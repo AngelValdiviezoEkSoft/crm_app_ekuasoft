@@ -179,7 +179,8 @@ class GenericState extends Equatable {
         ),
         if(objPermisos.mainMenu.itemScheduledVisits)
         ItemBoton('','','',3, Icons.calendar_month, 'Visitas Agendadas', 'Listado de clientes programados para el día','','', Colors.white, Colors.white,false,false,'','','icTramProc.png','icTramProcTrans.png','',
-          Rutas().rutaAgenda,
+          //Rutas().rutaAgenda,
+          Rutas().rutaConsultaActividades,
           () {}
         ),
         if(objPermisos.mainMenu.itemListCatalog)

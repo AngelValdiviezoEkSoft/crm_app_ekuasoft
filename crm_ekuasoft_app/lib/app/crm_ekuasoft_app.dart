@@ -10,16 +10,16 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 bool mostrarBoton = false;
 
-class CentroViajesApp extends StatefulWidget {
+class CrmEkuasoftApp extends StatefulWidget {
   
-  const CentroViajesApp(Key? key,
+  const CrmEkuasoftApp(Key? key,
   ) : super(key: key);
 
   @override
-  CentroViajesAppState createState() => CentroViajesAppState();
+  CrmEkuasoftAppState createState() => CrmEkuasoftAppState();
 }
 
-class CentroViajesAppState extends State<CentroViajesApp> {
+class CrmEkuasoftAppState extends State<CrmEkuasoftApp> {
   final TokenManager tokenManager = TokenManager();
   final cron = Cron();
   late Stream<ConnectivityResult> connectivityStream;

@@ -23,6 +23,8 @@ class Rutas{
   String rutaOnBoarding = '/onBoarding';
   String rutaInformative = '/informative';
   String rutaPlanActivConActiv = '/PlanActividades';
+  String rutaConsultaActividades = '/ConsultaActividades';
+  String rutaTermCond = '/TerminosCondiciones';
 
   //imágenes 
   String rutaImagenes = 'assets/images/';

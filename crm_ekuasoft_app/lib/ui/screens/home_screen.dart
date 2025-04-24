@@ -75,7 +75,7 @@ class HomeScreenState extends State<HomeScreen> {
                   
                   if(!snapshot.hasData) {
                     return Scaffold(
-                        backgroundColor: Colors.white,
+                      backgroundColor: Colors.white,
                       body: Center(
                         child: Image.asset(
                           "assets/gifs/gif_carga.gif",

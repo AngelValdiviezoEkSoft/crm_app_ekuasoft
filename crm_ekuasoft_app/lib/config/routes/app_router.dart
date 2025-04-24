@@ -11,8 +11,12 @@ final objRutas = Rutas();
 final GoRouter appRouter = GoRouter(
   routes: [//
     GoRoute(
+      path: objRutas.rutaTermCond,
+      builder: (context, state) => const TermsAndConditionsScreen(null),
+    ),
+    GoRoute(
       path: objRutas.rutaPlanActivConActiv,
-      builder: (context, state) => const PlanificacionActividadesConActividadScreen(null),      
+      builder: (context, state) => const PlanificacionActividadesConActividadScreen(null),
     ),
     GoRoute(
       path: objRutas.rutaInformative,
@@ -85,6 +89,9 @@ final GoRouter appRouter = GoRouter(
                     }
                     if(snapshot.data == 'home') {
                       return const HomeScreen(null);
+                    }
+                    if(snapshot.data == 'termCond') {
+                      return const TermsAndConditionsScreen(null);
                     }
                   //}
                 }

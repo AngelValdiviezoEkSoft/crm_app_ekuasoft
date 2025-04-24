@@ -277,7 +277,7 @@ class Welcome2Screen extends StatelessWidget {
     
           Position position = await getLocation();
     
-          imeiCod = '823456040001'; //BORRAR LUEGO - PARA EMULADOR
+          imeiCod = '82345604000005'; //BORRAR LUEGO - PARA EMULADOR
           //imeiCod = '82345604000002Luis'; //BORRAR LUEGO - PARA CELULAR PRUEBAS
           //imeiCod = '82345604113'; //BORRAR LUEGO - PARA EMULADOR
     
@@ -298,7 +298,9 @@ class Welcome2Screen extends StatelessWidget {
           if(respuesta.result.estado == 200){
             rutaServerWelcome = '';
             //ignore: use_build_context_synchronously
-            context.push(objRutasGen.rutaDefault);
+            //context.push(objRutasGen.rutaDefault);
+            //ignore: use_build_context_synchronously
+            context.push(objRutasGen.rutaTermCond);
           }
           else{
             showDialog(

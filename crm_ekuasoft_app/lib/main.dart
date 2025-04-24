@@ -36,7 +36,7 @@ void main() async {
               locked: true
             )
           ),
-          child: const CentroViajesApp(null)
+          child: const CrmEkuasoftApp(null)
         )
       ),
     )

@@ -13,6 +13,9 @@ abstract class AuthState extends Equatable {
 
       var rspReg = await storage.read(key: 'RespuestaRegistro') ?? '';
       var rspLog = await storage.read(key: 'RespuestaLogin') ?? '';
+                
+      var termCond = await storage.read(key: 'AceptaTermCond');
+
       await storage.write(key: 'fecMem', value: '');
       await storage.write(key: 'idMem', value: '');
 
@@ -20,7 +23,10 @@ abstract class AuthState extends Equatable {
         rspFinal = '';
       }
       else {
-        if(rspLog.isEmpty){
+        if(termCond == null || termCond == 'false'){
+          rspFinal = 'termCond';
+        }
+        if(rspLog.isEmpty && rspFinal == 'home'){
           rspFinal = 'log';
         }        
       }
