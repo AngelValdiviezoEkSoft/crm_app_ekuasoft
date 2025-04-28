@@ -313,40 +313,40 @@ class PerfilScreen extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () {
                         showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('¿Está seguro que desea cerrar su sesión?'),
-                            
-                            actions: [
-                              TextButton(
-                                onPressed: () async {
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('¿Está seguro que desea cerrar su sesión?'),
+                              
+                              actions: [
+                                TextButton(
+                                  onPressed: () async {
 
-                                  await AuthService().logOut();
+                                    await AuthService().logOut();
 
-                                  //ignore:use_build_context_synchronously
-                                  Navigator.of(context).pop();
+                                    //ignore:use_build_context_synchronously
+                                    Navigator.of(context).pop();
 
-                                  //ignore:use_build_context_synchronously
-                                  context.push(objRutasGen.rutaBienvenida);
+                                    //ignore:use_build_context_synchronously
+                                    context.push(objRutasGen.rutaBienvenida);
 
-                                },
-                                child: Text('Sí', style: TextStyle(color: Colors.blue[200]),),
-                              ),
-                              TextButton(
-                                onPressed: () {
+                                  },
+                                  child: Text('Sí', style: TextStyle(color: Colors.blue[200]),),
+                                ),
+                                TextButton(
+                                  onPressed: () {
 
-                                  Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
 
-                                  //context.push(objRutasGen.rutaBienvenida);
+                                    //context.push(objRutasGen.rutaBienvenida);
 
-                                },
-                                child: const Text('No', style: TextStyle(color: Colors.black),),
-                              ),
-                            ],
-                          );
-                        },
-                      );
+                                  },
+                                  child: const Text('No', style: TextStyle(color: Colors.black),),
+                                ),
+                              ],
+                            );
+                          },
+                        );
                     
                       },
                       style: ElevatedButton.styleFrom(

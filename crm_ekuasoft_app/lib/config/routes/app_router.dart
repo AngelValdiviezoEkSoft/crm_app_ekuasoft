@@ -67,6 +67,10 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => ConsultaVaciaScreen(null),
     ),
     GoRoute(
+      path: objRutas.rutaConsultaActividades,
+      builder: (context, state) => const ActividadesByFiltro(null),
+    ),
+    GoRoute(
       path: objRutas.rutaBienvenida,
       builder: (context, state) => BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
