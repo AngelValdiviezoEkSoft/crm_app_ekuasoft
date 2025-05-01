@@ -360,7 +360,7 @@ class ProspectoTypeService extends ChangeNotifier{
         if(objRspPrsp.isNotEmpty){
           objLead = CrmLeadAppModel.fromRawJson(objRspPrsp);
 
-          objLead.length = objLead.data.length;
+          objLead.length = objLead.data.length + 1;
         }
 
         var objRespuestaFinal = ProspectoRegistroResponseModel.fromRawJson(response.body);

@@ -205,19 +205,19 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                       .map((item) => item["name"]?.toString() ?? '')
                       .toList();
 
-                  if(campSelect.isEmpty){                      
+                  if(campSelect.isEmpty && lstCampanias.isNotEmpty){                      
                     campSelect = lstCampanias.first;
                   }
 
-                  if(mediaSelect.isEmpty){
+                  if(mediaSelect.isEmpty && lstMedias.isNotEmpty){
                     mediaSelect = lstMedias.first;
                   }
 
-                  if(originSelect.isEmpty){
+                  if(originSelect.isEmpty && lstOrigenes.isNotEmpty){
                     originSelect = lstOrigenes.first;
                   }
 
-                  if(actSelect.isEmpty){
+                  if(actSelect.isEmpty && lstActividades.isNotEmpty){
                     actSelect = lstActividades.first;
                   }
 

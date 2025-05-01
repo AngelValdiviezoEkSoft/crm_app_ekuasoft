@@ -451,6 +451,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
               
                                                       double tiempo = double.parse(_segundosAct.toString());
                                                       
+                                                      
                                                       ActivitiesTypeRequestModel objReqst = ActivitiesTypeRequestModel(
                                                         active: true,
                                                         createDate: DateTime.now(),//DateTime.parse(fechaActividadContTxtAct.text),
@@ -465,7 +466,9 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                         resId: objDatumCrmLead?.id ?? 0,
                                                         actId: 0,
                                                         workingTime: tiempo,
-                                                        summary: ''
+                                                        summary: '',
+                                                        leadName: objDatumCrmLead?.name ?? '',
+                                                        leadPhone: objDatumCrmLead?.phone ?? ''
                                                       );
               
                                                       showDialog(
@@ -1107,7 +1110,9 @@ class PlanActivStateTwo extends State<PlanActiv> {
                                                 resId: objDatumCrmLead?.id ?? 0,
                                                 actId: activitySelected,
                                                 workingTime: tiempo,
-                                                summary: ''
+                                                summary: '',
+                                                leadName: objDatumCrmLead?.name ?? '',
+                                                leadPhone: objDatumCrmLead?.phone ?? ''
                                               );
 
                                               showDialog(

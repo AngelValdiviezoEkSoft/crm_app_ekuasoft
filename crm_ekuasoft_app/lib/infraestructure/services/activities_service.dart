@@ -830,7 +830,7 @@ class ActivitiesService extends ChangeNotifier{
     }
   }
 
-  getActivitiesByFiltros(nombre, correo, probabilidad, resId) async {
+  getActivitiesByFiltros(nombre, phone, probabilidad, resId) async {
     try{
 
       var connectivityResult = await ValidacionesUtils().validaInternet();
@@ -899,28 +899,28 @@ class ActivitiesService extends ChangeNotifier{
         models = [
           {
             "model": modeloConsulta,
-            "filters": [                          
-              ["res_model_id", "=", 501],
-              ["res_id", "=", resId],
-              ["contact_name","=",nombre]              
+            "filters": [
+              ["res_model_id", "=", 677],//501],
+              //["res_id", "=", 5],//resId],
+              ["lead_name","=",nombre]
             ]
           },
         ];
       }
 
-      if(correo != null && correo.isNotEmpty){
+      if(phone != null && phone.isNotEmpty){
         models = [
           {
             "model": modeloConsulta,
             "filters": [                          
-              ["res_model_id", "=", 501],
-              ["res_id", "=", resId],                            
-              ["email_from","=",correo]              
+              ["res_model_id", "=", 677],//501],
+              //["res_id", "=", resId],                            
+              ["leadPhone","=",phone]              
             ]
           },
         ];
       }
-
+/*
       if(probabilidad != null && probabilidad.isNotEmpty){
         models = [
           {
@@ -933,6 +933,7 @@ class ActivitiesService extends ChangeNotifier{
           },
         ];
       }
+      */
 
       var codImei = await storageProspecto.read(key: 'codImei') ?? '';
 
@@ -990,6 +991,8 @@ class ActivitiesService extends ChangeNotifier{
         headers: headers,
         body: jsonEncode(requestBody), 
       );
+
+      print('NUEVA CONSULTA: ${response.body}');
       
       var rsp = AppResponseModel.fromRawJson(response.body);
 
@@ -1190,18 +1193,19 @@ class ActivitiesService extends ChangeNotifier{
             "tocken_valid_date": tockenValidDate,
             "create": {
               "date_deadline": DateFormat('yyyy-MM-dd', 'es').format(objActividad.dateDeadline!),//date_deadline
-              "create_date": DateFormat('yyyy-MM-dd', 'es').format(objActividad.createDate!),
-              "create_uid": objReq.params.uid,//objActividad.createUid,          
-              "active": true,
+              //"create_date": DateFormat('yyyy-MM-dd', 'es').format(objActividad.createDate!),
+              "create_uid": objReq.params.uid,
+              //"active": true,
               "previous_activity_type_id": objActividad.previousActivityTypeId,
-              "display_name": objActividad.displayName,
+              //"display_name": objActividad.displayName,
               "activity_type_id": objActividad.activityTypeId,
-              "res_model_id": 501,
+              "res_model_id": 677,//501,
               "user_id": objActividad.userId,
               "res_id": objActividad.resId,
               "summary": objActividad.note,
               "note": objActividad.note,
-              //"working_time": objActividad.workingTime,
+              "lead_name": objActividad.leadName,
+              "lead_phone": objActividad.leadPhone
             },
           }
         };

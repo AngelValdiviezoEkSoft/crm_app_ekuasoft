@@ -20,21 +20,32 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
 
     final size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Términos y Condiciones'),
-      ),
+    return Scaffold(      
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+
             Container(
               width: size.width,
-              height: size.height * 0.72,
+              height: size.height * 0.82,
               color: Colors.transparent,
               child: SingleChildScrollView(
                 child: Column(
                   children: [
+
+                    SizedBox(height: size.height * 0.06,),
+
+                    Container(
+                      width: size.width * 0.95,
+                      height: size.height * 0.05,
+                      color: Colors.transparent,
+                      alignment: Alignment.center,
+                      child: const Text('Términos y Condiciones', style: TextStyle(fontSize: 22),),
+                    ),
+
+                    SizedBox(height: size.height * 0.055,),
+
                     Container(
                       width: size.width * 0.95,
                       height: size.height * 0.13,
