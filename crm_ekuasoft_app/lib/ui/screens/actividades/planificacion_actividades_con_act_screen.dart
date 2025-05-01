@@ -90,10 +90,12 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
             //actividadesFilAgendaPlanAct = rspAct.activities.data;
             actividadesFilAgendaPlanAct = rspAct.objMailAct.data;
             lstActividadesAct = [];
-            
+            objDatumCrmLead = rspAct.lead;
+            /*
             if(rspAct.activities.fields.code != 'NO_INTERNET'){
               objDatumCrmLead = rspAct.lead;
             }
+            */
 
             /*
 
@@ -1180,6 +1182,7 @@ class PlanActivStateTwo extends State<PlanActiv> {
                                                     actions: [
                                                       TextButton(
                                                         onPressed: () {
+                                                          Navigator.of(contextPrincipalGen!).pop();
                                                           Navigator.of(contextPrincipalGen!).pop();
                                                           Navigator.of(contextPrincipalGen!).pop();
                                                         },

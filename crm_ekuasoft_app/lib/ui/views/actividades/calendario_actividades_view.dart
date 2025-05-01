@@ -497,7 +497,7 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                                             backgroundColor: objColorsApp.fucsia,
                                             foregroundColor: Colors.white,
                                             icon: Icons.account_circle,
-                                            label: 'Cierre de CalendarioActividades',
+                                            label: 'Cierre de Calendario de Actividades',
                                           )
                                         ]
                                     ),
@@ -610,7 +610,7 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                                     width: size.width * 0.95,
                                     height: size.height * 0.09,
                                     alignment: Alignment.topCenter,
-                                    child: const AutoSizeText('No existen CalendarioActividades agendadas para la fecha seleccionada', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,), maxLines: 2,  presetFontSizes: [42,40,38,36,34,32,30,28,26,24,22,20,18,16,14,12,10]),
+                                    child: const AutoSizeText('No existen actividades agendadas para la fecha seleccionada', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,), maxLines: 2,  presetFontSizes: [42,40,38,36,34,32,30,28,26,24,22,20,18,16,14,12,10]),
                                   ),
                                 ],
                               ), 

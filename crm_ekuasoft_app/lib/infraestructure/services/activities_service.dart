@@ -37,7 +37,7 @@ class ActivitiesService extends ChangeNotifier{
           "filters": [
             //["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(DateTime.now())],
             //["res_id","=",id],
-            ["res_model_id","=",501]
+            ["res_model_id","=",677]
           ]
         },
       ];
@@ -149,7 +149,7 @@ class ActivitiesService extends ChangeNotifier{
           "filters": [
             //["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(DateTime.now())],
             ["res_id","=",id],
-            ["res_model_id","=",501]
+            ["res_model_id","=",677]
           ]
         },
       ];
@@ -254,7 +254,7 @@ class ActivitiesService extends ChangeNotifier{
           "model": EnvironmentsProd().modMailAct,
           "filters": [
             ["date_deadline","=",fecha],            
-            ["res_model_id","=",501]
+            ["res_model_id","=",677]
           ]
         },
       ];
@@ -345,6 +345,14 @@ class ActivitiesService extends ChangeNotifier{
     }
   }
 
+  getTipoActividades() async {
+    var cmbAct = await storageCamp.read(key: 'cmbActividades') ?? '';
+
+    MailActivityTypeAppModel  objFinAct = MailActivityTypeAppModel.fromRawJson(cmbAct);
+
+    return objFinAct;
+  }
+
   getActivitiesByRangoFechas(fechas, resId) async {
     try{
 
@@ -432,7 +440,7 @@ class ActivitiesService extends ChangeNotifier{
             "model": modeloConsulta,
             "filters": [            
               ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(DateTime.now())],            
-              ["res_model_id", "=", 501],
+              ["res_model_id", "=", 677],
               if(resId > 0)
               ["res_id", "=", resId]
             ]
@@ -448,7 +456,7 @@ class ActivitiesService extends ChangeNotifier{
             "filters": [            
               ["date_deadline",">=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],            
               ["date_deadline","<=",DateFormat('yyyy-MM-dd', 'es').format(fechas[1])],
-              ["res_model_id", "=", 501],
+              ["res_model_id", "=", 677],
               if(resId > 0)
               ["res_id", "=", resId]
             ]
@@ -464,7 +472,7 @@ class ActivitiesService extends ChangeNotifier{
               "model": modeloConsulta,
               "filters": [            
                 ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],            
-                ["res_model_id", "=", 501],
+                ["res_model_id", "=", 677],
                 if(resId > 0)
                 ["res_id", "=", resId]
               ]
@@ -532,7 +540,7 @@ class ActivitiesService extends ChangeNotifier{
       
       var rsp = AppResponseModel.fromRawJson(response.body);
 
-      //print('Test: ${response.body}');
+      print('Consulta agenda: ${response.body}');
 
       String cmbLstAct = json.encode(rsp.result.data.mailActivity);//await storageCamp.read(key: 'cmbLstActividades') ?? '';
 
@@ -637,9 +645,9 @@ class ActivitiesService extends ChangeNotifier{
       }
 
       if(internet.isEmpty){
-        MailMessageResponseModel objRsp = await getActivitiesCerradasByRangoFechas(fechas, resId);
+        MailMessageResponseModel? objRsp = await getActivitiesCerradasByRangoFechas(fechas, resId);
         
-        if(objRsp.result.data.mailMessage.length > 0){
+        if(objRsp != null && objRsp.result.data.mailMessage.length > 0){
           
           for(int i = 0; i < objRsp.result.data.mailMessage.data.length; i++)
           {
@@ -674,8 +682,8 @@ class ActivitiesService extends ChangeNotifier{
 
       return objRspFinal;
     }
-    catch(_){
-     //print('Test: $ex');
+    catch(ex){
+     print('Test: $ex');
     }
   }
 
@@ -819,18 +827,18 @@ class ActivitiesService extends ChangeNotifier{
         body: jsonEncode(requestBody), 
       );
 
-      //print('Test: ${response.body}');
+      print('Test de error: ${response.body}');
       
       var rsp = MailMessageResponseModel.fromRawJson(response.body);
 
       return rsp;
     }
-    catch(_){
-     //print('Test: $ex');
+    catch(ex){
+     print('Test: $ex');
     }
   }
 
-  getActivitiesByFiltros(nombre, phone, probabilidad, resId) async {
+  getActivitiesByFiltros(nombre, phone, idTpAct, resId) async {
     try{
 
       var connectivityResult = await ValidacionesUtils().validaInternet();
@@ -880,28 +888,12 @@ class ActivitiesService extends ChangeNotifier{
 
       var models = [];
 
-      /*
-      models = [
-        {
-          "model": modeloConsulta,
-          "filters": [                          
-            ["res_model_id", "=", 501],
-            ["res_id", "=", resId],
-            ["contact_name","=",nombre],
-            ["email_from","=",correo],
-            ["probability","=",probabilidad],
-          ]
-        },
-      ];
-      */
-
       if(nombre != null && nombre.isNotEmpty){
         models = [
           {
             "model": modeloConsulta,
             "filters": [
-              ["res_model_id", "=", 677],//501],
-              //["res_id", "=", 5],//resId],
+              ["res_model_id", "=", 677],
               ["lead_name","=",nombre]
             ]
           },
@@ -913,27 +905,68 @@ class ActivitiesService extends ChangeNotifier{
           {
             "model": modeloConsulta,
             "filters": [                          
-              ["res_model_id", "=", 677],//501],
-              //["res_id", "=", resId],                            
-              ["leadPhone","=",phone]              
+              ["res_model_id", "=", 677],
+              ["lead_phone","=",phone]              
             ]
           },
         ];
       }
-/*
-      if(probabilidad != null && probabilidad.isNotEmpty){
+
+      if(idTpAct != null && idTpAct != 0){
         models = [
           {
             "model": modeloConsulta,
             "filters": [                          
-              ["res_model_id", "=", 501],
-              ["res_id", "=", resId],
-              ["probability","=",probabilidad]              
+              ["res_model_id", "=", 677],              
+              ["activity_type_id","=",idTpAct]
             ]
           },
         ];
       }
-      */
+
+      if(nombre != null && nombre.isNotEmpty && idTpAct!= 0 && phone == null){
+        models = [];
+        models = [
+          {
+            "model": modeloConsulta,
+            "filters": [
+              ["res_model_id", "=", 677],
+              ["lead_name","=",nombre],
+              ["activity_type_id","=",idTpAct]
+            ]
+          },
+        ];
+      }
+
+      if(phone != null && phone.isNotEmpty && idTpAct!= 0 && nombre == null){
+        models = [];
+        models = [
+          {
+            "model": modeloConsulta,
+            "filters": [
+              ["res_model_id", "=", 677],
+              ["lead_phone","=",phone],
+              ["activity_type_id","=",idTpAct]
+            ]
+          },
+        ];
+      }
+
+      if(nombre != null && nombre.isNotEmpty && phone != null && phone.isNotEmpty
+      && idTpAct != null){
+        models = [];
+        models = [
+          {
+            "model": modeloConsulta,
+            "filters": [                          
+              ["res_model_id", "=", 677],
+              ["lead_name","=",nombre],
+              ["lead_phone","=",phone],
+              ["activity_type_id","=",idTpAct]
+            ]
+          },
+        ];
+      }
 
       var codImei = await storageProspecto.read(key: 'codImei') ?? '';
 
@@ -1199,7 +1232,7 @@ class ActivitiesService extends ChangeNotifier{
               "previous_activity_type_id": objActividad.previousActivityTypeId,
               //"display_name": objActividad.displayName,
               "activity_type_id": objActividad.activityTypeId,
-              "res_model_id": 677,//501,
+              "res_model_id": 677,
               "user_id": objActividad.userId,
               "res_id": objActividad.resId,
               "summary": objActividad.note,
@@ -1459,7 +1492,7 @@ class ActivitiesService extends ChangeNotifier{
             "id": objActividad.actId,
             "write": {
               //"date_deadline": DateFormat('yyyy-MM-dd', 'es').format(objActividad.dateDeadline!),
-              "res_model_id": 501,
+              "res_model_id": 677,
               "user_id": objActividad.userId,
               "res_id": objActividad.resId,
               //"summary": objActividad.summary,
