@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:crm_ekuasoft_app/domain/domain.dart';
+import 'package:crm_ekuasoft_app/ui/ui.dart';
+
 class AppResponseModel {
     String jsonrpc;
     dynamic id;
@@ -61,6 +64,7 @@ class DataAppModel {
     MailActivityTypeAppModel mailActivityType;
     ResCountryAppModel resCountry;
     MailActivityAppModel mailActivity;
+    IrModel irResponse;
 
     DataAppModel({
         required this.crmLead,
@@ -70,7 +74,8 @@ class DataAppModel {
         required this.utmMedium,
         required this.mailActivityType,
         required this.resCountry,
-        required this.mailActivity
+        required this.mailActivity,
+        required this.irResponse
     });
 
     factory DataAppModel.fromRawJson(String str) => DataAppModel.fromJson(json.decode(str));
@@ -116,7 +121,11 @@ class DataAppModel {
         mailActivity: json['mail.activity'] != null ?
           MailActivityAppModel.fromJson(json["mail.activity"])
           :
-          MailActivityAppModel(data: [], length: 0, fields: MailActivityFieldsAppModel(code: '', name: '', stateIds: ''))
+          MailActivityAppModel(data: [], length: 0, fields: MailActivityFieldsAppModel(code: '', name: '', stateIds: '')),
+        irResponse: json[EnvironmentsProd().modIrModel] != null ?
+          IrModel.fromJson(json[EnvironmentsProd().modIrModel])
+          :
+          IrModel(data: [], length: 0, fields: FieldsIr(id: '', model: '')),
     );
 
     Map<String, dynamic> toJson() => {

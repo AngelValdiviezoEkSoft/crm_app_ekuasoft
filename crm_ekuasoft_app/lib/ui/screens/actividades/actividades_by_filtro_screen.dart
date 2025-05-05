@@ -72,6 +72,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
     tpActividades = [];
     campSelectTpAct = '';
     activityTypeId = 0;
+    lstActividadesByFiltros = [];
   }
 
   Future<void> refreshDataAgenda() async {
@@ -320,13 +321,13 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                           }
                                         }
                                         
-                                        
-
                                         ActivitiesPageModel objRsp = await ActivitiesService().getActivitiesByFiltros(nombreProbFiltroTxt.text, cellFiltroTxt.text, activityTypeId, objDatumCrmLead?.id ?? 0);
                         
                                         lstActividadesByFiltros = [];
-                                        lstActividadesByFiltros = objRsp.activities.data;
-              
+
+                                        if(objRsp.activities.data.isNotEmpty){
+                                          lstActividadesByFiltros = objRsp.activities.data;
+                                        }
               /*
                                         nombreProbFiltroTxt = TextEditingController();
                                         cellFiltroTxt = TextEditingController();

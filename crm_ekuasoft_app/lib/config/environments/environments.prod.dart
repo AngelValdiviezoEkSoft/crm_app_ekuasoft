@@ -23,7 +23,9 @@ class EnvironmentsProd {
   final String modActiv = 'mail.activity.type';
   final String modPaise = 'res.country';
   final String modMailAct = 'mail.activity';
-  final String modBlogPost = 'blog.post';  
-  final String modMailMessage = 'mail.message';  
+  final String modBlogPost = 'blog.post';
+  final String modMailMessage = 'mail.message';
+  final String modIrModel = 'ir.model';
+  final String modCrmLead = 'crm.lead';
 
 }

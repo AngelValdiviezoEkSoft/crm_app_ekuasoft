@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:crm_ekuasoft_app/config/routes/app_router.dart';
 import 'package:crm_ekuasoft_app/domain/domain.dart';
@@ -7,6 +8,7 @@ import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -234,17 +236,7 @@ class AuthService extends ChangeNotifier {
         await login(authRequest);
       }
 
-      final models = [
-        /*
-        {
-          "model": EnvironmentsProd().modMailAct,//"mail.activity",
-          "filters": [
-            ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(DateTime.now())],
-            ["res_id","=",25],
-            ["res_model_id","=",501]
-          ]
-        },
-        */
+      final models = [        
         {
           "model": EnvironmentsProd().modProsp,//"crm.lead",
           "filters": []
@@ -274,6 +266,12 @@ class AuthService extends ChangeNotifier {
         {
           "model": EnvironmentsProd().modPaise,//"res.country",
           "filters": []
+        },
+        {
+          "model": EnvironmentsProd().modIrModel,//"ir.model",
+          "filters": [
+            ["model","=",EnvironmentsProd().modCrmLead]//"crm.lead"
+          ]
         },
       ];
 
@@ -325,6 +323,66 @@ class AuthService extends ChangeNotifier {
     
   }
   
+  getIrModel() async {
+    try{
+
+      var codImei = await storagePais.read(key: 'codImei') ?? '';
+
+      var objReg = await storagePais.read(key: 'RespuestaRegistro') ?? '';
+      var obj = RegisterDeviceResponseModel.fromJson(objReg);
+
+      var objLog = await storagePais.read(key: 'RespuestaLogin') ?? '';
+      var objLogDecode = json.decode(objLog);
+
+      List<MultiModel> lstMultiModel = [];
+
+      lstMultiModel.add(
+        MultiModel(model: 'ir.model')
+      );
+
+      final models = [
+        {
+          "model": EnvironmentsProd().modIrModel,
+          "filters": [
+            ["model","=",EnvironmentsProd().modCrmLead],
+          ]
+        },
+      ];
+
+
+      ConsultaMultiModelRequestModel objReq = ConsultaMultiModelRequestModel(
+        jsonrpc: EnvironmentsProd().jsonrpc,
+        params: ParamsMultiModels(
+          bearer: obj.result.bearer,
+          company: objLogDecode['result']['current_company'],
+          imei: codImei,
+          key: obj.result.key,
+          tocken: obj.result.tocken,
+          tockenValidDate: obj.result.tockenValidDate,
+          uid: objLogDecode['result']['uid'],
+          models: lstMultiModel
+        )
+      );
+
+      var rsp = await GenericService().getMultiModelos(objReq, "ir.model");
+      
+      return rsp;
+    }
+    
+    on SocketException catch (_) {
+      Fluttertoast.showToast(
+        msg: objMensajesProspectoService.mensajeFallaInternet,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 5,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0
+      );  
+    }
+    
+  }
+
   Future<dynamic> opcionesMenuPorPerfil(BuildContext context) async {
 
     var objLogin = await storage.read(key: 'RespuestaLogin') ?? '';
@@ -362,6 +420,7 @@ class AuthService extends ChangeNotifier {
     await storage.write(key: 'cmbMedia', value: '');
     await storage.write(key: 'cmbActividades', value: '');
     await storage.write(key: 'cmbPaises', value: '');
+    await storage.write(key: 'RespuestaIrModel', value: '');
     
     return;
   }

@@ -66,6 +66,10 @@ class GenericState extends Equatable {
   Future<String> readPrincipalPage() async {
 
     try{
+      
+      var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
+      IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+
       final registraProspecto = await storage.read(key: 'registraProspecto') ?? '';
       final registraActividad = await storage.read(key: 'RegistraActividad') ?? '';
       
@@ -110,7 +114,7 @@ class GenericState extends Equatable {
                 "previous_activity_type_id": objGuardar.previousActivityTypeId,
                 "display_name": objGuardar.displayName,
                 "activity_type_id": objGuardar.activityTypeId,
-                "res_model_id": 501,
+                "res_model_id": objIrModel.data[0].id,
                 "user_id": objGuardar.userId,
                 "res_id": objGuardar.resId,
                 "summary": objGuardar.note,

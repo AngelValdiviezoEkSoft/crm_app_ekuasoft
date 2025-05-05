@@ -61,12 +61,14 @@ class DataInicialService extends ChangeNotifier{
       var objMedias = await MediaService().getMedias();
       var objActividades = await ActivitiesService().getActivities();
       var objPaises = await PaisService().getPaises();
+      //var objPaises = await PaisService().getPaises();
 
       await storageDataInicial.write(key: 'cmbCampania', value: json.encode(objCamp));
       await storageDataInicial.write(key: 'cmbOrigen', value: json.encode(objOrigen));
       await storageDataInicial.write(key: 'cmbMedia', value: json.encode(objMedias));
       await storageDataInicial.write(key: 'cmbActividades', value: json.encode(objActividades));
       await storageDataInicial.write(key: 'cmbPaises', value: json.encode(objPaises));
+      //await storageDataInicial.write(key: 'RespuestaIrModel', value: json.encode());
 
     }
     catch(ex){

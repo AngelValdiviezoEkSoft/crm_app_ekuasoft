@@ -192,6 +192,7 @@ class GenericService extends ChangeNotifier {
     await storage.write(key: 'cmbActividades', value: json.encode(rsp.result.data.mailActivityType));
     await storage.write(key: 'cmbPaises', value: json.encode(rsp.result.data.resCountry));
     await storage.write(key: 'cmbLstActividades', value: json.encode(rsp.result.data.mailActivity));
+    await storage.write(key: 'RespuestaIrModel', value: json.encode(rsp.result.data.irResponse));
 
     return response.body;
     

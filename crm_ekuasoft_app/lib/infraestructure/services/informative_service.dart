@@ -30,14 +30,7 @@ class InformativeService extends ChangeNotifier{
 
       final models = [
         {
-          "model": EnvironmentsProd().modBlogPost,
-          /*
-          "filters": [            
-            ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(DateTime.now())],            
-            ["res_model_id", "=", 501],              
-            ["res_id", "=", resId]
-          ]
-          */
+          "model": EnvironmentsProd().modBlogPost,          
         },
       ];
 

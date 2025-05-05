@@ -25,6 +25,9 @@ class ActivitiesService extends ChangeNotifier{
   getActivities() async {
     try{
 
+      var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
+      IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+      
       List<MultiModel> lstMultiModel = [];
 
       lstMultiModel.add(
@@ -35,9 +38,7 @@ class ActivitiesService extends ChangeNotifier{
         {
           "model": EnvironmentsProd().modMailAct,
           "filters": [
-            //["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(DateTime.now())],
-            //["res_id","=",id],
-            ["res_model_id","=",677]
+            ["res_model_id","=",objIrModel.data[0].id]
           ]
         },
       ];
@@ -131,6 +132,9 @@ class ActivitiesService extends ChangeNotifier{
   getActivitiesById(id) async {
     try{
 
+      var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
+      IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+      
       if(id == 0){
         var strMem = await storageAct.read(key: 'idMem') ?? '';
 
@@ -149,7 +153,7 @@ class ActivitiesService extends ChangeNotifier{
           "filters": [
             //["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(DateTime.now())],
             ["res_id","=",id],
-            ["res_model_id","=",677]
+            ["res_model_id","=",objIrModel.data[0].id]
           ]
         },
       ];
@@ -243,6 +247,9 @@ class ActivitiesService extends ChangeNotifier{
   getActivitiesByFecha(fecha) async {
     try{
 
+      var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
+      IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+
       List<MultiModel> lstMultiModel = [];
 
       lstMultiModel.add(
@@ -254,7 +261,7 @@ class ActivitiesService extends ChangeNotifier{
           "model": EnvironmentsProd().modMailAct,
           "filters": [
             ["date_deadline","=",fecha],            
-            ["res_model_id","=",677]
+            ["res_model_id","=",objIrModel.data[0].id]
           ]
         },
       ];
@@ -356,6 +363,9 @@ class ActivitiesService extends ChangeNotifier{
   getActivitiesByRangoFechas(fechas, resId) async {
     try{
 
+      var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
+      IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+
       var connectivityResult = await ValidacionesUtils().validaInternet();
 
       var cmbAct = await storageCamp.read(key: 'cmbActividades') ?? '';
@@ -440,7 +450,7 @@ class ActivitiesService extends ChangeNotifier{
             "model": modeloConsulta,
             "filters": [            
               ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(DateTime.now())],            
-              ["res_model_id", "=", 677],
+              ["res_model_id", "=", objIrModel.data[0].id],
               if(resId > 0)
               ["res_id", "=", resId]
             ]
@@ -456,7 +466,7 @@ class ActivitiesService extends ChangeNotifier{
             "filters": [            
               ["date_deadline",">=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],            
               ["date_deadline","<=",DateFormat('yyyy-MM-dd', 'es').format(fechas[1])],
-              ["res_model_id", "=", 677],
+              ["res_model_id", "=", objIrModel.data[0].id],
               if(resId > 0)
               ["res_id", "=", resId]
             ]
@@ -472,7 +482,7 @@ class ActivitiesService extends ChangeNotifier{
               "model": modeloConsulta,
               "filters": [            
                 ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],            
-                ["res_model_id", "=", 677],
+                ["res_model_id", "=", objIrModel.data[0].id],
                 if(resId > 0)
                 ["res_id", "=", resId]
               ]
@@ -841,6 +851,9 @@ class ActivitiesService extends ChangeNotifier{
   getActivitiesByFiltros(nombre, phone, idTpAct, resId) async {
     try{
 
+      var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
+      IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+
       var connectivityResult = await ValidacionesUtils().validaInternet();
 
       var cmbAct = await storageCamp.read(key: 'cmbActividades') ?? '';
@@ -893,20 +906,23 @@ class ActivitiesService extends ChangeNotifier{
           {
             "model": modeloConsulta,
             "filters": [
-              ["res_model_id", "=", 677],
-              ["lead_name","=",nombre]
+              ["res_model_id", "=", objIrModel.data[0].id],
+              ["lead_name","ilike",nombre]
             ]
           },
         ];
       }
 
       if(phone != null && phone.isNotEmpty){
+
+        String newPhone = limpiarNumero(phone);
+
         models = [
           {
             "model": modeloConsulta,
-            "filters": [                          
-              ["res_model_id", "=", 677],
-              ["lead_phone","=",phone]              
+            "filters": [
+              ["res_model_id", "=", objIrModel.data[0].id],
+              ["lead_phone","ilike",newPhone]              
             ]
           },
         ];
@@ -917,7 +933,7 @@ class ActivitiesService extends ChangeNotifier{
           {
             "model": modeloConsulta,
             "filters": [                          
-              ["res_model_id", "=", 677],              
+              ["res_model_id", "=", objIrModel.data[0].id],              
               ["activity_type_id","=",idTpAct]
             ]
           },
@@ -930,8 +946,8 @@ class ActivitiesService extends ChangeNotifier{
           {
             "model": modeloConsulta,
             "filters": [
-              ["res_model_id", "=", 677],
-              ["lead_name","=",nombre],
+              ["res_model_id", "=", objIrModel.data[0].id],
+              ["lead_name","ilike",nombre],
               ["activity_type_id","=",idTpAct]
             ]
           },
@@ -940,12 +956,15 @@ class ActivitiesService extends ChangeNotifier{
 
       if(phone != null && phone.isNotEmpty && idTpAct!= 0 && nombre == null){
         models = [];
+
+        String newPhone = limpiarNumero(phone);
+
         models = [
           {
             "model": modeloConsulta,
             "filters": [
-              ["res_model_id", "=", 677],
-              ["lead_phone","=",phone],
+              ["res_model_id", "=", objIrModel.data[0].id],
+              ["lead_phone","ilike",newPhone],
               ["activity_type_id","=",idTpAct]
             ]
           },
@@ -954,14 +973,18 @@ class ActivitiesService extends ChangeNotifier{
 
       if(nombre != null && nombre.isNotEmpty && phone != null && phone.isNotEmpty
       && idTpAct != null){
+        
         models = [];
+
+        String newPhone = limpiarNumero(phone);
+
         models = [
           {
             "model": modeloConsulta,
             "filters": [                          
-              ["res_model_id", "=", 677],
-              ["lead_name","=",nombre],
-              ["lead_phone","=",phone],
+              ["res_model_id", "=", objIrModel.data[0].id],
+              ["lead_name","ilike",nombre],
+              ["lead_phone","ilike",newPhone],
               ["activity_type_id","=",idTpAct]
             ]
           },
@@ -1182,6 +1205,9 @@ class ActivitiesService extends ChangeNotifier{
       
       try{
 
+        var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
+        IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+
         var codImei = await storageProspecto.read(key: 'codImei') ?? '';
 
         var objReg = await storageProspecto.read(key: 'RespuestaRegistro') ?? '';
@@ -1226,19 +1252,24 @@ class ActivitiesService extends ChangeNotifier{
             "tocken_valid_date": tockenValidDate,
             "create": {
               "date_deadline": DateFormat('yyyy-MM-dd', 'es').format(objActividad.dateDeadline!),//date_deadline
-              //"create_date": DateFormat('yyyy-MM-dd', 'es').format(objActividad.createDate!),
-              "create_uid": objReq.params.uid,
-              //"active": true,
-              "previous_activity_type_id": objActividad.previousActivityTypeId,
-              //"display_name": objActividad.displayName,
               "activity_type_id": objActividad.activityTypeId,
-              "res_model_id": 677,
-              "user_id": objActividad.userId,
+              "res_model_id": objIrModel.data[0].id,
               "res_id": objActividad.resId,
               "summary": objActividad.note,
               "note": objActividad.note,
               "lead_name": objActividad.leadName,
               "lead_phone": objActividad.leadPhone
+
+              /*
+              //"create_date": DateFormat('yyyy-MM-dd', 'es').format(objActividad.createDate!),
+              "create_uid": objReq.params.uid,
+              //"active": true,
+              "previous_activity_type_id": objActividad.previousActivityTypeId,
+              //"display_name": objActividad.displayName,
+              
+              
+              "user_id": objActividad.userId,
+              */
             },
           }
         };
@@ -1445,6 +1476,9 @@ class ActivitiesService extends ChangeNotifier{
     //VALIDACIÓN DE INTERNET
     if(internet.isEmpty){
       
+      var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
+      IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+
       try{
 
         var codImei = await storageProspecto.read(key: 'codImei') ?? '';
@@ -1492,7 +1526,7 @@ class ActivitiesService extends ChangeNotifier{
             "id": objActividad.actId,
             "write": {
               //"date_deadline": DateFormat('yyyy-MM-dd', 'es').format(objActividad.dateDeadline!),
-              "res_model_id": 677,
+              "res_model_id": objIrModel.data[0].id,
               "user_id": objActividad.userId,
               "res_id": objActividad.resId,
               //"summary": objActividad.summary,
@@ -1607,4 +1641,10 @@ class ActivitiesService extends ChangeNotifier{
 
   }
 
+  String limpiarNumero(String numero) {
+    if (numero.startsWith('0')) {
+      return numero.substring(1);
+    }
+    return numero;
+  }
 }
