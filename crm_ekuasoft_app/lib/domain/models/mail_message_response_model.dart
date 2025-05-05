@@ -107,7 +107,7 @@ class DatumMailMessage {
     DateTime date;
     DateTime dateDeadLine;
     String description;
-    bool emailAddSignature;
+    //bool emailAddSignature;
     String emailFrom;
     String emailLayoutXmlid;
     bool hasError;
@@ -159,7 +159,7 @@ class DatumMailMessage {
         required this.date,
         required this.dateDeadLine,
         required this.description,
-        required this.emailAddSignature,
+        //required this.emailAddSignature,
         required this.emailFrom,
         required this.emailLayoutXmlid,
         required this.hasError,
@@ -220,7 +220,7 @@ class DatumMailMessage {
         date: json["date"] != null ? DateTime.parse(json["date"]) : DateTime.now(),
         dateDeadLine: json["activity_due_date"] != null ? DateTime.parse(json["activity_due_date"]) : DateTime.now(),
         description: json["description"] ?? '',
-        emailAddSignature: json["email_add_signature"] ?? '',
+        //emailAddSignature: false,//json["email_add_signature"] ?? '',
         emailFrom: json["email_from"] ?? '',
         emailLayoutXmlid: json["email_layout_xmlid"] ?? '',
         hasError: json["has_error"] ?? '',
@@ -280,7 +280,7 @@ class DatumMailMessage {
         "date": date.toIso8601String(),
         "activity_due_date": dateDeadLine.toIso8601String(),
         "description": description,
-        "email_add_signature": emailAddSignature,
+        //"email_add_signature": emailAddSignature,
         "email_from": emailFrom,
         "email_layout_xmlid": emailLayoutXmlid,
         "has_error": hasError,

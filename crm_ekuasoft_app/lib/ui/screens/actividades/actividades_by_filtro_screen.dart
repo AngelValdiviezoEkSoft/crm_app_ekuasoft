@@ -237,7 +237,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                     child: TextFormField(
                                       controller: nombreProbFiltroTxt,
                                       decoration: const InputDecoration(
-                                        labelText: 'Nombre de probabilidad',
+                                        labelText: 'Nombre de oportunidad',
                                         border: OutlineInputBorder(),
                                         suffixIcon: Icon(Icons.person),
                                       ),
@@ -434,6 +434,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                                           await storage.write(key: 'idMem', value: lstActividadesByFiltros[index].resId.toString());
                                                           await storage.write(key: 'fecMem', value: DateFormat('yyyy-MM-dd', 'es').format(lstActividadesByFiltros[index].dateDeadline));
                                                           
+                                                          entraXActividad = true;
                                                           idActividadSeleccionada = lstActividadesByFiltros[index].id;
                               
                                                           objActividadEscogida = lstActividadesByFiltros[index];

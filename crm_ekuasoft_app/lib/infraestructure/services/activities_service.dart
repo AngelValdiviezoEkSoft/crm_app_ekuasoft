@@ -403,7 +403,7 @@ class ActivitiesService extends ChangeNotifier{
         MultiModel(model: 'mail.activity')
       );
 
-      if(resId == 0){        
+      if(resId != null && resId == 0){        
         var idMem = await storageProspecto.read(key: 'idMem') ?? '';
 
         if(idMem.isNotEmpty){
@@ -451,7 +451,7 @@ class ActivitiesService extends ChangeNotifier{
             "filters": [            
               ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(DateTime.now())],            
               ["res_model_id", "=", objIrModel.data[0].id],
-              if(resId > 0)
+              if(resId != null && resId > 0)
               ["res_id", "=", resId]
             ]
           },
@@ -467,7 +467,7 @@ class ActivitiesService extends ChangeNotifier{
               ["date_deadline",">=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],            
               ["date_deadline","<=",DateFormat('yyyy-MM-dd', 'es').format(fechas[1])],
               ["res_model_id", "=", objIrModel.data[0].id],
-              if(resId > 0)
+              if(resId != null && resId > 0)
               ["res_id", "=", resId]
             ]
           },
@@ -483,7 +483,7 @@ class ActivitiesService extends ChangeNotifier{
               "filters": [            
                 ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],            
                 ["res_model_id", "=", objIrModel.data[0].id],
-                if(resId > 0)
+                if(resId != null && resId > 0)
                 ["res_id", "=", resId]
               ]
             },

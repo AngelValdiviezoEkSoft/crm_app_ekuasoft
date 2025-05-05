@@ -482,6 +482,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                             FocusScope.of(context).unfocus();
                           
                                             terminoBusqueda = '';
+                                            entraXActividad = false;
                                             filtroPrspTxt = TextEditingController();
                           
                                             //context.push(Rutas().rutaPlanificacionActividades);

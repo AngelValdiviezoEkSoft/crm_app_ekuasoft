@@ -25,6 +25,7 @@ List<bool> isSelected = [false,true ]; // 'Mes' está seleccionado inicialmente
 bool actualizaListaActAgenda = false;
 List<DatumActivitiesResponse> actividadesFilAgenda = [];
 int contLstAgenda = 0;
+bool entraXActividad = false;
 
 class AgendaScreen extends StatefulWidget {
   
@@ -52,6 +53,7 @@ class AgendaScreenState extends State<AgendaScreen>  {
     selectedDayGen = DateTime.now();
     focusedDayGen = DateTime.now();
     filtroAgendaTxt = TextEditingController();
+    entraXActividad = false;
   }
 
   Future<void> refreshDataAgenda() async {
@@ -333,7 +335,7 @@ class AgendaScreenState extends State<AgendaScreen>  {
                                   _dates = [];
                                   _dates.add(selectedDay);
                   
-                                  ActivitiesPageModel objRsp = await ActivitiesService().getActivitiesByRangoFechas(_dates, objDatumCrmLead?.id ?? 0);
+                                  ActivitiesPageModel objRsp = await ActivitiesService().getActivitiesByRangoFechas(_dates, null);
                   
                                   actividadesFilAgenda = [];
                                   actividadesFilAgenda = objRsp.activities.data;                                  
@@ -507,6 +509,7 @@ class AgendaScreenState extends State<AgendaScreen>  {
                                               
                                               idActividadSeleccionada = actividadesFilAgenda[index].id;
                   
+                                              entraXActividad = true;
                                               objActividadEscogida = actividadesFilAgenda[index];
                   
                                               //ignore: use_build_context_synchronously

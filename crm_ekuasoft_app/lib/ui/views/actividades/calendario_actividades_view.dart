@@ -491,7 +491,8 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                                               objCalendarioActividadescogidaByFiltroCal = calendarioActividadesFilAgendaByFiltroCall[index];
                   
                                               //ignore: use_build_context_synchronously
-                                              //context.push(objRutasGen.rutaPlanificacionCalendarioActividades);
+                                              context.push(objRutasGen.rutaPlanificacionActividades);
+                                              //context.push(objRutasGen.rutaPlanificacionActividades);
                                               
                                             },
                                             backgroundColor: objColorsApp.fucsia,

@@ -46,6 +46,8 @@ class PlanificacionActividades extends StatefulWidget {
 
 class PlanActState extends State<PlanificacionActividades> {
 
+  //late Future<ActivitiesPageModel> _futureActividades;
+
   @override
   void initState() {
     super.initState();
@@ -63,6 +65,16 @@ class PlanActState extends State<PlanificacionActividades> {
     _segundos = 0;
     _corriendo = false;
     actividadesFilAgendaPlan = [];
+    _timer = null;
+    actPlanSelect = '';
+    selectedDayGenPlanAct = DateTime.now();
+    focusedDayGenPlanAct = DateTime.now();
+/*
+    _futureActividades = ActivitiesService().getActivitiesByRangoFechas(
+      null,
+      entraXActividad ? objActividadEscogida?.resId ?? 0 : objDatumCrmLead?.id ?? 0,
+    );
+*/
   }
 
   @override
@@ -73,8 +85,9 @@ class PlanActState extends State<PlanificacionActividades> {
 
     return BlocBuilder<GenericBloc, GenericState>(
         builder: (context,state) {
+          
         return FutureBuilder(
-          future: ActivitiesService().getActivitiesByRangoFechas( null, objDatumCrmLead?.id ?? 0),
+          future: ActivitiesService().getActivitiesByRangoFechas( null, entraXActividad ? objActividadEscogida?.resId ?? 0 : objDatumCrmLead?.id ?? 0),
           builder: (context, snapshot) {
 
             if(!snapshot.hasData) {
@@ -89,8 +102,8 @@ class PlanActState extends State<PlanificacionActividades> {
                 ),
               );
             }
-
-            ActivitiesPageModel rspAct = snapshot.data as ActivitiesPageModel;
+            else{
+              ActivitiesPageModel rspAct = snapshot.data as ActivitiesPageModel;
 
             //actividadesFilAgendaPlan = rspAct.activities.data;
             actividadesFilAgendaPlan = rspAct.objMailAct.data;
@@ -98,46 +111,13 @@ class PlanActState extends State<PlanificacionActividades> {
 
             objDatumCrmLead = rspAct.lead;
 
-            /*
-            if(rspAct.activities.fields.code != 'NO_INTERNET'){
-              objDatumCrmLead = rspAct.lead;
-            }            
-            */
-
-            /*
-
-            String rspCombos = snapshot.data as String;
-
-            ProspectoCombosModel objTmp = ProspectoCombosModel(
-              campanias: '',//rspCombos.split('---')[0],
-              origen: '',//rspCombos.split('---')[1],
-              medias: '',//rspCombos.split('---')[2],
-              actividades: '',//rspCombos.split('---')[3],
-              paises: '',//rspCombos.split('---')[4],
-              lstActividades: rspCombos.split('---')[5],
-            );
-
-            var objAct = json.decode(objTmp.lstActividades);
-
-            var objAct3 = objAct['data'];
-
-            List<Map<String, dynamic>> mappedObjAct3 = List<Map<String, dynamic>>.from(objAct3);
-            */
-
             for(int i = 0; i < actividadesFilAgendaPlan.length; i++){
               lstActividades.add(actividadesFilAgendaPlan[i].name ?? '');
             }
 
-            /*
-            mappedObjAct3
-            .map((item) => item["activity_type_id"]["name"]?.toString() ?? '')
-            .toList();
-            */
-
             if(actPlanSelect.isEmpty && lstActividades.isNotEmpty){
               actPlanSelect = lstActividades.first;
             }
-            //if()
 
             if(objActividadEscogida != null && DateFormat('yyyy-MM-dd', 'es').format(objActividadEscogida!.dateDeadline) == DateFormat('yyyy-MM-dd', 'es').format(DateTime.now())){
               muestraTextoParaHoy = true;
@@ -146,9 +126,10 @@ class PlanActState extends State<PlanificacionActividades> {
             return WillPopScope(
               onWillPop: () async => false,
               child: Scaffold(
+                //resizeToAvoidBottomInset: false,
                 appBar: AppBar(
                   title: Text(
-                    objDatumCrmLead?.contactName ?? '-- Sin nombre --',
+                  objDatumCrmLead != null && objDatumCrmLead!.contactName != null ? objDatumCrmLead!.contactName! : '-- Sin nombre --',
                     style: const TextStyle(color: Colors.white),
                   ),
                   backgroundColor: Colors.blue.shade800,
@@ -776,6 +757,9 @@ class PlanActState extends State<PlanificacionActividades> {
               ),
             );
           
+            }
+
+            
           }
         );
       }
@@ -862,6 +846,9 @@ class PlanActStateTwo extends State<PlanAct> {
   @override
   void initState() {
     super.initState();
+    _corriendo = false;
+    _timer = null;
+    _segundos = 0;
   }
 
   @override
@@ -1150,7 +1137,7 @@ class PlanActStateTwo extends State<PlanAct> {
                                                 dateDeadline: DateTime.now(),
                                                 userId: objDatumCrmLead?.userId!.id ?? 0,
                                                 userCreateId: objDatumCrmLead?.userId!.id ?? 0,
-                                                resId: objDatumCrmLead?.id ?? 0,
+                                                resId: objActividadEscogida?.resId ?? 0,//objDatumCrmLead?.id ?? 0,
                                                 actId: idActividadSeleccionada,
                                                 workingTime: tiempo,
                                                 summary: objActividadEscogida?.summary ?? '',
@@ -1303,7 +1290,7 @@ class PlanActStateTwo extends State<PlanAct> {
                               EmojiInputFormatter()
                             ],
                             cursorColor: AppLightColors().primary,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            //autovalidateMode: AutovalidateMode.onUserInteraction,
                             style: AppTextStyles.bodyRegular(width: size.width),
                             decoration: const InputDecoration(
                               label: Text('Notas'),
@@ -1472,7 +1459,7 @@ class BtnSlidableActionState extends State<BtnSlidableAction> {
                             EmojiInputFormatter()
                           ],
                           cursorColor: AppLightColors().primary,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          //autovalidateMode: AutovalidateMode.onUserInteraction,
                           style: AppTextStyles.bodyRegular(width: size.width),
                           decoration: const InputDecoration(
                             label: Text('Notas'),
