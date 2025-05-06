@@ -456,6 +456,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                         ),
                                       ),
                                     ),
+                                  
                                   Transform.translate(
                                     offset: Offset(0, 100 * controllerOp.value),
                                     child: child,
@@ -492,220 +493,220 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                           foregroundColor: Colors.white,
                                           icon: Icons.call_outlined,
                                           label: 'Actividades',
-                                        ),
-                                    
+                                        ),                                    
                                       ]
-                                  ),
-                                  child: ListTile(
-                                    title: Container(
-                                    color: Colors.transparent,
-                                    width: size.width * 0.98,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.transparent,
-                                          border: Border.all(
-                                              color: const Color.fromARGB(255, 217, 217, 217)),
-                                          borderRadius: const BorderRadius.all(Radius.circular(10))
-                                        ),
-                                      width: size.width * 0.98,
-                                      height: size.height * 0.195,
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
+                                    ),
+                                    child: ListTile(
+                                        title: Container(
+                                        color: Colors.transparent,
+                                        width: size.width * 0.98,
+                                        child: Container(
+                                        decoration: BoxDecoration(
                                             color: Colors.transparent,
-                                            width: size.width * 0.7,
-                                            height: size.height * 0.25,
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                SizedBox(width: size.width * 0.01,),
-                                                Container(
-                                                  color: Colors.transparent,
-                                                  width: size.width * 0.14,
-                                                  height: size.height * 0.1,
-                                                  child: CircleAvatar(
-                                                    radius: 30.0,
-                                                    backgroundColor: Colors.grey[200],
-                                                    child: const Icon(Icons.person, color: Colors.grey, size: 40.0),
+                                            border: Border.all(
+                                                color: const Color.fromARGB(255, 217, 217, 217)),
+                                            borderRadius: const BorderRadius.all(Radius.circular(10))
+                                          ),
+                                        width: size.width * 0.98,
+                                        height: size.height * 0.195,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              color: Colors.transparent,
+                                              width: size.width * 0.7,
+                                              height: size.height * 0.25,
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: [
+                                                  SizedBox(width: size.width * 0.01,),
+                                                  Container(
+                                                    color: Colors.transparent,
+                                                    width: size.width * 0.14,
+                                                    height: size.height * 0.1,
+                                                    child: CircleAvatar(
+                                                      radius: 30.0,
+                                                      backgroundColor: Colors.grey[200],
+                                                      child: const Icon(Icons.person, color: Colors.grey, size: 40.0),
+                                                    ),
                                                   ),
-                                                ),
-                                                Container(
-                                                  color: Colors.transparent,
-                                                  width: size.width * 0.55,
-                                                  height: size.height * 0.25,
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                    Container(
-                                                      color: Colors.transparent,
-                                                      width: size.width * 0.54,
-                                                      height: size.height * 0.04,
-                                                      child: Text(
-                                                        prospectosFiltrados[index].name,
-                                                        style: const TextStyle(
-                                                          fontWeight: FontWeight.bold,                                                                
-                                                          color: Colors.black
+                                                  Container(
+                                                    color: Colors.transparent,
+                                                    width: size.width * 0.55,
+                                                    height: size.height * 0.25,
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      Container(
+                                                        color: Colors.transparent,
+                                                        width: size.width * 0.54,
+                                                        height: size.height * 0.04,
+                                                        child: Text(
+                                                          prospectosFiltrados[index].name,
+                                                          style: const TextStyle(
+                                                            fontWeight: FontWeight.bold,                                                                
+                                                            color: Colors.black
+                                                          ),
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          textAlign: TextAlign.left,
                                                         ),
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow.ellipsis,
-                                                        textAlign: TextAlign.left,
                                                       ),
-                                                    ),
-                                                    Container(
-                                                      color: Colors.transparent,
-                                                      width: size.width * 0.54,
-                                                      height: size.height * 0.04,
-                                                      child: Text(
-                                                        prospectosFiltrados[index].contactName ?? '',
-                                                        style: const TextStyle(
-                                                          fontWeight: FontWeight.bold,                                                                
-                                                          color: Colors.black
+                                                      Container(
+                                                        color: Colors.transparent,
+                                                        width: size.width * 0.54,
+                                                        height: size.height * 0.04,
+                                                        child: Text(
+                                                          prospectosFiltrados[index].contactName ?? '',
+                                                          style: const TextStyle(
+                                                            fontWeight: FontWeight.bold,                                                                
+                                                            color: Colors.black
+                                                          ),
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          textAlign: TextAlign.left,
                                                         ),
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow.ellipsis,
-                                                        textAlign: TextAlign.left,
                                                       ),
-                                                    ),
-                                                    Container(
-                                                  color: Colors.transparent,
-                                                  width: size.width * 0.54,
-                                                  height: size.height * 0.035,
-                                                  child: RichText(
-                                                    overflow: TextOverflow.ellipsis,
-                                                    text: TextSpan(
-                                                      children: [
-                                                        const TextSpan(
-                                                          text: 'Email: ',
-                                                          style: TextStyle(color: Colors.black)
-                                                        ),
-                                                        TextSpan(
-                                                          text: prospectosFiltrados[index].emailFrom,
-                                                          style: const TextStyle(color: Colors.blue)
-                                                        ),
-                                                      ]
-                                                    ),
-                                                  )
-                                              
-                                                ),
-                                                Container(
-                                                  color: Colors.transparent,
-                                                  width: size.width * 0.54,
-                                                  height: size.height * 0.035,
-                                                    child: 
-                                                    RichText(
+                                                      Container(
+                                                    color: Colors.transparent,
+                                                    width: size.width * 0.54,
+                                                    height: size.height * 0.035,
+                                                    child: RichText(
                                                       overflow: TextOverflow.ellipsis,
                                                       text: TextSpan(
                                                         children: [
                                                           const TextSpan(
-                                                            text: 'Teléfono: ',
+                                                            text: 'Email: ',
                                                             style: TextStyle(color: Colors.black)
                                                           ),
                                                           TextSpan(
-                                                            text: prospectosFiltrados[index].phone,
+                                                            text: prospectosFiltrados[index].emailFrom,
                                                             style: const TextStyle(color: Colors.blue)
                                                           ),
                                                         ]
                                                       ),
                                                     )
-                                                ),
-                                                Container(
+                                                
+                                                  ),
+                                                  Container(
                                                     color: Colors.transparent,
                                                     width: size.width * 0.54,
-                                                  height: size.height * 0.035,
-                                                    child: AutoSizeText(
-                                                        prospectosFiltrados[index].stageId.name,
-                                                          style: const TextStyle(
-                                                            fontWeight: FontWeight.bold,
-                                                            fontSize: 10,
-                                                            color: Colors.green
-                                                          ),
-                                                          maxLines: 2,
-                                                          textAlign: TextAlign.left,),
-                                                ),
-                                              
-                                                    ],
+                                                    height: size.height * 0.035,
+                                                      child: 
+                                                      RichText(
+                                                        overflow: TextOverflow.ellipsis,
+                                                        text: TextSpan(
+                                                          children: [
+                                                            const TextSpan(
+                                                              text: 'Teléfono: ',
+                                                              style: TextStyle(color: Colors.black)
+                                                            ),
+                                                            TextSpan(
+                                                              text: prospectosFiltrados[index].phone,
+                                                              style: const TextStyle(color: Colors.blue)
+                                                            ),
+                                                          ]
+                                                        ),
+                                                      )
                                                   ),
-                                                ),
+                                                  Container(
+                                                      color: Colors.transparent,
+                                                      width: size.width * 0.54,
+                                                    height: size.height * 0.035,
+                                                      child: AutoSizeText(
+                                                          prospectosFiltrados[index].stageId.name,
+                                                            style: const TextStyle(
+                                                              fontWeight: FontWeight.bold,
+                                                              fontSize: 10,
+                                                              color: Colors.green
+                                                            ),
+                                                            maxLines: 2,
+                                                            textAlign: TextAlign.left,),
+                                                  ),
                                                 
-                                                
-                                              ],
-                                            )
-                                          ),
-                                          Container(
-                                            width: size.width * 0.11,
-                                            height: size.height * 0.17,
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                              color: Colors.black12, // Color del óvalo
-                                              borderRadius: BorderRadius.circular(50), // Bordes redondeados para el óvalo
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  
+                                                  
+                                                ],
+                                              )
                                             ),
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                Container(
-                                                  color: Colors.transparent,
-                                                  height: size.height * 0.03,
-                                                  alignment: Alignment.topCenter,
-                                                  child: IconButton(
-                                                    icon: const Icon(Icons.location_pin, color: Colors.grey, size: 20,),
-                                                    onPressed: () {
-                                                      /*
-                                                      final gpsBloc = BlocProvider.of<GpsBloc>(context);
-                                                        gpsBloc.askGpsAccess();
-                                                        */
-                                                      context.push(Rutas().rutaMap);
-                                                    },
+                                            Container(
+                                              width: size.width * 0.11,
+                                              height: size.height * 0.17,
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                color: Colors.black12, // Color del óvalo
+                                                borderRadius: BorderRadius.circular(50), // Bordes redondeados para el óvalo
+                                              ),
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                children: [
+                                                  Container(
+                                                    color: Colors.transparent,
+                                                    height: size.height * 0.03,
+                                                    alignment: Alignment.topCenter,
+                                                    child: IconButton(
+                                                      icon: const Icon(Icons.location_pin, color: Colors.grey, size: 20,),
+                                                      onPressed: () {
+                                                        /*
+                                                        final gpsBloc = BlocProvider.of<GpsBloc>(context);
+                                                          gpsBloc.askGpsAccess();
+                                                          */
+                                                        context.push(Rutas().rutaMap);
+                                                      },
+                                                    ),
                                                   ),
-                                                ),
-                                                Container(
-                                                  color: Colors.transparent,
-                                                  height: size.height * 0.03,
-                                                  alignment: Alignment.topCenter,
-                                                  child: IconButton(
-                                                    icon: const Icon(Icons.route, color: Colors.grey, size: 20,),
-                                                    onPressed: () {
-                                                      
-                                                    },
+                                                  Container(
+                                                    color: Colors.transparent,
+                                                    height: size.height * 0.03,
+                                                    alignment: Alignment.topCenter,
+                                                    child: IconButton(
+                                                      icon: const Icon(Icons.route, color: Colors.grey, size: 20,),
+                                                      onPressed: () {
+                                                        
+                                                      },
+                                                    ),
                                                   ),
-                                                ),
-                                                Container(
-                                                  color: Colors.transparent,
-                                                  height: size.height * 0.03,
-                                                  child: IconButton(
-                                                    icon: const Icon(Icons.info, color: Colors.grey, size: 20,),
-                                                    onPressed: () {
-                          
-                                                      objDatumCrmLead = prospectosFiltrados[index];
-                          
-                                                      //ignore: use_build_context_synchronously
-                                                      FocusScope.of(context).unfocus();
-                          
-                                                      terminoBusqueda = '';
-                                                      filtroPrspTxt = TextEditingController();
-                          
-                                                      context.push(Rutas().rutaEditProsp);
-                                                    },
+                                                  Container(
+                                                    color: Colors.transparent,
+                                                    height: size.height * 0.03,
+                                                    child: IconButton(
+                                                      icon: const Icon(Icons.info, color: Colors.grey, size: 20,),
+                                                      onPressed: () {
+                            
+                                                        objDatumCrmLead = prospectosFiltrados[index];
+                            
+                                                        //ignore: use_build_context_synchronously
+                                                        FocusScope.of(context).unfocus();
+                            
+                                                        terminoBusqueda = '';
+                                                        filtroPrspTxt = TextEditingController();
+                            
+                                                        context.push(Rutas().rutaEditProsp);
+                                                      },
+                                                    ),
                                                   ),
-                                                ),
-                                                SizedBox(height: size.height * 0.004,)
-                                              ],
+                                                  SizedBox(height: size.height * 0.004,)
+                                                ],
+                                              ),
                                             ),
+                                            SizedBox(width: size.width * 0.01,)
+                                          ],
                                           ),
-                                          SizedBox(width: size.width * 0.01,)
-                                        ],
                                         ),
                                       ),
-                                    ),
-                                  )
-                                );
-                              },
-                            ),
+                                    )
+                                  );
+                                },
+                              ),
                           
                           ),
+                          floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
                           floatingActionButton: showButtonScrool
                             ? FloatingActionButton(
                                 onPressed: scrollToTop,

@@ -1065,13 +1065,13 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                             suffixIcon: Icon(Icons.calendar_today),
                           ),
                           onTap: () async {
-                            DateTime? fechaEdit =
-                                await showDatePicker(
+                            DateTime? fechaEdit = await showDatePicker(
                               context: context,
                               initialDate: DateTime.now(),
-                              firstDate: DateTime(2020),
-                              lastDate: DateTime(2100),
+                              firstDate: DateTime.now(),//DateTime(2020),
+                              lastDate: DateTime(DateTime.now().year + 1),
                             );
+                            
                             if (fechaEdit != null) {
                               fecEditCierre = DateFormat('yyyy-MM-dd', 'es').format(fechaEdit);
                               fechaCierreEditxt.text = '';

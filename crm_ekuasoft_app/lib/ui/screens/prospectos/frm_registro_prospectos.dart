@@ -393,6 +393,11 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                         onInputValidated: (bool isValid) async {
                                           validandoCell = true;
                                           celularValido = isValid;
+                                          String tituloAlerta = '';
+                                          IconData? iconoAlerta;
+                                          Color? colorIcono;
+                                          String msmBoton = '';
+
                                           if(isValid){
                                             
                                             String resInt = await ValidacionesUtils().validaInternet();
@@ -451,10 +456,20 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
 
                                               var objResp = json.decode(resp);
 
+                                              //print('Núm Cell: ${objResp['result']['create_date']}');
+
                                               if(objResp['result']['create_date'] == null){
                                                 habilitaGuardar = true;
+                                                tituloAlerta = 'Información';
+                                                iconoAlerta = Icons.check;
+                                                colorIcono = Colors.green;
+                                                msmBoton = 'Continuar';
                                               } else {
                                                 habilitaGuardar = false;
+                                                tituloAlerta = 'Atención';
+                                                colorIcono = Colors.red;
+                                                iconoAlerta = Icons.cancel;
+                                                msmBoton = 'Volver';
                                               }
                         
                                               showDialog(
@@ -472,8 +487,12 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                     tipoAlerta: TipoAlerta().alertAccion,
                                                     numLineasTitulo: 2,
                                                     numLineasMensaje: 3,
-                                                    titulo: 'Atención',
-                                                    mensajeAlerta: objResp['result']['mensaje']
+                                                    titulo: tituloAlerta,//'Atención',
+                                                    msmConIcono: true,
+                                                    iconoAlerta: iconoAlerta!,
+                                                    colorIconoAlerta: colorIcono,
+                                                    mensajeAlerta: objResp['result']['mensaje'],
+                                                    mensajeBoton: msmBoton
                                                   );
                                                 },
                                               );
@@ -545,140 +564,140 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                           children: [
                                             
                                             Container(
-                                        color: Colors.transparent,
-                                        width: size.width * 0.92,
-                                        child: TextFormField(
-                                          textCapitalization: TextCapitalization.sentences,
-                                          cursorColor: AppLightColors().primary,                                        
-                                          inputFormatters: [
-                                            EmojiInputFormatter()
-                                          ],
-                                          style: AppTextStyles.bodyRegular(width: size.width),
-                                          decoration: InputDecorationCvs.formsDecoration(
-                                            labelText: '* Nombre de Prospecto',
-                                            hintTetx: 'Ej: Juan Valdez',
-                                            size: size
-                                          ),
-                                          enabled: habilitaGuardar,
-                                          controller: nombresTxt,
-                                          autocorrect: false,
-                                          keyboardType: TextInputType.text,
-                                          minLines: 1,
-                                          maxLines: 2,
-                                          autofocus: false,
-                                          maxLength: 50,
-                                          textAlign: TextAlign.left,
-                                          onEditingComplete: () {
-                                            FocusScope.of(context).unfocus();
-                                            //FocusScope.of(context).requestFocus(numTelfAfilAkiNode);
-                                          },
-                                          onChanged: (value) {
+                                              color: Colors.transparent,
+                                              width: size.width * 0.92,
+                                              child: TextFormField(
+                                                textCapitalization: TextCapitalization.sentences,
+                                                cursorColor: AppLightColors().primary,                                        
+                                                inputFormatters: [
+                                                  EmojiInputFormatter()
+                                                ],
+                                                style: AppTextStyles.bodyRegular(width: size.width),
+                                                decoration: InputDecorationCvs.formsDecoration(
+                                                  labelText: '* Nombre de Prospecto',
+                                                  hintTetx: 'Ej: Juan Valdez',
+                                                  size: size
+                                                ),
+                                                enabled: habilitaGuardar,
+                                                controller: nombresTxt,
+                                                autocorrect: false,
+                                                keyboardType: TextInputType.text,
+                                                minLines: 1,
+                                                maxLines: 2,
+                                                autofocus: false,
+                                                maxLength: 50,
+                                                textAlign: TextAlign.left,
+                                                onEditingComplete: () {
+                                                  FocusScope.of(context).unfocus();
+                                                  //FocusScope.of(context).requestFocus(numTelfAfilAkiNode);
+                                                },
+                                                onChanged: (value) {
+                                                  
+                                                },
+                                                onTapOutside: (event) {
+                                                  FocusScope.of(context).unfocus();
+                                                },
+                                              ),
+                                            ),
                                             
-                                          },
-                                          onTapOutside: (event) {
-                                            FocusScope.of(context).unfocus();
-                                          },
-                                        ),
-                                      ),
-                                      
-                                      SizedBox(
-                                        height: size.height * 0.04,
-                                      ),
-                                      
-                                      Container(
-                                        color: Colors.transparent,
-                                        width: size.width * 0.92,
-                                        child: TextFormField(
-                                          textCapitalization: TextCapitalization.sentences,
-                                          cursorColor: AppLightColors().primary,                                        
-                                          inputFormatters: [
-                                            EmojiInputFormatter()
-                                          ],
-                                          style: AppTextStyles.bodyRegular(width: size.width),
-                                          decoration: InputDecorationCvs.formsDecoration(
-                                            labelText: '* Nombre Oportunidad',
-                                            hintTetx: 'Ej: Juan Valdez',
-                                            size: size
-                                          ),
-                                          enabled: habilitaGuardar,
-                                          controller: nombresOportTxt,
-                                          autocorrect: false,
-                                          keyboardType: TextInputType.text,
-                                          minLines: 1,
-                                          maxLines: 2,
-                                          autofocus: false,
-                                          maxLength: 50,
-                                          textAlign: TextAlign.left,
-                                          onEditingComplete: () {
-                                            FocusScope.of(context).unfocus();
-                                            //FocusScope.of(context).requestFocus(numTelfAfilAkiNode);
-                                          },
-                                          onChanged: (value) {
+                                            SizedBox(
+                                              height: size.height * 0.04,
+                                            ),
                                             
-                                          },
-                                          onTapOutside: (event) {
-                                            FocusScope.of(context).unfocus();
-                                          },
-                                        ),
-                                      ),
-                                      
-                                      SizedBox(
-                                        height: size.height * 0.04,
-                                      ),
+                                            Container(
+                                              color: Colors.transparent,
+                                              width: size.width * 0.92,
+                                              child: TextFormField(
+                                                textCapitalization: TextCapitalization.sentences,
+                                                cursorColor: AppLightColors().primary,                                        
+                                                inputFormatters: [
+                                                  EmojiInputFormatter()
+                                                ],
+                                                style: AppTextStyles.bodyRegular(width: size.width),
+                                                decoration: InputDecorationCvs.formsDecoration(
+                                                  labelText: '* Nombre Oportunidad',
+                                                  hintTetx: 'Ej: Juan Valdez',
+                                                  size: size
+                                                ),
+                                                enabled: habilitaGuardar,
+                                                controller: nombresOportTxt,
+                                                autocorrect: false,
+                                                keyboardType: TextInputType.text,
+                                                minLines: 1,
+                                                maxLines: 2,
+                                                autofocus: false,
+                                                maxLength: 50,
+                                                textAlign: TextAlign.left,
+                                                onEditingComplete: () {
+                                                  FocusScope.of(context).unfocus();
+                                                  //FocusScope.of(context).requestFocus(numTelfAfilAkiNode);
+                                                },
+                                                onChanged: (value) {
+                                                  
+                                                },
+                                                onTapOutside: (event) {
+                                                  FocusScope.of(context).unfocus();
+                                                },
+                                              ),
+                                            ),
+                                            
+                                            SizedBox(
+                                              height: size.height * 0.04,
+                                            ),
 
-                                      if(habilitaGuardar)
-                                      Container(
-                                        color: Colors.transparent,
-                                        width: size.width * 0.92,
-                                        child: DropdownButtonFormField<String>(                                          
-                                          decoration: const InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            labelText: 'Seleccione el país...',
-                                          ),
-                                          value: paisSelect,
-                                          items: lstPaises
-                                            .map(
-                                              (activityPrsp) =>
-                                                DropdownMenuItem(
-                                                  value: activityPrsp,
-                                                  //child: Text(activityPrsp, overflow: TextOverflow.ellipsis, maxLines: 1, style: const TextStyle(fontSize: 12),),
-                                                  child: AutoSizeText(activityPrsp, presetFontSizes: const [12, 10, 8, 6,4], maxLines: 1, minFontSize: 2, maxFontSize: 12,),
-                                                )
-                                              )
-                                            .toList(),
-                                          onChanged: (value) {
-                                            
-                                            setState(() {
-                                              paisSelect = value ?? '';
-                                            });
-                                                                    
-                                          },
-                                        ),
-                                      ),
-                                        
-                                      if(habilitaGuardar)
-                                      SizedBox(
-                                        height: size.height * 0.03,
-                                      ),
+                                            if(habilitaGuardar)
+                                            Container(
+                                              color: Colors.transparent,
+                                              width: size.width * 0.92,
+                                              child: DropdownButtonFormField<String>(                                          
+                                                decoration: const InputDecoration(
+                                                  border: OutlineInputBorder(),
+                                                  labelText: 'Seleccione el país...',
+                                                ),
+                                                value: paisSelect,
+                                                items: lstPaises
+                                                  .map(
+                                                    (activityPrsp) =>
+                                                      DropdownMenuItem(
+                                                        value: activityPrsp,
+                                                        //child: Text(activityPrsp, overflow: TextOverflow.ellipsis, maxLines: 1, style: const TextStyle(fontSize: 12),),
+                                                        child: AutoSizeText(activityPrsp, presetFontSizes: const [12, 10, 8, 6,4], maxLines: 1, minFontSize: 2, maxFontSize: 12,),
+                                                      )
+                                                    )
+                                                  .toList(),
+                                                onChanged: (value) {
+                                                  
+                                                  setState(() {
+                                                    paisSelect = value ?? '';
+                                                  });
+                                                                          
+                                                },
+                                              ),
+                                            ),
+                                              
+                                            if(habilitaGuardar)
+                                            SizedBox(
+                                              height: size.height * 0.03,
+                                            ),
 
-                                      if(!habilitaGuardar)
-                                      Container(
-                                        color: Colors.transparent,
-                                        width: size.width * 0.92,
-                                        child: DropdownButtonFormField<String>(                                          
-                                          decoration: const InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            labelText: 'Seleccione el país...',
-                                          ),
-                                          items: const [],
-                                          onChanged: (value) {},
-                                        ),
-                                      ),
-                                        
-                                      if(!habilitaGuardar)
-                                      SizedBox(
-                                        height: size.height * 0.03,
-                                      ),
+                                            if(!habilitaGuardar)
+                                            Container(
+                                              color: Colors.transparent,
+                                              width: size.width * 0.92,
+                                              child: DropdownButtonFormField<String>(                                          
+                                                decoration: const InputDecoration(
+                                                  border: OutlineInputBorder(),
+                                                  labelText: 'Seleccione el país...',
+                                                ),
+                                                items: const [],
+                                                onChanged: (value) {},
+                                              ),
+                                            ),
+                                              
+                                            if(!habilitaGuardar)
+                                            SizedBox(
+                                              height: size.height * 0.03,
+                                            ),
 
                                       if(habilitaGuardar)    
                                       Container(
@@ -891,7 +910,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 autovalidateMode: AutovalidateMode.onUserInteraction,                                              
                                                 style: AppTextStyles.bodyRegular(width: size.width),
                                                 decoration: InputDecoration(
-                                                  labelText: '* Probabilidad',
+                                                  labelText: 'Probabilidad',
                                                   hintStyle: SafeGoogleFont(
                                                       GoogleFontsApp().fontMulish,
                                                       fontSize: size.width * 0.0025 * 18,
@@ -952,7 +971,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                     color: AppLightColors().gray800SecondaryText,
                                                     letterSpacing: 0
                                                   ),
-                                                  labelText: '* Ingreso esperado en dólares',
+                                                  labelText: 'Ingreso esperado en dólares',
                                                   hintText: "0.00",
                                                   suffixText: '\$',
                                                 ),
@@ -1002,7 +1021,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                               
                                               style: AppTextStyles.bodyRegular(width: size.width),
                                               decoration: InputDecorationCvs.formsDecoration(
-                                                labelText: '* Correo',
+                                                labelText: 'Correo',
                                                 hintTetx: 'Ej: correo@ejemplo.com',
                                                 size: size
                                               ),
@@ -1058,18 +1077,18 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 //initialValue: fecCierre,//DateFormat('dd-MM-yyyy', 'es').format(dateRgPrsp),
                                                 readOnly: true,
                                                 decoration: const InputDecoration(
-                                                  labelText: '* Cierre esperado',
+                                                  labelText: 'Cierre esperado',
                                                   border: OutlineInputBorder(),
                                                   suffixIcon: Icon(Icons.calendar_today),
                                                 ),
                                                 onTap: () async {
-                                                  DateTime? fecCambio =
-                                                      await showDatePicker(
+                                                  DateTime? fecCambio = await showDatePicker(
                                                     context: context,
                                                     initialDate: DateTime.now(),
-                                                    firstDate: DateTime(2020),
-                                                    lastDate: DateTime(2100),
+                                                    firstDate: DateTime.now(),//DateTime(2020),
+                                                    lastDate: DateTime(DateTime.now().year + 1),
                                                   );
+
                                                   if (fecCambio != null) {
                                                     
                                                     //tabAccionesRegPrsp = 2;
@@ -1106,7 +1125,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                               ],
                                               style: AppTextStyles.bodyRegular(width: size.width),
                                               decoration: InputDecorationCvs.formsDecoration(
-                                                labelText: '* Dirección',
+                                                labelText: 'Dirección',
                                                 hintTetx: '',
                                                 size: size
                                               ),
@@ -1239,33 +1258,6 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
 
                                     FocusScope.of(context).requestFocus(FocusNode());
 
-                                    //print('Test form: ${formKeyRegPrp.currentState!.validate()}');
-                                    /*
-                                    if (!formKeyRegPrp.currentState!.validate()) {
-                                      showDialog(
-                                        barrierDismissible: false,
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return ContentAlertDialog(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            onPressedCont: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            tipoAlerta: TipoAlerta().alertAccion,
-                                            numLineasTitulo: 2,
-                                            numLineasMensaje: 2,
-                                            titulo: 'Error',
-                                            mensajeAlerta: 'Error... Ingrese todos los datos del formulario.'
-                                          );
-                                        },
-                                      );
-                    
-                                      return;
-                                    }
-                                    */
-                    
                                     if(!celularValido){
                                       showDialog(
                                         barrierDismissible: false,
@@ -1290,7 +1282,8 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                       return;
                                     }
                     
-                                    if(nombresTxt.text.isEmpty){
+                                    if(nombresTxt.text.isEmpty || nombresOportTxt.text.isEmpty) {
+
                                       showDialog(
                                         barrierDismissible: false,
                                         context: context,
@@ -1306,13 +1299,42 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                             numLineasTitulo: 2,
                                             numLineasMensaje: 2,
                                             titulo: 'Error',
-                                            mensajeAlerta: 'Ingrese los nombres.'
+                                            mensajeAlerta: 'Ingrese los nombres del prospecto.'
                                           );
                                         },
                                       );
                     
                                       return;
                                     }
+
+                                     String pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                                      RegExp regExp = RegExp(pattern);
+                                      
+                                      if(emailTxt.text.isNotEmpty && !regExp.hasMatch(emailTxt.text)){
+                                        showDialog(
+                                          barrierDismissible: false,
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return ContentAlertDialog(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              onPressedCont: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              tipoAlerta: TipoAlerta().alertAccion,
+                                              numLineasTitulo: 2,
+                                              numLineasMensaje: 2,
+                                              titulo: 'Error',
+                                              mensajeAlerta: 'Correo inválido.'
+                                            );
+                                          },
+                                        );
+                      
+                                        return;
+                                      }
+
+                                    /*
 
                                     if(probabilityTxt.text.isEmpty){
                                       showDialog(
@@ -1569,6 +1591,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                     
                                       return;
                                     }
+                                    */
                     
                                     showDialog(
                                       context: context,

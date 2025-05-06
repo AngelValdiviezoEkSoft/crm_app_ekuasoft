@@ -151,7 +151,7 @@ class ActivitiesService extends ChangeNotifier{
         {
           "model": EnvironmentsProd().modMailAct,
           "filters": [
-            //["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(DateTime.now())],
+            ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(DateTime.now())],
             ["res_id","=",id],
             ["res_model_id","=",objIrModel.data[0].id]
           ]

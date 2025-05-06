@@ -11,13 +11,21 @@ class ContentAlertDialog extends StatelessWidget {
       this.numLineasTitulo,
       this.onPressed,
       this.onPressedCont,
-      this.numLineasMensaje});
+      this.numLineasMensaje,
+      this.msmConIcono,
+      this.iconoAlerta,
+      this.colorIconoAlerta,
+      this.mensajeBoton});
 
   final String titulo;
   final String tipoAlerta;
   final String mensajeAlerta;
   final int? numLineasTitulo;
   final int? numLineasMensaje;
+  final bool? msmConIcono;
+  final IconData? iconoAlerta;
+  final Color? colorIconoAlerta;
+  final String? mensajeBoton;
   final VoidCallback? onPressed;
   final VoidCallback? onPressedCont;
 
@@ -63,7 +71,9 @@ class ContentAlertDialog extends StatelessWidget {
         side: BorderSide(color: oColorBordesTpAlert, width: size.width * 0.004),
         borderRadius: BorderRadius.circular(size.width * 0.02)
       ),
-      title: Container(
+      title: 
+      msmConIcono == null || msmConIcono == false ?
+      Container(
         color: Colors.transparent,
         height: tipoAlerta == oTipoAlerta.alertAccion
             ? heightTitle > 1
@@ -121,11 +131,77 @@ class ContentAlertDialog extends StatelessWidget {
               ),
           ],
         ),
+      )
+      :
+      Container(
+        color: Colors.transparent,
+        height: tipoAlerta == oTipoAlerta.alertAccion
+            ? heightTitle > 1
+                ? size.height * 0.04 * heightTitle
+                : size.height * 0.04
+            : size.height * 0.03 * heightTitle,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (tipoAlerta != oTipoAlerta.alertAccion)
+                  Icon(
+                    Icons.info,
+                    color: oColorTpAlert,
+                  ),
+                const SizedBox(
+                  width: 5,
+                ),
+                Icon(iconoAlerta!, color: colorIconoAlerta,),
+                const SizedBox(
+                  width: 5,
+                ),
+                SizedBox(
+                  width: size.width * 0.5,
+                  child: BaseText(
+                    null,
+                    titulo,                    
+                    size: 0.05,
+                    color: oColors.negro,
+                    weight: FontWeight.w700,
+                    align: TextAlign.left,
+                    maxlines: 3,
+                  ),
+                ),
+              ],
+            ),
+            if (tipoAlerta != oTipoAlerta.alertAccion)
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Icon(
+                  Icons.close,
+                  color: oColors.negro,
+                ),
+              ),
+            if (tipoAlerta == oTipoAlerta.alertAccion)
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Icon(
+                  Icons.cancel_outlined,
+                  color: oColors.morado,
+                ),
+              ),
+          ],
+        ),
       ),
       contentPadding: tipoAlerta == oTipoAlerta.alertAccion
           ? const EdgeInsets.symmetric(horizontal: 10, vertical: 0)
           : const EdgeInsets.symmetric(horizontal: 40, vertical: 0),
-      content: Container(
+      content: 
+      msmConIcono == null || msmConIcono == false ?
+      Container(
         color: Colors.transparent,
         width: tipoAlerta == oTipoAlerta.alertAccion
             ? size.width
@@ -141,6 +217,24 @@ class ContentAlertDialog extends StatelessWidget {
           weight: FontWeight.w400,
           align: TextAlign.left,
         ),
+      )
+      :
+      Container(
+        color: Colors.transparent,
+        width: tipoAlerta == oTipoAlerta.alertAccion
+            ? size.width
+            : size.width * 0.9,
+        height: tipoAlerta == oTipoAlerta.alertAccion
+            ? size.height * 0.055 * heightMessage
+            : size.height * 0.06,
+        child: BaseText(
+              null,
+              mensajeAlerta,          
+              size: 0.04,
+              color: oColors.negro,
+              weight: FontWeight.w400,
+              align: TextAlign.left,
+            ),
       ),
       actionsAlignment: MainAxisAlignment.center,
       actionsPadding:
@@ -181,7 +275,7 @@ class ContentAlertDialog extends StatelessWidget {
                       }
                     },
                     child: ButtonCvsWidget(
-                      text: 'Continuar',
+                      text: mensajeBoton != null && mensajeBoton!.isNotEmpty ? mensajeBoton! : 'Continuar',
                       colorBoton: null,
                       textStyle: TextStyle(color: oColors.blanco0Opacidad),
                       onPressed: () {

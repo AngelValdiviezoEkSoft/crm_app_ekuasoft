@@ -184,381 +184,380 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
               }
 
               return Scaffold(
-                          appBar: AppBar(
-                            title: const Text("Agenda"),
-                            leading: IconButton(
-                              icon: const Icon(Icons.arrow_back_ios),
-                              onPressed: () {
-                                context.pop();
-                              },
+                appBar: AppBar(
+                  title: const Text("Agenda"),
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios),
+                    onPressed: () {
+                      context.pop();
+                    },
+                  ),
+                  actions: [
+                    if(!buscaXCalendario)
+                    IconButton(
+                      icon: const Icon(Icons.calendar_month),
+                      onPressed: () async {
+                        //await refreshDataAgenda();
+                        
+                        setState(() {
+                          buscaXCalendario = true;
+                        });
+                      },
+                    ),
+    
+                    if(buscaXCalendario)
+                    IconButton(
+                      icon: const Icon(Icons.list),
+                      onPressed: () async {
+                        setState(() {
+                          buscaXCalendario = false;
+                        });
+                      },
+                    ),
+                  ],
+                  backgroundColor: Colors.white,
+                  elevation: 0,
+                  foregroundColor: Colors.black,
+                ),
+                body: !buscaXCalendario ?
+                Container(
+                  width: size.width * 0.99,
+                  height: size.height,
+                  color: Colors.transparent,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        
+                        SizedBox(height:  size.height * 0.02,),
+    
+                        Container(
+                          color: Colors.transparent,
+                          width: size.width * 0.95,
+                          height: size.height * 0.09,
+                          child: TextFormField(
+                            controller: nombreProbFiltroTxt,
+                            decoration: const InputDecoration(
+                              labelText: 'Nombre de oportunidad',
+                              border: OutlineInputBorder(),
+                              suffixIcon: Icon(Icons.person),
                             ),
-                            actions: [
-                              if(!buscaXCalendario)
-                              IconButton(
-                                icon: const Icon(Icons.calendar_month),
-                                onPressed: () async {
-                                  //await refreshDataAgenda();
-                                  
-                                  setState(() {
-                                    buscaXCalendario = true;
-                                  });
-                                },
-                              ),
+                          ),
+                        ),
+                        
+                        const SizedBox(height: 16),
+                        Container(
+                          color: Colors.transparent,
+                          width: size.width * 0.95,
+                          height: size.height * 0.09,
+                          child: TextFormField(
+                            controller: cellFiltroTxt,
+                            decoration: const InputDecoration(
+                              labelText: 'Número celular',
+                              border: OutlineInputBorder(),
+                              suffixIcon: Icon(Icons.phone_iphone_outlined),
+                            ),
+                            keyboardType: TextInputType.phone,
+                            onChanged: (value) {
+                              setState(() {
+                                campSelectTpAct = '';
+                              });
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+    
+                        Container(
+                          color: Colors.transparent,
+                          width: size.width * 0.95,
+                          height: size.height * 0.09,
+                          child: DropdownButtonFormField<String>(
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Seleccione el tipo de actividad...',
+                            ),
+                            value: campSelectTpAct,
+                            items: lstActividadesActByFlt.map((activityPrsp) =>
+                              DropdownMenuItem(
+                                  value: activityPrsp,
+                                  child: Text(activityPrsp, overflow: TextOverflow.ellipsis, maxLines: 1, style: const TextStyle(fontSize: 12),),                                              
+                                )
+                              )
+                            .toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                campSelectTpAct = newValue ?? '';
+                              });
+                            },
+                          ),
+                        ),
+                        
+    
+                        SizedBox(height: size.height * 0.035),
+    
+                        Container(
+                          color: Colors.transparent,
+                          width: size.width * 0.9,
+                          height: size.height * 0.06,
+                          child: ElevatedButton(
+                            onPressed: () async {
+
+                              if(campSelectTpAct != '-- Seleccione --' && cellFiltroTxt.text.isEmpty && nombreProbFiltroTxt.text.isEmpty){
+                                for(int i = 0; i < tpActividades.length; i++){
+                                  if(campSelectTpAct == tpActividades[i].name){
+                                    activityTypeId = tpActividades[i].id ?? 0;
+                                  }
+                                }
+                              }
+                              else {
+                                if(cellFiltroTxt.text.isNotEmpty || nombreProbFiltroTxt.text.isNotEmpty){
+                                  activityTypeId = 0;
+                                }
+                                if(campSelectTpAct != '-- Seleccione --' || (cellFiltroTxt.text.isNotEmpty && nombreProbFiltroTxt.text.isNotEmpty)){
+                                  for(int i = 0; i < tpActividades.length; i++){
+                                    if(campSelectTpAct == tpActividades[i].name){
+                                      activityTypeId = tpActividades[i].id ?? 0;
+                                    }
+                                  }
+                                }
+                              }
+                              
+                              ActivitiesPageModel objRsp = await ActivitiesService().getActivitiesByFiltros(nombreProbFiltroTxt.text, cellFiltroTxt.text, activityTypeId, objDatumCrmLead?.id ?? 0);
               
-                              if(buscaXCalendario)
-                              IconButton(
-                                icon: const Icon(Icons.list),
-                                onPressed: () async {
-                                  setState(() {
-                                    buscaXCalendario = false;
-                                  });
-                                },
+                              lstActividadesByFiltros = [];
+
+                              if(objRsp.activities.data.isNotEmpty){
+                                lstActividadesByFiltros = objRsp.activities.data;
+                              }
+    /*
+                              nombreProbFiltroTxt = TextEditingController();
+                              cellFiltroTxt = TextEditingController();
+                              probabilidadFiltroTxt = TextEditingController();
+                              */
+
+                              //ignore: use_build_context_synchronously
+                              FocusScope.of(context).unfocus();
+
+    
+                              setState(() {
+                                //rspAct = objRsp;//.activities;
+                                actualizaListaActAgendaByFiltro2FiltroCampos = true;
+                                contLstAgendaByFiltroCalFiltroCampos = lstActividadesByFiltros.length;
+                              }); 
+                            },
+                            style: ElevatedButton.styleFrom(                                  
+                              backgroundColor: const Color.fromRGBO(75, 57, 239, 1.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            child: const Text('Buscar', style: TextStyle(color: Colors.white),),
+                          ),
+                        ),
+    
+                        SizedBox(height: size.height * 0.015),
+    
+                        Container(
+                          width: size.width * 0.9,
+                          height: size.height * 0.42,
+                          color: Colors.transparent,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              /*
+                              Container(
+                                color: Colors.transparent,
+                                width: size.width * 0.95,
+                                height: size.height * 0.09,
+                                alignment: Alignment.center,
+                                child: AutoSizeText('¡HEY!', style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'AristotelicaDisplayDemiBoldTrial',color: objColorsApp.naranjaIntenso,), maxLines: 1,  presetFontSizes: const [58,56,54,52,50,48,46,44,42,40,38,36,34,32,30,28,26,24,22,20,18,16,14,12,10]),
+                              ),
+                              */
+    
+                              if(state.muestraCarga)
+                              Container(
+                                width: size.width,
+                                height: isSelected[1] ? size.height * 0.53 : size.height * 0.33,
+                                color: Colors.transparent,
+                                child: Image.asset(
+                                  "assets/gifs/gif_carga.gif",
+                                  height: size.width * 0.85,
+                                  width: size.width * 0.85,
+                                ),
+                              ),
+                    
+                              //if(contLstAgenda > 0 && !state.muestraCarga)
+                              if(lstActividadesByFiltros.isNotEmpty && !state.muestraCarga)
+                              Container(
+                                color: Colors.transparent,
+                                width: size.width,
+                                height: size.height * 0.42,//isSelected[1] ? size.height * 0.53 : size.height * 0.33,
+                                child: ListView.builder(
+                                  controller: scrollListaClt,
+                                  itemCount: lstActividadesByFiltros.length,
+                                  itemBuilder: ( _, int index ) {
+                    
+                                    return Slidable(
+                                      key: ValueKey(lstActividadesByFiltros[index].id),
+                                      startActionPane: ActionPane(
+                                        motion: const ScrollMotion(),
+                                          children: [
+                                            SlidableAction(
+                                              onPressed: (cont) async {
+                    
+                                                if(lstActividadesByFiltros[index].cerrado){
+                                                  showDialog(
+                                                    barrierDismissible: false,
+                                                    context: context,
+                                                    builder: (BuildContext context) {
+                                                      return ContentAlertDialog(
+                                                        onPressed: () {
+                                                          Navigator.of(context).pop();
+                                                        },
+                                                        onPressedCont: () {
+                                                          Navigator.of(context).pop();
+                                                        },
+                                                        tipoAlerta: TipoAlerta().alertAccion,
+                                                        numLineasTitulo: 2,
+                                                        numLineasMensaje: 2,
+                                                        titulo: 'Error',
+                                                        mensajeAlerta: 'Esta actividad ya fue cerrada.'
+                                                      );
+                                                    },
+                                                  );
+                                
+                                                  return;
+                                                }
+                    
+                                                const storage = FlutterSecureStorage();
+                      
+                                                await storage.write(key: 'idMem', value: lstActividadesByFiltros[index].resId.toString());
+                                                await storage.write(key: 'fecMem', value: DateFormat('yyyy-MM-dd', 'es').format(lstActividadesByFiltros[index].dateDeadline));
+                                                
+                                                entraXActividad = true;
+                                                idActividadSeleccionada = lstActividadesByFiltros[index].id;
+                    
+                                                objActividadEscogida = lstActividadesByFiltros[index];
+                    
+                                                //ignore: use_build_context_synchronously
+                                                context.push(objRutasGen.rutaPlanificacionActividades);
+                                                
+                                              },
+                                              backgroundColor: ColorsApp().fucsia,
+                                              foregroundColor: Colors.white,
+                                              icon: Icons.account_circle,
+                                              label: 'Cierre de Actividades',
+                                            )
+                                          ]
+                                      ),
+                                      child:  Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                                        child: Card(
+                                          elevation: 1,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          color: lstActividadesByFiltros[index].cerrado ? Colors.grey[300] : Colors.white,
+                                          child: ListTile(
+                                            leading: CircleAvatar(
+                                              backgroundColor: lstActividadesByFiltros[index].cerrado ? Colors.black45 : Colors.grey[300],
+                                              child: Stack(
+                                                  children: [
+                                                    const Icon(Icons.person),
+                                                    if(!lstActividadesByFiltros[index].cerrado && DateFormat('yyyy-MM-dd', 'es').format(lstActividadesByFiltros[index].dateDeadline) == DateFormat('yyyy-MM-dd', 'es').format(DateTime.now()))
+                                                    Positioned(
+                                                      top: size.height * 0.01,
+                                                      left: size.width * 0.02,
+                                                      child: Container(
+                                                        color: Colors.transparent,
+                                                        width: size.width * 0.05,
+                                                        height: size.height * 0.02,
+                                                        child: const IndicatorPointWidget(null)
+                                                      ),
+                                                    )
+                                                  ]
+                                                ),
+                                            ),
+                                            title: Text(lstActividadesByFiltros[index].summary ?? ''),
+                                            subtitle: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                    
+                                                RichText(
+                                                  text: TextSpan(
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: 'Tipo de agenda:',
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                      TextSpan(
+                                                        text: lstActividadesByFiltros[index].activityTypeId.name,
+                                                        style: const TextStyle(
+                                                          color: Colors.blueGrey,
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                
+                                                RichText(
+                                                  text: TextSpan(
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: 'Fecha planificada:',
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                      TextSpan(
+                                                        text: DateFormat('yyyy-MM-dd', 'es').format(lstActividadesByFiltros[index].dateDeadline),
+                                                        style: const TextStyle(
+                                                          color: Colors.blueGrey,
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    );
+                                  
+                                  },
+                                ),
+                              ),
+                              
+                              if(lstActividadesByFiltros.isEmpty)
+                              Container(
+                                color: Colors.transparent,
+                                width: size.width * 0.95,
+                                height: size.height * 0.09,
+                                alignment: Alignment.topCenter,
+                                child: const AutoSizeText('No existen actividades agendadas para la fecha seleccionada', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,), maxLines: 2,  presetFontSizes: [42,40,38,36,34,32,30,28,26,24,22,20,18,16,14,12,10]),
                               ),
                             ],
-                            backgroundColor: Colors.white,
-                            elevation: 0,
-                            foregroundColor: Colors.black,
-                          ),
-                          body: !buscaXCalendario ?
-                          Container(
-                            width: size.width * 0.99,
-                            height: size.height,
-                            color: Colors.transparent,
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  
-                                  SizedBox(height:  size.height * 0.02,),
+                          ), 
+                        ),
               
-                                  Container(
-                                    color: Colors.transparent,
-                                    width: size.width * 0.95,
-                                    height: size.height * 0.09,
-                                    child: TextFormField(
-                                      controller: nombreProbFiltroTxt,
-                                      decoration: const InputDecoration(
-                                        labelText: 'Nombre de oportunidad',
-                                        border: OutlineInputBorder(),
-                                        suffixIcon: Icon(Icons.person),
-                                      ),
-                                    ),
-                                  ),
-                                  
-                                  const SizedBox(height: 16),
-                                  Container(
-                                    color: Colors.transparent,
-                                    width: size.width * 0.95,
-                                    height: size.height * 0.09,
-                                    child: TextFormField(
-                                      controller: cellFiltroTxt,
-                                      decoration: const InputDecoration(
-                                        labelText: 'Número celular',
-                                        border: OutlineInputBorder(),
-                                        suffixIcon: Icon(Icons.phone_iphone_outlined),
-                                      ),
-                                      keyboardType: TextInputType.phone,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          campSelectTpAct = '';
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  const SizedBox(height: 16),
-              
-                                  Container(
-                                    color: Colors.transparent,
-                                    width: size.width * 0.95,
-                                    height: size.height * 0.09,
-                                    child: DropdownButtonFormField<String>(
-                                      decoration: const InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        labelText: 'Seleccione el tipo de actividad...',
-                                      ),
-                                      value: campSelectTpAct,
-                                      items: lstActividadesActByFlt.map((activityPrsp) =>
-                                        DropdownMenuItem(
-                                            value: activityPrsp,
-                                            child: Text(activityPrsp, overflow: TextOverflow.ellipsis, maxLines: 1, style: const TextStyle(fontSize: 12),),                                              
-                                          )
-                                        )
-                                      .toList(),
-                                      onChanged: (String? newValue) {
-                                        setState(() {
-                                          campSelectTpAct = newValue ?? '';
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  
-              
-                                  SizedBox(height: size.height * 0.035),
-              
-                                  Container(
-                                    color: Colors.transparent,
-                                    width: size.width * 0.9,
-                                    height: size.height * 0.06,
-                                    child: ElevatedButton(
-                                      onPressed: () async {
-
-                                        if(campSelectTpAct != '-- Seleccione --' && cellFiltroTxt.text.isEmpty && nombreProbFiltroTxt.text.isEmpty){
-                                          for(int i = 0; i < tpActividades.length; i++){
-                                            if(campSelectTpAct == tpActividades[i].name){
-                                              activityTypeId = tpActividades[i].id ?? 0;
-                                            }
-                                          }
-                                        }
-                                        else {
-                                          if(cellFiltroTxt.text.isNotEmpty || nombreProbFiltroTxt.text.isNotEmpty){
-                                            activityTypeId = 0;
-                                          }
-                                          if(campSelectTpAct != '-- Seleccione --' || (cellFiltroTxt.text.isNotEmpty && nombreProbFiltroTxt.text.isNotEmpty)){
-                                            for(int i = 0; i < tpActividades.length; i++){
-                                              if(campSelectTpAct == tpActividades[i].name){
-                                                activityTypeId = tpActividades[i].id ?? 0;
-                                              }
-                                            }
-                                          }
-                                        }
-                                        
-                                        ActivitiesPageModel objRsp = await ActivitiesService().getActivitiesByFiltros(nombreProbFiltroTxt.text, cellFiltroTxt.text, activityTypeId, objDatumCrmLead?.id ?? 0);
-                        
-                                        lstActividadesByFiltros = [];
-
-                                        if(objRsp.activities.data.isNotEmpty){
-                                          lstActividadesByFiltros = objRsp.activities.data;
-                                        }
-              /*
-                                        nombreProbFiltroTxt = TextEditingController();
-                                        cellFiltroTxt = TextEditingController();
-                                        probabilidadFiltroTxt = TextEditingController();
-                                        */
-
-                                        //ignore: use_build_context_synchronously
-                                        FocusScope.of(context).unfocus();
-
-              
-                                        setState(() {
-                                          //rspAct = objRsp;//.activities;
-                                          actualizaListaActAgendaByFiltro2FiltroCampos = true;
-                                          contLstAgendaByFiltroCalFiltroCampos = lstActividadesByFiltros.length;
-                                        }); 
-                                      },
-                                      style: ElevatedButton.styleFrom(                                  
-                                        backgroundColor: const Color.fromRGBO(75, 57, 239, 1.0),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(20),
-                                        ),
-                                      ),
-                                      child: const Text('Buscar', style: TextStyle(color: Colors.white),),
-                                    ),
-                                  ),
-              
-                                  SizedBox(height: size.height * 0.015),
-              
-                                  Container(
-                                    width: size.width * 0.9,
-                                    height: size.height * 0.42,
-                                    color: Colors.transparent,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        /*
-                                        Container(
-                                          color: Colors.transparent,
-                                          width: size.width * 0.95,
-                                          height: size.height * 0.09,
-                                          alignment: Alignment.center,
-                                          child: AutoSizeText('¡HEY!', style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'AristotelicaDisplayDemiBoldTrial',color: objColorsApp.naranjaIntenso,), maxLines: 1,  presetFontSizes: const [58,56,54,52,50,48,46,44,42,40,38,36,34,32,30,28,26,24,22,20,18,16,14,12,10]),
-                                        ),
-                                        */
-              
-                                        if(state.muestraCarga)
-                                        Container(
-                                          width: size.width,
-                                          height: isSelected[1] ? size.height * 0.53 : size.height * 0.33,
-                                          color: Colors.transparent,
-                                          child: Image.asset(
-                                            "assets/gifs/gif_carga.gif",
-                                            height: size.width * 0.85,
-                                            width: size.width * 0.85,
-                                          ),
-                                        ),
-                              
-                                        //if(contLstAgenda > 0 && !state.muestraCarga)
-                                        if(lstActividadesByFiltros.isNotEmpty && !state.muestraCarga)
-                                        Container(
-                                          color: Colors.transparent,
-                                          width: size.width,
-                                          height: size.height * 0.42,//isSelected[1] ? size.height * 0.53 : size.height * 0.33,
-                                          child: ListView.builder(
-                                            controller: scrollListaClt,
-                                            itemCount: lstActividadesByFiltros.length,
-                                            itemBuilder: ( _, int index ) {
-                              
-                                              return Slidable(
-                                                key: ValueKey(lstActividadesByFiltros[index].id),
-                                                startActionPane: ActionPane(
-                                                  motion: const ScrollMotion(),
-                                                    children: [
-                                                      SlidableAction(
-                                                        onPressed: (cont) async {
-                              
-                                                          if(lstActividadesByFiltros[index].cerrado){
-                                                            showDialog(
-                                                              barrierDismissible: false,
-                                                              context: context,
-                                                              builder: (BuildContext context) {
-                                                                return ContentAlertDialog(
-                                                                  onPressed: () {
-                                                                    Navigator.of(context).pop();
-                                                                  },
-                                                                  onPressedCont: () {
-                                                                    Navigator.of(context).pop();
-                                                                  },
-                                                                  tipoAlerta: TipoAlerta().alertAccion,
-                                                                  numLineasTitulo: 2,
-                                                                  numLineasMensaje: 2,
-                                                                  titulo: 'Error',
-                                                                  mensajeAlerta: 'Esta actividad ya fue cerrada.'
-                                                                );
-                                                              },
-                                                            );
-                                          
-                                                            return;
-                                                          }
-                              
-                                                          const storage = FlutterSecureStorage();
-                                
-                                                          await storage.write(key: 'idMem', value: lstActividadesByFiltros[index].resId.toString());
-                                                          await storage.write(key: 'fecMem', value: DateFormat('yyyy-MM-dd', 'es').format(lstActividadesByFiltros[index].dateDeadline));
-                                                          
-                                                          entraXActividad = true;
-                                                          idActividadSeleccionada = lstActividadesByFiltros[index].id;
-                              
-                                                          objActividadEscogida = lstActividadesByFiltros[index];
-                              
-                                                          //ignore: use_build_context_synchronously
-                                                          context.push(objRutasGen.rutaPlanificacionActividades);
-                                                          
-                                                        },
-                                                        backgroundColor: ColorsApp().fucsia,
-                                                        foregroundColor: Colors.white,
-                                                        icon: Icons.account_circle,
-                                                        label: 'Cierre de Actividades',
-                                                      )
-                                                    ]
-                                                ),
-                                                child:  Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-                                                  child: Card(
-                                                    elevation: 1,
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(10),
-                                                    ),
-                                                    color: lstActividadesByFiltros[index].cerrado ? Colors.grey[300] : Colors.white,
-                                                    child: ListTile(
-                                                      leading: CircleAvatar(
-                                                        backgroundColor: lstActividadesByFiltros[index].cerrado ? Colors.black45 : Colors.grey[300],
-                                                        child: Stack(
-                                                            children: [
-                                                              const Icon(Icons.person),
-                                                              if(!lstActividadesByFiltros[index].cerrado && DateFormat('yyyy-MM-dd', 'es').format(lstActividadesByFiltros[index].dateDeadline) == DateFormat('yyyy-MM-dd', 'es').format(DateTime.now()))
-                                                              Positioned(
-                                                                top: size.height * 0.01,
-                                                                left: size.width * 0.02,
-                                                                child: Container(
-                                                                  color: Colors.transparent,
-                                                                  width: size.width * 0.05,
-                                                                  height: size.height * 0.02,
-                                                                  child: const IndicatorPointWidget(null)
-                                                                ),
-                                                              )
-                                                            ]
-                                                          ),
-                                                      ),
-                                                      title: Text(lstActividadesByFiltros[index].summary ?? ''),
-                                                      subtitle: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                              
-                                                          RichText(
-                                                            text: TextSpan(
-                                                              children: [
-                                                                const TextSpan(
-                                                                  text: 'Tipo de agenda:',
-                                                                  style: TextStyle(
-                                                                    color: Colors.black,
-                                                                    fontSize: 12,
-                                                                  ),
-                                                                ),
-                                                                TextSpan(
-                                                                  text: lstActividadesByFiltros[index].activityTypeId.name,
-                                                                  style: const TextStyle(
-                                                                    color: Colors.blueGrey,
-                                                                    fontSize: 12,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          
-                                                          RichText(
-                                                            text: TextSpan(
-                                                              children: [
-                                                                const TextSpan(
-                                                                  text: 'Fecha planificada:',
-                                                                  style: TextStyle(
-                                                                    color: Colors.black,
-                                                                    fontSize: 12,
-                                                                  ),
-                                                                ),
-                                                                TextSpan(
-                                                                  text: DateFormat('yyyy-MM-dd', 'es').format(lstActividadesByFiltros[index].dateDeadline),
-                                                                  style: const TextStyle(
-                                                                    color: Colors.blueGrey,
-                                                                    fontSize: 12,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                )
-                                              );
-                                            
-                                            },
-                                          ),
-                                        ),
-                        
-              
-                                        if(lstActividadesByFiltros.isEmpty)
-                                        Container(
-                                          color: Colors.transparent,
-                                          width: size.width * 0.95,
-                                          height: size.height * 0.09,
-                                          alignment: Alignment.topCenter,
-                                          child: const AutoSizeText('No existen actividades agendadas para la fecha seleccionada', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,), maxLines: 2,  presetFontSizes: [42,40,38,36,34,32,30,28,26,24,22,20,18,16,14,12,10]),
-                                        ),
-                                      ],
-                                    ), 
-                                  ),
-                        
-                                  SizedBox(
-                                    height: size.height * 0.02,
-                                  )
-                                ],
-                              ),
-                            ),
-                          )
-                          :
-                          const CalendarioActividadesByFiltroView(null),
-                        );
+                        SizedBox(
+                          height: size.height * 0.02,
+                        )
+                      ],
+                    ),
+                  ),
+                )
+                :
+                const CalendarioActividadesByFiltroView(null),
+              );
             
             }
 
