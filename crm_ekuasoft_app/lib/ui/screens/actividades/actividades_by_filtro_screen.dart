@@ -487,7 +487,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                                   text: TextSpan(
                                                     children: [
                                                       const TextSpan(
-                                                        text: 'Tipo de agenda:',
+                                                        text: 'Tipo de actividad:',
                                                         style: TextStyle(
                                                           color: Colors.black,
                                                           fontSize: 12,

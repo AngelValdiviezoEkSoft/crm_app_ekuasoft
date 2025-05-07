@@ -21,11 +21,12 @@ class GenericBloc extends Bloc<GenericEvent, GenericState> {
   String idFormaPago = '';
   double heightModalPlanAct = 0.65;
   bool muestraCarga = false;
+  bool inicioCarga = true;
 
   GenericBloc() : super(const GenericState(
     positionMenu: 0, positionFormaPago: 0, coordenadasMapa: 0.0, 
     radioMarcacion: 0.0,formaPago: '',localidadId: '', idFormaPago: '', 
-    heightModalPlanAct: 0.65, muestraCarga: false)) {
+    heightModalPlanAct: 0.65, muestraCarga: false, inicioCarga: true)) {
     on<OnNewCambioHeightModalPlanActEvent>(_onReInitHeight);
     on<OnNewPositionEvent>(_onReInitPosition);
     on<OnNewCoordenadasPositionEvent>(_onReInitPositionMapa);
@@ -35,6 +36,7 @@ class GenericBloc extends Bloc<GenericEvent, GenericState> {
     on<OnNewIdFormaPagoEvent>(_onCambioIdFormaPago);//_onCambioLocalidad  _onInitPositionFormaPago
     on<OnNewPositionFormaPagoEvent>(_onInitPositionFormaPago);//_onCambioLocalidad      
     on<OnNewMuestraCargaEvent>(_onInitMuestraCarga);//_onCambioLocalidad      
+    on<OnNewInicioCargaEvent>(_onInitInicioCarga);//_onCambioLocalidad       
   }
 
   Future<void> init() async {
@@ -66,6 +68,10 @@ class GenericBloc extends Bloc<GenericEvent, GenericState> {
 
   void _onInitMuestraCarga( OnNewMuestraCargaEvent event, Emitter<GenericState> emit ) {
     emit( state.copyWith( muestraCarga: muestraCarga ) );
+  }
+
+  void _onInitInicioCarga( OnNewInicioCargaEvent event, Emitter<GenericState> emit ) {
+    emit( state.copyWith( inicioCarga: inicioCarga ) );
   }
 
   void _onReInitHeight( OnNewCambioHeightModalPlanActEvent event, Emitter<GenericState> emit ) {
@@ -148,6 +154,11 @@ class GenericBloc extends Bloc<GenericEvent, GenericState> {
   void setMuestraCarga(bool varMuestraCarga) {//
     muestraCarga = varMuestraCarga;
     add(OnNewMuestraCargaEvent(varMuestraCarga));
+  }
+
+  void setIniciaCarga(bool varMuestraCarga) {//
+    inicioCarga = varMuestraCarga;
+    add(OnNewInicioCargaEvent(inicioCarga));
   }
 
   @override

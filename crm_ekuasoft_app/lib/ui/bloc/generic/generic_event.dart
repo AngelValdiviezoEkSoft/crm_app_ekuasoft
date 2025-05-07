@@ -57,3 +57,8 @@ class OnNewMuestraCargaEvent extends GenericEvent {
   final bool muestraCarga;
   const OnNewMuestraCargaEvent(this.muestraCarga);
 }
+
+class OnNewInicioCargaEvent extends GenericEvent {
+  final bool inicioCarga;
+  const OnNewInicioCargaEvent(this.inicioCarga);
+}

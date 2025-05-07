@@ -1036,6 +1036,7 @@ class MailActivityDatumAppModel {
     int? resId;
     String? resModel;
     String? summary;
+    String? leadName;
 
     CombosAppModel activityTypeId;
     CombosAppModel userId;
@@ -1047,7 +1048,8 @@ class MailActivityDatumAppModel {
         required this.resModel,
         required this.activityTypeId,
         required this.userId,
-        required this.summary
+        required this.summary,
+        required this.leadName
     });
 
     factory MailActivityDatumAppModel.fromRawJson(String str) => MailActivityDatumAppModel.fromJson(json.decode(str));
@@ -1060,6 +1062,7 @@ class MailActivityDatumAppModel {
         dateDadline: json["date_deadline"] ?? '',
         resId: json["res_id"] ?? 0,
         resModel: json['res_model'] ?? '',
+        leadName: json['lead_name'] ?? '',
         activityTypeId: json["activity_type_id"] != null ? 
         CombosAppModel.fromJson(json["activity_type_id"])
         : CombosAppModel(id: 0, name: ''),
@@ -1075,7 +1078,8 @@ class MailActivityDatumAppModel {
         "res_model": resModel,
         "activity_type_id": activityTypeId.toJson(),//List<dynamic>.from(activityTypeId.map((x) => x.toJson())),
         "user_id": userId.toJson(),
-        "summary":summary
+        "summary":summary,
+        "lead_name": leadName
     };
 }
 

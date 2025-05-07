@@ -643,7 +643,7 @@ class ActivitiesService extends ChangeNotifier{
     
 
       if(lstEncr.isNotEmpty && internet.isNotEmpty){
-        ActivitiesResponseModel  objMem = ActivitiesResponseModel .fromRawJson(lstEncr);
+        ActivitiesResponseModel  objMem = ActivitiesResponseModel.fromRawJson(lstEncr);
 
         for(int i = 0; i < objMem.data.length; i++){
           String fec = DateFormat('yyyy-MM-dd').format(objMem.data[i].dateDeadline);
@@ -676,7 +676,8 @@ class ActivitiesService extends ChangeNotifier{
                   userId: IdActivities(
                     id: 0,
                     name: '',
-                  )
+                  ),
+                  leadName: objRsp.result.data.mailMessage.data[i].recordName
                 )
               );
           }
@@ -1525,11 +1526,9 @@ class ActivitiesService extends ChangeNotifier{
             "tocken_valid_date": tockenValidDate,
             "id": objActividad.actId,
             "write": {
-              //"date_deadline": DateFormat('yyyy-MM-dd', 'es').format(objActividad.dateDeadline!),
               "res_model_id": objIrModel.data[0].id,
               "user_id": objActividad.userId,
               "res_id": objActividad.resId,
-              //"summary": objActividad.summary,
               "note": objActividad.note,
               "working_time": objActividad.workingTime,
             },
@@ -1590,7 +1589,7 @@ class ActivitiesService extends ChangeNotifier{
               summary: objActividad.summary,
               userId: IdActivities (id: objMem.data.length, name: 'Test ${objMem.data.length}'),
               cerrado: true,
-              //contactName: ''
+              leadName: ''
             )
           );
 
@@ -1609,7 +1608,7 @@ class ActivitiesService extends ChangeNotifier{
                 summary: objActividad.summary,
                 userId: IdActivities (id: 1, name: 'Test 1'),
                 cerrado: true,
-                //contactName: ''
+                leadName: ''
               )
             ],
             length: 0,
@@ -1626,6 +1625,218 @@ class ActivitiesService extends ChangeNotifier{
       }
     } else {
       await storageProspecto.write(key: 'RegistraActividad', value: jsonEncode(objActividad.toJson()));
+
+      return ProspectoRegistroResponseModel(
+        id: 0,
+        jsonrpc: '',
+        result: ProspectoRegistroModel(
+          estado: 0, 
+          mensaje: '', 
+          data: []
+        ),
+        mensaje: objMensajesAlertasAct.mensajeOffLine
+      );
+    }
+
+  }
+
+  cierreActividadesXIdLista(List<ActivitiesTypeRequestModel> lstActividades) async {
+    String internet = await ValidacionesUtils().validaInternet();
+    
+    //VALIDACIÓN DE INTERNET
+    if(internet.isEmpty){
+      
+      var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
+      IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+
+      List<Map<String, dynamic>> lstActividadesMap = [];
+      
+      try{
+
+        var codImei = await storageProspecto.read(key: 'codImei') ?? '';
+
+        var objReg = await storageProspecto.read(key: 'RespuestaRegistro') ?? '';
+        var obj = RegisterDeviceResponseModel.fromJson(objReg);
+
+        var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
+        var objLogDecode = json.decode(objLog);
+
+        //print('Test DatosLogin: $objLog');
+
+        List<MultiModel> lstMultiModel = [];
+
+        lstMultiModel.add(
+          MultiModel(model: "mail.activity")
+        );
+
+        ConsultaMultiModelRequestModel objReq = ConsultaMultiModelRequestModel(
+          jsonrpc: jsonRpc,
+          params: ParamsMultiModels(
+            bearer: obj.result.bearer,
+            company: objLogDecode['result']['current_company'],
+            imei: codImei,
+            key: obj.result.key,
+            tocken: obj.result.tocken,
+            tockenValidDate: obj.result.tockenValidDate,
+            uid: objLogDecode['result']['uid'],
+            models: lstMultiModel
+          )
+        );
+
+        String tockenValidDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(objReq.params.tockenValidDate);
+
+        for(int i = 0; i < lstActividades.length; i++){
+        
+          lstActividadesMap.add(
+            {
+              "key": objReq.params.key,
+              "tocken": objReq.params.tocken,
+              "imei": objReq.params.imei,
+              "uid": objReq.params.uid,
+              "company": objReq.params.company,
+              "bearer": objReq.params.bearer,
+              "tocken_valid_date": tockenValidDate,
+              "id": lstActividades[0].actId,
+              "write": {
+                {
+                  "res_model_id": objIrModel.data[0].id,
+                  "user_id": lstActividades[i].userId,
+                  "res_id": lstActividades[i].resId,
+                  "note": lstActividades[i].note,
+                  "working_time": lstActividades[i].workingTime,
+                }
+              }
+            }
+          );
+
+        }
+
+        final requestBody = {
+          "jsonrpc": jsonRpc,
+          "params": lstActividadesMap
+        };
+/*
+        final requestBody = {
+          "jsonrpc": jsonRpc,
+          "params": {
+            "key": objReq.params.key,
+            "tocken": objReq.params.tocken,
+            "imei": objReq.params.imei,
+            "uid": objReq.params.uid,
+            "company": objReq.params.company,
+            "bearer": objReq.params.bearer,
+            "tocken_valid_date": tockenValidDate,
+            "id": objActividad.actId,
+            "write": {
+              "res_model_id": objIrModel.data[0].id,
+              "user_id": objActividad.userId,
+              "res_id": objActividad.resId,
+              "note": objActividad.note,
+              "working_time": objActividad.workingTime,
+            },
+          }
+        };
+        */
+
+        final headers = {
+          "Content-Type": EnvironmentsProd().contentType
+        };
+
+        String ruta = '';
+        final objStr = await storageProspecto.read(key: 'RespuestaRegistro') ?? '';
+        
+        if(objStr.isNotEmpty)
+        {
+          var obj = RegisterDeviceResponseModel.fromJson(objStr);
+          ruta = '${obj.result.url}/api/v1/${objReq.params.imei}/done/write/mail.activity/model';
+        }
+
+        final response = await http.post(
+          Uri.parse(ruta),
+          headers: headers,
+          body: jsonEncode(requestBody), 
+        );
+
+        String rspMsm = '';
+        int cod = 0;
+
+        CierreActividadesResponseModel objCierre = CierreActividadesResponseModel.fromRawJson(response.body);
+
+        if(objCierre.result.mensaje.toLowerCase().contains('record does not exist or has been deleted')){
+          rspMsm = 'Actividad cerrada exitosamente';
+          cod = 200;
+        }
+
+        ActividadRegistroResponseModel objRsp = ActividadRegistroResponseModel(
+          id: 0,
+          jsonrpc: '',
+          result: ResultActividad(
+            data: [],
+            estado: cod,
+            mensaje: rspMsm
+          )
+        );
+
+        final lstEncr = await storageCamp.read(key: 'LstActividadesAbiertasCerradas') ?? '';
+
+        if(lstEncr.isNotEmpty){
+          ActivitiesResponseModel  objMem = ActivitiesResponseModel.fromRawJson(lstEncr);
+
+          for(int i = 0; i < lstActividades.length; i++){
+            objMem.data.add(
+              DatumActivitiesResponse(
+                activityTypeId: IdActivities (id: objMem.data.length, name: 'Test ${objMem.data.length}'),
+                dateDeadline: DateTime.now(),
+                id: lstActividades[i].actId,
+                resId: lstActividades[i].resId,
+                resModel: 'Test ${objMem.data.length}',
+                summary: lstActividades[i].summary,
+                userId: IdActivities (id: objMem.data.length, name: 'Test ${objMem.data.length}'),
+                cerrado: true,
+                leadName: ''
+              )
+            );
+          }
+
+          
+
+          await storageCamp.write(key: 'LstActividadesAbiertasCerradas', value: jsonEncode(objMem.toJson()));
+        }
+        else {
+
+          for(int i = 0; i < lstActividades.length; i++){
+            ActivitiesResponseModel  objMem = ActivitiesResponseModel(            
+              data: [
+                DatumActivitiesResponse(
+                  activityTypeId: IdActivities (id: 1, name: 'Test 1'),
+                  dateDeadline: DateTime.now(),
+                  id: lstActividades[i].actId,
+                  resId: lstActividades[i].resId,
+                  resModel: 'Test 1',
+                  summary: lstActividades[i].summary,
+                  userId: IdActivities (id: 1, name: 'Test 1'),
+                  cerrado: true,
+                  leadName: ''
+                )
+              ],
+              length: 0,
+              fields: FieldsActivities(code: '', name: '',stateIds: '')
+            );
+
+            await storageCamp.write(key: 'LstActividadesAbiertasCerradas', value: jsonEncode(objMem.toJson()));
+          }
+        }
+
+        return objRsp;
+      } 
+      catch(_){
+        //print('Error al grabar: $ex');
+      }
+    } else {
+
+      String jsonLista = jsonEncode(lstActividades.map((e) => e.toJson()).toList());
+
+      await storageProspecto.write(key: 'RegistraActividad', value: jsonLista);
 
       return ProspectoRegistroResponseModel(
         id: 0,
