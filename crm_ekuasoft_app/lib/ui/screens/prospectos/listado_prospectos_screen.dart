@@ -243,7 +243,10 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
               terminoBusqueda = '';
               filtroPrspTxt = TextEditingController();
-              context.pop();
+              //context.pop();
+
+              //ignore:use_build_context_synchronously
+              context.push(objRutasGen.rutaHome);
             },
           ),
           title: const Text('Prospectos'),
@@ -493,7 +496,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                           foregroundColor: Colors.white,
                                           icon: Icons.call_outlined,
                                           label: 'Actividades',
-                                        ),                                    
+                                        ),
                                       ]
                                     ),
                                     child: ListTile(
@@ -755,7 +758,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
         onPressed: () {
           terminoBusqueda = '';
           filtroPrspTxt = TextEditingController();
-          context.push(objRutasGen.rutaRegistroPrsp);          
+          context.push(objRutasGen.rutaRegistroPrsp);
         },
         backgroundColor: const Color.fromRGBO(75, 57, 239, 1.0),
         child: const Icon(Icons.person_add_alt, color: Colors.white,),
@@ -774,7 +777,10 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
               
               terminoBusqueda = '';
               filtroPrspTxt = TextEditingController();
-              context.pop();
+              //context.pop();
+
+              //ignore:use_build_context_synchronously
+              context.push(objRutasGen.rutaHome);
             },
           ),
           title: const Text('Prospectos'),

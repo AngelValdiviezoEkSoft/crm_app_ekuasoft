@@ -1649,7 +1649,7 @@ class ActivitiesService extends ChangeNotifier{
       var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
       IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
 
-      List<Map<String, dynamic>> lstActividadesMap = [];
+      //List<Map<String, dynamic>> lstActividadesMap = [];
       
       try{
 
@@ -1685,6 +1685,36 @@ class ActivitiesService extends ChangeNotifier{
 
         String tockenValidDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(objReq.params.tockenValidDate);
 
+        List<Map<String, dynamic>> writeList = [];
+
+        for (int i = 0; i < lstActividades.length; i++) {
+          writeList.add({
+            "id": lstActividades[i].actId,
+            "write": {
+              "res_model_id": objIrModel.data[0].id,
+              "user_id": lstActividades[i].userId,
+              "res_id": lstActividades[i].resId,
+              "note": lstActividades[i].note,
+              "working_time": lstActividades[i].workingTime,
+            }
+          });
+        }
+
+        final requestBody = {
+          "jsonrpc": jsonRpc,
+          "params": {
+            "key": objReq.params.key,
+            "tocken": objReq.params.tocken,
+            "imei": objReq.params.imei,
+            "uid": objReq.params.uid,
+            "company": objReq.params.company,
+            "bearer": objReq.params.bearer,
+            "tocken_valid_date": tockenValidDate,
+            "write_list": writeList,
+          }
+        };
+
+/*
         for(int i = 0; i < lstActividades.length; i++){
         
           lstActividadesMap.add(
@@ -1696,15 +1726,13 @@ class ActivitiesService extends ChangeNotifier{
               "company": objReq.params.company,
               "bearer": objReq.params.bearer,
               "tocken_valid_date": tockenValidDate,
-              "id": lstActividades[0].actId,
-              "write": {
-                {
-                  "res_model_id": objIrModel.data[0].id,
-                  "user_id": lstActividades[i].userId,
-                  "res_id": lstActividades[i].resId,
-                  "note": lstActividades[i].note,
-                  "working_time": lstActividades[i].workingTime,
-                }
+              "id": lstActividades[i].actId,
+              "write": {                
+                "res_model_id": objIrModel.data[0].id,
+                "user_id": lstActividades[i].userId,
+                "res_id": lstActividades[i].resId,
+                "note": lstActividades[i].note,
+                "working_time": lstActividades[i].workingTime                
               }
             }
           );
@@ -1715,6 +1743,8 @@ class ActivitiesService extends ChangeNotifier{
           "jsonrpc": jsonRpc,
           "params": lstActividadesMap
         };
+        */
+
 /*
         final requestBody = {
           "jsonrpc": jsonRpc,
@@ -1759,6 +1789,8 @@ class ActivitiesService extends ChangeNotifier{
 
         String rspMsm = '';
         int cod = 0;
+
+        print('Test error: ${response.body}');
 
         CierreActividadesResponseModel objCierre = CierreActividadesResponseModel.fromRawJson(response.body);
 
@@ -1829,8 +1861,8 @@ class ActivitiesService extends ChangeNotifier{
 
         return objRsp;
       } 
-      catch(_){
-        //print('Error al grabar: $ex');
+      catch(ex){
+        print('Error al grabar: $ex');
       }
     } else {
 

@@ -11,11 +11,15 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 //late Timer _timer;
 
 class AuthService extends ChangeNotifier {
+
+  static final jsonRpc = EnvironmentsProd().jsonrpc;
+
   final env = CadenaConexion();
   final storage = const FlutterSecureStorage();
   List<OpcionesMenuModel> lstOp = [];
@@ -183,7 +187,6 @@ class AuthService extends ChangeNotifier {
     //return ValidationTokenResponseModel.fromJson(reponseRs);
     return reponseRs;
   }
-  
   //#endregion
 
   login(AuthRequest authRequest) async {
@@ -339,7 +342,7 @@ class AuthService extends ChangeNotifier {
       lstMultiModel.add(
         MultiModel(model: 'ir.model')
       );
-
+/*
       final models = [
         {
           "model": EnvironmentsProd().modIrModel,
@@ -348,6 +351,7 @@ class AuthService extends ChangeNotifier {
           ]
         },
       ];
+      */
 
 
       ConsultaMultiModelRequestModel objReq = ConsultaMultiModelRequestModel(
@@ -407,6 +411,128 @@ class AuthService extends ChangeNotifier {
       ),
     ];
     return lstOp;
+  }
+
+  cambioDeClave(String anteriorClave, String nuevaClave) async {
+    String internet = await ValidacionesUtils().validaInternet();
+    
+    //VALIDACIÓN DE INTERNET
+    if(internet.isEmpty){
+      
+      var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
+      IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+
+      try{
+
+        var codImei = await storageProspecto.read(key: 'codImei') ?? '';
+
+        var objReg = await storageProspecto.read(key: 'RespuestaRegistro') ?? '';
+        var obj = RegisterDeviceResponseModel.fromJson(objReg);
+
+        var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
+        var objLogDecode = json.decode(objLog);
+
+        //print('Test DatosLogin: $objLog');
+
+        List<MultiModel> lstMultiModel = [];
+
+        lstMultiModel.add(
+          MultiModel(model: "mail.activity")
+        );
+
+        ConsultaMultiModelRequestModel objReq = ConsultaMultiModelRequestModel(
+          jsonrpc: jsonRpc,
+          params: ParamsMultiModels(
+            bearer: obj.result.bearer,
+            company: objLogDecode['result']['current_company'],
+            imei: codImei,
+            key: obj.result.key,
+            tocken: obj.result.tocken,
+            tockenValidDate: obj.result.tockenValidDate,
+            uid: objLogDecode['result']['uid'],
+            models: lstMultiModel
+          )
+        );
+
+        String tockenValidDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(objReq.params.tockenValidDate);
+
+        final requestBody = {
+          "jsonrpc": jsonRpc,
+          "params": {
+            "key": objReq.params.key,
+            "tocken": objReq.params.tocken,
+            "imei": objReq.params.imei,
+            "uid": objReq.params.uid,
+            "company": objReq.params.company,
+            "bearer": objReq.params.bearer,
+            "tocken_valid_date": tockenValidDate,
+            
+            "write": {
+              "res_model_id": objIrModel.data[0].id,
+              
+            },
+          }
+        };
+
+        final headers = {
+          "Content-Type": EnvironmentsProd().contentType
+        };
+
+        String ruta = '';
+        final objStr = await storageProspecto.read(key: 'RespuestaRegistro') ?? '';
+        
+        if(objStr.isNotEmpty)
+        {
+          var obj = RegisterDeviceResponseModel.fromJson(objStr);
+          ruta = '${obj.result.url}/api/v1/${objReq.params.imei}/done/write/mail.activity/model';
+        }
+
+        final response = await http.post(
+          Uri.parse(ruta),
+          headers: headers,
+          body: jsonEncode(requestBody), 
+        );
+
+        String rspMsm = '';
+        int cod = 0;
+
+        CierreActividadesResponseModel objCierre = CierreActividadesResponseModel.fromRawJson(response.body);
+
+        if(objCierre.result.mensaje.toLowerCase().contains('record does not exist or has been deleted')){
+          rspMsm = objMensajesAlertasAct.mensajeExitoCambioClave;
+          cod = 200;
+        }
+
+        ActividadRegistroResponseModel objRsp = ActividadRegistroResponseModel(
+          id: 0,
+          jsonrpc: '',
+          result: ResultActividad(
+            data: [],
+            estado: cod,
+            mensaje: rspMsm
+          )
+        );
+
+        return objRsp;
+      } 
+      catch(_){
+        //print('Error al grabar: $ex');
+      }
+    } else {
+      //await storageProspecto.write(key: 'RegistraActividad', value: jsonEncode(objActividad.toJson()));
+
+      return ProspectoRegistroResponseModel(
+        id: 0,
+        jsonrpc: '',
+        result: ProspectoRegistroModel(
+          estado: 0, 
+          mensaje: '', 
+          data: []
+        ),
+        mensaje: objMensajesAlertasAct.mensajeOffLineGenerico
+      );
+    }
+
   }
 
   Future logOut() async {

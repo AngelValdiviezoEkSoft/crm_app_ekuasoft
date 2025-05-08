@@ -395,10 +395,8 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                 },
                                 child: AvatarGlow(
                                   animate: true,
-                                  repeat: true,
-                                  //glow
-                                  //showTwoGlows: false,
-                                  glowColor: Colors.orangeAccent,
+                                  repeat: true,                                  
+                                  //glowColor: Colors.orangeAccent,
                                   glowRadiusFactor: size.width * 0.16,
                                   //endRadius: size.width * 0.16,
                                   child: !validandoFoto ? 
@@ -1424,6 +1422,8 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                       
                                                 return;
                                               }
+
+                                              await AuthService().cambioDeClave(passwordAntTxt.text, passwordTxt.text);
                                             }
 
                                             Navigator.of(context).pop();
