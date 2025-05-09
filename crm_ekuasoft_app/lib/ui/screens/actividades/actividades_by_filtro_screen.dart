@@ -257,11 +257,13 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                               suffixIcon: Icon(Icons.phone_iphone_outlined),
                             ),
                             keyboardType: TextInputType.phone,
+                            /*
                             onChanged: (value) {
                               setState(() {
                                 campSelectTpAct = '';
                               });
                             },
+                            */
                           ),
                         ),
                         const SizedBox(height: 16),

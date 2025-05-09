@@ -85,7 +85,7 @@ class PlanActState extends State<PlanificacionActividades> {
 
     String nombreEscogido = '-- Sin nombre --';
 
-    if(objDatumCrmLead != null && objDatumCrmLead!.contactName != null){
+    if(objActividadEscogida == null && objDatumCrmLead != null && objDatumCrmLead!.contactName != null){
       nombreEscogido = objDatumCrmLead!.contactName!;
     }
     else{
@@ -877,7 +877,7 @@ class PlanActStateTwo extends State<PlanAct> {
                             color: Colors.transparent,
                             child: const Text('Agendado para hoy', style: TextStyle(color: Colors.green, fontSize: 25, fontWeight: FontWeight.bold),),
                           ),
-                      
+                      /*
                           if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga)
                           Container(
                             color: Colors.transparent,
@@ -982,7 +982,7 @@ class PlanActStateTwo extends State<PlanAct> {
                               },
                             ),
                           ),
-                      
+                      */
                           Container(
                             width: size.width * 0.99,
                             color: Colors.transparent,
@@ -1076,6 +1076,54 @@ class PlanActStateTwo extends State<PlanAct> {
                       
                                 GestureDetector(
                                   onTap: () {
+
+                                    if(_segundos == 0){
+                                      showDialog(
+                                        //ignore:use_build_context_synchronously
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Container(
+                                              color: Colors.transparent,
+                                              height: size.height * 0.17,
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  
+                                                  Container(
+                                                    color: Colors.transparent,
+                                                    height: size.height * 0.09,
+                                                    child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
+                                                  ),
+                      
+                                                  Container(
+                                                    color: Colors.transparent,
+                                                    width: size.width * 0.95,
+                                                    height: size.height * 0.08,
+                                                    alignment: Alignment.center,
+                                                    child: const AutoSizeText(
+                                                      'Debe marcar la llegada de la actividad.',
+                                                      maxLines: 2,
+                                                      minFontSize: 2,
+                                                    ),
+                                                  )
+                                                ],
+                                              )
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                      return;
+                                    }
+
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
@@ -1160,30 +1208,7 @@ class PlanActStateTwo extends State<PlanAct> {
                                                 }
                       
                                                 Navigator.of(context).pop();
-                                                  
-                                                detenerCronometro();
-                      
-                                                double tiempo = double.parse(_segundos.toString());
-                                                
-                                                ActivitiesTypeRequestModel objReqst = ActivitiesTypeRequestModel(
-                                                  active: true,
-                                                  createDate: DateTime.now(),//DateTime.parse(fechaActividadContTxtAct.text),
-                                                  createUid: 0,
-                                                  displayName: objDatumCrmLead?.contactName ?? '',
-                                                  previousActivityTypeId: 0,
-                                                  note: descripcionActTxtAct.text,
-                                                  activityTypeId: idACt,
-                                                  dateDeadline: DateTime.now(),
-                                                  userId: objDatumCrmLead?.userId!.id ?? 0,
-                                                  userCreateId: objDatumCrmLead?.userId!.id ?? 0,
-                                                  resId: objDatumCrmLead?.id ?? 0,
-                                                  actId: activitySelected,
-                                                  workingTime: tiempo,
-                                                  summary: '',
-                                                  leadName: objDatumCrmLead?.name ?? '',
-                                                  leadPhone: objDatumCrmLead?.phone ?? ''
-                                                );
-                      
+
                                                 showDialog(
                                                   context: context,
                                                   barrierDismissible: false,
@@ -1198,68 +1223,174 @@ class PlanActStateTwo extends State<PlanAct> {
                                                     ]
                                                   ),
                                                 );
-                                
-                                                ActividadRegistroResponseModel objResp = await ActivitiesService().cierreActividadesXId(objReqst);
+                                                  
+                                                detenerCronometro();
                       
-                                                String respuestaReg = objResp.result.mensaje;
-                                                int estado = objResp.result.estado;
-                                                String gifRespuesta = '';
-                      
-                                                if(estado == 200){
-                                                  gifRespuesta = 'assets/gifs/exito.gif';
-                                                } else {
-                                                  gifRespuesta = 'assets/gifs/gifErrorBlanco.gif';
-                                                }
-                      
-                                                //ignore:use_build_context_synchronously
-                                                Navigator.of(contextPrincipalGen!).pop();
-                                
-                                                showDialog(
-                                                  //ignore:use_build_context_synchronously
-                                                  context: contextPrincipalGen!,
-                                                  builder: (BuildContext context) {
-                                                    return AlertDialog(
-                                                      title: Container(
-                                                        color: Colors.transparent,
-                                                        height: size.height * 0.17,
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            
-                                                            Container(
-                                                              color: Colors.transparent,
-                                                              height: size.height * 0.09,
-                                                              child: Image.asset(gifRespuesta),
-                                                            ),
-                                
-                                                            Container(
-                                                              color: Colors.transparent,
-                                                              width: size.width * 0.95,
-                                                              height: size.height * 0.08,
-                                                              alignment: Alignment.center,
-                                                              child: AutoSizeText(
-                                                                respuestaReg,
-                                                                maxLines: 2,
-                                                                minFontSize: 2,
-                                                              ),
-                                                            )
-                                                          ],
-                                                        )
-                                                      ),
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            Navigator.of(contextPrincipalGen!).pop();
-                                                            Navigator.of(contextPrincipalGen!).pop();
-                                                            Navigator.of(contextPrincipalGen!).pop();
-                                                          },
-                                                          child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
-                                                        ),
-                                                      ],
-                                                    );
-                                                  },
+                                                double tiempo = double.parse(_segundos.toString());
+
+                                                /*
+                                                
+                                                ActivitiesTypeRequestModel objReqst = ActivitiesTypeRequestModel(
+                                                  active: true,
+                                                  createDate: DateTime.now(),//DateTime.parse(fechaActividadContTxtAct.text),
+                                                  createUid: 0,
+                                                  displayName: objDatumCrmLead?.contactName ?? '',
+                                                  previousActivityTypeId: 0,
+                                                  note: notasActTxt.text,
+                                                  activityTypeId: idACt,
+                                                  dateDeadline: DateTime.now(),
+                                                  userId: objDatumCrmLead?.userId!.id ?? 0,
+                                                  userCreateId: objDatumCrmLead?.userId!.id ?? 0,
+                                                  resId: objDatumCrmLead?.id ?? 0,
+                                                  actId: activitySelected,
+                                                  workingTime: tiempo,
+                                                  summary: '',
+                                                  leadName: objDatumCrmLead?.name ?? '',
+                                                  leadPhone: objDatumCrmLead?.phone ?? ''
                                                 );
+                                                */
+
+                                                //objActividadEscogida.le;
+
+                                                List<ActivitiesTypeRequestModel> lstRqst = [];
+ 
+                                                lstRqst.add(
+                                                  ActivitiesTypeRequestModel(
+                                                    active: true,
+                                                    createDate: DateTime.now(),//DateTime.parse(fechaActividadContTxtAct.text),
+                                                    createUid: 0,
+                                                    displayName: '',
+                                                    previousActivityTypeId: 0,
+                                                    note: notasActTxt.text,
+                                                    activityTypeId: idACt,
+                                                    dateDeadline: DateTime.now(),
+                                                    userId: objActividadEscogida?.userId.id ?? 0,//objDatumCrmLead?.userId!.id ?? 0,
+                                                    userCreateId: 0,
+                                                    resId: objActividadEscogida?.resId ?? 0,
+                                                    actId: objActividadEscogida?.id ?? 0,//activitySelected,
+                                                    workingTime: tiempo,
+                                                    summary: '',
+                                                    leadName: objActividadEscogida?.leadName ?? '',
+                                                    leadPhone: objDatumCrmLead?.phone ?? ''
+                                                  )
+                                                );
+                              
+                                                ActividadRegistroResponseModel? objResp = await ActivitiesService().cierreActividadesXIdLista(lstRqst);
+                      
+                                                if(objResp != null){
+                                                  //ActividadRegistroResponseModel objResp = await ActivitiesService().cierreActividadesXId(objReqst);
+                      
+                                                  String respuestaReg = objResp.result.mensaje;
+                                                  int estado = objResp.result.estado;
+                                                  String gifRespuesta = '';
+                        
+                                                  if(estado == 200){
+                                                    gifRespuesta = 'assets/gifs/exito.gif';
+                                                  } else {
+                                                    gifRespuesta = 'assets/gifs/gifErrorBlanco.gif';
+                                                  }
+                        
+                                                  //ignore:use_build_context_synchronously
+                                                  Navigator.of(contextPrincipalGen!).pop();
+                                  
+                                                  showDialog(
+                                                    //ignore:use_build_context_synchronously
+                                                    context: contextPrincipalGen!,
+                                                    builder: (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title: Container(
+                                                          color: Colors.transparent,
+                                                          height: size.height * 0.17,
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              
+                                                              Container(
+                                                                color: Colors.transparent,
+                                                                height: size.height * 0.09,
+                                                                child: Image.asset(gifRespuesta),
+                                                              ),
+                                  
+                                                              Container(
+                                                                color: Colors.transparent,
+                                                                width: size.width * 0.95,
+                                                                height: size.height * 0.08,
+                                                                alignment: Alignment.center,
+                                                                child: AutoSizeText(
+                                                                  respuestaReg,
+                                                                  maxLines: 2,
+                                                                  minFontSize: 2,
+                                                                ),
+                                                              )
+                                                            ],
+                                                          )
+                                                        ),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              Navigator.of(contextPrincipalGen!).pop();
+                                                              Navigator.of(contextPrincipalGen!).pop();
+                                                              Navigator.of(contextPrincipalGen!).pop();
+                                                            },
+                                                            child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                
+                                                }
+                                                else{
+                                                  //ignore:use_build_context_synchronously
+                                                  Navigator.of(contextPrincipalGen!).pop();
+                                  
+                                                  showDialog(
+                                                    //ignore:use_build_context_synchronously
+                                                    context: contextPrincipalGen!,
+                                                    builder: (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title: Container(
+                                                          color: Colors.transparent,
+                                                          height: size.height * 0.17,
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              
+                                                              Container(
+                                                                color: Colors.transparent,
+                                                                height: size.height * 0.09,
+                                                                child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
+                                                              ),
+                                  
+                                                              Container(
+                                                                color: Colors.transparent,
+                                                                width: size.width * 0.95,
+                                                                height: size.height * 0.08,
+                                                                alignment: Alignment.center,
+                                                                child: const AutoSizeText(
+                                                                  'Error de conversión',
+                                                                  maxLines: 2,
+                                                                  minFontSize: 2,
+                                                                ),
+                                                              )
+                                                            ],
+                                                          )
+                                                        ),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              Navigator.of(contextPrincipalGen!).pop();
+                                                              Navigator.of(contextPrincipalGen!).pop();
+                                                              Navigator.of(contextPrincipalGen!).pop();
+                                                            },
+                                                            child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
                                               
+                                                }
                                               },
                                               child: Text(
                                                 'Sí',
@@ -1884,6 +2015,53 @@ class BtnSlidableActionState extends State<BtnSlidableAction> {
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    if(_segundos == 0){
+                                                  showDialog(
+                                                  //ignore:use_build_context_synchronously
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: Container(
+                                                        color: Colors.transparent,
+                                                        height: size.height * 0.17,
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          children: [
+                                                            
+                                                            Container(
+                                                              color: Colors.transparent,
+                                                              height: size.height * 0.09,
+                                                              child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
+                                                            ),
+                                
+                                                            Container(
+                                                              color: Colors.transparent,
+                                                              width: size.width * 0.95,
+                                                              height: size.height * 0.08,
+                                                              alignment: Alignment.center,
+                                                              child: const AutoSizeText(
+                                                                'Debe marcar la llegada de la actividad.',
+                                                                maxLines: 2,
+                                                                minFontSize: 2,
+                                                              ),
+                                                            )
+                                                          ],
+                                                        )
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(context).pop();
+                                                          },
+                                                          child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                                  return;
+                                                }
+                                                
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {

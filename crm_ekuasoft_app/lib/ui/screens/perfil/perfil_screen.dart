@@ -15,7 +15,7 @@ class PerfilScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    objActividadEscogida = null;
     final size = MediaQuery.of(context).size;
     ScrollController scrollListaClt = ScrollController();
 

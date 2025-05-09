@@ -41,6 +41,8 @@ class HomeScreenState extends State<HomeScreen> {
   void initState(){
     super.initState();
 
+    objActividadEscogida = null;
+
     contextPrincipalGen = context;
 
     Connectivity().onConnectivityChanged.listen((_) async {

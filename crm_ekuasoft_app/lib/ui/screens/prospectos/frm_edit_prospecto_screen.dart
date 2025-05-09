@@ -84,6 +84,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
     comienzaEditarCampania = false;
     comienzaEditarOrigen = false;
     comienzaEditarMedio = false;
+    objActividadEscogida = null;
 
     nombresEditTxt = TextEditingController();
     nombresOportEditTxt = TextEditingController();

@@ -50,6 +50,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
   @override
   void initState() {
     super.initState();
+    objActividadEscogida = null;
     actualizaListaPrp = false;
     contLst = 0;
     terminoBusqueda = '';
