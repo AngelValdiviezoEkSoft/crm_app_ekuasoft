@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:crm_ekuasoft_app/domain/domain.dart';
+import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -1222,7 +1223,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
 
                                   String gifRespuesta = 'assets/gifs/exito.gif';
                     
-                                  if(nombresEditTxt.text.isEmpty){
+                                  if(nombresEditTxt.text.isEmpty || nombresOportEditTxt.text.isEmpty){
                                     showDialog(
                                       barrierDismissible: false,
                                       context: context,
@@ -1245,6 +1246,37 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                   
                                     return;
                                   }
+
+                                  if(emailEditTxt.text.isNotEmpty){
+                                      String pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                                      RegExp regExp = RegExp(pattern);
+                                      
+                                      if(!regExp.hasMatch(emailEditTxt.text)){
+                                        showDialog(
+                                          barrierDismissible: false,
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return ContentAlertDialog(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              onPressedCont: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              tipoAlerta: TipoAlerta().alertAccion,
+                                              numLineasTitulo: 2,
+                                              numLineasMensaje: 2,
+                                              titulo: 'Error',
+                                              mensajeAlerta: 'Correo inválido.'
+                                            );
+                                          },
+                                        );
+                      
+                                        return;
+                                      }
+                                    }
+
+                                  /*
 
                                   if(probabilityEditTxt.text.isEmpty){
                                     showDialog(
@@ -1451,6 +1483,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                   
                                     return;
                                   }
+                                  */
 
                                   /*
                                   showDialog(
@@ -1595,53 +1628,185 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
 
                                   context.pop();
                                   context.pop();
-                                  //context.pop();
-
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: Container(
-                                          color: Colors.transparent,
-                                          height: size.height * 0.17,
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              
-                                              Container(
-                                                color: Colors.transparent,
-                                                height: size.height * 0.09,
-                                                //child: Image.asset(gifRespuesta),
-                                                child: Image.asset(gifRespuesta),
-                                              ),
-
-                                              Container(
-                                                color: Colors.transparent,
-                                                width: size.width * 0.95,
-                                                height: size.height * 0.08,
-                                                alignment: Alignment.center,
-                                                child: const AutoSizeText(
-                                                  //respuestaReg,
-                                                  'Prospecto editado con éxito',
-                                                  maxLines: 2,
-                                                  minFontSize: 2,
-                                                ),
-                                              )
-                                            ],
-                                          )
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
+                                  /*
+                                  
+                                  DatumCrmLead objProsp = DatumCrmLead(
+                                      expectedRevenue: double.parse(ingresoEsperadoEditTxt.text),
+                                      dayClose: 0,//double.parse(.day.toString()),
+                                      id: 0,
+                                      name: nombresEditTxt.text,
+                                      emailCc: emailEditTxt.text,
+                                      priority: '',
+                                      type: '',
+                                      city: '',
+                                      contactName: nombresTxt.text,
+                                      description: observacionesTxt.text,
+                                      emailFrom: emailTxt.text,
+                                      street: direccionTxt.text,
+                                      phone: telefonoPrsp,
+                                      partnerName: nombresTxt.text,
+                                      mobile: telefonoPrsp,
+                                      dateOpen: DateTime.now(),
+                                      dateDeadline: DateTime.parse(fecCierreFin),//DateTime.now(),
+                                      probability: double.parse(probabilityEditTxt.text),
+                                      activityIds: [
+                                        StructCombos(id: idActivi, name: actSelect)
+                                      ],
+                                      campaignId: CampaignId(
+                                        id: idCamp,
+                                        name: campSelect
+                                      ),
+                                      countryId: StructCombos (
+                                        id: idPais,
+                                        name: paisTxt.text
+                                      ),
+                                      lostReasonId: CampaignId(
+                                        id: 2,
+                                        name: ''
+                                      ),
+                                      mediumId: StructCombos (
+                                        id: idMedia,
+                                        name: ''
+                                      ),
+                                      partnerId: StructCombos (
+                                        id: 2,
+                                        name: ''
+                                      ),
+                                      sourceId: StructCombos (
+                                        id: idOrigen,
+                                        name: originSelect
+                                      ),
+                                      stageId: StructCombos (
+                                        id: 2,
+                                        name: ''
+                                      ),
+                                      stateId: StructCombos (
+                                        id: 2,
+                                        name: ''
+                                      ),
+                                      title: CampaignId(
+                                        id: 2,
+                                        name: ''
+                                      ),
+                                      tagIds: [],
+                                      referred: recomendadoPorTxt.text,
+                                      dateClose: DateTime.now(),//DateTime.parse(fecCierreFin)
+                                    );
+                    
+                                    ProspectoRegistroResponseModel objRsp = await ProspectoTypeService().registraProspecto(objProsp);
+                                    
+                                    String respuestaReg = objRsp.result.mensaje;
+                                    int estado = objRsp.result.estado;
+                                    //String gifRespuesta = 'assets/gifs/exito.gif';
+                    
+                                    //ignore: use_build_context_synchronously
+                                    context.pop();
+                    
+                                    if(objRsp.mensaje.isNotEmpty){
                                 
+                                      showDialog(
+                                        //ignore: use_build_context_synchronously
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Container(
+                                              color: Colors.transparent,
+                                              height: size.height * 0.17,
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  
+                                                  Container(
+                                                    color: Colors.transparent,
+                                                    height: size.height * 0.09,
+                                                    child: Image.asset(gifRespuesta),
+                                                  ),
+                    
+                                                  Container(
+                                                    color: Colors.transparent,
+                                                    width: size.width * 0.95,
+                                                    height: size.height * 0.08,
+                                                    alignment: Alignment.center,
+                                                    child: AutoSizeText(
+                                                      objRsp.mensaje,
+                                                      maxLines: 2,
+                                                      minFontSize: 2,
+                                                    ),
+                                                  )
+                                                ],
+                                              )
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    
+                                      return;
+                                    }
+                    
+                                    if(estado == 200){
+                                      gifRespuesta = 'assets/gifs/exito.gif';
+                                    } else {
+                                      gifRespuesta = 'assets/gifs/gifErrorBlanco.gif';
+                                    }
+                    
+                                    //ignore:use_build_context_synchronously
+                                    context.pop();
+                                    //ignore:use_build_context_synchronously
+                                    context.pop();
+                    
+                                    showDialog(
+                                      //ignore:use_build_context_synchronously
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Container(
+                                            color: Colors.transparent,
+                                            height: size.height * 0.17,
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                
+                                                Container(
+                                                  color: Colors.transparent,
+                                                  height: size.height * 0.09,
+                                                  child: Image.asset(gifRespuesta),
+                                                ),
+                    
+                                                Container(
+                                                  color: Colors.transparent,
+                                                  width: size.width * 0.95,
+                                                  height: size.height * 0.08,
+                                                  alignment: Alignment.center,
+                                                  child: AutoSizeText(
+                                                    respuestaReg,
+                                                    maxLines: 2,
+                                                    minFontSize: 2,
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  */
+
                                 },
                                 child: ButtonCvsWidget(
                                   text: 'Actualizar',

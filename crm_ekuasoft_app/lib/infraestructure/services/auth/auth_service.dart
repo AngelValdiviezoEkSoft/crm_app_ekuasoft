@@ -413,14 +413,11 @@ class AuthService extends ChangeNotifier {
     return lstOp;
   }
 
-  cambioDeClave(String anteriorClave, String nuevaClave) async {
+  cambioDeClave(String anteriorClave, String nuevaClave, int idUser) async {
     String internet = await ValidacionesUtils().validaInternet();
     
     //VALIDACIÓN DE INTERNET
-    if(internet.isEmpty){
-      
-      var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
-      IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+    if(internet.isEmpty){      
 
       try{
 
@@ -466,11 +463,9 @@ class AuthService extends ChangeNotifier {
             "company": objReq.params.company,
             "bearer": objReq.params.bearer,
             "tocken_valid_date": tockenValidDate,
-            
-            "write": {
-              "res_model_id": objIrModel.data[0].id,
-              
-            },
+            "id": idUser,
+            "old_password": anteriorClave,
+            "new_password": nuevaClave
           }
         };
 
@@ -484,7 +479,7 @@ class AuthService extends ChangeNotifier {
         if(objStr.isNotEmpty)
         {
           var obj = RegisterDeviceResponseModel.fromJson(objStr);
-          ruta = '${obj.result.url}/api/v1/${objReq.params.imei}/done/write/mail.activity/model';
+          ruta = '${obj.result.url}/api/v1/${objReq.params.imei}/done/change_password';          
         }
 
         final response = await http.post(
@@ -493,27 +488,9 @@ class AuthService extends ChangeNotifier {
           body: jsonEncode(requestBody), 
         );
 
-        String rspMsm = '';
-        int cod = 0;
+        CambioClaveResponseModel objCierre = CambioClaveResponseModel.fromJson(response.body);
 
-        CierreActividadesResponseModel objCierre = CierreActividadesResponseModel.fromRawJson(response.body);
-
-        if(objCierre.result.mensaje.toLowerCase().contains('record does not exist or has been deleted')){
-          rspMsm = objMensajesAlertasAct.mensajeExitoCambioClave;
-          cod = 200;
-        }
-
-        ActividadRegistroResponseModel objRsp = ActividadRegistroResponseModel(
-          id: 0,
-          jsonrpc: '',
-          result: ResultActividad(
-            data: [],
-            estado: cod,
-            mensaje: rspMsm
-          )
-        );
-
-        return objRsp;
+        return objCierre;
       } 
       catch(_){
         //print('Error al grabar: $ex');

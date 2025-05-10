@@ -1644,7 +1644,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                       }
                                     }
 
-                                    DatumCrmLead objProsp = DatumCrmLead(                                    
+                                    DatumCrmLead objProsp = DatumCrmLead(
                                       expectedRevenue: double.parse(ingresoEsperadoTxt.text),
                                       dayClose: double.parse(dateRgPrsp.day.toString()),
                                       id: 0,

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:crm_ekuasoft_app/domain/domain.dart';
 import 'package:crm_ekuasoft_app/infraestructure/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -61,7 +62,8 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
     passwordAntTxt = TextEditingController();
     passwordTxt = TextEditingController();
     passwordConfTxt = TextEditingController();
-
+    verValidaciones = false;
+    tabAccEdit = 0;
   }
 
   
@@ -394,9 +396,10 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                   }
                                 },
                                 child: AvatarGlow(
-                                  animate: true,
-                                  repeat: true,                                  
-                                  //glowColor: Colors.orangeAccent,
+                                  animate: false,
+                                  repeat: false,                                  
+                                  //glowColor: Colors.transparent,
+
                                   glowRadiusFactor: size.width * 0.16,
                                   //endRadius: size.width * 0.16,
                                   child: !validandoFoto ? 
@@ -1373,6 +1376,21 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                           color: Colors.transparent,
                                           child: GestureDetector(
                                           onTap: () async {
+
+                                            showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (context) => SimpleDialog(
+                                                alignment: Alignment.center,
+                                                children: [
+                                                  SimpleDialogCargando(
+                                                    null,
+                                                    mensajeMostrar: 'Estamos actualizando ',
+                                                    mensajeMostrarDialogCargando: 'sus datos.',
+                                                  ),
+                                                ]
+                                              ),
+                                            );
                                     
                                             if(tabAccEdit == 1){
                                               if(passwordAntTxt.text.isEmpty){
@@ -1423,7 +1441,32 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                                 return;
                                               }
 
-                                              await AuthService().cambioDeClave(passwordAntTxt.text, passwordTxt.text);
+                                              CambioClaveResponseModel? objCambClave = await AuthService().cambioDeClave(passwordAntTxt.text, passwordTxt.text, int.parse(uid));
+
+                                              if(objCambClave != null){
+                                                showDialog(
+                                                  //ignore:use_build_context_synchronously
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: Text(objCambClave.mensaje),
+                                                      
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(context).pop();
+                                                          },
+                                                          child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              
+                                                return;
+                                              }
+
+                                              
                                             }
 
                                             Navigator.of(context).pop();
