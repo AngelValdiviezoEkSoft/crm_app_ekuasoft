@@ -2094,26 +2094,28 @@ class ActivitiesService extends ChangeNotifier{
           headers: headers,
           body: jsonEncode(requestBody), 
         );
-
+/*
         String rspMsm = '';
         int cod = 0;
+        */
 
-        print('Test error: ${response.body}');
+        //print('Test error: ${response.body}');
 
         CierreActividadesResponseModel objCierre = CierreActividadesResponseModel.fromRawJson(response.body);
-
+/*
         if(objCierre.result.mensaje.toLowerCase().contains('record does not exist or has been deleted')){
           rspMsm = 'Actividad cerrada exitosamente';
           cod = 200;
         }
+        */
 
         ActividadRegistroResponseModel objRsp = ActividadRegistroResponseModel(
           id: 0,
           jsonrpc: '',
           result: ResultActividad(
             data: [],
-            estado: cod,
-            mensaje: rspMsm
+            estado: objCierre.result.estado,//cod,
+            mensaje: objCierre.result.mensaje //rspMsm
           )
         );
 
@@ -2169,8 +2171,8 @@ class ActivitiesService extends ChangeNotifier{
 
         return objRsp;
       } 
-      catch(ex){
-        print('Error al grabar: $ex');
+      catch(_){
+        //print('Error al grabar: $ex');
       }
     } else {
 

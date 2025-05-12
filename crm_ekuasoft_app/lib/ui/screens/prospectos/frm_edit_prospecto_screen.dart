@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:crm_ekuasoft_app/domain/domain.dart';
-import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -1221,7 +1219,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                 child: GestureDetector(
                                 onTap: () async {
 
-                                  String gifRespuesta = 'assets/gifs/exito.gif';
+                                  //String gifRespuesta = 'assets/gifs/exito.gif';
                     
                                   if(nombresEditTxt.text.isEmpty || nombresOportEditTxt.text.isEmpty){
                                     showDialog(

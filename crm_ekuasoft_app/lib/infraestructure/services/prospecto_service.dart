@@ -285,6 +285,7 @@ class ProspectoTypeService extends ChangeNotifier{
               "source_id": objProspecto.sourceId.id,
               "medium_id": objProspecto.mediumId.id,
               "country_id": objProspecto.countryId.id
+              //"user_id": objReq.params.uid
             },
           }
         };

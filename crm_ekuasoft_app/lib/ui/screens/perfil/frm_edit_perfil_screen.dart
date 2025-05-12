@@ -1441,7 +1441,10 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                                 return;
                                               }
 
-                                              CambioClaveResponseModel? objCambClave = await AuthService().cambioDeClave(passwordAntTxt.text, passwordTxt.text, int.parse(uid));
+                                              CambioClaveResponseModel? objCambClave = await AuthService().cambioDeClave(passwordAntTxt.text, passwordTxt.text, int.parse(uid), nombresCompletos);
+
+                                              //ignore:use_build_context_synchronously
+                                              Navigator.of(context).pop();
 
                                               if(objCambClave != null){
                                                 showDialog(
@@ -1449,11 +1452,11 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                                   context: context,
                                                   builder: (BuildContext context) {
                                                     return AlertDialog(
-                                                      title: Text(objCambClave.mensaje),
-                                                      
+                                                      title: Text(objCambClave.result.mensaje),                                                      
                                                       actions: [
                                                         TextButton(
                                                           onPressed: () {
+                                                            Navigator.of(context).pop();
                                                             Navigator.of(context).pop();
                                                           },
                                                           child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
@@ -1469,9 +1472,10 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                               
                                             }
 
-                                            Navigator.of(context).pop();
+                                            
                                             
                                             showDialog(
+                                              //ignore:use_build_context_synchronously
                                               context: context,
                                               builder: (BuildContext context) {
                                                 return AlertDialog(

@@ -244,10 +244,10 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
               terminoBusqueda = '';
               filtroPrspTxt = TextEditingController();
-              //context.pop();
+              context.pop();
 
               //ignore:use_build_context_synchronously
-              context.push(objRutasGen.rutaHome);
+              //context.push(objRutasGen.rutaHome);
             },
           ),
           title: const Text('Prospectos'),

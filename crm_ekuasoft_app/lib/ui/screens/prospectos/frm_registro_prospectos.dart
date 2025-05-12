@@ -1645,7 +1645,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                     }
 
                                     DatumCrmLead objProsp = DatumCrmLead(
-                                      expectedRevenue: double.parse(ingresoEsperadoTxt.text),
+                                      expectedRevenue: ingresoEsperadoTxt.text.isNotEmpty ? double.parse(ingresoEsperadoTxt.text) : 0,
                                       dayClose: double.parse(dateRgPrsp.day.toString()),
                                       id: 0,
                                       name: nombresOportTxt.text,
@@ -1662,7 +1662,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                       mobile: telefonoPrsp,
                                       dateOpen: DateTime.now(),
                                       dateDeadline: DateTime.parse(fecCierreFin),//DateTime.now(),
-                                      probability: double.parse(probabilityTxt.text),
+                                      probability: probabilityTxt.text.isNotEmpty ? double.parse(probabilityTxt.text) : 0,
                                       activityIds: [
                                         StructCombos(id: idActivi, name: actSelect)
                                       ],

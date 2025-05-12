@@ -413,7 +413,7 @@ class AuthService extends ChangeNotifier {
     return lstOp;
   }
 
-  cambioDeClave(String anteriorClave, String nuevaClave, int idUser) async {
+  cambioDeClave(String anteriorClave, String nuevaClave, int idUser, String userName) async {
     String internet = await ValidacionesUtils().validaInternet();
     
     //VALIDACIÓN DE INTERNET
@@ -464,6 +464,7 @@ class AuthService extends ChangeNotifier {
             "bearer": objReq.params.bearer,
             "tocken_valid_date": tockenValidDate,
             "id": idUser,
+            "login": userName,
             "old_password": anteriorClave,
             "new_password": nuevaClave
           }
@@ -488,7 +489,7 @@ class AuthService extends ChangeNotifier {
           body: jsonEncode(requestBody), 
         );
 
-        CambioClaveResponseModel objCierre = CambioClaveResponseModel.fromJson(response.body);
+        CambioClaveResponseModel objCierre = CambioClaveResponseModel.fromRawJson(response.body);
 
         return objCierre;
       } 

@@ -126,10 +126,10 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    //context.pop();
+                                    context.pop();
                                     //Navigator.pop(context);
                                     //ignore:use_build_context_synchronously
-                                    context.push(objRutasGen.rutaListaProspectos);
+                                    //context.push(objRutasGen.rutaListaProspectos);
                                   },
                                   child: Text(
                                     'NO',
@@ -154,9 +154,9 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                         return;
                       }
                       else {
-                        //context.pop();
+                        context.pop();
                         //ignore:use_build_context_synchronously
-                        context.push(objRutasGen.rutaListaProspectos);
+                        //context.push(objRutasGen.rutaListaProspectos);
                       }
               
                     },
@@ -571,7 +571,10 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                     
                                                       //POR AQUÍ AEVG
                                                       //ignore:use_build_context_synchronously
-                                                      //context.pop();
+                                                      context.pop();
+
+                                                      //ignore:use_build_context_synchronously
+                                                      context.pop();
 
                                                       //ignore:use_build_context_synchronously
                                                       context.push(objRutasGen.rutaPlanActivConActiv);
@@ -2170,7 +2173,7 @@ class PlanActivStateTwo extends State<PlanActiv> {
                                                         actions: [
                                                           TextButton(
                                                             onPressed: () {
-                                                              Navigator.of(contextPrincipalGen!).pop();
+                                                              //Navigator.of(contextPrincipalGen!).pop();
                                                               Navigator.of(contextPrincipalGen!).pop();
                                                               Navigator.of(contextPrincipalGen!).pop();
                                                             },
@@ -2221,7 +2224,7 @@ class PlanActivStateTwo extends State<PlanActiv> {
                                                         actions: [
                                                           TextButton(
                                                             onPressed: () {
-                                                              Navigator.of(contextPrincipalGen!).pop();
+                                                              //Navigator.of(contextPrincipalGen!).pop();
                                                               Navigator.of(contextPrincipalGen!).pop();
                                                               Navigator.of(contextPrincipalGen!).pop();
                                                             },
