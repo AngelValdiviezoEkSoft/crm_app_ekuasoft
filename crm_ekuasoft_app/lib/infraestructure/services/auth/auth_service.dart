@@ -283,7 +283,39 @@ class AuthService extends ChangeNotifier {
       //print('Result Login: ${response.body}');
       
       await DataInicialService().readModelosApp(models);
-      
+
+      //#region ConsultaCorreo
+      var objReg = await storage.read(key: 'RespuestaRegistro') ?? '';
+      var obj = RegisterDeviceResponseModel.fromJson(objReg);
+
+      var objLog = await storage.read(key: 'RespuestaLogin') ?? '';
+      var objLogDecode = json.decode(objLog);
+
+      var codImei = await storage.read(key: 'codImei') ?? '';
+
+      ConsultaModelRequestModel objRqst = ConsultaModelRequestModel(
+        jsonrpc: '',
+        params: ParamsConsultaModel(
+          bearer: obj.result.bearer,
+          company: objLogDecode['result']['current_company'],
+          imei: codImei,
+          key: obj.result.key,
+          models: [],
+          tocken: obj.result.tocken,
+          tockenValidDate: obj.result.tockenValidDate,
+          uid: objLogDecode['result']['uid'],
+        )
+      );
+
+      String rsp = await GenericService().getModelosByUidUser(objRqst, 'res.users');
+
+      var rspCorreo = json.decode(rsp);
+
+      String emailUser = rspCorreo["result"]["data"][0]["email"];
+
+      await storage.write(key: 'CorreoUser', value: emailUser);
+      //#endregion
+
       return response.body;
     } catch (_) {
       //print('Test Error1: $ex');
@@ -490,6 +522,137 @@ class AuthService extends ChangeNotifier {
         );
 
         CambioClaveResponseModel objCierre = CambioClaveResponseModel.fromRawJson(response.body);
+
+        return objCierre;
+      } 
+      catch(_){
+        //print('Error al grabar: $ex');
+      }
+    } else {
+      //await storageProspecto.write(key: 'RegistraActividad', value: jsonEncode(objActividad.toJson()));
+
+      return ProspectoRegistroResponseModel(
+        id: 0,
+        jsonrpc: '',
+        result: ProspectoRegistroModel(
+          estado: 0, 
+          mensaje: '', 
+          data: []
+        ),
+        mensaje: objMensajesAlertasAct.mensajeOffLineGenerico
+      );
+    }
+
+  }
+
+  cambioDeCorreo(String correoNuevo) async {
+    String internet = await ValidacionesUtils().validaInternet();
+    
+    //VALIDACIÓN DE INTERNET
+    if(internet.isEmpty){      
+
+      try{
+
+        var codImei = await storageProspecto.read(key: 'codImei') ?? '';
+
+        var objReg = await storageProspecto.read(key: 'RespuestaRegistro') ?? '';
+        var obj = RegisterDeviceResponseModel.fromJson(objReg);
+
+        var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
+        var objLogDecode = json.decode(objLog);
+
+        //print('Test DatosLogin: $objLog');
+
+        List<MultiModel> lstMultiModel = [];
+
+        lstMultiModel.add(
+          MultiModel(model: "mail.activity")
+        );
+
+        ConsultaMultiModelRequestModel objReq = ConsultaMultiModelRequestModel(
+          jsonrpc: jsonRpc,
+          params: ParamsMultiModels(
+            bearer: obj.result.bearer,
+            company: objLogDecode['result']['current_company'],
+            imei: codImei,
+            key: obj.result.key,
+            tocken: obj.result.tocken,
+            tockenValidDate: obj.result.tockenValidDate,
+            uid: objLogDecode['result']['uid'],
+            models: lstMultiModel
+          )
+        );
+
+        String tockenValidDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(objReq.params.tockenValidDate);
+
+        List<Map<String, dynamic>> writeList = [];
+
+        /* 
+        
+        final requestBody = {
+          "jsonrpc": jsonRpc,
+          "params": {
+            "key": objReq.params.key,
+            "tocken": objReq.params.tocken,
+            "imei": objReq.params.imei,
+            "uid": objReq.params.uid,
+            "company": objReq.params.company,
+            "bearer": objReq.params.bearer,
+            "tocken_valid_date": tockenValidDate,                       
+            "write_list": {
+              [
+                
+              ]
+            },
+          }
+        };
+
+        */
+
+        writeList.add({
+          "id": objReq.params.uid,
+          "write": {              
+            "email": correoNuevo,
+          }
+        });
+
+        final requestBody = {
+          "jsonrpc": jsonRpc,
+          "params": {
+            "key": objReq.params.key,
+            "tocken": objReq.params.tocken,
+            "imei": objReq.params.imei,
+            "uid": objReq.params.uid,
+            "company": objReq.params.company,
+            "bearer": objReq.params.bearer,
+            "tocken_valid_date": tockenValidDate,
+            "write_list": writeList,
+          }
+        };
+
+        final headers = {
+          "Content-Type": EnvironmentsProd().contentType
+        };
+
+        String ruta = '';
+        final objStr = await storageProspecto.read(key: 'RespuestaRegistro') ?? '';
+        
+        if(objStr.isNotEmpty)
+        {
+          var obj = RegisterDeviceResponseModel.fromJson(objStr);
+          ruta = '${obj.result.url}/api/v1/${objReq.params.imei}/done/write/res.users/model';      
+        }
+
+        final response = await http.post(
+          Uri.parse(ruta),
+          headers: headers,
+          body: jsonEncode(requestBody), 
+        );
+
+        CambioClaveResponseModel objCierre = CambioClaveResponseModel.fromRawJson(response.body);
+
+        await storage.write(key: 'CorreoUser', value: '');
+        await storage.write(key: 'CorreoUser', value: correoNuevo);
 
         return objCierre;
       } 

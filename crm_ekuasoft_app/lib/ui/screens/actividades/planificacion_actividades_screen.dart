@@ -306,12 +306,9 @@ class PlanActState extends State<PlanificacionActividades> {
                                                   ElevatedButton(
                                                     onPressed: () {
                                                       context.pop();
-                                                    },
-                                                    
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      backgroundColor: const Color(
-                                                          0xFF5F2EEA), // Purple button
+                                                    },                                                    
+                                                    style: ElevatedButton.styleFrom(
+                                                      backgroundColor: ColorsApp().celeste,
                                                     ),
                                                     child: const Text(
                                                       'Cerrar',
@@ -550,10 +547,8 @@ class PlanActState extends State<PlanificacionActividades> {
                                                       );
                                                     
                                                     },
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      backgroundColor: const Color(
-                                                          0xFF5F2EEA), // Purple button
+                                                    style: ElevatedButton.styleFrom(
+                                                      backgroundColor: ColorsApp().celeste,
                                                     ),
                                                     child: const Text(
                                                       'Crear Actividad',

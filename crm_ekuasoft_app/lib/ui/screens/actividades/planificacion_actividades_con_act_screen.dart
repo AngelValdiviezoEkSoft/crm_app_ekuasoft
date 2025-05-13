@@ -304,10 +304,8 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                       context.pop();
                                                     },
                                                     
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      backgroundColor: const Color(
-                                                          0xFF5F2EEA), // Purple button
+                                                    style: ElevatedButton.styleFrom(
+                                                      backgroundColor: ColorsApp().celeste,
                                                     ),
                                                     child: const Text(
                                                       'Cerrar',
@@ -580,7 +578,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                       context.push(objRutasGen.rutaPlanActivConActiv);
                                                     },
                                                     style: ElevatedButton.styleFrom(
-                                                      backgroundColor: const Color(0xFF5F2EEA),
+                                                      backgroundColor: ColorsApp().celeste,
                                                     ),
                                                     child: const Text(
                                                       'Crear Actividad',

@@ -257,8 +257,9 @@ class GenericState extends Equatable {
 
   readDatosPerfil() async {    
     String objLogin = await storage.read(key: 'RespuestaLogin') ?? '';
+    String correoUser = await storage.read(key: 'CorreoUser') ?? '';
 
-    return objLogin;
+    return '$objLogin|$correoUser';
   }
 
   

@@ -79,6 +79,62 @@ class GenericService extends ChangeNotifier {
     return obj;    
   }
 
+  getModelosByUidUser(ConsultaModelRequestModel objReq, String modelBusca) async {    
+
+    String ruta = '';
+    final objStr = await storage.read(key: 'RespuestaRegistro') ?? '';
+    
+    if(objStr.isNotEmpty)
+    {  
+      var obj = RegisterDeviceResponseModel.fromJson(objStr);
+      ruta = '${obj.result.url}/api/v1/${objReq.params.imei}/done/data/$modelBusca/model';
+    }
+
+    String tockenValidDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(objReq.params.tockenValidDate);
+    
+    final Map<String, dynamic> body = 
+    {
+      "jsonrpc": EnvironmentsProd().jsonrpc,
+      "params": {
+        "key": objReq.params.key,
+        "tocken": objReq.params.tocken,
+        "imei": objReq.params.imei,
+        "uid": objReq.params.uid,
+        "company": objReq.params.company,
+        "bearer": objReq.params.bearer,
+        "tocken_valid_date": tockenValidDate,//objReq.params.tockenValidDate,
+        "filters": [
+          ["id","=",objReq.params.uid],
+        ]
+      }
+    };
+    
+    final response = await http.post(
+      Uri.parse(ruta),
+      headers: <String, String>{
+        'Content-Type': EnvironmentsProd().contentType//'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(body),
+    );
+    
+    var reponseRs = response.body;
+
+    var rspValidacion = json.decode(response.body);
+
+    if(rspValidacion['result']['mensaje'] != null && 
+      (
+        rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenNoValido || 
+        rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenExpirado
+      )){
+      await tokenManager.checkTokenExpiration();
+      await getModelos(objReq, modelBusca);
+    }
+
+    //var obj = RegisterDeviceResponseModel.fromJson(reponseRs);
+
+    return reponseRs;    
+  }
+
   getMultiModelos(ConsultaMultiModelRequestModel objReq, String modelo) async {
 
     String ruta = '';

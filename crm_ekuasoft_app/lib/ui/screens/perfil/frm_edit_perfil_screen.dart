@@ -41,6 +41,7 @@ Color coloresFondoRepuesta = Colors.transparent;
 late TextEditingController passwordAntTxt;
 late TextEditingController passwordTxt;
 late TextEditingController passwordConfTxt;
+late TextEditingController emailUserTxt;
 
 String emailUser = '';
 
@@ -62,6 +63,7 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
     passwordAntTxt = TextEditingController();
     passwordTxt = TextEditingController();
     passwordConfTxt = TextEditingController();
+    emailUserTxt = TextEditingController();
     verValidaciones = false;
     tabAccEdit = 0;
   }
@@ -224,12 +226,19 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
               
               String rspData = snapshot.data as String;
 
-              final data = json.decode(rspData);
+              List<String> arrRspData = rspData.split('|');
+
+              final data = json.decode(arrRspData[0]);
 
               nombresCompletos = data["result"]["name"];
               user = data["result"]["username"];
-              uid = data["result"]["uid"].toString();
-              //emailUser = data["result"]["uid"].toString();
+              uid = data["result"]["uid"].toString();              
+              emailUser = arrRspData[1];//data["result"]["uid"].toString();
+
+              if(emailUserTxt.text.isEmpty){
+                emailUserTxt.text = emailUser;
+              }
+
             }
 
               return Container(
@@ -650,9 +659,7 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                     color: Colors.transparent,
                                     width: size.width * 0.92,
                                     child: TextFormField(
-                                      initialValue: emailUser,
-                                      //initialValue: '',
-                                      //enabled: false,
+                                      //initialValue: emailUser,
                                       cursorColor: AppLightColors().primary,
                                       autovalidateMode: AutovalidateMode.onUserInteraction,
                                       inputFormatters: [
@@ -664,7 +671,7 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                         hintTetx: 'ejemplo@gmail.com',
                                         size: size
                                       ),
-                                      //controller: emailAkiTxt,
+                                      controller: emailUserTxt,
                                       autocorrect: false,
                                       keyboardType: TextInputType.emailAddress,
                                       minLines: 1,
@@ -679,7 +686,13 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                         FocusScope.of(context).unfocus();
                                       },
                                       onChanged: (value) {
-                                        
+                                        /*
+                                        emailUser = '';
+                                        emailUser = value;
+                                        setState(() {
+                                          
+                                        });
+                                        */
                                       },
                                       onTapOutside: (event) {
                                         planAct.setHeightModalPlanAct(0.11);
@@ -715,6 +728,7 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                           },
                                           child: ButtonCvsWidget(
                                             text: 'Cancelar',
+                                            colorBoton: ColorsApp().celeste,
                                             textStyle: AppTextStyles.h3Bold(
                                               width: size.width,
                                               color: AppLightColors().white
@@ -728,6 +742,103 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                           color: Colors.transparent,
                                           child: GestureDetector(
                                           onTap: () async {
+
+                                            showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (context) => SimpleDialog(
+                                                alignment: Alignment.center,
+                                                children: [
+                                                  SimpleDialogCargando(
+                                                    null,
+                                                    mensajeMostrar: 'Estamos actualizando',
+                                                    mensajeMostrarDialogCargando: 'sus datos.',
+                                                  ),
+                                                ]
+                                              ),
+                                            );
+
+                                            if(tabAccEdit == 0){
+                                              if(emailUserTxt.text.isEmpty){
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: const Text('Ingrese su correo.'),
+                                                      
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            // Acción para solicitar revisión
+                                                            //Navigator.of(context).pop();
+                                                            Navigator.of(context).pop();
+                                                          },
+                                                          child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                      
+                                                return;
+                                              }
+
+                                              String pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                                              RegExp regExp = RegExp(pattern);
+                                              
+                                              if(emailUserTxt.text.isNotEmpty && !regExp.hasMatch(emailUserTxt.text)){
+                                                showDialog(
+                                                  barrierDismissible: false,
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+                                                    return ContentAlertDialog(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      onPressedCont: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      tipoAlerta: TipoAlerta().alertAccion,
+                                                      numLineasTitulo: 2,
+                                                      numLineasMensaje: 2,
+                                                      titulo: 'Error',
+                                                      mensajeAlerta: 'Correo inválido.'
+                                                    );
+                                                  },
+                                                );
+                              
+                                                return;
+                                              }
+
+                                              CambioClaveResponseModel? objCambClave = await AuthService().cambioDeCorreo(emailUserTxt.text);
+
+                                              //ignore:use_build_context_synchronously
+                                              Navigator.of(context).pop();
+
+                                              if(objCambClave != null){
+                                                showDialog(
+                                                  //ignore:use_build_context_synchronously
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: Text(objCambClave.result.mensaje),                                                      
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(context).pop();
+                                                            Navigator.of(context).pop();
+                                                          },
+                                                          child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              
+                                                return;
+                                              }
+
+                                            }
                                     
                                             if(tabAccEdit == 1){
                                               if(passwordAntTxt.text.isEmpty){
@@ -778,7 +889,7 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                                 return;
                                               }
                                             }
-
+/*
                                             Navigator.of(context).pop();
                                             
                                             showDialog(
@@ -800,11 +911,12 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                                 );
                                               },
                                             );
+                                          */
                                           },
-                                          child: ButtonCvsWidget(                            
-                                            //text: 'Guardar Cambios',
+                                          child: ButtonCvsWidget(
                                             text: 'Actualizar',
-                                            textStyle: AppTextStyles.h3Bold(
+                                            colorBoton: ColorsApp().celeste,
+                                            textStyle: AppTextStyles.h3Bold(                                              
                                                 width: size.width,
                                                 color: AppLightColors().white),
                                           )),
@@ -1391,6 +1503,61 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                                 ]
                                               ),
                                             );
+
+                                            if(tabAccEdit == 0){
+                                              if(emailUser.isEmpty){
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: const Text('Ingrese su correo.'),
+                                                      
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            // Acción para solicitar revisión
+                                                            //Navigator.of(context).pop();
+                                                            Navigator.of(context).pop();
+                                                          },
+                                                          child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                      
+                                                return;
+                                              }
+
+                                              CambioClaveResponseModel? objCambClave = await AuthService().cambioDeCorreo(emailUserTxt.text);
+
+                                              //ignore:use_build_context_synchronously
+                                              Navigator.of(context).pop();
+
+                                              if(objCambClave != null){
+                                                showDialog(
+                                                  //ignore:use_build_context_synchronously
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: Text(objCambClave.result.mensaje),                                                      
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(context).pop();
+                                                            Navigator.of(context).pop();
+                                                          },
+                                                          child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              
+                                                return;
+                                              }
+
+                                            }
                                     
                                             if(tabAccEdit == 1){
                                               if(passwordAntTxt.text.isEmpty){
@@ -1473,7 +1640,7 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                             }
 
                                             
-                                            
+                                            /*
                                             showDialog(
                                               //ignore:use_build_context_synchronously
                                               context: context,
@@ -1494,10 +1661,11 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                                 );
                                               },
                                             );
+                                          */
                                           },
-                                          child: ButtonCvsWidget(                            
-                                            //text: 'Guardar Cambios',
+                                          child: ButtonCvsWidget(
                                             text: 'Actualizar',
+                                            colorBoton: ColorsApp().celeste,
                                             textStyle: AppTextStyles.h3Bold(
                                                 width: size.width,
                                                 color: AppLightColors().white),
