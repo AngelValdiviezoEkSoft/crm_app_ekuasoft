@@ -1244,6 +1244,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                   },
                                   child: ButtonCvsWidget(
                                     text: 'Cerrar',
+                                    colorBoton: ColorsApp().azulCvs,
                                     textStyle: AppTextStyles.h3Bold(
                                         width: size.width,
                                         color: AppLightColors().white),
@@ -1822,7 +1823,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                   
                                   },
                                   child: ButtonCvsWidget(
-                                    //text: 'Crear',
+                                    colorBoton: ColorsApp().azulCvs,
                                     text: 'Crear Prospecto',
                                     textStyle: AppTextStyles.h3Bold(
                                       width: size.width,

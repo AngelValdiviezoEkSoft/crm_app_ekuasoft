@@ -256,8 +256,6 @@ class ProspectoTypeService extends ChangeNotifier{
 
         String tockenValidDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(objReq.params.tockenValidDate);
 
-        //print('Fecha token: $tockenValidDate');
-
         final requestBody = {
           "jsonrpc": EnvironmentsProd().jsonrpc,
           "params": {
@@ -273,8 +271,7 @@ class ProspectoTypeService extends ChangeNotifier{
               "phone": objProspecto.phone,          
               "contact_name": objProspecto.contactName,
               "partner_name": objProspecto.partnerName,
-              //"date_closed": DateFormat('yyyy-MM-dd', 'es').format(objProspecto.dateClose!),
-              "date_deadline": DateFormat('yyyy-MM-dd', 'es').format(objProspecto.dateDeadline!),//date_deadline
+              "date_deadline": DateFormat('yyyy-MM-dd', 'es').format(objProspecto.dateDeadline!),
               "email_from": objProspecto.emailFrom,
               "street": objProspecto.street,
               "expected_revenue": objProspecto.expectedRevenue,
