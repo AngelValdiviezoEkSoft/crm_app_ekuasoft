@@ -179,6 +179,7 @@ class GenericState extends Equatable {
             
           }
         ),
+        /*
         if(objPermisos.mainMenu.itemListPartners)
         ItemBoton('','','',2, Icons.groups, 'Clientes', 'Listado de todos los clientes asignados','','', Colors.white, Colors.white,false,false,'','','icTramApr.png','icTramAprTrans.png','',
           Rutas().rutaListaClientes, 
@@ -186,12 +187,14 @@ class GenericState extends Equatable {
             
           }
         ),
+        */
         if(objPermisos.mainMenu.itemScheduledVisits)
         ItemBoton('','','',3, Icons.calendar_month, 'Visitas Agendadas CVE', 'Listado de clientes programados para el día','','', Colors.white, Colors.white,false,false,'','','icTramProc.png','icTramProcTrans.png','',
           //Rutas().rutaAgenda,
           Rutas().rutaConsultaActividades,
           () {}
         ),
+/*
         if(objPermisos.mainMenu.itemScheduledVisits)
         ItemBoton('','','',3, Icons.calendar_month, 'Visitas Agendadas', 'Listado de clientes programados para el día','','', Colors.white, Colors.white,false,false,'','','icTramProc.png','icTramProcTrans.png','',
           Rutas().rutaAgenda,
@@ -222,7 +225,8 @@ class GenericState extends Equatable {
           Rutas().rutaConstruccion, 
           () {}
         ),
-      ]; 
+        */
+      ];
 
       final jsonString = serializeItemBotonMenuList(items);      
 
