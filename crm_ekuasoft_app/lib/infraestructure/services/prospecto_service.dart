@@ -128,7 +128,7 @@ class ProspectoTypeService extends ChangeNotifier{
     return frmValido;
   }
 
-  getProspectoRegistrado(String phoneProsp) async {
+  getProspectoRegistrado(String phoneProsp, String codIsoPhone) async {
     try{
       
       var codImei = await storageProspecto.read(key: 'codImei') ?? '';
@@ -185,21 +185,22 @@ class ProspectoTypeService extends ChangeNotifier{
           "company": objReq.params.company,
           "bearer": objReq.params.bearer,
           "tocken_valid_date": tockenValidDate,
-          "phone": phoneProsp
+          "phone": phoneProsp,
+          "country_code": codIsoPhone
         }
       };
 
       final response = await http.post(
         Uri.parse(ruta),
         headers: headers,
-        body: jsonEncode(requestBody), 
+        body: jsonEncode(requestBody),
       );
 
       var rspValidacion = json.decode(response.body);
 
       if(rspValidacion['result']['mensaje'] != null && (rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenNoValido || rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenExpirado)){
         await tokenManager.checkTokenExpiration();
-        await getProspectoRegistrado(phoneProsp);
+        await getProspectoRegistrado(phoneProsp, codIsoPhone);
       }
 
       return response.body;
@@ -281,9 +282,9 @@ class ProspectoTypeService extends ChangeNotifier{
               "campaign_id": objProspecto.campaignId!.id,
               "source_id": objProspecto.sourceId.id,
               "medium_id": objProspecto.mediumId.id,
-              "country_id": objProspecto.countryId.id
-              //"user_id": objReq.params.uid
-            },
+              "country_id": objProspecto.countryId.id,
+              "is_done_app": true
+            }
           }
         };
 

@@ -550,7 +550,7 @@ class ActivitiesService extends ChangeNotifier{
       
       var rsp = AppResponseModel.fromRawJson(response.body);
 
-      print('Consulta agenda: ${response.body}');
+      //print('Consulta agenda: ${response.body}');
 
       String cmbLstAct = json.encode(rsp.result.data.mailActivity);//await storageCamp.read(key: 'cmbLstActividades') ?? '';
 
@@ -662,8 +662,8 @@ class ActivitiesService extends ChangeNotifier{
 
       return objRspFinal;
     }
-    catch(ex){
-     print('Test: $ex');
+    catch(_){
+     //print('Test: $ex');
     }
   }
 
@@ -858,7 +858,7 @@ class ActivitiesService extends ChangeNotifier{
       
       var rsp = AppResponseModel.fromRawJson(response.body);
 
-      print('Consulta agenda: ${response.body}');
+      //print('Consulta agenda: ${response.body}');
 
       String cmbLstAct = json.encode(rsp.result.data.mailActivity);//await storageCamp.read(key: 'cmbLstActividades') ?? '';
 
@@ -1001,8 +1001,8 @@ class ActivitiesService extends ChangeNotifier{
 
       return objRspFinal;
     }
-    catch(ex){
-     print('Test: $ex');
+    catch(_){
+     //print('Test: $ex');
     }
   }
 
@@ -1567,18 +1567,8 @@ class ActivitiesService extends ChangeNotifier{
               "summary": objActividad.note,
               "note": objActividad.note,
               "lead_name": objActividad.leadName,
-              "lead_phone": objActividad.leadPhone
-
-              /*
-              //"create_date": DateFormat('yyyy-MM-dd', 'es').format(objActividad.createDate!),
-              "create_uid": objReq.params.uid,
-              //"active": true,
-              "previous_activity_type_id": objActividad.previousActivityTypeId,
-              //"display_name": objActividad.displayName,
-              
-              
-              "user_id": objActividad.userId,
-              */
+              "lead_phone": objActividad.leadPhone,
+              "is_done_app": true
             },
           }
         };
@@ -1602,7 +1592,7 @@ class ActivitiesService extends ChangeNotifier{
           body: jsonEncode(requestBody), 
         );
 
-        print('respuesta: ${response.body}');
+        //print('respuesta: ${response.body}');
       
         var rspValidacion = json.decode(response.body);
 

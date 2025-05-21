@@ -124,6 +124,7 @@ class GenericState extends Equatable {
                 "res_id": objGuardar.resId,
                 "summary": objGuardar.note,
                 "note": objGuardar.note,
+                "is_done_app": true
               }
             );
 

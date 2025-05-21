@@ -85,6 +85,11 @@ class PlanActState extends State<PlanificacionActividades> {
 
     String nombreEscogido = '-- Sin nombre --';
 
+    if(objActividadEscogida != null && objActividadEscogida!.leadName != null){
+      nombreEscogido = objActividadEscogida!.leadName!;
+    }
+
+    /*
     if(objActividadEscogida == null && objDatumCrmLead != null && objDatumCrmLead!.contactName != null){
       nombreEscogido = objDatumCrmLead!.contactName!;
     }
@@ -93,6 +98,7 @@ class PlanActState extends State<PlanificacionActividades> {
         nombreEscogido = objActividadEscogida!.leadName!;
       }
     }
+    */
 
     return BlocBuilder<GenericBloc, GenericState>(
         builder: (context,state) {

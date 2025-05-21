@@ -432,43 +432,27 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                         ),
                                                       );
                                       
-                                                      ActividadRegistroResponseModel objResp = await ActivitiesService().registroActividades(objReqst);
-/*
-                                                      if(lstActividadesDiariasByProspecto.isEmpty){
-                                                        lstActividadesDiariasByProspecto = [];                                                        
-                                                      }
-                                                    
-                                                      lstActividadesDiariasByProspecto.add(
-                                                        DatumActivitiesResponse(
-                                                          activityTypeId: IdActivities(id: objReqst.activityTypeId, name: ''),
-                                                          cerrado: false,
-                                                          dateDeadline: DateTime.parse(fechaActividadContTxtAct.text),
-                                                          id: lstActividadesDiariasByProspecto.length + 1,
-                                                          resId: objReqst.resId,
-                                                          resModel: '',
-                                                          summary: objReqst.note,
-                                                          userId: IdActivities(id: objReqst.userId, name: '')
-                                                        )
-                                                      );
-              */
-                                                      String respuestaReg = objResp.result.mensaje;
-                                                      int estado = objResp.result.estado;
-                                                      String gifRespuesta = '';
-              
-                                                      //ignore: use_build_context_synchronously
-                                                      context.pop();
-              
-                                                      if(estado == 200){
-                                                        gifRespuesta = 'assets/gifs/exito.gif';
-                                                      } else {
-                                                        gifRespuesta = 'assets/gifs/gifErrorBlanco.gif';
-                                                      }
-              
-              /*
-                                                      if(objResp.result.mensaje.isNotEmpty){
-                                  
+                                                      ActividadRegistroResponseModel? objResp = await ActivitiesService().registroActividades(objReqst);
+
+                                                      if(objResp != null){
+                                                        String respuestaReg = objResp.result.mensaje;
+                                                        int estado = objResp.result.estado;
+                                                        String gifRespuesta = '';
+                
+                                                        //ignore: use_build_context_synchronously
+                                                        context.pop();
+                
+                                                        if(estado == 200){
+                                                          gifRespuesta = 'assets/gifs/exito.gif';
+                                                        } else {
+                                                          gifRespuesta = 'assets/gifs/gifErrorBlanco.gif';
+                                                        }
+                
+                                                        //ignore:use_build_context_synchronously
+                                                        context.pop();                                                      
+
                                                         showDialog(
-                                                          //ignore: use_build_context_synchronously
+                                                          //ignore:use_build_context_synchronously
                                                           context: context,
                                                           builder: (BuildContext context) {
                                                             return AlertDialog(
@@ -484,14 +468,14 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                                       height: size.height * 0.09,
                                                                       child: Image.asset(gifRespuesta),
                                                                     ),
-                                      
+                                        
                                                                     Container(
                                                                       color: Colors.transparent,
                                                                       width: size.width * 0.95,
                                                                       height: size.height * 0.08,
                                                                       alignment: Alignment.center,
                                                                       child: AutoSizeText(
-                                                                        objResp.result.mensaje,
+                                                                        respuestaReg,
                                                                         maxLines: 2,
                                                                         minFontSize: 2,
                                                                       ),
@@ -511,71 +495,65 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                           },
                                                         );
                                                       
-                                                        //return;
-                                                      }
-                                                      */
-                                      
-                                                      
-                                                      //ignore:use_build_context_synchronously
-                                                      context.pop();
-                                                      /*
-                                                      //ignore:use_build_context_synchronously
-                                                      context.pop();
-                                                      */
-
-                                                      showDialog(
+                                                        //POR AQUÍ AEVG
                                                         //ignore:use_build_context_synchronously
-                                                        context: context,
-                                                        builder: (BuildContext context) {
-                                                          return AlertDialog(
-                                                            title: Container(
-                                                              color: Colors.transparent,
-                                                              height: size.height * 0.17,
-                                                              child: Column(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                children: [
-                                                                  
-                                                                  Container(
-                                                                    color: Colors.transparent,
-                                                                    height: size.height * 0.09,
-                                                                    child: Image.asset(gifRespuesta),
-                                                                  ),
-                                      
-                                                                  Container(
-                                                                    color: Colors.transparent,
-                                                                    width: size.width * 0.95,
-                                                                    height: size.height * 0.08,
-                                                                    alignment: Alignment.center,
-                                                                    child: AutoSizeText(
-                                                                      respuestaReg,
-                                                                      maxLines: 2,
-                                                                      minFontSize: 2,
+                                                        context.pop();
+
+                                                        //ignore:use_build_context_synchronously
+                                                        context.pop();
+
+                                                        //ignore:use_build_context_synchronously
+                                                        context.push(objRutasGen.rutaPlanActivConActiv);
+                                                      }
+                                                      else{
+                                                        //ignore:use_build_context_synchronously
+                                                        context.pop();                                                      
+
+                                                        showDialog(
+                                                          //ignore:use_build_context_synchronously
+                                                          context: context,
+                                                          builder: (BuildContext context) {
+                                                            return AlertDialog(
+                                                              title: Container(
+                                                                color: Colors.transparent,
+                                                                height: size.height * 0.17,
+                                                                child: Column(
+                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                  children: [
+                                                                    
+                                                                    Container(
+                                                                      color: Colors.transparent,
+                                                                      height: size.height * 0.09,
+                                                                      child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
                                                                     ),
-                                                                  )
-                                                                ],
-                                                              )
-                                                            ),
-                                                            actions: [
-                                                              TextButton(
-                                                                onPressed: () {
-                                                                  Navigator.of(context).pop();
-                                                                },
-                                                                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                        
+                                                                    Container(
+                                                                      color: Colors.transparent,
+                                                                      width: size.width * 0.95,
+                                                                      height: size.height * 0.08,
+                                                                      alignment: Alignment.center,
+                                                                      child: const AutoSizeText(
+                                                                        'Error al crear una nueva actividad',
+                                                                        maxLines: 2,
+                                                                        minFontSize: 2,
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                )
                                                               ),
-                                                            ],
-                                                          );
-                                                        },
-                                                      );
-                                                    
-                                                      //POR AQUÍ AEVG
-                                                      //ignore:use_build_context_synchronously
-                                                      context.pop();
-
-                                                      //ignore:use_build_context_synchronously
-                                                      context.pop();
-
-                                                      //ignore:use_build_context_synchronously
-                                                      context.push(objRutasGen.rutaPlanActivConActiv);
+                                                              actions: [
+                                                                TextButton(
+                                                                  onPressed: () {
+                                                                    Navigator.of(context).pop();
+                                                                  },
+                                                                  child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                                                ),
+                                                              ],
+                                                            );
+                                                          },
+                                                        );
+                                                      
+                                                      }
                                                     },
                                                     style: ElevatedButton.styleFrom(
                                                       backgroundColor: ColorsApp().celeste,

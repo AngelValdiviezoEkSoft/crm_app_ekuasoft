@@ -30,7 +30,7 @@ late TextEditingController fechaCierreContTxt;
 
 String fecCierre = '';
 String fecCierreFin = '';
-                  
+String codIsoPhone = '';
 
 DateTime dateRgPrsp = DateTime.now();
 
@@ -96,6 +96,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
     originSelect = '';
     actSelect = '';
     telefonoPrsp = '';
+    codIsoPhone = '';
   }
 
   @override
@@ -388,6 +389,8 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                         isEnabled: !validandoCell,
                                         onInputChanged: (PhoneNumber phoneNumber) async {
                                           telefonoPrsp = phoneNumber.phoneNumber ?? '';
+                                          codIsoPhone = phoneNumber.isoCode ?? '';
+
                                           setState(() {});
                                         },
                                         onInputValidated: (bool isValid) async {
@@ -420,8 +423,8 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                               ),
                                             );
                                               
-                                              var resp = await ProspectoTypeService().getProspectoRegistrado(telefonoPrsp);
-                      
+                                              var resp = await ProspectoTypeService().getProspectoRegistrado(telefonoPrsp, codIsoPhone);
+
                                               //ignore: use_build_context_synchronously
                                               FocusScope.of(context).unfocus();
 
@@ -546,7 +549,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                         onSaved: (PhoneNumber phoneNumber) {
                                           //print('Número guardado: ${phoneNumber.phoneNumber}');
                                         },
-                                        maxLength: 11,
+                                        //maxLength: 11,
                                         errorMessage: 'Teléfono no válido',
                                       ),
                                     ),
@@ -1708,9 +1711,10 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                       dateClose: DateTime.now(),//DateTime.parse(fecCierreFin)
                                     );
                     
-                                    ProspectoRegistroResponseModel objRsp = await ProspectoTypeService().registraProspecto(objProsp);
+                                    ProspectoRegistroResponseModel? objRsp = await ProspectoTypeService().registraProspecto(objProsp);
                                     
-                                    String respuestaReg = objRsp.result.mensaje;
+                                    if(objRsp != null){
+                                      String respuestaReg = objRsp.result.mensaje;
                                     int estado = objRsp.result.estado;
                                     String gifRespuesta = 'assets/gifs/exito.gif';
                     
@@ -1821,6 +1825,57 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                       },
                                     );
                                   
+                                    }
+                                    else{
+                                      //ignore:use_build_context_synchronously
+                                      context.pop();
+                    
+                                      showDialog(
+                                        //ignore:use_build_context_synchronously
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Container(
+                                              color: Colors.transparent,
+                                              height: size.height * 0.17,
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  
+                                                  Container(
+                                                    color: Colors.transparent,
+                                                    height: size.height * 0.09,
+                                                    child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
+                                                  ),
+                      
+                                                  Container(
+                                                    color: Colors.transparent,
+                                                    width: size.width * 0.95,
+                                                    height: size.height * 0.08,
+                                                    alignment: Alignment.center,
+                                                    child: const AutoSizeText(
+                                                      "Error al registrar prospecto.",
+                                                      maxLines: 2,
+                                                      minFontSize: 2,
+                                                    ),
+                                                  )
+                                                ],
+                                              )
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+
+                                    
                                   },
                                   child: ButtonCvsWidget(
                                     colorBoton: ColorsApp().azulCvs,
