@@ -8,10 +8,10 @@ class TermsAndConditionsScreen extends StatefulWidget {
   const TermsAndConditionsScreen(Key? key) : super(key: key);
 
   @override
-  _TermsAndConditionsScreenState createState() => _TermsAndConditionsScreenState();
+  TermsAndConditionsScreenState createState() => TermsAndConditionsScreenState();
 }
 
-class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
+class TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
   
   bool _accepted = false;
 

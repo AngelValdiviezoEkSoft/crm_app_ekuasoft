@@ -544,7 +544,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                 width: size.width * 0.95,
                                 height: size.height * 0.09,
                                 alignment: Alignment.topCenter,
-                                child: const AutoSizeText('No existen actividades agendadas para la fecha seleccionada', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,), maxLines: 2,  presetFontSizes: [42,40,38,36,34,32,30,28,26,24,22,20,18,16,14,12,10]),
+                                child: const AutoSizeText('No existen actividades agendadas', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,), maxLines: 2,  presetFontSizes: [42,40,38,36,34,32,30,28,26,24,22,20,18,16,14,12,10]),
                               ),
                             ],
                           ), 

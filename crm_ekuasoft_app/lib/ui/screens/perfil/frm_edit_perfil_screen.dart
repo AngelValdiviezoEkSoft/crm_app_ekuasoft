@@ -359,38 +359,9 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                       final croppedFile = await ImageCropper().cropImage(
                                         sourcePath: pickedFile.path,
                                         compressFormat: ImageCompressFormat.png,
-                                        compressQuality: 100,
-                                        /*
-                                        uiSettings: [
-                                          AndroidUiSettings(
-                                            hideBottomControls: true,
-                                            toolbarTitle: 'Recortando',
-                                            toolbarColor: Colors.deepOrange,
-                                            toolbarWidgetColor: Colors.white,
-                                            initAspectRatio: CropAspectRatioPreset.square,
-                                            lockAspectRatio: false
-                                          ),
-                                          IOSUiSettings(
-                                            title: 'Recortando',
-                                          ),
-                                          //ignore: use_build_context_synchronously
-                                          WebUiSettings(
-                                            context: context,
-                                          ),
-                                        ],
-                                        */
+                                        compressQuality: 100,                                        
                                       );
-                                      if (croppedFile != null) {
-                                        /*
-                                        final bytes = File(croppedFile.path).readAsBytesSync();
-                                        String img64 = base64Encode(bytes);
-                                        
-                                        FotoPerfilModel objFotoPerfilNueva = FotoPerfilModel(
-                                          base64: img64,
-                                          extension: 'png',
-                                          nombre: 'foto_perfil_$primerNombre'
-                                        );
-                                        */
+                                      if (croppedFile != null) {                                        
                         
                                         rutaNuevaFotoPerfil = croppedFile.path;
                                         

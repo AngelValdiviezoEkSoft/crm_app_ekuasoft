@@ -429,7 +429,9 @@ class HomeScreenState extends State<HomeScreen> {
                     }
                   }
 
-                  return Container();
+                  return Container(
+                    color: Colors.blue,
+                  );
                 }
               );
             

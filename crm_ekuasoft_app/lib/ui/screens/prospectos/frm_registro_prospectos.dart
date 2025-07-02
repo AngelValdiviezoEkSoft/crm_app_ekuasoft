@@ -767,7 +767,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                   DropdownMenuItem(
                                                     value: activityPrsp,
                                                     //child: Text(activityPrsp, overflow: TextOverflow.ellipsis, maxLines: 1, style: const TextStyle(fontSize: 12),),
-                                                    child: AutoSizeText(activityPrsp, presetFontSizes: const [10, 8, 6,4], maxLines: 1, minFontSize: 2, maxFontSize: 12,),
+                                                    child: AutoSizeText(activityPrsp, presetFontSizes: const [ 9,8, 6,4], maxLines: 1, minFontSize: 2, maxFontSize: 12,),
                                                   ))
                                               .toList(),
                                           onChanged: (newValue) {

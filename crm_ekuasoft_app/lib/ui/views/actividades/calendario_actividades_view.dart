@@ -269,7 +269,7 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                               child: CalendarDatePicker2(
                                 config: CalendarDatePicker2Config(
                                   calendarType: CalendarDatePicker2Type.range,
-                                  lastDate: DateTime.now()
+                                  //lastDate: DateTime.now()
                                 ),
                                 value: _datesByFiltroCal,
                                 onValueChanged: (dates) async {
@@ -304,7 +304,7 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                                 headerStyle: const HeaderStyle(formatButtonVisible: false),
                                 calendarFormat: calendarFormat,
                                 firstDay: DateTime.utc(2010, 10, 16),
-                                lastDay: DateTime.now(),
+                                lastDay: DateTime(3000),
                                 focusedDay: focusedDayGenByFiltroCal,
                                 selectedDayPredicate: (day) {
                                   return focusedDayGenByFiltroCal == day;

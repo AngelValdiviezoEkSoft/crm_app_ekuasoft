@@ -169,7 +169,7 @@ class AuthService extends ChangeNotifier {
     final ruta = '${env.apiEndpoint}done/$imei/validate/tocken/$key';
     
     final Map<String, dynamic> body = {
-      "jsonrpc": EnvironmentsProd().jsonrpc,
+      "jsonrpc": jsonRpc,//EnvironmentsProd().jsonrpc,
       "params": {
         "tocken": tocken
       }
@@ -208,7 +208,7 @@ class AuthService extends ChangeNotifier {
       }
 
       final Map<String, dynamic> body = {
-        "jsonrpc": EnvironmentsProd().jsonrpc,
+        "jsonrpc": jsonRpc,//EnvironmentsProd().jsonrpc,
         "params": {
           "db": authRequest.db,
           "login": authRequest.login,
@@ -220,7 +220,7 @@ class AuthService extends ChangeNotifier {
       final response = await http.post(
         Uri.parse(ruta),
         headers: <String, String>{
-          'Content-Type': EnvironmentsProd().contentType,
+          'Content-Type': 'application/json'//EnvironmentsProd().contentType,
         },
         body: jsonEncode(body),
       );
@@ -311,14 +311,14 @@ class AuthService extends ChangeNotifier {
 
       var rspCorreo = json.decode(rsp);
 
-      String emailUser = rspCorreo["result"]["data"][0]["email"];
+      String emailUser = rspCorreo["result"]["data"][0]["email"] ?? '';
 
       await storage.write(key: 'CorreoUser', value: emailUser);
       //#endregion
 
       return response.body;
-    } catch (_) {
-      //print('Test Error1: $ex');
+    } catch (ex) {
+      print('Test Error1: $ex');
     }
   }
 
@@ -687,7 +687,7 @@ class AuthService extends ChangeNotifier {
     await storage.write(key: 'cmbMedia', value: '');
     await storage.write(key: 'cmbActividades', value: '');
     await storage.write(key: 'cmbPaises', value: '');
-    await storage.write(key: 'RespuestaIrModel', value: '');
+    //await storage.write(key: 'RespuestaIrModel', value: '');
     
     return;
   }

@@ -89,6 +89,10 @@ class PlanActState extends State<PlanificacionActividades> {
       nombreEscogido = objActividadEscogida!.leadName!;
     }
 
+    if(objActividadEscogida == null && objDatumCrmLead != null && objDatumCrmLead!.contactName != null){
+      nombreEscogido = objDatumCrmLead!.contactName!;
+    }
+
     /*
     if(objActividadEscogida == null && objDatumCrmLead != null && objDatumCrmLead!.contactName != null){
       nombreEscogido = objDatumCrmLead!.contactName!;
