@@ -234,6 +234,14 @@ class GenericService extends ChangeNotifier {
     }
 
     //print('Lst gen: ${response.body}');
+/*
+    try{
+      var rsp2 = AppResponseModel.fromRawJson(response.body);
+    }
+    catch(ex){
+      print('errooor: $ex');
+    }
+    */
 
     var rsp = AppResponseModel.fromRawJson(response.body);
 

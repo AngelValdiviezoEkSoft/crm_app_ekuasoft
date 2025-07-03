@@ -502,7 +502,8 @@ class ProspectoTypeService extends ChangeNotifier{
             "company": objReq.params.company,
             "bearer": objReq.params.bearer,
             "tocken_valid_date": tockenValidDate,
-            "create": {
+            "id": objProspecto.id,
+            "write": {
               "name": objProspecto.name,
               "phone": objProspecto.phone,          
               "contact_name": objProspecto.contactName,
@@ -514,10 +515,10 @@ class ProspectoTypeService extends ChangeNotifier{
               "referred": objProspecto.referred,
               "description": objProspecto.description,
               "probability": objProspecto.probability,
-              "campaign_id": objProspecto.campaignId!.id,
-              "source_id": objProspecto.sourceId.id,
-              "medium_id": objProspecto.mediumId.id,
-              "country_id": objProspecto.countryId.id
+              "campaign_id": objProspecto.campaignId!.id == 0 ? null : objProspecto.campaignId!.id,
+              "source_id": objProspecto.sourceId.id == 0 ? null : objProspecto.sourceId.id,
+              "medium_id": objProspecto.mediumId.id == 0 ? null : objProspecto.mediumId.id,
+              "country_id": objProspecto.countryId.id == 0 ? null : objProspecto.countryId.id
             },
           }
         };
@@ -532,7 +533,7 @@ class ProspectoTypeService extends ChangeNotifier{
         if(objStr.isNotEmpty)
         {
           var obj = RegisterDeviceResponseModel.fromJson(objStr);
-          ruta = '${obj.result.url}/api/v1/${objReq.params.imei}/done/create/crm.lead/model';
+          ruta = '${obj.result.url}/api/v1/${objReq.params.imei}/done/write/crm.lead/model';
         }
 
         //print('Test: ${jsonEncode(requestBody)}');
@@ -547,7 +548,7 @@ class ProspectoTypeService extends ChangeNotifier{
 
         if(rspValidacion['result']['mensaje'] != null && (rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenNoValido || rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenExpirado)){
           await tokenManager.checkTokenExpiration();
-          await registraProspecto(objProspecto);
+          await editaProspecto(objProspecto);
         } 
 
         var objRspPrsp = await storageProspecto.read(key: 'RespuestaProspectos') ?? '';
@@ -656,13 +657,15 @@ class ProspectoTypeService extends ChangeNotifier{
             description: objProspecto.description            
           );
 
-          objLead.data.add(objCrmLeadDatumAppModel);
+          if(objCrmLeadDatumAppModel.id == objProspecto.id){
+            objLead.data.add(objCrmLeadDatumAppModel);
+          }          
 
         }
-
+/*
         await storageProspecto.write(key: 'RespuestaProspectos', value: '');
         await storageProspecto.write(key: 'RespuestaProspectos', value: json.encode(objLead));
-
+*/
         return objRespuestaFinal;
       } 
       catch(_){

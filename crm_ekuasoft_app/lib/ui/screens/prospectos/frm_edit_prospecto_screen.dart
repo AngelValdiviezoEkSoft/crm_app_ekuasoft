@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:crm_ekuasoft_app/domain/domain.dart';
+import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -1219,8 +1221,6 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                 child: GestureDetector(
                                 onTap: () async {
 
-                                  //String gifRespuesta = 'assets/gifs/exito.gif';
-                    
                                   if(nombresEditTxt.text.isEmpty || nombresOportEditTxt.text.isEmpty){
                                     showDialog(
                                       barrierDismissible: false,
@@ -1272,381 +1272,79 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                       
                                         return;
                                       }
-                                    }
-
-                                  /*
-
-                                  if(probabilityEditTxt.text.isEmpty){
-                                    showDialog(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return ContentAlertDialog(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          onPressedCont: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          tipoAlerta: TipoAlerta().alertAccion,
-                                          numLineasTitulo: 2,
-                                          numLineasMensaje: 2,
-                                          titulo: 'Error',
-                                          mensajeAlerta: 'Ingrese la probabilidad.'
-                                        );
-                                      },
-                                    );
-                  
-                                    return;
-                                  } else {
-                                    if(probabilityEditTxt.text.isNotEmpty){
-                                      double probNeg = double.parse(probabilityEditTxt.text);
-
-                                      if(probNeg < 0) {
-                                        showDialog(
-                                          barrierDismissible: false,
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return ContentAlertDialog(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              onPressedCont: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              tipoAlerta: TipoAlerta().alertAccion,
-                                              numLineasTitulo: 1,
-                                              numLineasMensaje: 2,
-                                              titulo: 'Error',
-                                              mensajeAlerta: 'La probabilidad no puede ser un valor negativo.'
-                                            );
-                                          },
-                                        );
-                      
-                                        return;
-                                      }
-                                    }
                                   }
 
-                                  if(ingresoEsperadoEditTxt.text.isEmpty){
-                                    showDialog(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return ContentAlertDialog(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          onPressedCont: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          tipoAlerta: TipoAlerta().alertAccion,
-                                          numLineasTitulo: 2,
-                                          numLineasMensaje: 2,
-                                          titulo: 'Error',
-                                          mensajeAlerta: 'Ingrese el monto esperado.'
-                                        );
-                                      },
-                                    );
-                  
-                                    return;
-                                  } else {
-                                    if(ingresoEsperadoEditTxt.text.isNotEmpty){
-                                      double ingNeg = double.parse(ingresoEsperadoEditTxt.text);
-
-                                      if(ingNeg < 0) {
-                                        showDialog(
-                                          barrierDismissible: false,
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return ContentAlertDialog(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              onPressedCont: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              tipoAlerta: TipoAlerta().alertAccion,
-                                              numLineasTitulo: 1,
-                                              numLineasMensaje: 2,
-                                              titulo: 'Error',
-                                              mensajeAlerta: 'El ingreso esperado no puede ser un valor negativo.'
-                                            );
-                                          },
-                                        );
-                      
-                                        return;
-                                      }
-                                    }
-                                  }
-
-                                  if(emailEditTxt.text.isEmpty){
-                                    showDialog(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return ContentAlertDialog(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          onPressedCont: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          tipoAlerta: TipoAlerta().alertAccion,
-                                          numLineasTitulo: 2,
-                                          numLineasMensaje: 2,
-                                          titulo: 'Error',
-                                          mensajeAlerta: 'Ingrese el correo.'
-                                        );
-                                      },
-                                    );
-                  
-                                    return;
-                                  } else {
-                                    if(emailEditTxt.text.isNotEmpty){
-                                      String pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                                      RegExp regExp = RegExp(pattern);
-                                      
-                                      if(!regExp.hasMatch(emailEditTxt.text)){
-                                        showDialog(
-                                          barrierDismissible: false,
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return ContentAlertDialog(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              onPressedCont: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              tipoAlerta: TipoAlerta().alertAccion,
-                                              numLineasTitulo: 2,
-                                              numLineasMensaje: 2,
-                                              titulo: 'Error',
-                                              mensajeAlerta: 'Correo inválido.'
-                                            );
-                                          },
-                                        );
-                      
-                                        return;
-                                      }
-                                    }
-
-                                  }
-
-                                  if(fecEditCierre.isEmpty){
-                                    showDialog(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return ContentAlertDialog(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          onPressedCont: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          tipoAlerta: TipoAlerta().alertAccion,
-                                          numLineasTitulo: 2,
-                                          numLineasMensaje: 2,
-                                          titulo: 'Error',
-                                          mensajeAlerta: 'Ingrese la fecha de cierre esperado.'
-                                        );
-                                      },
-                                    );
-                  
-                                    return;
-                                  }
-
-                                  if(direccionEditTxt.text.isEmpty){
-                                    showDialog(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return ContentAlertDialog(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          onPressedCont: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          tipoAlerta: TipoAlerta().alertAccion,
-                                          numLineasTitulo: 2,
-                                          numLineasMensaje: 2,
-                                          titulo: 'Error',
-                                          mensajeAlerta: 'Ingrese la dirección del prospecto.'
-                                        );
-                                      },
-                                    );
-                  
-                                    return;
-                                  }
-                                  */
-
-                                  /*
                                   showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (context) => SimpleDialog(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        SimpleDialogCargando(
-                                          null,
-                                          mensajeMostrar: 'Estamos editando',
-                                          mensajeMostrarDialogCargando: 'los datos del prospecto.',
-                                        ),
-                                      ]
-                                    ),
-                                  );
-
-                                  DatumCrmLead objProsp = DatumCrmLead(                                    
-                                    
-                                    dayClose: double.parse(dateEdPrsp.day.toString()),
-                                    id: 0,
-                                    name: nombresEditTxt.text,
-                                    emailCc: emailEditTxt.text,
-                                    priority: '',
-                                    type: '',
-                                    city: '',
-                                    contactName: nombresEditTxt.text,
-                                    description: observacionesEditTxt.text,
-                                    emailFrom: emailEditTxt.text,
-                                    street: direccionEditTxt.text,
-                                    phone: telefonoEditTxt.text,
-                                    partnerName: nombresEditTxt.text,
-                                    mobile: '',
-                                    dateOpen: DateTime.now(),
-                                    dateDeadline: DateTime.now(),
-                                    probability: double.parse(probabilityEditTxt.text),
-
-                                    activityIds: [
-                                      StructCombos(id: 2, name: actEditSelect)
-                                    ],
-                                    campaignId: CampaignId(
-                                      id: 2,
-                                      name: ''
-                                    ),
-                                    countryId: StructCombos (
-                                      id: 2,
-                                      name: paisEditTxt.text
-                                    ),
-                                    lostReasonId: CampaignId(
-                                      id: 2,
-                                      name: ''
-                                    ),
-                                    mediumId: StructCombos (
-                                      id: 3,
-                                      name: ''
-                                    ),
-                                    partnerId: StructCombos (
-                                      id: 2,
-                                      name: ''
-                                    ),
-                                    sourceId: StructCombos (
-                                      id: 2,
-                                      name: ''
-                                    ),
-                                    stageId: StructCombos (
-                                      id: 2,
-                                      name: ''
-                                    ),
-                                    stateId: StructCombos (
-                                      id: 2,
-                                      name: ''
-                                    ),
-                                    title: CampaignId(
-                                      id: 2,
-                                      name: ''
-                                    ),
-                                    tagIds: [],
-                                    expectedRevenue: double.parse(ingresoEsperadoEditTxt.text),
-                                    referred: recomendadoPorEditTxt.text
-                                  );
-
-                                  ProspectoRegistroResponseModel objRsp = await ProspectoTypeService().registraProspecto(objProsp);
-
-                                  String respuestaReg = objRsp.result.mensaje;
-                                  int estado = objRsp.result.estado;
-                                  
-
-                                  if(estado == 200){
-                                    gifRespuesta = 'assets/gifs/exito.gif';
-                                  } else {
-                                    gifRespuesta = 'assets/gifs/gifErrorBlanco.gif';
-                                  }
-
-                                  if(objRsp.mensaje.isEmpty){
-                                    
-                                    showDialog(
                                       context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Container(
-                                            color: Colors.transparent,
-                                            height: size.height * 0.17,
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                
-                                                Container(
-                                                  color: Colors.transparent,
-                                                  height: size.height * 0.09,
-                                                  child: Image.asset(gifRespuesta),
-                                                ),
-
-                                                Container(
-                                                  color: Colors.transparent,
-                                                  width: size.width * 0.95,
-                                                  height: size.height * 0.08,
-                                                  alignment: Alignment.center,
-                                                  child: AutoSizeText(
-                                                    objRsp.mensaje,
-                                                    maxLines: 2,
-                                                    minFontSize: 2,
-                                                  ),
-                                                )
-                                              ],
-                                            )
+                                      barrierDismissible: false,
+                                      builder: (context) => SimpleDialog(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          SimpleDialogCargando(
+                                            null,
+                                            mensajeMostrar: 'Estamos editar',
+                                            mensajeMostrarDialogCargando: 'al nuevo prospecto.',
                                           ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
-                                            ),
-                                          ],
-                                        );
-                                      },
+                                        ]
+                                      ),
                                     );
-                                  
-                                    return;
-                                  }
-                                  */
+                    
+                                    int idPais = 0;
+                                    int idCamp = 0;
+                                    int idMedia = 0;
+                                    int idOrigen = 0;
+                                    int idActivi = 0;
+                    
+                                    for (var elemento in mappedObjPais3) {
+                                      if (elemento['name'] == paisSelect) {
+                                        idPais = elemento['id'];
+                                      }
+                                    }
+                    
+                                    for (var elemento in mappedObjCamp3) {
+                                      if (elemento['name'] == campSelect) {
+                                        idCamp = elemento['id'];
+                                      }
+                                    }
+                    
+                                    for (var elemento in mappedObjOrig3) {
+                                      if (elemento['name'] == originSelect) {
+                                        idOrigen = elemento['id'];
+                                      }
+                                    }
+                    
+                                    for (var elemento in mappedObjMed3) {
+                                      if (elemento['name'] == mediaSelect) {
+                                        idMedia = elemento['id'];
+                                      }
+                                    }
+                                    
+                                    for (var elemento in mappedObjAct3) {
+                                      if (elemento['name'] == mediaSelect) {
+                                        idActivi = elemento['id'];
+                                      }
+                                    }
 
-                                  context.pop();
-                                  context.pop();
-                                  /*
-                                  
-                                  DatumCrmLead objProsp = DatumCrmLead(
-                                      expectedRevenue: double.parse(ingresoEsperadoEditTxt.text),
-                                      dayClose: 0,//double.parse(.day.toString()),
-                                      id: 0,
-                                      name: nombresEditTxt.text,
-                                      emailCc: emailEditTxt.text,
+/*
+                                    DatumCrmLead objProsp = DatumCrmLead(
+                                      id: objDatumCrmLeadEdit?.id ?? 0,
+                                      expectedRevenue: ingresoEsperadoTxt.text.isNotEmpty ? double.parse(ingresoEsperadoTxt.text) : 0,
+                                      dayClose: double.parse(dateRgPrsp.day.toString()),                                      
+                                      name: nombresOportTxt.text,
+                                      emailCc: emailTxt.text,
                                       priority: '',
                                       type: '',
                                       city: '',
                                       contactName: nombresTxt.text,
                                       description: observacionesTxt.text,
-                                      emailFrom: emailTxt.text,
+                                      emailFrom: emailEditTxt.text,
                                       street: direccionTxt.text,
                                       phone: telefonoPrsp,
                                       partnerName: nombresTxt.text,
                                       mobile: telefonoPrsp,
                                       dateOpen: DateTime.now(),
                                       dateDeadline: DateTime.parse(fecCierreFin),//DateTime.now(),
-                                      probability: double.parse(probabilityEditTxt.text),
+                                      probability: probabilityTxt.text.isNotEmpty ? double.parse(probabilityTxt.text) : 0,
                                       activityIds: [
                                         StructCombos(id: idActivi, name: actSelect)
                                       ],
@@ -1690,12 +1388,80 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                       referred: recomendadoPorTxt.text,
                                       dateClose: DateTime.now(),//DateTime.parse(fecCierreFin)
                                     );
+                                    */
                     
-                                    ProspectoRegistroResponseModel objRsp = await ProspectoTypeService().registraProspecto(objProsp);
+                                  DatumCrmLead objProsp = DatumCrmLead(                                    
+                                    //dateClose: DateTime.now(),
+                                    //userId: 0,
+                                    id: objDatumCrmLeadEdit?.id ?? 0,
+                                    dayClose: double.parse(dateEdPrsp.day.toString()),                                    
+                                    name: nombresOportEditTxt.text,
+                                    emailCc: emailEditTxt.text,
+                                    priority: '',
+                                    type: '',
+                                    city: '',
+                                    contactName: nombresEditTxt.text,
+                                    description: observacionesEditTxt.text,
+                                    emailFrom: emailEditTxt.text,
+                                    street: direccionEditTxt.text,
+                                    phone: '593${telefonoEditTxt.text}',
+                                    partnerName: nombresEditTxt.text,
+                                    mobile: '',
+                                    dateOpen: DateTime.now(),
+                                    dateDeadline: DateTime.now(),
+                                    probability: double.parse(probabilityEditTxt.text),
+
+                                    activityIds: [
+                                        StructCombos(id: idActivi, name: actEditSelect)
+                                      ],
+                                      campaignId: CampaignId(
+                                        id: idCamp,
+                                        name: campEditSelect
+                                      ),
+                                      countryId: StructCombos (
+                                        id: idPais,
+                                        name: paisEditTxt.text
+                                      ),
+                                      lostReasonId: CampaignId(
+                                        id: 2,
+                                        name: ''
+                                      ),
+                                      mediumId: StructCombos (
+                                        id: idMedia,
+                                        name: ''
+                                      ),
+                                      partnerId: StructCombos (
+                                        id: 2,
+                                        name: ''
+                                      ),
+                                      sourceId: StructCombos (
+                                        id: idOrigen,
+                                        name: originEditSelect
+                                      ),
+                                      stageId: StructCombos (
+                                        id: 2,
+                                        name: ''
+                                      ),
+                                      stateId: StructCombos (
+                                        id: 2,
+                                        name: ''
+                                      ),
+                                      title: CampaignId(
+                                        id: 2,
+                                        name: ''
+                                      ),
+                                    tagIds: [],
+                                    expectedRevenue: double.parse(ingresoEsperadoEditTxt.text),
+                                    referred: recomendadoPorEditTxt.text
+                                  );
+
+                                    ProspectoRegistroResponseModel? objRsp = await ProspectoTypeService().editaProspecto(objProsp);
                                     
-                                    String respuestaReg = objRsp.result.mensaje;
+                                    
+                                    if(objRsp != null){
+                                      String respuestaReg = objRsp.result.mensaje;
                                     int estado = objRsp.result.estado;
-                                    //String gifRespuesta = 'assets/gifs/exito.gif';
+                                    String gifRespuesta = 'assets/gifs/exito.gif';
                     
                                     //ignore: use_build_context_synchronously
                                     context.pop();
@@ -1803,7 +1569,57 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                         );
                                       },
                                     );
-                                  */
+                                  
+                                    }
+                                    else{
+                                      //ignore:use_build_context_synchronously
+                                      context.pop();
+                    
+                                      showDialog(
+                                        //ignore:use_build_context_synchronously
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Container(
+                                              color: Colors.transparent,
+                                              height: size.height * 0.17,
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  
+                                                  Container(
+                                                    color: Colors.transparent,
+                                                    height: size.height * 0.09,
+                                                    child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
+                                                  ),
+                      
+                                                  Container(
+                                                    color: Colors.transparent,
+                                                    width: size.width * 0.95,
+                                                    height: size.height * 0.08,
+                                                    alignment: Alignment.center,
+                                                    child: const AutoSizeText(
+                                                      "Error al editar prospecto.",
+                                                      maxLines: 2,
+                                                      minFontSize: 2,
+                                                    ),
+                                                  )
+                                                ],
+                                              )
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+
 
                                 },
                                 child: ButtonCvsWidget(

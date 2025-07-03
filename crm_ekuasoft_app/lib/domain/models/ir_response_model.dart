@@ -16,9 +16,9 @@ class IrResponseModel {
     String toRawJson() => json.encode(toJson());
 
     factory IrResponseModel.fromJson(Map<String, dynamic> json) => IrResponseModel(
-        jsonrpc: json["jsonrpc"],
-        id: json["id"],
-        result: ResultIr.fromJson(json["result"]),
+        jsonrpc: json["jsonrpc"] ?? '',
+        id: json["id"] ?? 0,
+        result: json["result"] != null ? ResultIr.fromJson(json["result"]) : ResultIr(estado: 0, data: DataIr(irModel: IrModel(data: [], fields: FieldsIr(id: '', model: ''), length: 0))),
     );
 
     Map<String, dynamic> toJson() => {
@@ -42,8 +42,9 @@ class ResultIr {
     String toRawJson() => json.encode(toJson());
 
     factory ResultIr.fromJson(Map<String, dynamic> json) => ResultIr(
-        estado: json["estado"],
-        data: DataIr.fromJson(json["data"]),
+        estado: json["estado"] ?? 0,
+        data: json["data"] != null ? DataIr.fromJson(json["data"]) : 
+        DataIr(irModel: IrModel(data: [], fields: FieldsIr(id: '', model: ''), length: 0)),
     );
 
     Map<String, dynamic> toJson() => {
@@ -64,7 +65,7 @@ class DataIr {
     String toRawJson() => json.encode(toJson());
 
     factory DataIr.fromJson(Map<String, dynamic> json) => DataIr(
-        irModel: IrModel.fromJson(json["ir.model"]),
+        irModel: json["ir.model"] != null ? IrModel.fromJson(json["ir.model"]) : IrModel(data: [], fields: FieldsIr(id: '', model: ''), length: 0),
     );
 
     Map<String, dynamic> toJson() => {
@@ -88,9 +89,9 @@ class IrModel {
     String toRawJson() => json.encode(toJson());
 
     factory IrModel.fromJson(Map<String, dynamic> json) => IrModel(
-        length: json["length"],
-        fields: FieldsIr.fromJson(json["fields"]),
-        data: List<DatumIr>.from(json["data"].map((x) => DatumIr.fromJson(x))),
+        length: json["length"] ?? 0,
+        fields: json["fields"] != null ? FieldsIr.fromJson(json["fields"]) : FieldsIr(id: '', model: ''),
+        data: json["data"] != null ? List<DatumIr>.from(json["data"].map((x) => DatumIr.fromJson(x))) : [],
     );
 
     Map<String, dynamic> toJson() => {
@@ -114,8 +115,8 @@ class DatumIr {
     String toRawJson() => json.encode(toJson());
 
     factory DatumIr.fromJson(Map<String, dynamic> json) => DatumIr(
-        id: json["id"],
-        model: json["model"],
+        id: json["id"] ?? 0,
+        model: json["model"] ?? '',
     );
 
     Map<String, dynamic> toJson() => {
@@ -138,8 +139,8 @@ class FieldsIr {
     String toRawJson() => json.encode(toJson());
 
     factory FieldsIr.fromJson(Map<String, dynamic> json) => FieldsIr(
-        id: json["id"],
-        model: json["model"],
+        id: json["id"] ?? '',
+        model: json["model"] ?? '',
     );
 
     Map<String, dynamic> toJson() => {
