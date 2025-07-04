@@ -1270,7 +1270,7 @@ class PlanActStateTwo extends State<PlanAct> {
                                                     activityTypeId: idACt,
                                                     dateDeadline: DateTime.now(),
                                                     userId: objActividadEscogida?.userId.id ?? 0,//objDatumCrmLead?.userId!.id ?? 0,
-                                                    userCreateId: 0,
+                                                    userCreateId: objActividadEscogida?.userId.id ?? 0,
                                                     resId: objActividadEscogida?.resId ?? 0,
                                                     actId: objActividadEscogida?.id ?? 0,//activitySelected,
                                                     workingTime: tiempo,

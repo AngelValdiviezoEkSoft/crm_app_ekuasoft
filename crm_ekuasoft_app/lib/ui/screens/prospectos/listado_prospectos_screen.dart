@@ -778,14 +778,16 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
             },
           ),
           title: const Text('Prospectos'),
+          /*
           actions: [
             IconButton(
               icon: const Icon(Icons.calendar_month, color: Colors.black),
               onPressed: () {
-                //context.push(objRutasGen.rutaAgenda);
+                
               },
             ),
           ],
+          */
         ),
       body: BlocBuilder<GenericBloc, GenericState>(
         builder: (context,state) {

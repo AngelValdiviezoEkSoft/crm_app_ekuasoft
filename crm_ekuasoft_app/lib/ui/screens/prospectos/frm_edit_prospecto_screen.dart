@@ -184,10 +184,12 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
           ),
           title: const Text('Edición de Prospecto'),
           actions: [
+            /*
             IconButton(
               icon: const Icon(Icons.filter_list, color: Colors.black),
               onPressed: () {},
             ),
+            */
           ],
         ),
       body: BlocBuilder<GenericBloc, GenericState>(

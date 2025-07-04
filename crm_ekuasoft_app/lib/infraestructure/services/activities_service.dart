@@ -1947,8 +1947,6 @@ class ActivitiesService extends ChangeNotifier{
       var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
       IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
 
-      //List<Map<String, dynamic>> lstActividadesMap = [];
-      
       try{
 
         var codImei = await storageProspecto.read(key: 'codImei') ?? '';
@@ -2012,60 +2010,6 @@ class ActivitiesService extends ChangeNotifier{
           }
         };
 
-/*
-        for(int i = 0; i < lstActividades.length; i++){
-        
-          lstActividadesMap.add(
-            {
-              "key": objReq.params.key,
-              "tocken": objReq.params.tocken,
-              "imei": objReq.params.imei,
-              "uid": objReq.params.uid,
-              "company": objReq.params.company,
-              "bearer": objReq.params.bearer,
-              "tocken_valid_date": tockenValidDate,
-              "id": lstActividades[i].actId,
-              "write": {                
-                "res_model_id": objIrModel.data[0].id,
-                "user_id": lstActividades[i].userId,
-                "res_id": lstActividades[i].resId,
-                "note": lstActividades[i].note,
-                "working_time": lstActividades[i].workingTime                
-              }
-            }
-          );
-
-        }
-
-        final requestBody = {
-          "jsonrpc": jsonRpc,
-          "params": lstActividadesMap
-        };
-        */
-
-/*
-        final requestBody = {
-          "jsonrpc": jsonRpc,
-          "params": {
-            "key": objReq.params.key,
-            "tocken": objReq.params.tocken,
-            "imei": objReq.params.imei,
-            "uid": objReq.params.uid,
-            "company": objReq.params.company,
-            "bearer": objReq.params.bearer,
-            "tocken_valid_date": tockenValidDate,
-            "id": objActividad.actId,
-            "write": {
-              "res_model_id": objIrModel.data[0].id,
-              "user_id": objActividad.userId,
-              "res_id": objActividad.resId,
-              "note": objActividad.note,
-              "working_time": objActividad.workingTime,
-            },
-          }
-        };
-        */
-
         final headers = {
           "Content-Type": EnvironmentsProd().contentType
         };
@@ -2084,20 +2028,8 @@ class ActivitiesService extends ChangeNotifier{
           headers: headers,
           body: jsonEncode(requestBody), 
         );
-/*
-        String rspMsm = '';
-        int cod = 0;
-        */
-
-        //print('Test error: ${response.body}');
 
         CierreActividadesResponseModel objCierre = CierreActividadesResponseModel.fromRawJson(response.body);
-/*
-        if(objCierre.result.mensaje.toLowerCase().contains('record does not exist or has been deleted')){
-          rspMsm = 'Actividad cerrada exitosamente';
-          cod = 200;
-        }
-        */
 
         ActividadRegistroResponseModel objRsp = ActividadRegistroResponseModel(
           id: 0,
@@ -2129,8 +2061,6 @@ class ActivitiesService extends ChangeNotifier{
               )
             );
           }
-
-          
 
           await storageCamp.write(key: 'LstActividadesAbiertasCerradas', value: jsonEncode(objMem.toJson()));
         }
