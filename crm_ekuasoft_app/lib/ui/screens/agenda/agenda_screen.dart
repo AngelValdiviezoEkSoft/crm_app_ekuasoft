@@ -43,6 +43,7 @@ class AgendaScreenState extends State<AgendaScreen>  {
   void initState() {
     super.initState();
     objActividadEscogida = null;
+    objCalendarioActividadescogidaByFiltroCal = null;
     idActividadSeleccionada = 0;
     terminoBusquedaActAgenda = '';
     actualizaListaActAgenda = false;

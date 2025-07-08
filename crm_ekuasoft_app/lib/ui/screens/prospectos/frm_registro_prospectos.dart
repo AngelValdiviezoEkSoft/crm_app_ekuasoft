@@ -68,6 +68,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
   void initState() {
     super.initState();
     objActividadEscogida = null;
+    objCalendarioActividadescogidaByFiltroCal = null;
     tabAccionesRegPrsp = 0;
     fechaCierreContTxt = TextEditingController();
     nombresTxt = TextEditingController();

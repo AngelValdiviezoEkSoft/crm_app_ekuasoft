@@ -51,6 +51,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
   void initState() {
     super.initState();
     objActividadEscogida = null;
+    objCalendarioActividadescogidaByFiltroCal = null;
     actualizaListaPrp = false;
     contLst = 0;
     terminoBusqueda = '';

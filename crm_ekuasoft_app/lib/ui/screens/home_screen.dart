@@ -42,6 +42,7 @@ class HomeScreenState extends State<HomeScreen> {
     super.initState();
 
     objActividadEscogida = null;
+    objCalendarioActividadescogidaByFiltroCal = null;
 
     contextPrincipalGen = context;
 
