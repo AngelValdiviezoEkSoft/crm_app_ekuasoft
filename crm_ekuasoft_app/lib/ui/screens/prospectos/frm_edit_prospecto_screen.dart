@@ -12,6 +12,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+late TextEditingController notasInternasTxt;
 bool comienzaEditarFechaCierre = false;
 bool comienzaEditarCorreo = false;
 bool comienzaEditarDireccion = false;
@@ -88,6 +89,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
     objActividadEscogida = null;
     objCalendarioActividadescogidaByFiltroCal = null;
 
+    notasInternasTxt = TextEditingController();
     nombresEditTxt = TextEditingController();
     nombresOportEditTxt = TextEditingController();
     emailEditTxt = TextEditingController();
@@ -564,7 +566,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                   hintTetx: 'Ej: Juan Valdez',
                                                   size: size
                                                 ),
-                                                enabled: false,
+                                                //enabled: false,
                                                 controller: nombresEditTxt,
                                                 autocorrect: false,
                                                 keyboardType: TextInputType.text,
@@ -612,7 +614,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                   hintTetx: 'Ej: Juan Valdez',
                                                   size: size
                                                 ),
-                                                enabled: false,
+                                                //enabled: false,
                                                 controller: nombresOportEditTxt,
                                                 autocorrect: false,
                                                 keyboardType: TextInputType.text,
@@ -1172,8 +1174,44 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                             Container(
                                               color: Colors.transparent,
                                               width: size.width * 0.92,
-                                              height: size.height * 0.22,
+                                              height: size.height * 0.05,
                                               child: const Text('-- Sin Observaciones --', style: TextStyle(color: Colors.black, fontSize: 20),)
+                                            ),
+
+                                            Container(
+                                              color: Colors.transparent,
+                                              width: size.width * 0.92,
+                                              child: TextFormField(
+                                                //enabled: habilitaGuardar,
+                                                inputFormatters: [
+                                                  EmojiInputFormatter()
+                                                ],
+                                                cursorColor: AppLightColors().primary,
+                                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                                style: AppTextStyles.bodyRegular(width: size.width),
+                                                decoration: InputDecorationCvs.formsDecoration(
+                                                  labelText: 'Notas internas',
+                                                  hintTetx: '-- Seguimiento del prospecto --',
+                                                  size: size                                                  
+                                                ),
+                                                controller: notasInternasTxt,
+                                                autocorrect: false,
+                                                keyboardType: TextInputType.multiline,
+                                                minLines: 1,
+                                                maxLines: 4,
+                                                autofocus: false,
+                                                //maxLength: 150,
+                                                textAlign: TextAlign.left,
+                                                onEditingComplete: () {
+                                                  FocusScope.of(context).unfocus();
+                                                },
+                                                onChanged: (value) {
+                                                  
+                                                },
+                                                onTapOutside: (event) {
+                                                  FocusScope.of(context).unfocus();
+                                                },
+                                              ),
                                             ),
                                             
                                             SizedBox(
@@ -1328,71 +1366,6 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                       }
                                     }
 
-/*
-                                    DatumCrmLead objProsp = DatumCrmLead(
-                                      id: objDatumCrmLeadEdit?.id ?? 0,
-                                      expectedRevenue: ingresoEsperadoTxt.text.isNotEmpty ? double.parse(ingresoEsperadoTxt.text) : 0,
-                                      dayClose: double.parse(dateRgPrsp.day.toString()),                                      
-                                      name: nombresOportTxt.text,
-                                      emailCc: emailTxt.text,
-                                      priority: '',
-                                      type: '',
-                                      city: '',
-                                      contactName: nombresTxt.text,
-                                      description: observacionesTxt.text,
-                                      emailFrom: emailEditTxt.text,
-                                      street: direccionTxt.text,
-                                      phone: telefonoPrsp,
-                                      partnerName: nombresTxt.text,
-                                      mobile: telefonoPrsp,
-                                      dateOpen: DateTime.now(),
-                                      dateDeadline: DateTime.parse(fecCierreFin),//DateTime.now(),
-                                      probability: probabilityTxt.text.isNotEmpty ? double.parse(probabilityTxt.text) : 0,
-                                      activityIds: [
-                                        StructCombos(id: idActivi, name: actSelect)
-                                      ],
-                                      campaignId: CampaignId(
-                                        id: idCamp,
-                                        name: campSelect
-                                      ),
-                                      countryId: StructCombos (
-                                        id: idPais,
-                                        name: paisTxt.text
-                                      ),
-                                      lostReasonId: CampaignId(
-                                        id: 2,
-                                        name: ''
-                                      ),
-                                      mediumId: StructCombos (
-                                        id: idMedia,
-                                        name: ''
-                                      ),
-                                      partnerId: StructCombos (
-                                        id: 2,
-                                        name: ''
-                                      ),
-                                      sourceId: StructCombos (
-                                        id: idOrigen,
-                                        name: originSelect
-                                      ),
-                                      stageId: StructCombos (
-                                        id: 2,
-                                        name: ''
-                                      ),
-                                      stateId: StructCombos (
-                                        id: 2,
-                                        name: ''
-                                      ),
-                                      title: CampaignId(
-                                        id: 2,
-                                        name: ''
-                                      ),
-                                      tagIds: [],
-                                      referred: recomendadoPorTxt.text,
-                                      dateClose: DateTime.now(),//DateTime.parse(fecCierreFin)
-                                    );
-                                    */
-                    
                                   DatumCrmLead objProsp = DatumCrmLead(                                    
                                     //dateClose: DateTime.now(),
                                     //userId: 0,

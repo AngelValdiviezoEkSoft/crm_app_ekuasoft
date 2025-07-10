@@ -13,6 +13,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 List<DatumCrmLead> prospectosFiltrados = [];
 String terminoBusqueda = '';
@@ -224,8 +225,14 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
   }
 
+  int? _mesSeleccionado; // mes del 1 al 12
+
   @override
   Widget build(BuildContext context) {
+
+    //VALIDAR QUE SEA SOLO PARA CVE
+    final meses = List.generate(12, (index) => DateFormat.MMMM().format(DateTime(0, index + 1)));
+    meses.add("-- Todos --");
 
     ColorsApp objColorsApp = ColorsApp();
 
@@ -327,6 +334,24 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
           }
 
+          
+          Future<void> refreshDataByMes(int mesSelect, String objMemoria, bool muestraTodos) async {            
+            prospectosFiltrados = [];
+
+            CrmLead apiResponse = CrmLead.fromJson(objMemoria);
+
+            if(mesSelect != 0 && !muestraTodos){
+              prospectosFiltrados = apiResponse.data.where((element) => element.dateOpen!.month == mesSelect).toList();
+              contLst = 0;
+
+              contLst = prospectosFiltrados.length;
+            } else{
+              prospectosFiltrados = apiResponse.data;
+            }            
+
+            //setState(() {});
+
+          }
 
           return FutureBuilder(
             future: state.lstProspectos(),
@@ -357,6 +382,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                   contLst = int.parse(contStr);
 
                   refreshDataByFiltro('', objRsp);
+                  refreshDataByMes(_mesSeleccionado ?? 0, objRsp, _mesSeleccionado == 13);
                   
                   listaVaciaPrp = false;
                   
@@ -412,6 +438,30 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                             FocusScope.of(context).unfocus();
                             actualizaListaPrp = true;
                             setState(() { });
+                          },
+                        ),
+                      ),
+
+                      //VALIDAR QUE SEA SOLO PARA CVE
+                      Container(
+                        color: Colors.white,
+                        width: size.width * 0.96,
+                        child: DropdownButton<int>(
+                          hint: const Text('Selecciona un mes'),
+                          value: _mesSeleccionado,
+                          isExpanded: true,
+                          items: List.generate(13, (index) {
+                            return DropdownMenuItem(
+                              value: index + 1,
+                              child: Text(meses[index]),
+                            );
+                          }),
+                          onChanged: (value) {
+                            _mesSeleccionado = value;
+                            //refreshDataByMes(_mesSeleccionado ?? 0, objRsp);
+                            setState(() {
+                              
+                            });
                           },
                         ),
                       ),
