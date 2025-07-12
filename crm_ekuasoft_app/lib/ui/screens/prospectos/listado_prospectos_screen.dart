@@ -15,6 +15,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
+late final List<int> years;
 List<DatumCrmLead> prospectosFiltrados = [];
 String terminoBusqueda = '';
 DatumCrmLead? objDatumCrmLead;
@@ -31,6 +32,9 @@ class ListaProspectosScreen extends StatefulWidget {
 
 //class MarcacionScreen extends StatelessWidget {
 class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
+
+  int selectedYear = DateTime.now().year;
+  int? _mesSeleccionado; // mes del 1 al 12  
 
   bool showButtonScrool = false;
   final ScrollController scrollListaClt = ScrollController();
@@ -73,6 +77,9 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
         });
       }
     });
+
+    int currentYear = DateTime.now().year;
+    years = List.generate(currentYear - 2000 + 1, (index) => 2000 + index);
   }
 
   @override
@@ -225,8 +232,6 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
   }
 
-  int? _mesSeleccionado; // mes del 1 al 12
-
   @override
   Widget build(BuildContext context) {
 
@@ -341,7 +346,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
             CrmLead apiResponse = CrmLead.fromJson(objMemoria);
 
             if(mesSelect != 0 && !muestraTodos){
-              prospectosFiltrados = apiResponse.data.where((element) => element.dateOpen!.month == mesSelect).toList();
+              prospectosFiltrados = apiResponse.data.where((element) => element.dateOpen!.month == mesSelect && element.dateOpen!.year == selectedYear).toList();
               contLst = 0;
 
               contLst = prospectosFiltrados.length;
@@ -442,14 +447,21 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                         ),
                       ),
 
+                      SizedBox(
+                        height: size.height * 0.02,
+                      ),
+
                       //VALIDAR QUE SEA SOLO PARA CVE
                       Container(
                         color: Colors.white,
                         width: size.width * 0.96,
-                        child: DropdownButton<int>(
+                        child: DropdownButtonFormField<int>(
                           hint: const Text('Selecciona un mes'),
                           value: _mesSeleccionado,
                           isExpanded: true,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                          ),
                           items: List.generate(13, (index) {
                             return DropdownMenuItem(
                               value: index + 1,
@@ -465,6 +477,34 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                           },
                         ),
                       ),
+
+                      SizedBox(
+                        height: size.height * 0.02,
+                      ),
+
+                      //VALIDAR QUE SEA SOLO PARA CVE
+                      Container(
+                        color: Colors.white,
+                        width: size.width * 0.96,
+                        child: DropdownButtonFormField<int>(
+                          value: selectedYear,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                          ),
+                          items: years.map((year) {
+                            return DropdownMenuItem(
+                              value: year,
+                              child: Text(year.toString()),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedYear = value!;
+                            });
+                          },
+                        ),
+                      ),
+
 
                       if(prospectosFiltrados.isNotEmpty)         
                       SizedBox(height: size.height * 0.02,),
@@ -580,9 +620,10 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                       child: const Icon(Icons.person, color: Colors.grey, size: 40.0),
                                                     ),
                                                   ),
+                                                  SizedBox(width: size.width * 0.02,),
                                                   Container(
                                                     color: Colors.transparent,
-                                                    width: size.width * 0.55,
+                                                    width: size.width * 0.52,
                                                     height: size.height * 0.25,
                                                   child: Column(
                                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -684,7 +725,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                               )
                                             ),
                                             Container(
-                                              width: size.width * 0.11,
+                                              width: size.width * 0.13,
                                               height: size.height * 0.17,
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
@@ -696,7 +737,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                 children: [
                                                   Container(
                                                     color: Colors.transparent,
-                                                    height: size.height * 0.03,
+                                                    height: size.height * 0.04,
                                                     alignment: Alignment.topCenter,
                                                     child: IconButton(
                                                       icon: const Icon(Icons.location_pin, color: Colors.grey, size: 20,),
@@ -711,7 +752,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                   ),
                                                   Container(
                                                     color: Colors.transparent,
-                                                    height: size.height * 0.03,
+                                                    height: size.height * 0.04,
                                                     alignment: Alignment.topCenter,
                                                     child: IconButton(
                                                       icon: const Icon(Icons.route, color: Colors.grey, size: 20,),
@@ -722,7 +763,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                   ),
                                                   Container(
                                                     color: Colors.transparent,
-                                                    height: size.height * 0.03,
+                                                    height: size.height * 0.04,
                                                     child: IconButton(
                                                       icon: const Icon(Icons.info, color: Colors.grey, size: 20,),
                                                       onPressed: () {

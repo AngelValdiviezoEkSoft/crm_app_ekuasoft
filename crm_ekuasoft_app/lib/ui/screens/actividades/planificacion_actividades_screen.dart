@@ -88,6 +88,7 @@ class PlanActState extends State<PlanificacionActividades> {
     final planAct = BlocProvider.of<GenericBloc>(context);
 
     String nombreEscogido = '-- Sin nombre --';
+    double probCalculada = 0;
 
     if(objActividadEscogida != null && objActividadEscogida!.leadName != null){
       nombreEscogido = objActividadEscogida!.leadName!;
@@ -95,6 +96,9 @@ class PlanActState extends State<PlanificacionActividades> {
 
     if(objActividadEscogida == null && objDatumCrmLead != null && objDatumCrmLead!.contactName != null){
       nombreEscogido = objDatumCrmLead!.contactName!;
+      if(objDatumCrmLead!.probability != null){
+        probCalculada = objDatumCrmLead!.probability! * 100;
+      }      
     }
 
     /*
@@ -719,7 +723,7 @@ class PlanActState extends State<PlanificacionActividades> {
                         // Precios y Ventas
                         sectionTitle(Icons.monetization_on, "Precios y Ventas"),
                       if (tabAcciones == 1) infoRow("Ingreso esperado", "\$${objDatumCrmLead?.expectedRevenue}"),
-                      if (tabAcciones == 1) infoRow("Probabilidad", "${objDatumCrmLead?.probability}%"),
+                      if (tabAcciones == 1) infoRow("Probabilidad", "$probCalculada%"),
                     ],
                   ),
                 ),
@@ -744,7 +748,7 @@ Widget sectionTitle(IconData icon, String title) {
           title,
           style: const TextStyle(
             color: Colors.white,
-            fontSize: 16,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -761,7 +765,6 @@ Widget infoRow(String label, String value) {
       children: [
         Text(
           "$label:",
-          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         Text(value),
       ],

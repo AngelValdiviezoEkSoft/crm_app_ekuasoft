@@ -1177,7 +1177,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                               height: size.height * 0.05,
                                               child: const Text('-- Sin Observaciones --', style: TextStyle(color: Colors.black, fontSize: 20),)
                                             ),
-
+/*
                                             Container(
                                               color: Colors.transparent,
                                               width: size.width * 0.92,
@@ -1213,6 +1213,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                 },
                                               ),
                                             ),
+                                            */
                                             
                                             SizedBox(
                                               height: size.height * 0.02,
