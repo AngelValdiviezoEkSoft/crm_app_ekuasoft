@@ -276,6 +276,26 @@ class AuthService extends ChangeNotifier {
             ["model","=",EnvironmentsProd().modCrmLead]//"crm.lead"
           ]
         },
+        {
+          "model": EnvironmentsProd().modEkClasif,//"ek.classification",
+          "filters": []
+        },
+        {
+          "model": EnvironmentsProd().modEkResCountryCanton,//"ek.res.country.canton",
+          "filters": []
+        },
+        {
+          "model": EnvironmentsProd().modEkResRegion,//"ek.res.region",
+          "filters": []
+        },
+        {
+          "model": EnvironmentsProd().modEkResSector,//"ek.res.sector",
+          "filters": []
+        },
+        {
+          "model": EnvironmentsProd().modEkResCountryCity,//"ek.res.country.city",
+          "filters": []
+        },
       ];
 
       await storage.write(key: 'RespuestaLogin', value: response.body);

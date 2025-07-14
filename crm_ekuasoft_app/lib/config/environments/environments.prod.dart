@@ -27,5 +27,11 @@ class EnvironmentsProd {
   final String modMailMessage = 'mail.message';
   final String modIrModel = 'ir.model';
   final String modCrmLead = 'crm.lead';
+  
+  final String modEkClasif = 'ek.classification';
+  final String modEkResCountryCanton = 'ek.res.country.canton';
+  final String modEkResRegion = 'ek.res.region';
+  final String modEkResSector = 'ek.res.sector';
+  final String modEkResCountryCity = 'ek.res.country.city';  
 
 }

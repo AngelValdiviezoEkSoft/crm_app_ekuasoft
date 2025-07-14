@@ -1407,9 +1407,17 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                         id: idMedia,
                                         name: ''
                                       ),
-                                      partnerId: StructCombos (
+                                      partnerId: PartnerId(
                                         id: 2,
-                                        name: ''
+                                        name: '',
+                                        tradeName: '',
+                                        channelId: StructCombos(id: 0, name: ''),
+                                        cityId: StructCombos(id: 0, name: ''),
+                                        clasificationId: StructCombos(id: 0, name: ''),
+                                        email: '',
+                                        cantonId: StructCombos(id: 0, name: ''),
+                                        regionId: StructCombos(id: 0, name: ''),
+                                        sectorId: StructCombos(id: 0, name: '')
                                       ),
                                       sourceId: StructCombos (
                                         id: idOrigen,

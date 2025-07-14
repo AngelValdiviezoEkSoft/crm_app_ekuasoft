@@ -115,7 +115,7 @@ class DatumCrmLead {
     String emailFrom;    
     StructCombos mediumId;
     String name;
-    StructCombos partnerId;
+    PartnerId partnerId;
     String? partnerName;
     String? phone;
     String priority;
@@ -189,7 +189,7 @@ class DatumCrmLead {
         lostReasonId: CampaignId.fromMap(json["lost_reason_id"]),
         mediumId: StructCombos.fromMap(json["medium_id"]),
         name: json["name"],
-        partnerId: StructCombos.fromMap(json["partner_id"]),
+        partnerId: PartnerId.fromMap(json["partner_id"]),
         partnerName: json["partner_name"],
         phone: json["phone"],
         priority: json["priority"],
@@ -229,7 +229,7 @@ class DatumCrmLead {
         lostReasonId: json['lost_reason_id'].toString() == "{}" ? CampaignId(id: 0, name: '') : CampaignId.fromJson2(jsonDecode(json['lost_reason_id'])),//json['lost_reason_id'],
         mediumId: json['medium_id'].toString() == "{}" ? StructCombos(id: 0, name: '') : StructCombos.fromJson2(jsonDecode(json['medium_id'])),
         name: json['name'],
-        partnerId: json['partner_id'].toString() == "{}" ? StructCombos(id: 0, name: '') : StructCombos.fromJson2(jsonDecode(json['partner_id'])),
+        partnerId: json['partner_id'].toString() == "{}" ? PartnerId (id: 0, name: '', tradeName: '', channelId: StructCombos(id: 0, name: ''), cityId: StructCombos(id: 0, name: ''), clasificationId: StructCombos(id: 0, name: ''), email: '', cantonId: StructCombos(id: 0, name: ''), regionId: StructCombos(id: 0, name: ''), sectorId: StructCombos(id: 0, name: '')) : PartnerId .fromJson2(jsonDecode(json['partner_id'])),
         partnerName: json['partner_name'],
         phone: json['phone'],
         priority: json['priority'],
@@ -527,3 +527,78 @@ class StructCombos {
         "name": name
     };
 }
+
+class PartnerId {
+    int id;
+    String name;
+    String tradeName;
+    String email;
+    StructCombos channelId;
+    StructCombos cityId;
+    StructCombos clasificationId;
+
+    StructCombos regionId;
+    StructCombos cantonId;
+    StructCombos sectorId;
+
+    PartnerId({
+        required this.id,
+        required this.name,
+        required this.tradeName,
+        required this.channelId,
+        required this.cityId,
+        required this.clasificationId,
+        required this.email,
+        required this.regionId,
+        required this.cantonId,
+        required this.sectorId
+    });
+
+    factory PartnerId.fromJson(String str) => PartnerId.fromMap(json.decode(str));
+
+    String toJson() => json.encode(toMap());
+
+    factory PartnerId.fromMap(Map<String, dynamic> json) => PartnerId(
+        id: json["id"] ?? 0,
+        name: json["name"] ?? '',
+        tradeName: json["trade_name"] ?? '',
+        channelId: json["channel_id"] != null ? StructCombos.fromJson2(json["channel_id"]) : StructCombos(id: 0, name: ''),
+        cityId: json["city_id"] != null ? StructCombos.fromJson2(json["city_id"]) : StructCombos(id: 0, name: ''),
+        clasificationId: json["classification_id"] != null ? StructCombos.fromJson2(json["classification_id"]) : StructCombos(id: 0, name: ''),
+
+        regionId: json["region_id"] != null ? StructCombos.fromJson2(json["region_id"]) : StructCombos(id: 0, name: ''),
+        cantonId: json["canton_id"] != null ? StructCombos.fromJson2(json["canton_id"]) : StructCombos(id: 0, name: ''),
+        sectorId: json["sector_id"] != null ? StructCombos.fromJson2(json["sector_id"]) : StructCombos(id: 0, name: ''),
+        
+        email: json["email"] ?? '',
+    );
+
+    factory PartnerId.fromJson2(Map<String, dynamic> json) {
+      return PartnerId(
+        id: json['id'] ?? 0,
+        name: json['name'] ?? '',
+        tradeName: json['trade_name'] ?? '',
+        channelId: json['channel_id'] ?? '',
+        cityId: json['city_id'] ?? '',
+        clasificationId: json['classification_id'] ?? '',
+        email: json['email'] ?? '',
+        regionId: json['region_id'] ?? '',
+        cantonId: json['canton_id'] ?? '',
+        sectorId: json['sector_id'] ?? ''        
+      );
+    }
+
+    Map<String, dynamic> toMap() => {
+        "id": id,
+        "name": name,
+        "channel_id": channelId.toJson(),
+        "city_id": cityId.toJson(),
+        "classification_id": clasificationId.toJson(),
+        "email": email,
+        "region_id": regionId,
+        "canton_id": cantonId,
+        "sector_id": sectorId,
+        "trade_name": tradeName
+    };
+}
+

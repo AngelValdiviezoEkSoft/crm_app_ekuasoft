@@ -382,7 +382,7 @@ class ActivitiesService extends ChangeNotifier{
         lead: DatumCrmLead(
           activityIds: [], campaignId: CampaignId(id: 0, name: ''), countryId: StructCombos(id: 0, name: ''),
           dayClose: 0, emailFrom: '', expectedRevenue: 0, id: 0, lostReasonId: CampaignId(id: 0, name: ''),
-          mediumId: StructCombos(id: 0, name: ''), mobile: '', name: '', partnerId: StructCombos(id: 0, name: ''),
+          mediumId: StructCombos(id: 0, name: ''), mobile: '', name: '', partnerId: PartnerId(id: 0, name: '', tradeName: '', cantonId: StructCombos(id: 0, name: ''), regionId: StructCombos(id: 0, name: ''), sectorId: StructCombos(id: 0, name: ''), channelId: StructCombos(id: 0, name: ''), cityId: StructCombos(id: 0, name: ''), clasificationId: StructCombos(id: 0, name: ''), email: ''),
           priority: '', sourceId: StructCombos(id: 0, name: ''), stageId: StructCombos(id: 0, name: ''),
           stateId: StructCombos(id: 0, name: ''), tagIds: [], title: CampaignId(id: 0, name: ''),
           type: '', city: '', contactName: '', dateClose: null, dateDeadline: null, dateOpen: null, description: '',
@@ -593,9 +593,17 @@ class ActivitiesService extends ChangeNotifier{
           name: objFin?.mediumId.name ?? ''
         ),
         name: objFin?.name ?? '',
-        partnerId: StructCombos(
+        partnerId: PartnerId(
+          tradeName: '',
+          cantonId: StructCombos(id: 0, name: ''),
+          regionId: StructCombos(id: 0, name: ''),
+          sectorId: StructCombos(id: 0, name: ''),
           id: objFin?.partnerId.id ?? 0,
-          name: objFin?.partnerId.name ?? ''
+          name: objFin?.partnerId.name ?? '',
+          channelId: StructCombos(id: 0, name: ''),
+          cityId: StructCombos(id: 0, name: ''),
+          clasificationId: StructCombos(id: 0, name: ''),
+          email: ''
         ),
         priority: objFin?.priority ?? '',
         sourceId: StructCombos(
@@ -690,7 +698,7 @@ class ActivitiesService extends ChangeNotifier{
         lead: DatumCrmLead(
           activityIds: [], campaignId: CampaignId(id: 0, name: ''), countryId: StructCombos(id: 0, name: ''),
           dayClose: 0, emailFrom: '', expectedRevenue: 0, id: 0, lostReasonId: CampaignId(id: 0, name: ''),
-          mediumId: StructCombos(id: 0, name: ''), mobile: '', name: '', partnerId: StructCombos(id: 0, name: ''),
+          mediumId: StructCombos(id: 0, name: ''), mobile: '', name: '', partnerId: PartnerId(id: 0, name: '', tradeName: '', cantonId: StructCombos(id: 0, name: ''), regionId: StructCombos(id: 0, name: ''), sectorId: StructCombos(id: 0, name: ''), channelId: StructCombos(id: 0, name: ''), cityId: StructCombos(id: 0, name: ''),clasificationId: StructCombos(id: 0, name: ''), email: ''),
           priority: '', sourceId: StructCombos(id: 0, name: ''), stageId: StructCombos(id: 0, name: ''),
           stateId: StructCombos(id: 0, name: ''), tagIds: [], title: CampaignId(id: 0, name: ''),
           type: '', city: '', contactName: '', dateClose: null, dateDeadline: null, dateOpen: null, description: '',
@@ -901,9 +909,17 @@ class ActivitiesService extends ChangeNotifier{
           name: objFin?.mediumId.name ?? ''
         ),
         name: objFin?.name ?? '',
-        partnerId: StructCombos(
+        partnerId: PartnerId(
           id: objFin?.partnerId.id ?? 0,
-          name: objFin?.partnerId.name ?? ''
+          tradeName: '',
+          name: objFin?.partnerId.name ?? '',
+          channelId: StructCombos(id: 0, name: ''),
+          cityId: StructCombos(id: 0, name: ''),
+          clasificationId: StructCombos(id: 0, name: ''),
+          email: '',
+          cantonId: StructCombos(id: 0, name: ''),
+          regionId: StructCombos(id: 0, name: ''),
+          sectorId: StructCombos(id: 0, name: '')
         ),
         priority: objFin?.priority ?? '',
         sourceId: StructCombos(
@@ -1179,7 +1195,7 @@ class ActivitiesService extends ChangeNotifier{
         lead: DatumCrmLead(
           activityIds: [], campaignId: CampaignId(id: 0, name: ''), countryId: StructCombos(id: 0, name: ''),
           dayClose: 0, emailFrom: '', expectedRevenue: 0, id: 0, lostReasonId: CampaignId(id: 0, name: ''),
-          mediumId: StructCombos(id: 0, name: ''), mobile: '', name: '', partnerId: StructCombos(id: 0, name: ''),
+          mediumId: StructCombos(id: 0, name: ''), mobile: '', name: '', partnerId: PartnerId(id: 0, tradeName: '', name: '', cantonId: StructCombos(id: 0, name: ''), regionId: StructCombos(id: 0, name: ''), sectorId: StructCombos(id: 0, name: ''), channelId: StructCombos(id: 0, name: ''), cityId: StructCombos(id: 0, name: ''), clasificationId: StructCombos(id: 0, name: ''), email: ''),
           priority: '', sourceId: StructCombos(id: 0, name: ''), stageId: StructCombos(id: 0, name: ''),
           stateId: StructCombos(id: 0, name: ''), tagIds: [], title: CampaignId(id: 0, name: ''),
           type: '', city: '', contactName: '', dateClose: null, dateDeadline: null, dateOpen: null, description: '',
@@ -1402,9 +1418,17 @@ class ActivitiesService extends ChangeNotifier{
           name: objFin?.mediumId.name ?? ''
         ),
         name: objFin?.name ?? '',
-        partnerId: StructCombos(
+        partnerId: PartnerId(
+          tradeName: '',
           id: objFin?.partnerId.id ?? 0,
-          name: objFin?.partnerId.name ?? ''
+          name: objFin?.partnerId.name ?? '',
+          channelId: StructCombos(id: 0, name: ''),
+          cityId: StructCombos(id: 0, name: ''),
+          clasificationId: StructCombos(id: 0, name: ''),
+          email: '',
+          cantonId: StructCombos(id: 0, name: ''),
+          regionId: StructCombos(id: 0, name: ''),
+          sectorId: StructCombos(id: 0, name: '')
         ),
         priority: objFin?.priority ?? '',
         sourceId: StructCombos(

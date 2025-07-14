@@ -233,19 +233,9 @@ class GenericService extends ChangeNotifier {
       await getMultiModelosGen(objReq, lstModels);
     }
 
-    //print('Lst gen: ${response.body}');
-/*
-    try{
-      var rsp2 = AppResponseModel.fromRawJson(response.body);
-    }
-    catch(ex){
-      print('errooor: $ex');
-    }
-    */
-
     var rsp = AppResponseModel.fromRawJson(response.body);
 
-    //print('Lst Prsp: ${json.encode(rsp.result.data.crmLead)}'); 
+    print('Respuesta MODELOS: ${response.body}');
 
     await storage.write(key: 'RespuestaProspectos', value: json.encode(rsp.result.data.crmLead));
     await storage.write(key: 'RespuestaClientes', value: json.encode(rsp.result.data.resPartner));
@@ -257,6 +247,12 @@ class GenericService extends ChangeNotifier {
     await storage.write(key: 'cmbPaises', value: json.encode(rsp.result.data.resCountry));
     await storage.write(key: 'cmbLstActividades', value: json.encode(rsp.result.data.mailActivity));
     await storage.write(key: 'RespuestaIrModel', value: json.encode(rsp.result.data.irResponse));
+
+    await storage.write(key: 'EkClasifProsp', value: json.encode(rsp.result.data.ekClasification));
+    await storage.write(key: 'EkResCountryCantonProsp', value: json.encode(rsp.result.data.ekResCountryCanton));
+    await storage.write(key: 'EkResRegionProsp', value: json.encode(rsp.result.data.ekResRegion));
+    await storage.write(key: 'EkResSectorProsp', value: json.encode(rsp.result.data.ekResSector));
+    await storage.write(key: 'EkResCountryCityProsp', value: json.encode(rsp.result.data.ekResCountryCity));
 
     return response.body;
     

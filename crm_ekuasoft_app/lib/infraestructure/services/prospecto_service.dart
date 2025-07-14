@@ -35,12 +35,9 @@ class ProspectoTypeService extends ChangeNotifier{
 
   getProspectos() async {
     try{
-
       var codImei = await storageProspecto.read(key: 'codImei') ?? '';
-
       var objReg = await storageProspecto.read(key: 'RespuestaRegistro') ?? '';
       var obj = RegisterDeviceResponseModel.fromJson(objReg);
-
       var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
       var objLogDecode = json.decode(objLog);
 

@@ -8,9 +8,17 @@ import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+
+String channelProspPlAct = '';
+String clasificacionPrspPlAct = '';
+String ciudadPrspPlAct = '';
+String regionPrspPlAct = '';
+String cantonPrspPlAct = '';
+String sectorPrspPlAct = '';
 
 bool muestraTextoParaHoy = false;
 List<MailActivityTypeDatumAppModel> actividadesFilAgendaPlan = [];
@@ -79,6 +87,13 @@ class PlanActState extends State<PlanificacionActividades> {
     if(objActividadEscogida == null && objCalendarioActividadescogidaByFiltroCal != null){
       objActividadEscogida = objCalendarioActividadescogidaByFiltroCal;
     }
+
+    channelProspPlAct = '';
+    clasificacionPrspPlAct = '';
+    ciudadPrspPlAct = '';
+    regionPrspPlAct = '';
+    cantonPrspPlAct = '';
+    sectorPrspPlAct = '';
   }
 
   @override
@@ -668,8 +683,42 @@ class PlanActState extends State<PlanificacionActividades> {
                                         : Colors.blue.shade800,
                                     child: Center(
                                       child: TextButton(
-                                        onPressed: () {
+                                        onPressed: () async {
                                           tabAcciones = 1;
+
+                                          if(objDatumCrmLead != null){
+                                            const storage = FlutterSecureStorage();
+
+                                            String resPartner = await storage.read(key: 'RespuestaClientes') ?? '';
+
+                                            String ekClasifProspStr = await storage.read(key: 'EkClasifProsp') ?? '';
+                                            String ekResCountryCantonStr = await storage.read(key: 'EkResCountryCantonProsp') ?? '';
+                                            String ekResRegionStr = await storage.read(key: 'EkResRegionProsp') ?? '';
+                                            String ekResSectorStr = await storage.read(key: 'EkResSectorProsp') ?? '';
+                                            String ekResCityStr = await storage.read(key: 'EkResCountryCityProsp') ?? '';
+
+                                            ResPartnerAppModel apiResponse = ResPartnerAppModel.fromRawJson(resPartner);
+                                            EkClassification  ekClassificationFin = EkClassification.fromRawJson(ekClasifProspStr);
+                                            CantonModel  ekCantonFin = CantonModel.fromRawJson(ekResCountryCantonStr);
+                                            RegionModel  ekRegionModelFin = RegionModel.fromRawJson(ekResRegionStr);
+                                            SectorModel  ekSectorFin = SectorModel.fromRawJson(ekResSectorStr);
+                                            CountryCity  ekCityFin = CountryCity.fromRawJson(ekResCityStr);
+                                            
+                                            var objFiltrado = apiResponse.data.firstWhere((x) => x.id == objDatumCrmLead!.partnerId.id,);
+                                            var objClasif = ekClassificationFin.data.firstWhere((x) => x.id == objFiltrado.ekClasificationId.id);
+                                            var objCiudad = ekCityFin.data.firstWhere((x) => x.id == objFiltrado.cityId.id);
+                                            var objCanton = ekCantonFin.data.firstWhere((x) => x.id == objFiltrado.ekResCountryCantonId.id);
+                                            var objRegion = ekRegionModelFin.data.firstWhere((x) => x.id == objFiltrado.ekResRegionId.id);
+                                            var objSector = ekSectorFin.data.firstWhere((x) => x.id == objFiltrado.ekResSectorId.id);
+
+                                            channelProspPlAct = objFiltrado.channelId.name ?? '';
+                                            clasificacionPrspPlAct = objClasif.name ?? '';
+                                            ciudadPrspPlAct = objCiudad.name ?? '';
+                                            regionPrspPlAct = objRegion.name ?? '';
+                                            cantonPrspPlAct = objCanton.name ?? '';
+                                            sectorPrspPlAct = objSector.name ?? '';
+                                          }
+
                                           setState(() {});
                                         },
                                         child: Column(
@@ -705,27 +754,25 @@ class PlanActState extends State<PlanificacionActividades> {
                       if (tabAcciones == 1)
                         // Información General
                         sectionTitle(Icons.info, "Información General"),
-                      //if (tabAcciones == 1) infoRow("Razón Social", "Randy Rudolph"),
+                      if (tabAcciones == 1) infoRow("Razón Social", objDatumCrmLead?.partnerId.name ?? '-----', size),
                       if (tabAcciones == 1)
-                        infoRow("Nombre Comercial", objDatumCrmLead?.partnerId.name ?? '-----'),
-                      if (tabAcciones == 1) infoRow("Clasificación", "-----"),
-                      if (tabAcciones == 1) infoRow("Canal", objDatumCrmLead?.mediumId.name ?? '-----'),
-                      if (tabAcciones == 1) infoRow("Dirección", '${objDatumCrmLead?.street} ${objDatumCrmLead?.street2}'),
+                        infoRow("Nombre Comercial", objDatumCrmLead?.partnerId.tradeName ?? '-----', size),
+                      if (tabAcciones == 1) infoRow("Clasificación", clasificacionPrspPlAct, size),
+                      if (tabAcciones == 1) infoRow("Canal", channelProspPlAct, size),
+                      if (tabAcciones == 1) infoRow("Dirección", '${objDatumCrmLead?.street} ${objDatumCrmLead?.street2}', size),
                       if (tabAcciones == 1)
                         // Territorio
                         sectionTitle(Icons.place, "Territorio"),
-                      if (tabAcciones == 1) infoRow("Estado", objDatumCrmLead?.stageId.name ?? '-----'),
-                      if (tabAcciones == 1) infoRow("Ciudad", objDatumCrmLead?.city ?? '-----'),
-                      /*
-                      if (tabAcciones == 1) infoRow("Cantón", "Tarquí"),
-                      if (tabAcciones == 1) infoRow("Región", "Costa"),
-                      */
-                      //if (tabAcciones == 1) infoRow("Lugar", "Norte"),
+                      if (tabAcciones == 1) infoRow("Estado", objDatumCrmLead?.stageId.name ?? '-----', size),
+                      if (tabAcciones == 1) infoRow("Ciudad", ciudadPrspPlAct, size),
+                      if (tabAcciones == 1) infoRow("Cantón", cantonPrspPlAct, size),
+                      if (tabAcciones == 1) infoRow("Región", regionPrspPlAct, size),
+                      if (tabAcciones == 1) infoRow("Lugar", sectorPrspPlAct, size),
                       if (tabAcciones == 1)
                         // Precios y Ventas
                         sectionTitle(Icons.monetization_on, "Precios y Ventas"),
-                      if (tabAcciones == 1) infoRow("Ingreso esperado", "\$${objDatumCrmLead?.expectedRevenue.toStringAsFixed(2)}"),
-                      if (tabAcciones == 1) infoRow("Probabilidad", "${probCalculada.toStringAsFixed(0)}%"),
+                      if (tabAcciones == 1) infoRow("Ingreso esperado", "\$${objDatumCrmLead?.expectedRevenue.toStringAsFixed(2)}", size),
+                      if (tabAcciones == 1) infoRow("Probabilidad", "${probCalculada.toStringAsFixed(0)}%", size),
                     ],
                   ),
                 ),
@@ -759,16 +806,30 @@ Widget sectionTitle(IconData icon, String title) {
   );
 }
 
-Widget infoRow(String label, String value) {
+Widget infoRow(String label, String value, Size size) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          "$label:",
+          Container(
+          width: size.width * 0.45,
+          height: size.height * 0.04,
+          color: Colors.transparent,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "$label:",
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
         ),
-        Text(value),
+        Container(
+          width: size.width * 0.43,
+          height: size.height * 0.04,
+          color: Colors.transparent,
+          alignment: Alignment.centerRight,
+          child: Text(value, style: const TextStyle(fontSize: 16, ), overflow: TextOverflow.ellipsis, maxLines: 1,)
+        ),
+      
       ],
     ),
   );
