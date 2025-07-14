@@ -62,3 +62,13 @@ class OnNewInicioCargaEvent extends GenericEvent {
   final bool inicioCarga;
   const OnNewInicioCargaEvent(this.inicioCarga);
 }
+
+class OnViewCargandoEvent extends GenericEvent {
+  final bool showIt;
+  const OnViewCargandoEvent(this.showIt);
+}
+
+class OnViewLevantaModalEvent extends GenericEvent {
+  final bool showIt;
+  const OnViewLevantaModalEvent(this.showIt);
+}

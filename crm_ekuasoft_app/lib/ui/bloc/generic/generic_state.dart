@@ -13,6 +13,8 @@ class GenericState extends Equatable {
   final double heightModalPlanAct;
   final bool muestraCarga;
   final bool inicioCarga;
+  final bool cargando;
+  final bool levantaModal;
 
   const GenericState(
     {
@@ -25,7 +27,9 @@ class GenericState extends Equatable {
       idFormaPago = '',
       heightModalPlanAct = 0.65,
       muestraCarga,
-      inicioCarga
+      inicioCarga,
+      cargando = false,
+      levantaModal = false
     } 
   ) : positionMenu = positionMenu ?? 0,
       positionFormaPago = positionFormaPago ?? 0,
@@ -36,7 +40,9 @@ class GenericState extends Equatable {
       idFormaPago = idFormaPago ?? '',
       heightModalPlanAct = heightModalPlanAct ?? 0.65,
       muestraCarga = muestraCarga ?? false,
-      inicioCarga = inicioCarga ?? true;
+      inicioCarga = inicioCarga ?? true,
+      cargando = cargando ?? false,
+      levantaModal = levantaModal ?? false;
   
 
   GenericState copyWith({
@@ -49,7 +55,9 @@ class GenericState extends Equatable {
     String? idFormaPago,
     double? heightModalPlanAct,
     bool? muestraCarga,
-    bool? inicioCarga
+    bool? inicioCarga,
+    bool? cargando,
+    bool? levantaModal
   }) 
   => GenericState(
     positionMenu: positionMenu ?? this.positionMenu,
@@ -61,12 +69,14 @@ class GenericState extends Equatable {
     idFormaPago: idFormaPago ?? this.idFormaPago,
     heightModalPlanAct: heightModalPlanAct ?? this.heightModalPlanAct,
     muestraCarga: muestraCarga ?? this.muestraCarga,
-    inicioCarga: inicioCarga ?? this.inicioCarga
+    inicioCarga: inicioCarga ?? this.inicioCarga,
+    cargando: cargando ?? this.cargando,
+    levantaModal: levantaModal ?? this.levantaModal
   );
 
 
   @override
-  List<Object> get props => [positionMenu,positionFormaPago,coordenadasMapa,radioMarcacion,formaPago,localidadId,idFormaPago, heightModalPlanAct, muestraCarga,inicioCarga];
+  List<Object> get props => [positionMenu,positionFormaPago,coordenadasMapa,radioMarcacion,formaPago,localidadId,idFormaPago, heightModalPlanAct, muestraCarga,inicioCarga,cargando,levantaModal];
 
   Future<String> readPrincipalPage() async {
 

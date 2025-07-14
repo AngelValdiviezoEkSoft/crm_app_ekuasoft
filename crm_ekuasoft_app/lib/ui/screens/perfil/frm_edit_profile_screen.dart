@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 //import 'package:provider/provider.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart' as picker;
+import 'package:provider/provider.dart';
 
 String rutaFotoPerfilEdit = '';
 String fechaCumpleAnios = '';
@@ -42,7 +43,7 @@ class FrmProfileEditScreenState extends State<FrmProfileEditScreen> {
   @override
   Widget build(BuildContext context) {
 
-    //final gnrBloc = Provider.of<GenericBloc>(context);
+    final gnrBloc = Provider.of<GenericBloc>(context);
     final size = MediaQuery.of(context).size;
     contextPrincipalGen = context;
     //ColorsApp objColorsApp = ColorsApp();
@@ -183,13 +184,14 @@ class FrmProfileEditScreenState extends State<FrmProfileEditScreen> {
                   ],
                 ),
               
-                if (rutaFotoPerfilEdit.isEmpty) //&& !state.levantaModal)
+                if (rutaFotoPerfilEdit.isEmpty&& !state.levantaModal)
                 Positioned(
                   //top: -1,
                   left: 137,
+                  //left: 80,
                   child: GestureDetector(
                     onTap: () {
-                      //gnrBloc.setLevantaModal(true);
+                      gnrBloc.setLevantaModal(true);
                       mostrarOpciones(context, size);
                     },
                     child: Container(
@@ -207,7 +209,7 @@ class FrmProfileEditScreenState extends State<FrmProfileEditScreen> {
                   ),
                 ),
             
-                //if (state.levantaModal)
+                if (state.levantaModal)
                 Positioned(
                   //top: -1,
                   left: 137,
@@ -225,7 +227,7 @@ class FrmProfileEditScreenState extends State<FrmProfileEditScreen> {
                   ),
                 ),
             
-                if (rutaFotoPerfilEdit.isNotEmpty)// && !state.levantaModal)
+                if (rutaFotoPerfilEdit.isNotEmpty && !state.levantaModal)
                 Positioned(
                   //top: -1,
                   left: 137,
@@ -241,7 +243,7 @@ class FrmProfileEditScreenState extends State<FrmProfileEditScreen> {
                       backgroundImage: FileImage(File(rutaFotoPerfilEdit)),
                       child: GestureDetector(
                         onTap: () async {
-                          //gnrBloc.setLevantaModal(true);
+                          gnrBloc.setLevantaModal(true);
                           mostrarOpciones(context, size);
                         },
                       )
@@ -258,7 +260,7 @@ class FrmProfileEditScreenState extends State<FrmProfileEditScreen> {
   }
 
   void mostrarOpciones(BuildContext context, Size size) {
-    //final gnrBloc = Provider.of<GenericBloc>(context, listen: false);
+    final gnrBloc = Provider.of<GenericBloc>(context, listen: false);
 
     showDialog(
       context: context,
@@ -341,18 +343,17 @@ class FrmProfileEditScreenState extends State<FrmProfileEditScreen> {
                           
                           final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
 
-                          //gnrBloc.setCargando(true);
+                          gnrBloc.setCargando(true);
 
                           try {
                             if (pickedFile != null) {
                               rutaFotoPerfilEdit = pickedFile.path;
 
                               //validandoFoto = false;
-                              /*
+                              
                               gnrBloc.setCargando(false);
                               gnrBloc.setLevantaModal(false);
-                              */
-
+                              
                               setState(() {});
 
                             }
@@ -367,7 +368,7 @@ class FrmProfileEditScreenState extends State<FrmProfileEditScreen> {
                           
                           Navigator.pop(context);
 
-                          //gnrBloc.setCargando(true);
+                          gnrBloc.setCargando(true);
 
                           final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
 
@@ -393,11 +394,9 @@ class FrmProfileEditScreenState extends State<FrmProfileEditScreen> {
           ),
         );
       },
-    ).then((result){
-      /*
+    ).then((result){      
       gnrBloc.setCargando(false);
-      gnrBloc.setLevantaModal(false);
-      */
+      gnrBloc.setLevantaModal(false);      
     });
 
   }

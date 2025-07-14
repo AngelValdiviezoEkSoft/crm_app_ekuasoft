@@ -22,6 +22,8 @@ class GenericBloc extends Bloc<GenericEvent, GenericState> {
   double heightModalPlanAct = 0.65;
   bool muestraCarga = false;
   bool inicioCarga = true;
+  bool cargando = false;
+  bool levantaModal = false;
 
   GenericBloc() : super(const GenericState(
     positionMenu: 0, positionFormaPago: 0, coordenadasMapa: 0.0, 
@@ -36,7 +38,9 @@ class GenericBloc extends Bloc<GenericEvent, GenericState> {
     on<OnNewIdFormaPagoEvent>(_onCambioIdFormaPago);//_onCambioLocalidad  _onInitPositionFormaPago
     on<OnNewPositionFormaPagoEvent>(_onInitPositionFormaPago);//_onCambioLocalidad      
     on<OnNewMuestraCargaEvent>(_onInitMuestraCarga);//_onCambioLocalidad      
-    on<OnNewInicioCargaEvent>(_onInitInicioCarga);//_onCambioLocalidad       
+    on<OnNewInicioCargaEvent>(_onInitInicioCarga);//_onCambioLocalidad   
+    on<OnViewCargandoEvent>(_onInitCargando);
+    on<OnViewLevantaModalEvent>(_onInitLevantaModal);    
   }
 
   Future<void> init() async {
@@ -64,6 +68,16 @@ class GenericBloc extends Bloc<GenericEvent, GenericState> {
     add(
       OnNewMuestraCargaEvent(muestraCarga)
     );
+    add( OnViewCargandoEvent(
+       cargando
+    ));
+    add( OnViewLevantaModalEvent(
+       levantaModal
+    ));
+  }
+
+  void _onInitCargando( OnViewCargandoEvent event, Emitter<GenericState> emit ) {
+    emit( state.copyWith( cargando: cargando ) );
   }
 
   void _onInitMuestraCarga( OnNewMuestraCargaEvent event, Emitter<GenericState> emit ) {
@@ -104,6 +118,10 @@ class GenericBloc extends Bloc<GenericEvent, GenericState> {
 
   void _onInitPositionFormaPago( OnNewPositionFormaPagoEvent event, Emitter<GenericState> emit ) {
     emit( state.copyWith( positionFormaPago: positionFormaPago ) );
+  }
+
+  void _onInitLevantaModal( OnViewLevantaModalEvent event, Emitter<GenericState> emit ) {
+    emit( state.copyWith( levantaModal: levantaModal ) );
   }
 
   void setPosicionFormaPago(int varPositionFormaPago) {
@@ -159,6 +177,16 @@ class GenericBloc extends Bloc<GenericEvent, GenericState> {
   void setIniciaCarga(bool varMuestraCarga) {//
     inicioCarga = varMuestraCarga;
     add(OnNewInicioCargaEvent(inicioCarga));
+  }
+
+  void setLevantaModal(bool varPositionFormaPago) {
+    levantaModal = varPositionFormaPago;
+    add(OnViewLevantaModalEvent(levantaModal));
+  }
+
+  void setCargando(bool varPositionFormaPago) {
+    cargando = varPositionFormaPago;
+    add(OnViewCargandoEvent(cargando));
   }
 
   @override
