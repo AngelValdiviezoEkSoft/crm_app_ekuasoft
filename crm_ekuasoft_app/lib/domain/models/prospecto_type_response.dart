@@ -125,9 +125,10 @@ class DatumCrmLead {
     List<dynamic> tagIds;    
     String type;
     String? city;
-    String? emailCc;
+    String? emailCc; 
     String mobile;
     String? street;
+    String? street2;
     DateTime? dateDeadline;
     double? probability;
     StructCombos? userId;
@@ -162,6 +163,7 @@ class DatumCrmLead {
         this.emailCc,
         required this.mobile,
         this.street,
+        this.street2,
         this.dateDeadline,
         this.probability,
         this.dateClose,
@@ -201,6 +203,7 @@ class DatumCrmLead {
         emailCc: json["email_cc"],
         mobile: json["mobile"] ?? '',
         street: json["street"] ?? '',
+        street2: json["street2"] ?? '',
         dateDeadline: json['date_deadline'] == null ? DateTime.now() : DateTime.parse(json['date_deadline']),
         probability: json["probability"] ?? 0,
         userId: json["user_id"] == null ? null : StructCombos.fromMap(json["user_id"]),

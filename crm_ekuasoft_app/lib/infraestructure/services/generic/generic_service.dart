@@ -123,8 +123,8 @@ class GenericService extends ChangeNotifier {
 
     if(rspValidacion['result']['mensaje'] != null && 
       (
-        rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenNoValido || 
-        rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenExpirado
+        rspValidacion['result']['mensaje'].toString().trim().toLowerCase().contains(MensajeValidacion().tockenNoValido) || 
+        rspValidacion['result']['mensaje'].toString().trim().toLowerCase().contains(MensajeValidacion().tockenExpirado)
       )){
       await tokenManager.checkTokenExpiration();
       await getModelos(objReq, modelBusca);

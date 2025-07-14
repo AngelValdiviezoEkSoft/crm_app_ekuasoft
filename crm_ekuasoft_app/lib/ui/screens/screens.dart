@@ -33,3 +33,5 @@ export 'package:crm_ekuasoft_app/ui/screens/mapa/map.dart';
 export 'package:crm_ekuasoft_app/ui/screens/onboarding/onboarding.dart';
 
 export 'package:crm_ekuasoft_app/ui/screens/terminos_condiciones/terminos_condiciones.dart';
+
+export 'package:crm_ekuasoft_app/ui/screens/settings/settings.dart';

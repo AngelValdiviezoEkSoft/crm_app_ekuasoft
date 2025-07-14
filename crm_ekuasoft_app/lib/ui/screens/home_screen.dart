@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crm_ekuasoft_app/app/app.dart';
 import 'package:crm_ekuasoft_app/domain/domain.dart';
+import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -253,8 +254,8 @@ class HomeScreenState extends State<HomeScreen> {
                             nameUserLbl = jsonLog["result"]["partner_display_name"];
                             emailUserLbl = jsonLog["result"]["email"] ?? 'avg@gmail.com';
 
-                            //ignore: use_build_context_synchronously
-                            context.push(objRutasGen.rutaPerfil);
+                            //ignore: use_build_context_synchronously                            
+                            context.push(objRutasGen.rutaProfGen);
                           },
                           child: const Padding(
                             padding: EdgeInsets.all(8.0),
@@ -272,7 +273,7 @@ class HomeScreenState extends State<HomeScreen> {
                               
                           Container(
                             color: Colors.transparent,
-                            width: size.width * 0.69,
+                            width: size.width * 0.6,
                             height: size.height * 0.055,
                             child: DropdownButton<String>(
                                 hint: const Icon(Icons.flip_camera_android_rounded), // Ícono del ComboBox
@@ -303,6 +304,48 @@ class HomeScreenState extends State<HomeScreen> {
                           IconButton(
                             icon: const Icon(Icons.wifi_off, color: Colors.black),
                             onPressed: () {},
+                          ),
+
+                          IconButton(
+                            icon: const Icon(Icons.logout, color: Colors.black),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('¿Está seguro que desea cerrar su sesión?'),
+                                    
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () async {
+
+                                          await AuthService().logOut();
+
+                                          //ignore:use_build_context_synchronously
+                                          Navigator.of(context).pop();
+
+                                          //ignore:use_build_context_synchronously
+                                          context.push(objRutasGen.rutaBienvenida);
+
+                                        },
+                                        child: Text('Sí', style: TextStyle(color: Colors.blue[200]),),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+
+                                          Navigator.of(context).pop();
+
+                                          //context.push(objRutasGen.rutaBienvenida);
+
+                                        },
+                                        child: const Text('No', style: TextStyle(color: Colors.black),),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                          
+                            },
                           ),
                         ],
                       ),

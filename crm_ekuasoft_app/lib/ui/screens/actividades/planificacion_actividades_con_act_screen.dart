@@ -703,24 +703,26 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                       if (tabAccionesAct == 1)
                         // Información General
                         sectionTitle(Icons.info, "Información General"),
-                      if (tabAccionesAct == 1) infoRowAct("Razón Social", "Randy Rudolph", size),
+                      //if (tabAccionesAct == 1) infoRowAct("Razón Social", "Randy Rudolph", size),
                       if (tabAccionesAct == 1)
-                        infoRowAct("Nombre Comercial", "[partner -> business_name]", size),
-                      if (tabAccionesAct == 1) infoRowAct("Clasificación", "Randy Rudolph", size),
-                      if (tabAccionesAct == 1) infoRowAct("Canal", "Randy Rudolph", size),
-                      if (tabAccionesAct == 1) infoRowAct("Dirección", objDatumCrmLead?.street ?? '-----', size),
+                        infoRowAct("Nombre Comercial",objDatumCrmLead?.partnerId.name ?? '-----', size),
+                      if (tabAccionesAct == 1) infoRowAct("Clasificación", "-----", size),
+                      if (tabAccionesAct == 1) infoRowAct("Canal", objDatumCrmLead?.mediumId.name ?? '-----', size),
+                      if (tabAccionesAct == 1) infoRowAct("Dirección", objDatumCrmLead?.street != null ? '${objDatumCrmLead?.street} ${objDatumCrmLead?.street2}' : '-----', size),
                       if (tabAccionesAct == 1)
                         // Territorio
                         sectionTitleAct(Icons.place, "Territorio"),
                       if (tabAccionesAct == 1) infoRowAct("Estado", objDatumCrmLead?.stageId.name ?? '-----', size),
-                      if (tabAccionesAct == 1) infoRowAct("Ciudad", "Guayaquil", size),
+                      if (tabAccionesAct == 1) infoRowAct("Ciudad", objDatumCrmLead?.city ?? '-----', size),
+                      /*
                       if (tabAccionesAct == 1) infoRowAct("Cantón", "Tarquí", size),
                       if (tabAccionesAct == 1) infoRowAct("Región", "Costa", size),
-                      if (tabAccionesAct == 1) infoRowAct("Lugar", "Norte", size),
+                      */
+                      //if (tabAccionesAct == 1) infoRowAct("Lugar", "Norte", size),
                       if (tabAccionesAct == 1)
                         // Precios y Ventas
                         sectionTitleAct(Icons.monetization_on, "Precios y Ventas"),
-                      if (tabAccionesAct == 1) infoRowAct("Ingreso esperado", "\$${objDatumCrmLead?.expectedRevenue}", size),
+                      if (tabAccionesAct == 1) infoRowAct("Ingreso esperado", "\$${objDatumCrmLead?.expectedRevenue.toStringAsFixed(2)}", size),
                       if (tabAccionesAct == 1) infoRowAct("Probabilidad", "${probCalculada.toStringAsFixed(0)}%", size),
                     ],
                   ),

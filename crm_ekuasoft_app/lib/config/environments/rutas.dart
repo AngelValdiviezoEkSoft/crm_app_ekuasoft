@@ -25,6 +25,12 @@ class Rutas{
   String rutaPlanActivConActiv = '/PlanActividades';
   String rutaConsultaActividades = '/ConsultaActividades';
   String rutaTermCond = '/TerminosCondiciones';
+  String rutaTermCond2 = '/TerminosCondiciones2';
+  String rutaProfGen = '/rutaProfGen';
+  String rutaProf = '/rutaProf';
+  String rutaFrmChangePassword = '/rutaFrmChangePassword';
+  String rutaSettingsUser = '/rutaSettingsUser';
+  String rutaEditProfile = '/rutaEditProfile';
 
   //imágenes 
   String rutaImagenes = 'assets/images/';

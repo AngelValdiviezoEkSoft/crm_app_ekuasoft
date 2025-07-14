@@ -352,7 +352,14 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             ),
-                            child: const Text('Buscar', style: TextStyle(color: Colors.white),),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(Icons.search, color: Colors.white,),
+                                Text('Buscar', style: TextStyle(color: Colors.white),),
+                              ],
+                            ),
                           ),
                         ),
     

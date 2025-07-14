@@ -9,10 +9,34 @@ import '../../infraestructure/infraestructure.dart';
 final objRutas = Rutas();
 
 final GoRouter appRouter = GoRouter(
-  routes: [//
+  routes: [//  
+    GoRoute(
+      path: objRutas.rutaEditProfile,
+      builder: (context, state) => const FrmProfileEditScreen(null),
+    ),
+    GoRoute(
+      path: objRutas.rutaSettingsUser,
+      builder: (context, state) => const SettingsUserScreen(),
+    ),
+    GoRoute(
+      path: objRutas.rutaFrmChangePassword,
+      builder: (context, state) => const FrmChangePasswordScreen(null),
+    ),
+    GoRoute(
+      path: objRutas.rutaProf,
+      builder: (context, state) => const FrmProfileScreen(key: null,),
+    ),
+    GoRoute(
+      path: objRutas.rutaProfGen,
+      builder: (context, state) => const ProfileScreenGen(key: null,),
+    ),
     GoRoute(
       path: objRutas.rutaTermCond,
       builder: (context, state) => const TermsAndConditionsScreen(null),
+    ),
+    GoRoute(
+      path: objRutas.rutaTermCond2,
+      builder: (context, state) => const TermsAndConditions2Screen(null),
     ),
     GoRoute(
       path: objRutas.rutaPlanActivConActiv,

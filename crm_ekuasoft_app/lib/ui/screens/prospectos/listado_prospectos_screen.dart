@@ -15,7 +15,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-late final List<int> years;
+List<int> years = [];
 List<DatumCrmLead> prospectosFiltrados = [];
 String terminoBusqueda = '';
 DatumCrmLead? objDatumCrmLead;
@@ -79,7 +79,10 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
     });
 
     int currentYear = DateTime.now().year;
+    
+    years = [];
     years = List.generate(currentYear - 2000 + 1, (index) => 2000 + index);
+    
   }
 
   @override

@@ -1,6 +1,6 @@
 class MensajeValidacion {
 
-  final String tockenNoValido = 'el tocken no es valido';
-  final String tockenExpirado = 'el tocken ha expirado';
+  final String tockenNoValido = 'el token no es valido';
+  final String tockenExpirado = 'el token ha expirado';
   
 }

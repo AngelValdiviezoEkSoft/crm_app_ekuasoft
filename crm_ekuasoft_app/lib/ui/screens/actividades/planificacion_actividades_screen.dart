@@ -705,25 +705,27 @@ class PlanActState extends State<PlanificacionActividades> {
                       if (tabAcciones == 1)
                         // Información General
                         sectionTitle(Icons.info, "Información General"),
-                      if (tabAcciones == 1) infoRow("Razón Social", "Randy Rudolph"),
+                      //if (tabAcciones == 1) infoRow("Razón Social", "Randy Rudolph"),
                       if (tabAcciones == 1)
-                        infoRow("Nombre Comercial", "[partner -> business_name]"),
-                      if (tabAcciones == 1) infoRow("Clasificación", "Randy Rudolph"),
-                      if (tabAcciones == 1) infoRow("Canal", "Randy Rudolph"),
-                      if (tabAcciones == 1) infoRow("Dirección", objDatumCrmLead?.street ?? '-----'),
+                        infoRow("Nombre Comercial", objDatumCrmLead?.partnerId.name ?? '-----'),
+                      if (tabAcciones == 1) infoRow("Clasificación", "-----"),
+                      if (tabAcciones == 1) infoRow("Canal", objDatumCrmLead?.mediumId.name ?? '-----'),
+                      if (tabAcciones == 1) infoRow("Dirección", '${objDatumCrmLead?.street} ${objDatumCrmLead?.street2}'),
                       if (tabAcciones == 1)
                         // Territorio
                         sectionTitle(Icons.place, "Territorio"),
                       if (tabAcciones == 1) infoRow("Estado", objDatumCrmLead?.stageId.name ?? '-----'),
-                      if (tabAcciones == 1) infoRow("Ciudad", "Guayaquil"),
+                      if (tabAcciones == 1) infoRow("Ciudad", objDatumCrmLead?.city ?? '-----'),
+                      /*
                       if (tabAcciones == 1) infoRow("Cantón", "Tarquí"),
                       if (tabAcciones == 1) infoRow("Región", "Costa"),
-                      if (tabAcciones == 1) infoRow("Lugar", "Norte"),
+                      */
+                      //if (tabAcciones == 1) infoRow("Lugar", "Norte"),
                       if (tabAcciones == 1)
                         // Precios y Ventas
                         sectionTitle(Icons.monetization_on, "Precios y Ventas"),
-                      if (tabAcciones == 1) infoRow("Ingreso esperado", "\$${objDatumCrmLead?.expectedRevenue}"),
-                      if (tabAcciones == 1) infoRow("Probabilidad", "$probCalculada%"),
+                      if (tabAcciones == 1) infoRow("Ingreso esperado", "\$${objDatumCrmLead?.expectedRevenue.toStringAsFixed(2)}"),
+                      if (tabAcciones == 1) infoRow("Probabilidad", "${probCalculada.toStringAsFixed(0)}%"),
                     ],
                   ),
                 ),
