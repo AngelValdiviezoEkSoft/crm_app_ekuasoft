@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:crm_ekuasoft_app/domain/domain.dart';
+import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,196 +65,223 @@ class FrmProfileEditScreenState extends State<FrmProfileEditScreen> {
               },
             ),
           ),
-          body: SingleChildScrollView(
-            child: Stack(
-              children: [
-               
-                Column(
+          body: FutureBuilder(
+            future: AuthService().getDatosPerfil(),
+            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+              
+              if(!snapshot.hasData) {
+                return Scaffold(
+                  backgroundColor: Colors.white,
+                  body: Center(
+                    child: Image.asset(
+                      "assets/gifs/gif_carga.gif",
+                      height: size.width * 0.85,
+                      width: size.width * 0.85,
+                    ),
+                  ),
+                );
+              }
+              else {
+                var rsp = ResPartnerDatumAppModel.fromRawJson('${snapshot.data}');
+            
+                cellProf = rsp.phone ?? '';
+                streetProf = rsp.street ?? '';
+                emailProf = rsp.email ?? '';
+                identificacionProf = rsp.vat ?? '';
+              }
+
+              return SingleChildScrollView(
+                child: Stack(
                   children: [
-                    SizedBox(height: size.height * 0.06),
-                
-                    Stack(
+                   
+                    Column(
                       children: [
+                        SizedBox(height: size.height * 0.06),
                     
-                        Container(
-                          height: size.height * 0.8,
-                          margin: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(40),
-                              topRight: Radius.circular(40),
-                              bottomLeft: Radius.circular(40),
-                              bottomRight: Radius.circular(40),
-                            ),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 10,
-                                offset: Offset(0, 5),
-                              ),
-                            ],
-                          ),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                SizedBox(height: size.height * 0.1),//20),
-                                
-                                //SizedBox(height: size.height * 0.025),//20),
-                                Card(
-                                  margin: const EdgeInsets.all(16),
-                                  color: Colors.white,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Column(
-                                      children: [
-                                        
-                                        CustomTextField(label: "Nombres", initialValue: nameUserLbl, txtInpTp: TextInputType.text, campoActivo: false,),                                      
-                                        const CustomTextField(label: "Celular", initialValue: '0988665834', txtInpTp: TextInputType.number, campoActivo: true),
-                                        const CustomTextField(label: "Email", initialValue: 'angel_elias_valdiviezo_gonzalez@hotmail.com', txtInpTp: TextInputType.emailAddress, campoActivo: true),
-                                        const CustomTextField(label: "Email extra", initialValue: 'melanie.vilema@gmail.com', txtInpTp: TextInputType.emailAddress, campoActivo: true),
-            
-                                        SizedBox(height: size.height * 0.008,),
-            
-                                        GestureDetector(
-                                          onTap: () {
-                                            //openDatePickerProfile(context);
-                                          },
-                                          child: Container(
-                                            width: size.width * 0.92,
-                                            height: size.height * 0.08,
-                                            color: Colors.transparent,
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  width: size.width * 0.92,
-                                                  height: size.height * 0.02,
-                                                  color: Colors.transparent,
-                                                  child: Text("Fecha de cumpleaños", style: TextStyle(color: Colors.grey[300]),),
-                                                ),
-                                                SizedBox(height: size.height * 0.007,),
-                                                Container(
-                                                  width: size.width * 0.92,
-                                                  height: size.height * 0.02,
-                                                  color: Colors.transparent,
-                                                  child: Text(fechaCumpleAnios, style: const TextStyle(color: Colors.black),),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-            
-                                        SizedBox(height: size.height * 0.05,),
-            
-                                        Container(
-                                          width: size.width * 0.96,
-                                          color: Colors.transparent,
-                                          alignment: Alignment.center,
-                                          child: ElevatedButton(                      
-                                            onPressed:
-                                            () {
-            
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              padding: const EdgeInsets.symmetric(horizontal: 130, vertical: 20),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(15),
-                                                //side: BorderSide(color: btnGuardar && btnGuardarFoto ? Colors.green : Colors.grey, width: 2),
-                                              ),
-                                              backgroundColor: Colors.blue,
-                                              elevation: 0,
-                                            ),
-                                            child: const Text(
-                                              "Guardar",
-                                              style: TextStyle( color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
-                                            ),
-                                          ),
-                                        ),
-                                        
-                                        SizedBox(height: size.height * 0.02,),
-                                      ],
-                                    ),
-                                  ),
+                        Stack(
+                          children: [
+                        
+                            Container(
+                              height: size.height * 0.8,
+                              margin: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(40),
+                                  topRight: Radius.circular(40),
+                                  bottomLeft: Radius.circular(40),
+                                  bottomRight: Radius.circular(40),
                                 ),
-                              ],
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 10,
+                                    offset: Offset(0, 5),
+                                  ),
+                                ],
+                              ),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: size.height * 0.1),//20),
+                                    
+                                    //SizedBox(height: size.height * 0.025),//20),
+                                    Card(
+                                      margin: const EdgeInsets.all(16),
+                                      color: Colors.white,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Column(
+                                          children: [
+                                            
+                                            CustomTextField(label: "Nombres", initialValue: nameUserLbl, txtInpTp: TextInputType.text, campoActivo: false,),                                      
+                                            CustomTextField(label: "Celular", initialValue: cellProf, txtInpTp: TextInputType.number, campoActivo: true),
+                                            CustomTextField(label: "Email", initialValue: emailProf, txtInpTp: TextInputType.emailAddress, campoActivo: true),
+                                            CustomTextField(label: "Dirección", initialValue: streetProf, txtInpTp: TextInputType.emailAddress, campoActivo: true),
+                /*
+                                            SizedBox(height: size.height * 0.008,),
+                
+                                            GestureDetector(
+                                              onTap: () {
+                                                //openDatePickerProfile(context);
+                                              },
+                                              child: Container(
+                                                width: size.width * 0.92,
+                                                height: size.height * 0.08,
+                                                color: Colors.transparent,
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      width: size.width * 0.92,
+                                                      height: size.height * 0.02,
+                                                      color: Colors.transparent,
+                                                      child: Text("Fecha de cumpleaños", style: TextStyle(color: Colors.grey[300]),),
+                                                    ),
+                                                    SizedBox(height: size.height * 0.007,),
+                                                    Container(
+                                                      width: size.width * 0.92,
+                                                      height: size.height * 0.02,
+                                                      color: Colors.transparent,
+                                                      child: Text(fechaCumpleAnios, style: const TextStyle(color: Colors.black),),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                */
+                                            SizedBox(height: size.height * 0.05,),
+                
+                                            Container(
+                                              width: size.width * 0.96,
+                                              color: Colors.transparent,
+                                              alignment: Alignment.center,
+                                              child: ElevatedButton(                      
+                                                onPressed:
+                                                () {
+                
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 130, vertical: 20),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(15),
+                                                    //side: BorderSide(color: btnGuardar && btnGuardarFoto ? Colors.green : Colors.grey, width: 2),
+                                                  ),
+                                                  backgroundColor: Colors.blue,
+                                                  elevation: 0,
+                                                ),
+                                                child: const Text(
+                                                  "Guardar",
+                                                  style: TextStyle( color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+                                                ),
+                                              ),
+                                            ),
+                                            
+                                            SizedBox(height: size.height * 0.02,),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
+                        
+                          ],
                         ),
-                    
                       ],
                     ),
-                  ],
-                ),
-              
-                if (rutaFotoPerfilEdit.isEmpty&& !state.levantaModal)
-                Positioned(
-                  //top: -1,
-                  left: 137,
-                  //left: 80,
-                  child: GestureDetector(
-                    onTap: () {
-                      gnrBloc.setLevantaModal(true);
-                      mostrarOpciones(context, size);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(4), // grosor del borde
-                      decoration: const BoxDecoration(
-                        color: Colors.white, // color del borde
-                        shape: BoxShape.circle,
-                      ),
-                      child: CircleAvatar(
-                        radius: 60,
-                        backgroundColor: Colors.grey[350],
-                        child: const Icon(Icons.add_a_photo_outlined, size: 50, color: Colors.white,),
-                      ),
-                    ),
-                  ),
-                ),
-            
-                if (state.levantaModal)
-                Positioned(
-                  //top: -1,
-                  left: 137,
-                  child: Container(
-                    padding: const EdgeInsets.all(4), // grosor del borde
-                    decoration: const BoxDecoration(
-                      color: Colors.white, // color del borde
-                      shape: BoxShape.circle,
-                    ),
-                    child: CircleAvatar(
-                      radius: 60,
-                      backgroundColor: Colors.grey[350],
-                      //child: const Icon(Icons.add_a_photo_outlined, size: 50, color: Colors.white,),
-                    ),
-                  ),
-                ),
-            
-                if (rutaFotoPerfilEdit.isNotEmpty && !state.levantaModal)
-                Positioned(
-                  //top: -1,
-                  left: 137,
-                  child: Container(
-                    padding: const EdgeInsets.all(4), // grosor del borde
-                    decoration: const BoxDecoration(
-                      color: Colors.white, // color del borde
-                      shape: BoxShape.circle,
-                    ),
-                    child: CircleAvatar(
-                      radius: 60,
-                      backgroundColor: Colors.grey[350],
-                      backgroundImage: FileImage(File(rutaFotoPerfilEdit)),
+                  
+                    if (rutaFotoPerfilEdit.isEmpty&& !state.levantaModal)
+                    Positioned(
+                      //top: -1,
+                      left: 137,
+                      //left: 80,
                       child: GestureDetector(
-                        onTap: () async {
+                        onTap: () {
                           gnrBloc.setLevantaModal(true);
                           mostrarOpciones(context, size);
                         },
-                      )
+                        child: Container(
+                          padding: const EdgeInsets.all(4), // grosor del borde
+                          decoration: const BoxDecoration(
+                            color: Colors.white, // color del borde
+                            shape: BoxShape.circle,
+                          ),
+                          child: CircleAvatar(
+                            radius: 60,
+                            backgroundColor: Colors.grey[350],
+                            child: const Icon(Icons.add_a_photo_outlined, size: 50, color: Colors.white,),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                
+                    if (state.levantaModal)
+                    Positioned(
+                      //top: -1,
+                      left: 137,
+                      child: Container(
+                        padding: const EdgeInsets.all(4), // grosor del borde
+                        decoration: const BoxDecoration(
+                          color: Colors.white, // color del borde
+                          shape: BoxShape.circle,
+                        ),
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundColor: Colors.grey[350],
+                          //child: const Icon(Icons.add_a_photo_outlined, size: 50, color: Colors.white,),
+                        ),
+                      ),
+                    ),
+                
+                    if (rutaFotoPerfilEdit.isNotEmpty && !state.levantaModal)
+                    Positioned(
+                      //top: -1,
+                      left: 137,
+                      child: Container(
+                        padding: const EdgeInsets.all(4), // grosor del borde
+                        decoration: const BoxDecoration(
+                          color: Colors.white, // color del borde
+                          shape: BoxShape.circle,
+                        ),
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundColor: Colors.grey[350],
+                          backgroundImage: FileImage(File(rutaFotoPerfilEdit)),
+                          child: GestureDetector(
+                            onTap: () async {
+                              gnrBloc.setLevantaModal(true);
+                              mostrarOpciones(context, size);
+                            },
+                          )
+                        ),
+                      ),
+                    ),
+                        
+                  ],
                 ),
-                    
-              ],
-            ),
+              );
+            }
           )
         );
       }
@@ -419,16 +448,18 @@ class CustomTextField extends StatelessWidget {
       child: TextFormField(
         enabled: campoActivo,
         initialValue: initialValue,
+        maxLines: label != 'Dirección' ? 1 : 4,
         decoration: InputDecoration(
           labelText: label,
           border: const UnderlineInputBorder(),
           suffixIcon: GestureDetector(
             //onTap: funtionExe,
-            child: const Icon(Icons.cancel, size: 12,)
+            child: const Icon(Icons.cancel, size: 15,)
           )
         ),
         keyboardType: txtInpTp,
       ),
+    
     );
   }
 }

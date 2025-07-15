@@ -1,8 +1,12 @@
 
 //import 'package:crm_ekuasoft_app/config/config.dart';
+import 'package:crm_ekuasoft_app/domain/domain.dart';
+import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+ResPartnerDatumAppModel? objPerfil;
 
 class ProfileScreenGen extends StatelessWidget {
   const ProfileScreenGen({super.key});
@@ -42,46 +46,56 @@ class ProfileScreenGen extends StatelessWidget {
   }
 
   Widget _buildProfileCard(BuildContext context, Size size) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.blue.shade700,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          const CircleAvatar(
-            radius: 30,
-            backgroundColor: Colors.white,
-            child: Icon(Icons.person, size: 40, color: Colors.grey),
+    return FutureBuilder(
+      future: AuthService().getDatosPerfil(),
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+
+        if(snapshot.hasData){
+          objPerfil = ResPartnerDatumAppModel.fromRawJson('${snapshot.data}');
+        }
+
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.blue.shade700,
+            borderRadius: BorderRadius.circular(10),
           ),
-          SizedBox(width: size.width * 0.035),//16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  nameUserLbl,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              const CircleAvatar(
+                radius: 30,
+                backgroundColor: Colors.white,
+                child: Icon(Icons.person, size: 40, color: Colors.grey),
+              ),
+              SizedBox(width: size.width * 0.035),//16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      objPerfil?.name ?? '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      objPerfil?.street ?? '',
+                      style: const TextStyle(color: Colors.white70, fontSize: 14),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 4),
-                const  Text(
-                  'Duran City - Etapa Bromelia, MZ14-V13\nPropietario',
-                  style: TextStyle(color: Colors.white70, fontSize: 14),
-                ),
-              ],
-            ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  context.push(objRutasGen.rutaProf);
+                },
+                child: const Icon(Icons.edit, color: Colors.white)
+              ),
+            ],
           ),
-          GestureDetector(
-            onTap: () {
-              context.push(objRutasGen.rutaProf);
-            },
-            child: const Icon(Icons.edit, color: Colors.white)
-          ),
-        ],
-      ),
+        );
+      }
     );
   }
 

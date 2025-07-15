@@ -766,7 +766,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                     if (tabAccionesAct == 1) infoRowAct("Ciudad", ciudadPrsp, size),
                     if (tabAccionesAct == 1) infoRowAct("Cantón", cantonPrsp, size),
                     if (tabAccionesAct == 1) infoRowAct("Región", regionPrsp, size),
-                    if (tabAccionesAct == 1) infoRowAct("Lugar", sectorPrsp, size),
+                    if (tabAccionesAct == 1) infoRowAct("Sector", sectorPrsp, size),
                     if (tabAccionesAct == 1)
                       // Precios y Ventas
                       sectionTitleAct(Icons.monetization_on, "Precios y Ventas"),

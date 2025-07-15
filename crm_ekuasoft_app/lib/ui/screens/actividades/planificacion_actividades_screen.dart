@@ -770,7 +770,7 @@ class PlanActState extends State<PlanificacionActividades> {
                       if (tabAcciones == 1) infoRow("Ciudad", ciudadPrspPlAct, size),
                       if (tabAcciones == 1) infoRow("Cantón", cantonPrspPlAct, size),
                       if (tabAcciones == 1) infoRow("Región", regionPrspPlAct, size),
-                      if (tabAcciones == 1) infoRow("Lugar", sectorPrspPlAct, size),
+                      if (tabAcciones == 1) infoRow("Sector", sectorPrspPlAct, size),
                       if (tabAcciones == 1)
                         // Precios y Ventas
                         sectionTitle(Icons.monetization_on, "Precios y Ventas"),

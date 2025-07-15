@@ -235,7 +235,7 @@ class GenericService extends ChangeNotifier {
 
     var rsp = AppResponseModel.fromRawJson(response.body);
 
-    print('Respuesta MODELOS: ${response.body}');
+    //print('Respuesta MODELOS: ${response.body}');
 
     await storage.write(key: 'RespuestaProspectos', value: json.encode(rsp.result.data.crmLead));
     await storage.write(key: 'RespuestaClientes', value: json.encode(rsp.result.data.resPartner));

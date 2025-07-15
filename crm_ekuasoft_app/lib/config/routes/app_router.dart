@@ -24,7 +24,7 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: objRutas.rutaProf,
-      builder: (context, state) => const FrmProfileScreen(key: null,),
+      builder: (context, state) => FrmProfileScreen(key: null,),
     ),
     GoRoute(
       path: objRutas.rutaProfGen,

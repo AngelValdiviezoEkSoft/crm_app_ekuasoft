@@ -130,15 +130,21 @@ class AuthService extends ChangeNotifier {
 
     var obj = RegisterDeviceResponseModel.fromJson(reponseRs);
 
-    if(obj.result.estado == 200){
-      await storage.write(key: 'codImei', value: objRegister.imei);
+    await storage.write(key: 'codImei', value: '');
+    await storage.write(key: 'codImei', value: objRegister.imei);
+
+    if(obj.result.estado == 200){      
       await storage.write(key: 'RespuestaRegistro', value: reponseRs);
     }
 
-    return obj;//RegisterDeviceResponseModel.fromJson(reponseRs);
-    
+    if(obj.result.estado == 404){
+      RegisterDeviceResponseModel rsp = await doneGetTocken(objRegister.imei, objRegister.key);
+      return rsp;
+    }
+
+    return obj;    
   }
-  
+
   doneGetTocken(String imei, String key) async {
     final ruta = '${env.apiEndpoint}done/$imei/tocken/$key';
     
@@ -184,7 +190,7 @@ class AuthService extends ChangeNotifier {
     );
     
     var reponseRs = response.body;
-    //return ValidationTokenResponseModel.fromJson(reponseRs);
+    
     return reponseRs;
   }
   //#endregion
@@ -333,12 +339,13 @@ class AuthService extends ChangeNotifier {
 
       String emailUser = rspCorreo["result"]["data"][0]["email"] ?? '';
 
+      await storage.write(key: 'DataUser', value: rsp);
       await storage.write(key: 'CorreoUser', value: emailUser);
       //#endregion
 
       return response.body;
-    } catch (ex) {
-      print('Test Error1: $ex');
+    } catch (_) {
+      //print('Test Error1: $ex');
     }
   }
 
@@ -696,6 +703,19 @@ class AuthService extends ChangeNotifier {
 
   }
 
+  Future<String> getDatosPerfil() async {    
+    String resPartner = await storage.read(key: 'RespuestaClientes') ?? '';
+    ResPartnerAppModel apiResponse = ResPartnerAppModel.fromRawJson(resPartner);
+    
+    final rspLogin = await storage.read(key: 'DataUser') ?? '';
+
+    final jsonLog = json.decode(rspLogin);
+    var partnerId = jsonLog["result"]["data"][0]["partner_id"]["id"] ?? 0;
+  
+    var objFiltrado = apiResponse.data.firstWhere((x) => x.id == partnerId);
+    return jsonEncode(objFiltrado);
+  }
+
   Future logOut() async {
     await storage.write(key: 'RespuestaLogin', value: '');
     
@@ -707,6 +727,7 @@ class AuthService extends ChangeNotifier {
     await storage.write(key: 'cmbMedia', value: '');
     await storage.write(key: 'cmbActividades', value: '');
     await storage.write(key: 'cmbPaises', value: '');
+    await storage.write(key: 'DataUser', value: '');
     //await storage.write(key: 'RespuestaIrModel', value: '');
     
     return;

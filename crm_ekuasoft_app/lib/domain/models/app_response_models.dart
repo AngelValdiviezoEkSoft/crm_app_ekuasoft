@@ -814,6 +814,11 @@ class ResPartnerDatumAppModel {
     String? name;
     String? tradeName;
     String? ref;
+
+    String? street;
+    String? phone;
+    String? vat;
+
     CombosAppModel channelId;
 
     CombosAppModel ekClasificationId;
@@ -843,7 +848,10 @@ class ResPartnerDatumAppModel {
         required this.ekResCountryCantonId,
         required this.ekResRegionId,
         required this.ekResSectorId,
-        required this.ekResCountryCityId
+        required this.ekResCountryCityId,
+        required this.street,
+        required this.phone,
+        required this.vat
     });
 
     factory ResPartnerDatumAppModel.fromRawJson(String str) => ResPartnerDatumAppModel.fromJson(json.decode(str));
@@ -872,6 +880,9 @@ class ResPartnerDatumAppModel {
         name: json["name"] ?? '',
         tradeName: json["trade_name"] ?? '',
         ref: json["ref"] ?? '',
+        street: json["street"] ?? '',
+        phone: json["phone"] ?? '',
+        vat: json["vat"] ?? '',
         ekClasificationId: 
             json["classification_id"] != null ? 
                 CombosAppModel.fromJson(json["classification_id"])
@@ -913,6 +924,9 @@ class ResPartnerDatumAppModel {
         "canton_id": ekResCountryCantonId.toJson(),
         "region_id": ekResRegionId.toJson(),
         "sector_id": ekResSectorId.toJson(),
+        "vat": vat,
+        "street": street,
+        "phone": phone
         //"ek.res.country.city": ekResCountryCityId.toJson(),
     };
 }
