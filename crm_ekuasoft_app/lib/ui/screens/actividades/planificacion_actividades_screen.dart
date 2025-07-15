@@ -13,6 +13,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+String tradeNamePrsp = '';
 String channelProspPlAct = '';
 String clasificacionPrspPlAct = '';
 String ciudadPrspPlAct = '';
@@ -60,6 +61,7 @@ class PlanActState extends State<PlanificacionActividades> {
   void initState() {
     super.initState();
 
+    tradeNamePrsp = '';
     muestraTextoParaHoy = false;
     contLst = 0;
     notasActTxt = TextEditingController();
@@ -717,6 +719,7 @@ class PlanActState extends State<PlanificacionActividades> {
                                             regionPrspPlAct = objRegion.name ?? '';
                                             cantonPrspPlAct = objCanton.name ?? '';
                                             sectorPrspPlAct = objSector.name ?? '';
+                                            tradeNamePrsp = objFiltrado.tradeName ?? '';
                                           }
 
                                           setState(() {});
@@ -756,7 +759,7 @@ class PlanActState extends State<PlanificacionActividades> {
                         sectionTitle(Icons.info, "Información General"),
                       if (tabAcciones == 1) infoRow("Razón Social", objDatumCrmLead?.partnerId.name ?? '-----', size),
                       if (tabAcciones == 1)
-                        infoRow("Nombre Comercial", objDatumCrmLead?.partnerId.tradeName ?? '-----', size),
+                        infoRow("Nombre Comercial", tradeNamePrsp, size),
                       if (tabAcciones == 1) infoRow("Clasificación", clasificacionPrspPlAct, size),
                       if (tabAcciones == 1) infoRow("Canal", channelProspPlAct, size),
                       if (tabAcciones == 1) infoRow("Dirección", '${objDatumCrmLead?.street} ${objDatumCrmLead?.street2}', size),

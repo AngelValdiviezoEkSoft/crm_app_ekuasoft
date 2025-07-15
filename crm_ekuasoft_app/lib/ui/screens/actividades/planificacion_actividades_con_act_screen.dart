@@ -11,6 +11,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+String tradeNameProsp = '';
 String channelProsp = '';
 String ciudadPrsp = '';
 String cantonPrsp = '';
@@ -55,6 +56,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
   void initState() {
     super.initState();
     //objActividadEscogida = null;
+    tradeNameProsp = '';
     contLstActiv = 0;
     notasActTxtAct = TextEditingController();
     fechaActividadContTxtAct = TextEditingController();
@@ -713,6 +715,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                           regionPrsp = objRegion.name ?? '';
                                           cantonPrsp = objCanton.name ?? '';
                                           sectorPrsp = objSector.name ?? '';
+                                          tradeNameProsp = objFiltrado.tradeName ?? '';
                                         }
 
                                         setState(() {});
@@ -752,7 +755,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                       sectionTitle(Icons.info, "Información General"),
                     if (tabAccionesAct == 1) infoRowAct("Razón Social", objDatumCrmLead?.partnerId.name ?? '-----', size),
                     if (tabAccionesAct == 1)
-                      infoRowAct("Nombre Comercial",objDatumCrmLead?.partnerId.tradeName ?? '-----', size),
+                      infoRowAct("Nombre Comercial", tradeNameProsp, size),
                     if (tabAccionesAct == 1) infoRowAct("Clasificación", clasificacionPrsp, size),
                     if (tabAccionesAct == 1) infoRowAct("Canal", channelProsp, size),
                     if (tabAccionesAct == 1) infoRowAct("Dirección", objDatumCrmLead?.street != null ? '${objDatumCrmLead?.street} ${objDatumCrmLead?.street2}' : '-----', size),

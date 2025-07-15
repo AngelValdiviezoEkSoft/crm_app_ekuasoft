@@ -812,6 +812,7 @@ class ResPartnerDatumAppModel {
     
     String? mobile;
     String? name;
+    String? tradeName;
     String? ref;
     CombosAppModel channelId;
 
@@ -834,6 +835,7 @@ class ResPartnerDatumAppModel {
 
         required this.mobile,
         required this.name,
+        required this.tradeName,
         required this.ref,
         required this.channelId,
 
@@ -868,6 +870,7 @@ class ResPartnerDatumAppModel {
         email: json["email"] ?? '',
         mobile: json["mobile"] ?? '',
         name: json["name"] ?? '',
+        tradeName: json["trade_name"] ?? '',
         ref: json["ref"] ?? '',
         ekClasificationId: 
             json["classification_id"] != null ? 
@@ -885,10 +888,7 @@ class ResPartnerDatumAppModel {
             json["sector_id"] != null ? 
                 CombosAppModel.fromJson(json["sector_id"])
             : CombosAppModel(id: 0, name: ''),
-        ekResCountryCityId: 
-            json["ek.res.country.city"] != null ? 
-                CombosAppModel.fromJson(json["ek.res.country.city"])
-            : CombosAppModel(id: 0, name: ''),
+        ekResCountryCityId: CombosAppModel(id: 0, name: ''),
 
     );
 
@@ -906,6 +906,7 @@ class ResPartnerDatumAppModel {
 
         "mobile": mobile,
         "name": name,
+        "trade_name": tradeName,
         "ref": ref,
 
         "classification_id": ekClasificationId.toJson(),
