@@ -252,7 +252,7 @@ class HomeScreenState extends State<HomeScreen> {
                             //print('Test: $rspLogin');
                             final jsonLog = json.decode(rspLogin);
                             nameUserLbl = jsonLog["result"]["partner_display_name"];
-                            emailUserLbl = jsonLog["result"]["email"] ?? 'avg@gmail.com';
+                            emailUserLbl = jsonLog["result"]["email"] ?? '';
 
                             //ignore: use_build_context_synchronously                            
                             context.push(objRutasGen.rutaProfGen);

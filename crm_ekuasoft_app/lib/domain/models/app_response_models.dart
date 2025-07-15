@@ -912,19 +912,17 @@ class ResPartnerDatumAppModel {
         "city_id": cityId.toJson(),
         "company_type": companyType,
         "country_id": countryId.toJson(),
-        "channel_id": channelId.toJson(),
-        "email": email,
-
+        "channel_id": channelId.toJson(),        
         "mobile": mobile,
         "name": name,
         "trade_name": tradeName,
         "ref": ref,
-
         "classification_id": ekClasificationId.toJson(),
         "canton_id": ekResCountryCantonId.toJson(),
         "region_id": ekResRegionId.toJson(),
         "sector_id": ekResSectorId.toJson(),
         "vat": vat,
+        "email": email,
         "street": street,
         "phone": phone
         //"ek.res.country.city": ekResCountryCityId.toJson(),

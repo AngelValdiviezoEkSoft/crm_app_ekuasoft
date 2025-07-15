@@ -716,6 +716,33 @@ class AuthService extends ChangeNotifier {
     return jsonEncode(objFiltrado);
   }
 
+  saveMemoryDatosPerfil(String cell, String email, String direccion) async {    
+    String resPartner = await storage.read(key: 'RespuestaClientes') ?? '';
+    ResPartnerAppModel apiResponse = ResPartnerAppModel.fromRawJson(resPartner);
+    
+    final rspLogin = await storage.read(key: 'DataUser') ?? '';
+
+    final jsonLog = json.decode(rspLogin);
+    var partnerId = jsonLog["result"]["data"][0]["partner_id"]["id"] ?? 0;
+  
+    var objFiltrado = apiResponse.data.firstWhere((x) => x.id == partnerId);
+
+    objFiltrado.phone = cell;
+    objFiltrado.email = email;
+    objFiltrado.street = direccion;
+
+    for(int i = 0; i < apiResponse.data.length; i++){
+      if(apiResponse.data[i].id == objFiltrado.id){
+        apiResponse.data[i] = objFiltrado;
+      }
+    }
+
+    await storage.write(key: 'RespuestaClientes', value: '');
+    await storage.write(key: 'RespuestaClientes', value: jsonEncode(apiResponse));
+
+    return;
+  }
+
   Future logOut() async {
     await storage.write(key: 'RespuestaLogin', value: '');
     

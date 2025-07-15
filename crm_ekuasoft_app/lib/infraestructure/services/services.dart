@@ -37,3 +37,5 @@ export 'package:crm_ekuasoft_app/infraestructure/services/marcacion_service.dart
 export 'package:crm_ekuasoft_app/infraestructure/services/services_locator.dart';
 
 export 'package:crm_ekuasoft_app/infraestructure/services/generic/generic.dart';
+
+export 'package:crm_ekuasoft_app/infraestructure/services/profile/profile.dart';
