@@ -516,7 +516,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                       Container(
                         color: Colors.transparent,
                         width: size.width,
-                        height: size.height * 0.7,
+                        height: size.height * 0.52,
                         child: Scaffold(
                           body: CustomRefreshIndicator(
                             onRefresh: refreshDataProsp,

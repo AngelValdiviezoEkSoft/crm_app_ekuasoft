@@ -56,7 +56,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
   void initState() {
     super.initState();
     //objActividadEscogida = null;
-    tradeNameProsp = '';
+    tradeNameProsp = '-----';
     contLstActiv = 0;
     notasActTxtAct = TextEditingController();
     fechaActividadContTxtAct = TextEditingController();
@@ -73,13 +73,13 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
     tipoActividadEscogida = '';
     seleccionaTodasActividades = false;
     seleccionaUnaActividad = false;
-    channelProsp = '';
+    channelProsp = '-----';
     tabAccionesAct = 0;
-    clasificacionPrsp = '';
-    ciudadPrsp = '';
-    cantonPrsp = '';
-    regionPrsp = '';
-    sectorPrsp = '';
+    clasificacionPrsp = '-----';
+    ciudadPrsp = '-----';
+    cantonPrsp = '-----';
+    regionPrsp = '-----';
+    sectorPrsp = '-----';
   }
 
    Future<void> actualizaActividadesByCliente() async {
@@ -684,38 +684,43 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                         tabAccionesAct = 1;
 
                                         if(objDatumCrmLead != null){
-                                          const storage = FlutterSecureStorage();
+                                          try{
+                                            const storage = FlutterSecureStorage();
 
-                                          String resPartner = await storage.read(key: 'RespuestaClientes') ?? '';
+                                            String resPartner = await storage.read(key: 'RespuestaClientes') ?? '';
 
-                                          String ekClasifProspStr = await storage.read(key: 'EkClasifProsp') ?? '';
-                                          String ekResCountryCantonStr = await storage.read(key: 'EkResCountryCantonProsp') ?? '';
-                                          String ekResRegionStr = await storage.read(key: 'EkResRegionProsp') ?? '';
-                                          String ekResSectorStr = await storage.read(key: 'EkResSectorProsp') ?? '';
-                                          String ekResCityStr = await storage.read(key: 'EkResCountryCityProsp') ?? '';
+                                            String ekClasifProspStr = await storage.read(key: 'EkClasifProsp') ?? '';
+                                            String ekResCountryCantonStr = await storage.read(key: 'EkResCountryCantonProsp') ?? '';
+                                            String ekResRegionStr = await storage.read(key: 'EkResRegionProsp') ?? '';
+                                            String ekResSectorStr = await storage.read(key: 'EkResSectorProsp') ?? '';
+                                            String ekResCityStr = await storage.read(key: 'EkResCountryCityProsp') ?? '';
 
-                                          ResPartnerAppModel apiResponse = ResPartnerAppModel.fromRawJson(resPartner);
-                                          EkClassification  ekClassificationFin = EkClassification.fromRawJson(ekClasifProspStr);
-                                          CantonModel  ekCantonFin = CantonModel.fromRawJson(ekResCountryCantonStr);
-                                          RegionModel  ekRegionModelFin = RegionModel.fromRawJson(ekResRegionStr);
-                                          SectorModel  ekSectorFin = SectorModel.fromRawJson(ekResSectorStr);
-                                          CountryCity  ekCityFin = CountryCity.fromRawJson(ekResCityStr);
-                                          
-                                          var objFiltrado = apiResponse.data.firstWhere((x) => x.id == objDatumCrmLead!.partnerId.id,);
-                                          var objClasif = ekClassificationFin.data.firstWhere((x) => x.id == objFiltrado.ekClasificationId.id);
-                                          var objCiudad = ekCityFin.data.firstWhere((x) => x.id == objFiltrado.cityId.id);
-                                          var objCanton = ekCantonFin.data.firstWhere((x) => x.id == objFiltrado.ekResCountryCantonId.id);
-                                          var objRegion = ekRegionModelFin.data.firstWhere((x) => x.id == objFiltrado.ekResRegionId.id);
-                                          var objSector = ekSectorFin.data.firstWhere((x) => x.id == objFiltrado.ekResSectorId.id);
+                                            ResPartnerAppModel apiResponse = ResPartnerAppModel.fromRawJson(resPartner);
+                                            EkClassification  ekClassificationFin = EkClassification.fromRawJson(ekClasifProspStr);
+                                            CantonModel  ekCantonFin = CantonModel.fromRawJson(ekResCountryCantonStr);
+                                            RegionModel  ekRegionModelFin = RegionModel.fromRawJson(ekResRegionStr);
+                                            SectorModel  ekSectorFin = SectorModel.fromRawJson(ekResSectorStr);
+                                            CountryCity  ekCityFin = CountryCity.fromRawJson(ekResCityStr);
+                                            
+                                            var objFiltrado = apiResponse.data.firstWhere((x) => x.id == objDatumCrmLead!.partnerId.id,);
+                                            var objClasif = ekClassificationFin.data.firstWhere((x) => x.id == objFiltrado.ekClasificationId.id);
+                                            var objCiudad = ekCityFin.data.firstWhere((x) => x.id == objFiltrado.cityId.id);
+                                            var objCanton = ekCantonFin.data.firstWhere((x) => x.id == objFiltrado.ekResCountryCantonId.id);
+                                            var objRegion = ekRegionModelFin.data.firstWhere((x) => x.id == objFiltrado.ekResRegionId.id);
+                                            var objSector = ekSectorFin.data.firstWhere((x) => x.id == objFiltrado.ekResSectorId.id);
 
-                                          channelProsp = objFiltrado.channelId.name ?? '';
+                                            channelProsp = objFiltrado.channelId.name ?? '';
 
-                                          clasificacionPrsp = objClasif.name ?? '';
-                                          ciudadPrsp = objCiudad.name ?? '';
-                                          regionPrsp = objRegion.name ?? '';
-                                          cantonPrsp = objCanton.name ?? '';
-                                          sectorPrsp = objSector.name ?? '';
-                                          tradeNameProsp = objFiltrado.tradeName ?? '';
+                                            clasificacionPrsp = objClasif.name ?? '';
+                                            ciudadPrsp = objCiudad.name ?? '';
+                                            regionPrsp = objRegion.name ?? '';
+                                            cantonPrsp = objCanton.name ?? '';
+                                            sectorPrsp = objSector.name ?? '';
+                                            tradeNameProsp = objFiltrado.tradeName ?? '';
+                                          }
+                                          catch(_){
+
+                                          }
                                         }
 
                                         setState(() {});

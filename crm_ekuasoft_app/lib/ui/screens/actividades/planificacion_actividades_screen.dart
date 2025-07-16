@@ -61,7 +61,7 @@ class PlanActState extends State<PlanificacionActividades> {
   void initState() {
     super.initState();
 
-    tradeNamePrsp = '';
+    tradeNamePrsp = '-----';
     muestraTextoParaHoy = false;
     contLst = 0;
     notasActTxt = TextEditingController();
@@ -90,12 +90,12 @@ class PlanActState extends State<PlanificacionActividades> {
       objActividadEscogida = objCalendarioActividadescogidaByFiltroCal;
     }
 
-    channelProspPlAct = '';
-    clasificacionPrspPlAct = '';
-    ciudadPrspPlAct = '';
-    regionPrspPlAct = '';
-    cantonPrspPlAct = '';
-    sectorPrspPlAct = '';
+    channelProspPlAct = '-----';
+    clasificacionPrspPlAct = '-----';
+    ciudadPrspPlAct = '-----';
+    regionPrspPlAct = '-----';
+    cantonPrspPlAct = '-----';
+    sectorPrspPlAct = '-----';
   }
 
   @override
