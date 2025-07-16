@@ -25,6 +25,9 @@ class ActivitiesService extends ChangeNotifier{
   getActivities() async {
     try{
 
+      var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
+      var objLogDecode = json.decode(objLog);
+
       var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
       IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
       
@@ -38,6 +41,7 @@ class ActivitiesService extends ChangeNotifier{
         {
           "model": EnvironmentsProd().modMailAct,
           "filters": [
+            ["user_id", "=", objLogDecode['result']['uid']],
             ["res_model_id","=",objIrModel.data[0].id]
           ]
         },
@@ -47,9 +51,6 @@ class ActivitiesService extends ChangeNotifier{
 
       var objReg = await storageProspecto.read(key: 'RespuestaRegistro') ?? '';
       var obj = RegisterDeviceResponseModel.fromJson(objReg);
-
-      var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
-      var objLogDecode = json.decode(objLog);
 
       ConsultaMultiModelRequestModel objReq = ConsultaMultiModelRequestModel(
         jsonrpc: jsonRpc,
@@ -132,6 +133,9 @@ class ActivitiesService extends ChangeNotifier{
   getActivitiesById(id) async {
     try{
 
+      var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
+      var objLogDecode = json.decode(objLog);
+
       var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
       IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
       
@@ -151,6 +155,7 @@ class ActivitiesService extends ChangeNotifier{
         {
           "model": EnvironmentsProd().modMailAct,
           "filters": [
+            ["user_id", "=", objLogDecode['result']['uid']],
             ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(DateTime.now())],
             ["res_id","=",id],
             ["res_model_id","=",objIrModel.data[0].id]
@@ -162,9 +167,6 @@ class ActivitiesService extends ChangeNotifier{
 
       var objReg = await storageProspecto.read(key: 'RespuestaRegistro') ?? '';
       var obj = RegisterDeviceResponseModel.fromJson(objReg);
-
-      var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
-      var objLogDecode = json.decode(objLog);
 
       ConsultaMultiModelRequestModel objReq = ConsultaMultiModelRequestModel(
         jsonrpc: jsonRpc,
@@ -247,6 +249,9 @@ class ActivitiesService extends ChangeNotifier{
   getActivitiesByFecha(fecha) async {
     try{
 
+      var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
+      var objLogDecode = json.decode(objLog);
+
       var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
       IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
 
@@ -260,6 +265,7 @@ class ActivitiesService extends ChangeNotifier{
         {
           "model": EnvironmentsProd().modMailAct,
           "filters": [
+            ["user_id", "=", objLogDecode['result']['uid']],
             ["date_deadline","=",fecha],            
             ["res_model_id","=",objIrModel.data[0].id]
           ]
@@ -270,9 +276,6 @@ class ActivitiesService extends ChangeNotifier{
 
       var objReg = await storageProspecto.read(key: 'RespuestaRegistro') ?? '';
       var obj = RegisterDeviceResponseModel.fromJson(objReg);
-
-      var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
-      var objLogDecode = json.decode(objLog);
 
       ConsultaMultiModelRequestModel objReq = ConsultaMultiModelRequestModel(
         jsonrpc: jsonRpc,
@@ -363,6 +366,9 @@ class ActivitiesService extends ChangeNotifier{
   getActivitiesDiariasByProspecto(fechas, resId) async {
     try{
 
+      var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
+      var objLogDecode = json.decode(objLog);
+
       var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
       IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
 
@@ -449,6 +455,7 @@ class ActivitiesService extends ChangeNotifier{
           {
             "model": modeloConsulta,
             "filters": [            
+              ["user_id", "=", objLogDecode['result']['uid']],
               ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(DateTime.now())],            
               ["res_model_id", "=", objIrModel.data[0].id],
               if(resId != null && resId > 0)
@@ -464,6 +471,7 @@ class ActivitiesService extends ChangeNotifier{
             {
             "model": modeloConsulta,
             "filters": [            
+              ["user_id", "=", objLogDecode['result']['uid']],
               ["date_deadline",">=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],            
               ["date_deadline","<=",DateFormat('yyyy-MM-dd', 'es').format(fechas[1])],
               ["res_model_id", "=", objIrModel.data[0].id],
@@ -481,6 +489,7 @@ class ActivitiesService extends ChangeNotifier{
               {
               "model": modeloConsulta,
               "filters": [            
+                ["user_id", "=", objLogDecode['result']['uid']],
                 ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],            
                 ["res_model_id", "=", objIrModel.data[0].id],
                 if(resId != null && resId > 0)
@@ -495,9 +504,6 @@ class ActivitiesService extends ChangeNotifier{
 
       var objReg = await storageProspecto.read(key: 'RespuestaRegistro') ?? '';
       var obj = RegisterDeviceResponseModel.fromJson(objReg);
-
-      var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
-      var objLogDecode = json.decode(objLog);
 
       ConsultaMultiModelRequestModel objReq = ConsultaMultiModelRequestModel(
         jsonrpc: jsonRpc,
@@ -679,6 +685,9 @@ class ActivitiesService extends ChangeNotifier{
   getActivitiesByRangoFechas(fechas, resId) async {
     try{
 
+      var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
+      var objLogDecode = json.decode(objLog);
+
       var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
       IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
 
@@ -767,6 +776,7 @@ class ActivitiesService extends ChangeNotifier{
             "filters": [            
               ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(DateTime.now())],            
               ["res_model_id", "=", objIrModel.data[0].id],
+              ["user_id", "=", objLogDecode['result']['uid']],
               if(resId != null && resId > 0)
               ["res_id", "=", resId]
             ]
@@ -782,6 +792,7 @@ class ActivitiesService extends ChangeNotifier{
             "filters": [            
               ["date_deadline",">=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],            
               ["date_deadline","<=",DateFormat('yyyy-MM-dd', 'es').format(fechas[1])],
+              ["user_id", "=", objLogDecode['result']['uid']],
               ["res_model_id", "=", objIrModel.data[0].id],
               if(resId != null && resId > 0)
               ["res_id", "=", resId]
@@ -796,7 +807,8 @@ class ActivitiesService extends ChangeNotifier{
           models = [
               {
               "model": modeloConsulta,
-              "filters": [            
+              "filters": [           
+                ["user_id", "=", objLogDecode['result']['uid']], 
                 ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],            
                 ["res_model_id", "=", objIrModel.data[0].id],
                 if(resId != null && resId > 0)
@@ -811,9 +823,6 @@ class ActivitiesService extends ChangeNotifier{
 
       var objReg = await storageProspecto.read(key: 'RespuestaRegistro') ?? '';
       var obj = RegisterDeviceResponseModel.fromJson(objReg);
-
-      var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
-      var objLogDecode = json.decode(objLog);
 
       ConsultaMultiModelRequestModel objReq = ConsultaMultiModelRequestModel(
         jsonrpc: jsonRpc,
@@ -1025,6 +1034,9 @@ class ActivitiesService extends ChangeNotifier{
   getActivitiesCerradasByRangoFechas(fechas, resId) async {
     try{
 
+      var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
+      var objLogDecode = json.decode(objLog);
+
       String modeloConsulta = EnvironmentsProd().modMailMessage;
 
       if(resId == 0){        
@@ -1071,6 +1083,7 @@ class ActivitiesService extends ChangeNotifier{
           {
             "model": modeloConsulta,
             "filters": [
+              ["user_id", "=", objLogDecode['result']['uid']],
               ["activity_due_date","=",DateFormat('yyyy-MM-dd', 'es').format(DateTime.now())],
             ]
           },
@@ -1082,7 +1095,8 @@ class ActivitiesService extends ChangeNotifier{
           models = [
             {
             "model": modeloConsulta,
-            "filters": [            
+            "filters": [
+              ["user_id", "=", objLogDecode['result']['uid']],
               ["activity_due_date",">=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],            
               ["activity_due_date","<=",DateFormat('yyyy-MM-dd', 'es').format(fechas[1])],              
             ]
@@ -1096,7 +1110,8 @@ class ActivitiesService extends ChangeNotifier{
           models = [
               {
               "model": modeloConsulta,
-              "filters": [            
+              "filters": [
+                ["user_id", "=", objLogDecode['result']['uid']],
                 ["activity_due_date",">=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],
                 ["activity_due_date","<=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],
               ]
@@ -1109,9 +1124,6 @@ class ActivitiesService extends ChangeNotifier{
 
       var objReg = await storageProspecto.read(key: 'RespuestaRegistro') ?? '';
       var obj = RegisterDeviceResponseModel.fromJson(objReg);
-
-      var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
-      var objLogDecode = json.decode(objLog);
 
       ConsultaMultiModelRequestModel objReq = ConsultaMultiModelRequestModel(
         jsonrpc: jsonRpc,
@@ -1162,19 +1174,22 @@ class ActivitiesService extends ChangeNotifier{
         body: jsonEncode(requestBody), 
       );
 
-      print('Test de error: ${response.body}');
+      //print('Test de error: ${response.body}');
       
       var rsp = MailMessageResponseModel.fromRawJson(response.body);
 
       return rsp;
     }
     catch(ex){
-     print('Test: $ex');
+     //print('Test: $ex');
     }
   }
 
   getActivitiesByFiltros(nombre, phone, idTpAct, resId) async {
     try{
+
+      var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
+      var objLogDecode = json.decode(objLog);
 
       var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
       IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
@@ -1231,6 +1246,7 @@ class ActivitiesService extends ChangeNotifier{
           {
             "model": modeloConsulta,
             "filters": [
+              ["user_id", "=", objLogDecode['result']['uid']],
               ["res_model_id", "=", objIrModel.data[0].id],
               ["lead_name","ilike",nombre]
             ]
@@ -1246,6 +1262,7 @@ class ActivitiesService extends ChangeNotifier{
           {
             "model": modeloConsulta,
             "filters": [
+              ["user_id", "=", objLogDecode['result']['uid']],
               ["res_model_id", "=", objIrModel.data[0].id],
               ["lead_phone","ilike",newPhone]              
             ]
@@ -1257,7 +1274,8 @@ class ActivitiesService extends ChangeNotifier{
         models = [
           {
             "model": modeloConsulta,
-            "filters": [                          
+            "filters": [  
+              ["user_id", "=", objLogDecode['result']['uid']],                        
               ["res_model_id", "=", objIrModel.data[0].id],              
               ["activity_type_id","=",idTpAct]
             ]
@@ -1271,6 +1289,7 @@ class ActivitiesService extends ChangeNotifier{
           {
             "model": modeloConsulta,
             "filters": [
+              ["user_id", "=", objLogDecode['result']['uid']],
               ["res_model_id", "=", objIrModel.data[0].id],
               ["lead_name","ilike",nombre],
               ["activity_type_id","=",idTpAct]
@@ -1288,6 +1307,7 @@ class ActivitiesService extends ChangeNotifier{
           {
             "model": modeloConsulta,
             "filters": [
+              ["user_id", "=", objLogDecode['result']['uid']],
               ["res_model_id", "=", objIrModel.data[0].id],
               ["lead_phone","ilike",newPhone],
               ["activity_type_id","=",idTpAct]
@@ -1306,7 +1326,8 @@ class ActivitiesService extends ChangeNotifier{
         models = [
           {
             "model": modeloConsulta,
-            "filters": [                          
+            "filters": [      
+              ["user_id", "=", objLogDecode['result']['uid']],                    
               ["res_model_id", "=", objIrModel.data[0].id],
               ["lead_name","ilike",nombre],
               ["lead_phone","ilike",newPhone],
@@ -1320,9 +1341,6 @@ class ActivitiesService extends ChangeNotifier{
 
       var objReg = await storageProspecto.read(key: 'RespuestaRegistro') ?? '';
       var obj = RegisterDeviceResponseModel.fromJson(objReg);
-
-      var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
-      var objLogDecode = json.decode(objLog);
 
       ConsultaMultiModelRequestModel objReq = ConsultaMultiModelRequestModel(
         jsonrpc: jsonRpc,
@@ -1373,7 +1391,7 @@ class ActivitiesService extends ChangeNotifier{
         body: jsonEncode(requestBody), 
       );
 
-      print('NUEVA CONSULTA: ${response.body}');
+      //print('NUEVA CONSULTA: ${response.body}');
       
       var rsp = AppResponseModel.fromRawJson(response.body);
 
@@ -1485,38 +1503,6 @@ class ActivitiesService extends ChangeNotifier{
         }
       }
 
-/*
-      if(internet.isEmpty){
-        MailMessageResponseModel objRsp = await getActivitiesCerradasByRangoFechas(fechas, resId);
-        
-        if(objRsp.result.data.mailMessage.length > 0){
-          
-          for(int i = 0; i < objRsp.result.data.mailMessage.data.length; i++)
-          {
-            objActividades.data.add(
-              DatumActivitiesResponse(
-                activityTypeId: IdActivities(
-                  id: objRsp.result.data.mailMessage.data[i].mailActivityTypeId.id,
-                  name: objRsp.result.data.mailMessage.data[i].mailActivityTypeId.name
-                ),
-                cerrado: true,
-                dateDeadline: objRsp.result.data.mailMessage.data[i].dateDeadLine,
-                id: objRsp.result.data.mailMessage.data[i].id,
-                resId: objRsp.result.data.mailMessage.data[i].resId,
-                resModel: 'Mail.Message',
-                summary: objRsp.result.data.mailMessage.data[i].description,
-                userId: IdActivities(
-                  id: 0,
-                  name: '',
-                )
-              )
-            );
-          }
-        }
-
-      }
-      */
-      
       ActivitiesPageModel objRspFinal = ActivitiesPageModel(
         activities: objActividades,
         lead: objDatumCrmLeadFin,
@@ -1592,7 +1578,8 @@ class ActivitiesService extends ChangeNotifier{
               "note": objActividad.note,
               "lead_name": objActividad.leadName,
               "lead_phone": objActividad.leadPhone,
-              "is_done_app": true
+              "is_done_app": true,
+              "user_id": objReq.params.uid
             },
           }
         };

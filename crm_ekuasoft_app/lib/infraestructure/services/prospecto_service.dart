@@ -125,7 +125,7 @@ class ProspectoTypeService extends ChangeNotifier{
     return frmValido;
   }
 
-  getProspectoRegistrado(String phoneProsp, String codIsoPhone) async {
+  getProspectoRegistrado(String phoneProsp, String codIsoPhone, String dialCodePhone) async {
     try{
       
       var codImei = await storageProspecto.read(key: 'codImei') ?? '';
@@ -183,7 +183,8 @@ class ProspectoTypeService extends ChangeNotifier{
           "bearer": objReq.params.bearer,
           "tocken_valid_date": tockenValidDate,
           "phone": phoneProsp,
-          "country_code": codIsoPhone
+          "country_code": codIsoPhone,
+          "dial_code": dialCodePhone
         }
       };
 
@@ -197,7 +198,7 @@ class ProspectoTypeService extends ChangeNotifier{
 
       if(rspValidacion['result']['mensaje'] != null && (rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenNoValido || rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenExpirado)){
         await tokenManager.checkTokenExpiration();
-        await getProspectoRegistrado(phoneProsp, codIsoPhone);
+        await getProspectoRegistrado(phoneProsp, codIsoPhone, dialCodePhone);
       }
 
       return response.body;

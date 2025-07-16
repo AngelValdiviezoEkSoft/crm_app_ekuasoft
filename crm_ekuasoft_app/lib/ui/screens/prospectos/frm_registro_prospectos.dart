@@ -31,6 +31,7 @@ late TextEditingController fechaCierreContTxt;
 String fecCierre = '';
 String fecCierreFin = '';
 String codIsoPhone = '';
+String dialCodePhone = '';
 
 DateTime dateRgPrsp = DateTime.now();
 
@@ -98,6 +99,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
     actSelect = '';
     telefonoPrsp = '';
     codIsoPhone = '';
+    dialCodePhone = '';
   }
 
   @override
@@ -391,6 +393,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                         onInputChanged: (PhoneNumber phoneNumber) async {
                                           telefonoPrsp = phoneNumber.phoneNumber ?? '';
                                           codIsoPhone = phoneNumber.isoCode ?? '';
+                                          dialCodePhone = phoneNumber.dialCode ?? '';
 
                                           setState(() {});
                                         },
@@ -424,7 +427,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                               ),
                                             );
                                               
-                                              var resp = await ProspectoTypeService().getProspectoRegistrado(telefonoPrsp, codIsoPhone);
+                                              var resp = await ProspectoTypeService().getProspectoRegistrado(telefonoPrsp, codIsoPhone, dialCodePhone);
 
                                               //ignore: use_build_context_synchronously
                                               FocusScope.of(context).unfocus();
@@ -474,32 +477,35 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 colorIcono = Colors.red;
                                                 iconoAlerta = Icons.cancel;
                                                 msmBoton = 'Volver';
+
+                                                showDialog(
+                                                  barrierDismissible: false,
+                                                  //ignore: use_build_context_synchronously
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+                                                    return ContentAlertDialog(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      onPressedCont: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      tipoAlerta: TipoAlerta().alertAccion,
+                                                      numLineasTitulo: 2,
+                                                      numLineasMensaje: 3,
+                                                      titulo: tituloAlerta,//'Atención',
+                                                      msmConIcono: true,
+                                                      iconoAlerta: iconoAlerta!,
+                                                      colorIconoAlerta: colorIcono,
+                                                      mensajeAlerta: objResp['result']['mensaje'],
+                                                      mensajeBoton: msmBoton
+                                                    );
+                                                  },
+                                                );
+                                              
+                                                return;
                                               }
                         
-                                              showDialog(
-                                                barrierDismissible: false,
-                                                //ignore: use_build_context_synchronously
-                                                context: context,
-                                                builder: (BuildContext context) {
-                                                  return ContentAlertDialog(
-                                                    onPressed: () {
-                                                      Navigator.of(context).pop();
-                                                    },
-                                                    onPressedCont: () {
-                                                      Navigator.of(context).pop();
-                                                    },
-                                                    tipoAlerta: TipoAlerta().alertAccion,
-                                                    numLineasTitulo: 2,
-                                                    numLineasMensaje: 3,
-                                                    titulo: tituloAlerta,//'Atención',
-                                                    msmConIcono: true,
-                                                    iconoAlerta: iconoAlerta!,
-                                                    colorIconoAlerta: colorIcono,
-                                                    mensajeAlerta: objResp['result']['mensaje'],
-                                                    mensajeBoton: msmBoton
-                                                  );
-                                                },
-                                              );
                                             } else {
                                               showDialog(
                                                 barrierDismissible: false,
