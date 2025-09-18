@@ -35,7 +35,7 @@ class _SettingsUserScreenState extends State<SettingsUserScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
+/*
             Container(
               width: size.width,
               height: size.height * 0.08,
@@ -84,6 +84,7 @@ class _SettingsUserScreenState extends State<SettingsUserScreen> {
             ),
 
             const SizedBox(height: 30),
+            */
 
             const Text('Brillo', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             

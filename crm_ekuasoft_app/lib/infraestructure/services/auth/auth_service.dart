@@ -333,7 +333,7 @@ class AuthService extends ChangeNotifier {
         )
       );
 
-      String rsp = await GenericService().getModelosByUidUser(objRqst, 'res.users');
+      String rsp = await GenericService().getModelosByUidUser(objRqst, EnvironmentsProd().modResUsers);//'res.users');
 
       var rspCorreo = json.decode(rsp);
 
@@ -344,8 +344,8 @@ class AuthService extends ChangeNotifier {
       //#endregion
 
       return response.body;
-    } catch (_) {
-      //print('Test Error1: $ex');
+    } catch (ex) {
+      print('Test Error1: $ex');
     }
   }
 
@@ -667,7 +667,7 @@ class AuthService extends ChangeNotifier {
         if(objStr.isNotEmpty)
         {
           var obj = RegisterDeviceResponseModel.fromJson(objStr);
-          ruta = '${obj.result.url}/api/v1/${objReq.params.imei}/done/write/res.users/model';      
+          ruta = '${obj.result.url}/api/v1/${objReq.params.imei}/done/write/${EnvironmentsProd().modResUsers}/model';      
         }
 
         final response = await http.post(

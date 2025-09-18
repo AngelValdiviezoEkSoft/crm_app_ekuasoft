@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:crm_ekuasoft_app/domain/domain.dart';
 import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
@@ -49,6 +51,8 @@ class ActividadesByFiltro extends StatefulWidget {
 
 class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
 
+  late Future<String> _futureActividades;
+
   @override
   void initState() {
     super.initState();
@@ -73,6 +77,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
     campSelectTpAct = '';
     activityTypeId = 0;
     lstActividadesByFiltros = [];
+    _futureActividades = gtTipoActividades();
   }
 
   Future<void> refreshDataAgenda() async {
@@ -151,8 +156,8 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
     return BlocBuilder<GenericBloc, GenericState>(
       builder: (context, state) {
 
-        return FutureBuilder(
-          future: ActivitiesService().getTipoActividades(),
+        return FutureBuilder<String>(
+          future: _futureActividades,//ActivitiesService().getTipoActividades(),
           builder: (context, snapshot) {
 
             if(!snapshot.hasData) {
@@ -168,7 +173,8 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
               );
             }
             else{
-              MailActivityTypeAppModel rspAct = snapshot.data as MailActivityTypeAppModel;
+              String rsp = snapshot.data as String;
+              MailActivityTypeAppModel rspAct = MailActivityTypeAppModel.fromRawJson(rsp);
 
               tpActividades = rspAct.data;
 
@@ -676,5 +682,18 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
         ),
       ),
     );
+  }
+}
+
+Future<String> gtTipoActividades() async {
+  try{
+    MailActivityTypeAppModel rsp = await ActivitiesService().getTipoActividades();
+
+    final jsonString = jsonEncode(rsp);
+
+    return jsonString;
+  }
+  catch(ex){
+    return '';
   }
 }

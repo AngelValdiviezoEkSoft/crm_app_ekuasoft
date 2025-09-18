@@ -7,9 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 ResPartnerDatumAppModel? objPerfil;
+late Future<String> dataProf;
 
 class ProfileScreenGen extends StatelessWidget {
-  const ProfileScreenGen({super.key});
+  
+  ProfileScreenGen({super.key}){
+    dataProf = gtDatosPerfil();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +51,7 @@ class ProfileScreenGen extends StatelessWidget {
 
   Widget _buildProfileCard(BuildContext context, Size size) {
     return FutureBuilder(
-      future: AuthService().getDatosPerfil(),
+      future: dataProf,//AuthService().getDatosPerfil(),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
 
         if(snapshot.hasData){
@@ -156,5 +160,15 @@ class ProfileScreenGen extends StatelessWidget {
 
       },
     );
+  }
+}
+
+
+Future<String> gtDatosPerfil() async {
+  try{
+    return await AuthService().getDatosPerfil();
+  }
+  catch(ex){
+    return '';
   }
 }

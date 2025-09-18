@@ -15,6 +15,7 @@ class EnvironmentsProd {
   final String apiKeyGMapIos = 'AIzaSyBNRevgaESKXBVcIFnEPVBQcTc1i_yqE6k';
 
   //MAPEO MODELOS 
+  final String modResUsers = 'res.users';
   final String modProsp = 'crm.lead';
   final String modClien = 'res.partner';
   final String modCampa = 'utm.campaign';

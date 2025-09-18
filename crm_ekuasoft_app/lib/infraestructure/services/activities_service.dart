@@ -1493,7 +1493,7 @@ class ActivitiesService extends ChangeNotifier{
       String internet = await ValidacionesUtils().validaInternet();
     
 
-      if(lstEncr.isNotEmpty && internet.isNotEmpty){
+      if(lstEncr.isNotEmpty && internet.isEmpty){
         ActivitiesResponseModel  objMem = ActivitiesResponseModel .fromRawJson(lstEncr);
 
         for(int i = 0; i < objMem.data.length; i++){

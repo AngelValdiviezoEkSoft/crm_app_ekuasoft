@@ -275,7 +275,7 @@ class Welcome2Screen extends StatelessWidget {
             plataforma = 'Desconocido';
           }
     
-          Position position = await getLocation();
+          Position position = await getLocation(context);
     
           //imeiCod = '8234560400000023'; //BORRAR LUEGO - PARA EMULADOR
           //imeiCod = '82345604000002Luis'; //BORRAR LUEGO - PARA CELULAR PRUEBAS
@@ -408,12 +408,45 @@ class Welcome2Screen extends StatelessWidget {
     return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   }
 
-  Future<Position> getLocation() async {
-    bool serviceEnabled;
+  Future<Position> getLocation(BuildContext contextLoc) async {
+    bool serviceEnabled = false;
     LocationPermission permission;
+
+    await showDialog(
+      context: contextLoc,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: const Text("Uso de tu ubicación"),
+          content: const Text("En esta opción de la aplicación, se accede a tu ubicación para permitir registrar tu dispositivo. No quedará registro de tu ubicación, bajo ningún concepto. ¿Deseas continuar con esta acción?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: const Text("Denegar"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: const Text("Aceptar"),
+            ),
+          ],
+        );
+      },
+    ).then((value) {      
+      serviceEnabled = value;
+    });
+
+    if(!serviceEnabled) return Future.error('Los permisos de ubicación están denegados permanentemente.');
 
     // Verifica si el servicio de ubicación está habilitado
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
     if (!serviceEnabled) {
       // Si no está habilitado, puedes mostrar un mensaje o pedirle al usuario que lo active
       return Future.error('Los servicios de ubicación están desactivados.');

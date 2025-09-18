@@ -763,7 +763,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                       infoRowAct("Nombre Comercial", tradeNameProsp, size),
                     if (tabAccionesAct == 1) infoRowAct("Clasificación", clasificacionPrsp, size),
                     if (tabAccionesAct == 1) infoRowAct("Canal", channelProsp, size),
-                    if (tabAccionesAct == 1) infoRowAct("Dirección", objDatumCrmLead?.street != null ? '${objDatumCrmLead?.street} ${objDatumCrmLead?.street2}' : '-----', size),
+                    if (tabAccionesAct == 1) infoRowAct("Dirección", objDatumCrmLead?.street != null && objDatumCrmLead?.street2 != null ? '${objDatumCrmLead?.street} ${objDatumCrmLead?.street2}' : objDatumCrmLead?.street != null ? '${objDatumCrmLead?.street}' : '-----', size),
                     if (tabAccionesAct == 1)
                       // Territorio
                       sectionTitleAct(Icons.place, "Territorio"),
