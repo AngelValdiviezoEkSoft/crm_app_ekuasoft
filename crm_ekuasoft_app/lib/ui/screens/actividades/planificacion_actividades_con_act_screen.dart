@@ -91,8 +91,14 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
         lstActividadesDiariasByProspecto = objRspFinal.activities.data;        
       }
       
+      if(lstActividadesDiariasByProspecto.isNotEmpty){
+        for(int i = 0; i < lstActividadesDiariasByProspecto.length; i++){
+          lstActividadesDiariasByProspecto[i].cerrado = false;
+        }
+      }
+
       setState(() {
-        //_mensaje = "¡Datos recibidos!";
+        
       });
       
     } catch (_) {
@@ -596,9 +602,29 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                             });
                       },
                       child: const Icon(
-                        Icons.calendar_month,
+                        Icons.document_scanner_sharp,
                         color: Colors.white,
-                        size: 40,
+                        size: 30,
+                      )
+                    ),
+                  SizedBox(
+                    width: size.width * 0.04,
+                  ),
+                  GestureDetector(
+                      onTap: () async {
+                        //ignore:use_build_context_synchronously
+                        context.pop();
+
+                        //ignore:use_build_context_synchronously
+                        context.pop();
+
+                        //ignore:use_build_context_synchronously
+                        context.push(objRutasGen.rutaPlanActivConActiv);
+                      },
+                      child: const Icon(
+                        Icons.refresh,
+                        color: Colors.white,
+                        size: 30,
                       )
                     ),
                   SizedBox(

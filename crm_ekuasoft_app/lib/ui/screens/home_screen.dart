@@ -23,6 +23,7 @@ String numeroIdentificacion = '';
 final FeatureApp objFeaturesNotificaciones = FeatureApp();
 bool permiteConsulta = false;
 bool permiteGestion = false;
+String userNameLogin = '';
 
 class HomeScreen extends StatefulWidget {
   
@@ -252,6 +253,8 @@ class HomeScreenState extends State<HomeScreen> {
                             //print('Test: $rspLogin');
                             final jsonLog = json.decode(rspLogin);
                             nameUserLbl = jsonLog["result"]["partner_display_name"];
+                            userNameLogin = jsonLog["result"]["username"];
+                            
                             emailUserLbl = jsonLog["result"]["email"] ?? '';
 
                             //ignore: use_build_context_synchronously                            

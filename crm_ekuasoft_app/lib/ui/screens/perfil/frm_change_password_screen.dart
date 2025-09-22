@@ -677,8 +677,9 @@ class FrmChangePasswordScreenState extends State<FrmChangePasswordScreen> {
                               var objLogDecode = json.decode(objLog);
 
                               int uidTmp = objLogDecode['result']['uid'];
+                              userNameLogin = objLogDecode["result"]["username"];
 
-                              CambioClaveResponseModel? objCambClave = await AuthService().cambioDeClave(passwordActController.text, _passwordController.text, uidTmp, nameUserLbl);
+                              CambioClaveResponseModel? objCambClave = await AuthService().cambioDeClave(passwordActController.text, _passwordController.text, uidTmp, userNameLogin);
 
                               //ignore:use_build_context_synchronously
                               Navigator.of(context).pop();
@@ -693,6 +694,7 @@ class FrmChangePasswordScreenState extends State<FrmChangePasswordScreen> {
                                       actions: [
                                         TextButton(
                                           onPressed: () {
+                                            Navigator.of(context).pop();
                                             Navigator.of(context).pop();
                                           },
                                           child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
