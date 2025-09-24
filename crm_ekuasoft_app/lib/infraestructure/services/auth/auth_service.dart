@@ -250,13 +250,7 @@ class AuthService extends ChangeNotifier {
       var objLog = await storage.read(key: 'RespuestaLogin') ?? '';
       var objLogDecode = json.decode(objLog);
 
-      final models = [        
-        /*
-        {
-          "model": EnvironmentsProd().modProsp,//"crm.lead",
-          "filters": []
-        },
-        */
+      final models = [                
         {
           "model": EnvironmentsProd().modClien,//"res.partner",
           "filters": []
@@ -283,14 +277,6 @@ class AuthService extends ChangeNotifier {
           "model": EnvironmentsProd().modPaise,//"res.country",
           "filters": []
         },
-        /*
-        {
-          "model": EnvironmentsProd().modIrModel,//"ir.model",
-          "filters": [
-            ["model","=",EnvironmentsProd().modCrmLead]//"crm.lead"
-          ]
-        },
-        */
         {
           "model": EnvironmentsProd().modIrModel,//"ir.model",
           "filters": []

@@ -47,6 +47,16 @@ class ProspectoTypeService extends ChangeNotifier{
         MultiModel(model: 'crm.lead')
       );
 
+      final models = [
+        {
+          "model": EnvironmentsProd().modCrmLead,//"crm.lead"
+          "filters": [
+            ['user_id', '=', objLogDecode['result']['uid']]
+          ]
+        },
+      ];
+
+
       ConsultaMultiModelRequestModel objReq = ConsultaMultiModelRequestModel(
         jsonrpc: EnvironmentsProd().jsonrpc,
         params: ParamsMultiModels(
@@ -61,7 +71,7 @@ class ProspectoTypeService extends ChangeNotifier{
         )
       );
 
-      var objRsp = await GenericService().getMultiModelos(objReq, "crm.lead");
+      var objRsp = await GenericService().getMultiModelosGen(objReq, models);
 
       var rsp = AppResponseModel.fromRawJson(objRsp);
 
