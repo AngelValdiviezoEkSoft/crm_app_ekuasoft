@@ -245,11 +245,18 @@ class AuthService extends ChangeNotifier {
         await login(authRequest);
       }
 
+      await storage.write(key: 'RespuestaLogin', value: response.body);
+
+      var objLog = await storage.read(key: 'RespuestaLogin') ?? '';
+      var objLogDecode = json.decode(objLog);
+
       final models = [        
+        /*
         {
           "model": EnvironmentsProd().modProsp,//"crm.lead",
           "filters": []
         },
+        */
         {
           "model": EnvironmentsProd().modClien,//"res.partner",
           "filters": []
@@ -276,10 +283,22 @@ class AuthService extends ChangeNotifier {
           "model": EnvironmentsProd().modPaise,//"res.country",
           "filters": []
         },
+        /*
         {
           "model": EnvironmentsProd().modIrModel,//"ir.model",
           "filters": [
             ["model","=",EnvironmentsProd().modCrmLead]//"crm.lead"
+          ]
+        },
+        */
+        {
+          "model": EnvironmentsProd().modIrModel,//"ir.model",
+          "filters": []
+        },
+        {
+          "model": EnvironmentsProd().modCrmLead,//"crm.lead"
+          "filters": [
+            ['user_id', '=', objLogDecode['result']['uid']]
           ]
         },
         {
@@ -304,8 +323,6 @@ class AuthService extends ChangeNotifier {
         },
       ];
 
-      await storage.write(key: 'RespuestaLogin', value: response.body);
-
       //print('Result Login: ${response.body}');
       
       await DataInicialService().readModelosApp(models);
@@ -313,9 +330,6 @@ class AuthService extends ChangeNotifier {
       //#region ConsultaCorreo
       var objReg = await storage.read(key: 'RespuestaRegistro') ?? '';
       var obj = RegisterDeviceResponseModel.fromJson(objReg);
-
-      var objLog = await storage.read(key: 'RespuestaLogin') ?? '';
-      var objLogDecode = json.decode(objLog);
 
       var codImei = await storage.read(key: 'codImei') ?? '';
 
