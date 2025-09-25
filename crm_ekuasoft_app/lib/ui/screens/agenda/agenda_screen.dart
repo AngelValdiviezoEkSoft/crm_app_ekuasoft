@@ -78,7 +78,7 @@ class AgendaScreenState extends State<AgendaScreen>  {
 
       //ActivitiesPageModel? objRspFinal = await ActivitiesService().getActivitiesDiariasByProspecto(null, objDatumCrmLead?.id ?? 0);
 
-      if(objRspFinal != null && actividadesFilAgenda.isEmpty){
+      if(actividadesFilAgenda.isEmpty){
         contLstAgenda = objRspFinal.activities.data.length;
         actividadesFilAgenda = objRspFinal.activities.data;
       }
@@ -173,7 +173,31 @@ class AgendaScreenState extends State<AgendaScreen>  {
 
     Future<void> refreshDataByFiltro(String filtro) async {
 
-      ActivitiesPageModel objActivitiesPageModel = ActivitiesService().getActivitiesByRangoFechas('mem', 0);
+      const storageAct = FlutterSecureStorage();
+
+      var cmbAct = await storageAct.read(key: 'cmbActividades') ?? '';
+
+      MailActivityTypeAppModel  objFinAct = MailActivityTypeAppModel.fromRawJson(cmbAct);
+
+
+      ActivitiesPageModel objActivitiesPageModel = ActivitiesPageModel(
+        activities: ActivitiesResponseModel(
+          data: [],
+          fields: FieldsActivities(code: 'NO_INTERNET', name: '', stateIds: ''),
+          length: 0
+        ),
+        lead: DatumCrmLead(
+          activityIds: [], campaignId: CampaignId(id: 0, name: ''), countryId: StructCombos(id: 0, name: ''),
+          dayClose: 0, emailFrom: '', expectedRevenue: 0, id: 0, lostReasonId: CampaignId(id: 0, name: ''),
+          mediumId: StructCombos(id: 0, name: ''), mobile: '', name: '', partnerId: PartnerId(id: 0, name: '', tradeName: '', cantonId: StructCombos(id: 0, name: ''), regionId: StructCombos(id: 0, name: ''), sectorId: StructCombos(id: 0, name: ''), channelId: StructCombos(id: 0, name: ''), cityId: StructCombos(id: 0, name: ''),clasificationId: StructCombos(id: 0, name: ''), email: ''),
+          priority: '', sourceId: StructCombos(id: 0, name: ''), stageId: StructCombos(id: 0, name: ''),
+          stateId: StructCombos(id: 0, name: ''), tagIds: [], title: CampaignId(id: 0, name: ''),
+          type: '', city: '', contactName: '', dateClose: null, dateDeadline: null, dateOpen: null, description: '',
+          emailCc: '', partnerName: '', phone: '', probability: 0, referred: '', street: '',
+          userId: StructCombos(id: 0, name: '')
+        ),
+        objMailAct: objFinAct
+      );//ActivitiesService().getActivitiesByRangoFechas('mem', 0);
 
       gnrBloc.setMuestraCarga(true);
       actividadesFilAgenda = [];

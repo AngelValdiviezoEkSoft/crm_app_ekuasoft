@@ -71,7 +71,7 @@ class ProspectoTypeService extends ChangeNotifier{
         )
       );
 
-      var objRsp = await GenericService().getMultiModelosGen(objReq, models);
+      var objRsp = await GenericService().getMultiModelosGenNoMemoria(objReq, models);
 
       var rsp = AppResponseModel.fromRawJson(objRsp);
 

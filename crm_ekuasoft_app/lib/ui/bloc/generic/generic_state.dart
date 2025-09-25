@@ -43,7 +43,6 @@ class GenericState extends Equatable {
       inicioCarga = inicioCarga ?? true,
       cargando = cargando ?? false,
       levantaModal = levantaModal ?? false;
-  
 
   GenericState copyWith({
     int? positionMenu,
@@ -73,7 +72,6 @@ class GenericState extends Equatable {
     cargando: cargando ?? this.cargando,
     levantaModal: levantaModal ?? this.levantaModal
   );
-
 
   @override
   List<Object> get props => [positionMenu,positionFormaPago,coordenadasMapa,radioMarcacion,formaPago,localidadId,idFormaPago, heightModalPlanAct, muestraCarga,inicioCarga,cargando,levantaModal];
@@ -277,7 +275,6 @@ class GenericState extends Equatable {
 
     return '$objLogin|$correoUser';
   }
-
   
   Future<String> lstProspectos() async {
     var rsp = await storage.read(key: 'RespuestaProspectos') ?? '';

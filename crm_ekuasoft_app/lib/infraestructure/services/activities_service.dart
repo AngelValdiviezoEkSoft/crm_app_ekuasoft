@@ -67,7 +67,7 @@ class ActivitiesService extends ChangeNotifier{
       );
 
       String ruta = '';
-      final objStr = await storageCamp.read(key: 'RespuestaRegistro') ?? '';
+      final objStr = await storageAct.read(key: 'RespuestaRegistro') ?? '';
       
       if(objStr.isNotEmpty)
       {  
@@ -108,10 +108,10 @@ class ActivitiesService extends ChangeNotifier{
       var rsp = AppResponseModel.fromRawJson(response.body);
 
 
-      await storageCamp.write(key: 'cmbLstActividades', value: json.encode(rsp.result.data.mailActivity));
+      await storageAct.write(key: 'cmbLstActividades', value: json.encode(rsp.result.data.mailActivity));
 
 
-      String cmbLstAct = await storageCamp.read(key: 'cmbLstActividades') ?? '';
+      String cmbLstAct = await storageAct.read(key: 'cmbLstActividades') ?? '';
 
       ActivitiesResponseModel objActividades = ActivitiesResponseModel.fromRawJson(cmbLstAct);
       
@@ -183,7 +183,7 @@ class ActivitiesService extends ChangeNotifier{
       );
 
       String ruta = '';
-      final objStr = await storageCamp.read(key: 'RespuestaRegistro') ?? '';
+      final objStr = await storageAct.read(key: 'RespuestaRegistro') ?? '';
       
       if(objStr.isNotEmpty)
       {  
@@ -224,10 +224,10 @@ class ActivitiesService extends ChangeNotifier{
       var rsp = AppResponseModel.fromRawJson(response.body);
 
 
-      await storageCamp.write(key: 'cmbLstActividades', value: json.encode(rsp.result.data.mailActivity));
+      await storageAct.write(key: 'cmbLstActividades', value: json.encode(rsp.result.data.mailActivity));
 
 
-      String cmbLstAct = await storageCamp.read(key: 'cmbLstActividades') ?? '';
+      String cmbLstAct = await storageAct.read(key: 'cmbLstActividades') ?? '';
 
       ActivitiesResponseModel objActividades = ActivitiesResponseModel.fromRawJson(cmbLstAct);
       
@@ -292,7 +292,7 @@ class ActivitiesService extends ChangeNotifier{
       );
 
       String ruta = '';
-      final objStr = await storageCamp.read(key: 'RespuestaRegistro') ?? '';
+      final objStr = await storageAct.read(key: 'RespuestaRegistro') ?? '';
       
       if(objStr.isNotEmpty)
       {  
@@ -333,10 +333,10 @@ class ActivitiesService extends ChangeNotifier{
       var rsp = AppResponseModel.fromRawJson(response.body);
 
 
-      await storageCamp.write(key: 'cmbLstActividades', value: json.encode(rsp.result.data.mailActivity));
+      await storageAct.write(key: 'cmbLstActividades', value: json.encode(rsp.result.data.mailActivity));
 
 
-      String cmbLstAct = await storageCamp.read(key: 'cmbLstActividades') ?? '';
+      String cmbLstAct = await storageAct.read(key: 'cmbLstActividades') ?? '';
 
       ActivitiesResponseModel objActividades = ActivitiesResponseModel.fromRawJson(cmbLstAct);
       
@@ -356,7 +356,7 @@ class ActivitiesService extends ChangeNotifier{
   }
 
   getTipoActividades() async {
-    var cmbAct = await storageCamp.read(key: 'cmbActividades') ?? '';
+    var cmbAct = await storageAct.read(key: 'cmbActividades') ?? '';
 
     MailActivityTypeAppModel  objFinAct = MailActivityTypeAppModel.fromRawJson(cmbAct);
 
@@ -374,7 +374,7 @@ class ActivitiesService extends ChangeNotifier{
 
       var connectivityResult = await ValidacionesUtils().validaInternet();
 
-      var cmbAct = await storageCamp.read(key: 'cmbActividades') ?? '';
+      var cmbAct = await storageAct.read(key: 'cmbActividades') ?? '';
 
       MailActivityTypeAppModel  objFinAct = MailActivityTypeAppModel.fromRawJson(cmbAct);
 
@@ -520,7 +520,7 @@ class ActivitiesService extends ChangeNotifier{
       );
 
       String ruta = '';
-      final objStr = await storageCamp.read(key: 'RespuestaRegistro') ?? '';
+      final objStr = await storageAct.read(key: 'RespuestaRegistro') ?? '';
       
       if(objStr.isNotEmpty)
       {  
@@ -558,11 +558,11 @@ class ActivitiesService extends ChangeNotifier{
 
       //print('Consulta agenda: ${response.body}');
 
-      String cmbLstAct = json.encode(rsp.result.data.mailActivity);//await storageCamp.read(key: 'cmbLstActividades') ?? '';
+      String cmbLstAct = json.encode(rsp.result.data.mailActivity);//await storageAct.read(key: 'cmbLstActividades') ?? '';
 
       ActivitiesResponseModel objActividades = ActivitiesResponseModel.fromRawJson(cmbLstAct);
 
-      var lstProsp = await storageCamp.read(key: 'RespuestaProspectos') ?? '';
+      var lstProsp = await storageAct.read(key: 'RespuestaProspectos') ?? '';
 
       var objLogDecode2 = json.decode(lstProsp);      
 
@@ -651,7 +651,7 @@ class ActivitiesService extends ChangeNotifier{
         ),
       );
 
-      final lstEncr = await storageCamp.read(key: 'LstActividadesAbiertasCerradas') ?? '';
+      final lstEncr = await storageAct.read(key: 'LstActividadesAbiertasCerradas') ?? '';
 
       String internet = await ValidacionesUtils().validaInternet();
     
@@ -682,7 +682,11 @@ class ActivitiesService extends ChangeNotifier{
   }
 
 
-  getActivitiesByRangoFechas(fechas, resId) async {
+  Future<ActivitiesPageModel> getActivitiesByRangoFechas(fechas, resId) async {
+    var cmbAct = await storageAct.read(key: 'cmbActividades') ?? '';
+
+    MailActivityTypeAppModel  objFinAct = MailActivityTypeAppModel.fromRawJson(cmbAct);
+
     try{
 
       var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
@@ -693,9 +697,7 @@ class ActivitiesService extends ChangeNotifier{
 
       var connectivityResult = await ValidacionesUtils().validaInternet();
 
-      var cmbAct = await storageCamp.read(key: 'cmbActividades') ?? '';
-
-      MailActivityTypeAppModel  objFinAct = MailActivityTypeAppModel.fromRawJson(cmbAct);
+      
 
       if(connectivityResult.isNotEmpty){
         ActivitiesPageModel objRspFinal = ActivitiesPageModel(
@@ -839,7 +841,7 @@ class ActivitiesService extends ChangeNotifier{
       );
 
       String ruta = '';
-      final objStr = await storageCamp.read(key: 'RespuestaRegistro') ?? '';
+      final objStr = await storageAct.read(key: 'RespuestaRegistro') ?? '';
       
       if(objStr.isNotEmpty)
       {  
@@ -877,11 +879,11 @@ class ActivitiesService extends ChangeNotifier{
 
       //print('Consulta agenda: ${response.body}');
 
-      String cmbLstAct = json.encode(rsp.result.data.mailActivity);//await storageCamp.read(key: 'cmbLstActividades') ?? '';
+      String cmbLstAct = json.encode(rsp.result.data.mailActivity);//await storageAct.read(key: 'cmbLstActividades') ?? '';
 
       ActivitiesResponseModel objActividades = ActivitiesResponseModel.fromRawJson(cmbLstAct);
 
-      var lstProsp = await storageCamp.read(key: 'RespuestaProspectos') ?? '';
+      var lstProsp = await storageAct.read(key: 'RespuestaProspectos') ?? '';
 
       var objLogDecode2 = json.decode(lstProsp);      
 
@@ -970,10 +972,9 @@ class ActivitiesService extends ChangeNotifier{
         ),
       );
 
-      final lstEncr = await storageCamp.read(key: 'LstActividadesAbiertasCerradas') ?? '';
+      final lstEncr = await storageAct.read(key: 'LstActividadesAbiertasCerradas') ?? '';
 
-      String internet = await ValidacionesUtils().validaInternet();
-    
+      String internet = await ValidacionesUtils().validaInternet();    
 
       if(lstEncr.isNotEmpty && internet.isNotEmpty){
         ActivitiesResponseModel  objMem = ActivitiesResponseModel.fromRawJson(lstEncr);
@@ -1028,6 +1029,24 @@ class ActivitiesService extends ChangeNotifier{
     }
     catch(_){
      //print('Test: $ex');
+     return ActivitiesPageModel(
+        activities: ActivitiesResponseModel(
+          data: [],
+          fields: FieldsActivities(code: 'ERROR_CATCH', name: '', stateIds: ''),
+          length: 0
+        ),
+        lead: DatumCrmLead(
+          activityIds: [], campaignId: CampaignId(id: 0, name: ''), countryId: StructCombos(id: 0, name: ''),
+          dayClose: 0, emailFrom: '', expectedRevenue: 0, id: 0, lostReasonId: CampaignId(id: 0, name: ''),
+          mediumId: StructCombos(id: 0, name: ''), mobile: '', name: '', partnerId: PartnerId(id: 0, name: '', tradeName: '', cantonId: StructCombos(id: 0, name: ''), regionId: StructCombos(id: 0, name: ''), sectorId: StructCombos(id: 0, name: ''), channelId: StructCombos(id: 0, name: ''), cityId: StructCombos(id: 0, name: ''),clasificationId: StructCombos(id: 0, name: ''), email: ''),
+          priority: '', sourceId: StructCombos(id: 0, name: ''), stageId: StructCombos(id: 0, name: ''),
+          stateId: StructCombos(id: 0, name: ''), tagIds: [], title: CampaignId(id: 0, name: ''),
+          type: '', city: '', contactName: '', dateClose: null, dateDeadline: null, dateOpen: null, description: '',
+          emailCc: '', partnerName: '', phone: '', probability: 0, referred: '', street: '',
+          userId: StructCombos(id: 0, name: '')
+        ),
+        objMailAct: objFinAct
+      );
     }
   }
 
@@ -1140,7 +1159,7 @@ class ActivitiesService extends ChangeNotifier{
       );
 
       String ruta = '';
-      final objStr = await storageCamp.read(key: 'RespuestaRegistro') ?? '';
+      final objStr = await storageAct.read(key: 'RespuestaRegistro') ?? '';
       
       if(objStr.isNotEmpty)
       {  
@@ -1196,7 +1215,7 @@ class ActivitiesService extends ChangeNotifier{
 
       var connectivityResult = await ValidacionesUtils().validaInternet();
 
-      var cmbAct = await storageCamp.read(key: 'cmbActividades') ?? '';
+      var cmbAct = await storageAct.read(key: 'cmbActividades') ?? '';
 
       MailActivityTypeAppModel  objFinAct = MailActivityTypeAppModel.fromRawJson(cmbAct);
 
@@ -1357,7 +1376,7 @@ class ActivitiesService extends ChangeNotifier{
       );
 
       String ruta = '';
-      final objStr = await storageCamp.read(key: 'RespuestaRegistro') ?? '';
+      final objStr = await storageAct.read(key: 'RespuestaRegistro') ?? '';
       
       if(objStr.isNotEmpty)
       {  
@@ -1395,11 +1414,11 @@ class ActivitiesService extends ChangeNotifier{
       
       var rsp = AppResponseModel.fromRawJson(response.body);
 
-      String cmbLstAct = json.encode(rsp.result.data.mailActivity);//await storageCamp.read(key: 'cmbLstActividades') ?? '';
+      String cmbLstAct = json.encode(rsp.result.data.mailActivity);//await storageAct.read(key: 'cmbLstActividades') ?? '';
 
       ActivitiesResponseModel objActividades = ActivitiesResponseModel.fromRawJson(cmbLstAct);
 
-      var lstProsp = await storageCamp.read(key: 'RespuestaProspectos') ?? '';
+      var lstProsp = await storageAct.read(key: 'RespuestaProspectos') ?? '';
 
       var objLogDecode2 = json.decode(lstProsp);      
 
@@ -1488,7 +1507,7 @@ class ActivitiesService extends ChangeNotifier{
         ),
       );
 
-      final lstEncr = await storageCamp.read(key: 'LstActividadesAbiertasCerradas') ?? '';
+      final lstEncr = await storageAct.read(key: 'LstActividadesAbiertasCerradas') ?? '';
 
       String internet = await ValidacionesUtils().validaInternet();
     
@@ -1883,7 +1902,7 @@ class ActivitiesService extends ChangeNotifier{
           )
         );
 
-        final lstEncr = await storageCamp.read(key: 'LstActividadesAbiertasCerradas') ?? '';
+        final lstEncr = await storageAct.read(key: 'LstActividadesAbiertasCerradas') ?? '';
 
         if(lstEncr.isNotEmpty){
           ActivitiesResponseModel  objMem = ActivitiesResponseModel.fromRawJson(lstEncr);
@@ -1902,7 +1921,7 @@ class ActivitiesService extends ChangeNotifier{
             )
           );
 
-          await storageCamp.write(key: 'LstActividadesAbiertasCerradas', value: jsonEncode(objMem.toJson()));
+          await storageAct.write(key: 'LstActividadesAbiertasCerradas', value: jsonEncode(objMem.toJson()));
         }
         else {
 
@@ -1924,7 +1943,7 @@ class ActivitiesService extends ChangeNotifier{
             fields: FieldsActivities(code: '', name: '',stateIds: '')
           );
 
-          await storageCamp.write(key: 'LstActividadesAbiertasCerradas', value: jsonEncode(objMem.toJson()));
+          await storageAct.write(key: 'LstActividadesAbiertasCerradas', value: jsonEncode(objMem.toJson()));
         }
 
         return objRsp;
@@ -2052,7 +2071,7 @@ class ActivitiesService extends ChangeNotifier{
           )
         );
 
-        final lstEncr = await storageCamp.read(key: 'LstActividadesAbiertasCerradas') ?? '';
+        final lstEncr = await storageAct.read(key: 'LstActividadesAbiertasCerradas') ?? '';
 
         if(lstEncr.isNotEmpty){
           ActivitiesResponseModel  objMem = ActivitiesResponseModel.fromRawJson(lstEncr);
@@ -2073,7 +2092,7 @@ class ActivitiesService extends ChangeNotifier{
             );
           }
 
-          await storageCamp.write(key: 'LstActividadesAbiertasCerradas', value: jsonEncode(objMem.toJson()));
+          await storageAct.write(key: 'LstActividadesAbiertasCerradas', value: jsonEncode(objMem.toJson()));
         }
         else {
 
@@ -2096,7 +2115,7 @@ class ActivitiesService extends ChangeNotifier{
               fields: FieldsActivities(code: '', name: '',stateIds: '')
             );
 
-            await storageCamp.write(key: 'LstActividadesAbiertasCerradas', value: jsonEncode(objMem.toJson()));
+            await storageAct.write(key: 'LstActividadesAbiertasCerradas', value: jsonEncode(objMem.toJson()));
           }
         }
 

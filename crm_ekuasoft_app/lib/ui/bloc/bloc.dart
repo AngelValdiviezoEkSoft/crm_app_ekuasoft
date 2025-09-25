@@ -1,4 +1,6 @@
 
+export 'package:crm_ekuasoft_app/ui/bloc/activities/activities_bloc.dart';
+
 export 'package:crm_ekuasoft_app/ui/bloc/gps/gps_bloc.dart';
 
 export 'package:crm_ekuasoft_app/ui/bloc/search/search_bloc.dart';

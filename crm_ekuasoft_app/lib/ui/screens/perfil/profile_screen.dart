@@ -54,7 +54,7 @@ class ProfileScreenGen extends StatelessWidget {
       future: dataProf,//AuthService().getDatosPerfil(),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
 
-        if(snapshot.hasData){
+        if(snapshot.hasData && snapshot.data != null && snapshot.data!.isNotEmpty){
           objPerfil = ResPartnerDatumAppModel.fromRawJson('${snapshot.data}');
         }
 

@@ -18,6 +18,7 @@ void setupServiceLocator() {
   
   getIt.registerLazySingleton(() => LocationBloc());
   getIt.registerLazySingleton(() => GpsBloc());
+  getIt.registerLazySingleton(() => ActivitiesBloc());
   
   getIt.registerLazySingleton(() => MapBloc(
     locationBloc: LocationBloc()

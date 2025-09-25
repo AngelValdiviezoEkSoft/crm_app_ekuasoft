@@ -86,7 +86,7 @@ class PlanActState extends State<PlanificacionActividades> {
     );
 */
 
-    if(objActividadEscogida == null && objCalendarioActividadescogidaByFiltroCal != null){
+    if(objCalendarioActividadescogidaByFiltroCal != null){
       objActividadEscogida = objCalendarioActividadescogidaByFiltroCal;
     }
 

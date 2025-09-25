@@ -706,6 +706,8 @@ class AuthService extends ChangeNotifier {
   Future<String> getDatosPerfil() async {    
     String resPartner = await storage.read(key: 'RespuestaClientes') ?? '';
     ResPartnerAppModel apiResponse = ResPartnerAppModel.fromRawJson(resPartner);
+
+    if(apiResponse.data.isEmpty) return '';
     
     final rspLogin = await storage.read(key: 'DataUser') ?? '';
 

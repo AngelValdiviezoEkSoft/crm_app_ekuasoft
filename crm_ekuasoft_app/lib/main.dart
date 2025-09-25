@@ -26,6 +26,7 @@ void main() async {
         BlocProvider(create: (context) => getIt<GpsBloc>()),
         BlocProvider(create: (context) => getIt<MapBloc>()),
         BlocProvider(create: (context) => getIt<SearchBloc>()),
+        BlocProvider(create: (context) => getIt<ActivitiesBloc>()),
 
       ],
       child: ProviderScope(
