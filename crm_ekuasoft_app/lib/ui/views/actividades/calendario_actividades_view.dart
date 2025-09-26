@@ -193,43 +193,50 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                     selectedColor: Colors.white,
                     borderRadius: BorderRadius.circular(20),
                     onPressed: (int index) {
+                      muestraCargaLocal = true;
+                      actBloc.setLstActividades([]);
+                      selectedDayGenByFiltroCal = DateTime.now();
+                      focusedDayGenByFiltroCal = DateTime.now();
+
                       setState(() {
                         for (int i = 0; i < actualizaListaActAgendaByFiltro2CalCal.length; i++) {
                           actualizaListaActAgendaByFiltro2CalCal[i] = i == index;
                         }
                       });
+
+                      WidgetsBinding.instance.addPostFrameCallback((_) async {
+
+                        _datesByFiltroCal = [];
+                        _datesByFiltroCal.add(DateTime.now());
+
+                        ActivitiesPageModel objRsp = await ActivitiesService().getActivitiesByRangoFechas(_datesByFiltroCal, objDatumCrmLead?.id ?? 0);
+
+                        actBloc.setLstActividades(objRsp.activities.data);
+                        gnrBloc.setMuestraCarga(false);
+                        muestraCargaLocal = false;
+                      });
                     },
                     isSelected: actualizaListaActAgendaByFiltro2CalCal,
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
                         child: Text(
                           'Mes',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color:
-                                actualizaListaActAgendaByFiltro2CalCal[
-                                        0]
-                                    ? Colors.white
-                                    : Colors.black,
+                            color: actualizaListaActAgendaByFiltro2CalCal[0] ? Colors.white : Colors.black,
                           ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
                         child: Text(
                           'Semana',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color:
-                                actualizaListaActAgendaByFiltro2CalCal[
-                                        1]
-                                    ? Colors.white
-                                    : Colors.black,
+                            color: actualizaListaActAgendaByFiltro2CalCal[1] ? Colors.white : Colors.black,
                           ),
                         ),
                       ),
@@ -248,14 +255,34 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                             ),
                             value: _datesByFiltroCal,
                             onValueChanged: (dates) async {
-                              gnrBloc.setMuestraCarga(true);
                               _datesByFiltroCal = dates;
 
                               if (dates.length == 1) {
                                 return;
                               }
 
+                              muestraCargaLocal = true;
+                              actBloc.setLstActividades([]);
+
                               calendarioActividadesFilAgendaByFiltroCall = [];
+
+                              WidgetsBinding.instance.addPostFrameCallback((_) async {
+
+                                ActivitiesPageModel objRsp = await ActivitiesService().getActivitiesByRangoFechas(dates, objDatumCrmLead?.id ?? 0);
+
+                                actBloc.setLstActividades(objRsp.activities.data);
+                                gnrBloc.setMuestraCarga(false);
+                                muestraCargaLocal = false;
+
+                                if(objRsp.activities.data.isEmpty){
+                                  setState(() {
+                                    return;
+                                  });
+                                }
+                                
+                              });
+
+                              /*
 
                               ActivitiesPageModel objRsp = await ActivitiesService().getActivitiesByRangoFechas(dates, objDatumCrmLead?.id ?? 0);
 
@@ -266,7 +293,7 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
 
                               gnrBloc.setMuestraCarga(false);
                               actBloc.setLstActividades(calendarioActividadesFilAgendaByFiltroCall);
-
+*/
                               //setState(() {});
                             })),
 
@@ -288,14 +315,12 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                               muestraCargaLocal = true;
                               selectedDayGenByFiltroCal = selectedDay;
                               focusedDayGenByFiltroCal = focusedDay;
+                              actBloc.setLstActividades([]);
+                              gnrBloc.setMuestraCarga(true);
 
                               setState(() {});
 
-                              gnrBloc.setMuestraCarga(true);
-
                               WidgetsBinding.instance.addPostFrameCallback((_) async {
-
-                                actBloc.setLstActividades([]);
 
                                 _datesByFiltroCal = [];
                                 _datesByFiltroCal.add(selectedDay);
@@ -305,6 +330,13 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                                 actBloc.setLstActividades(objRsp.activities.data);
                                 gnrBloc.setMuestraCarga(false);
                                 muestraCargaLocal = false;
+
+                                if(objRsp.activities.data.isEmpty){
+                                  setState(() {
+                                    return;
+                                  });
+                                }
+
                               });
 
                             }
@@ -473,7 +505,7 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                     ),
 
                   //if (contLstAgendaByFiltroCal > 0 && !state.muestraCarga && calendarioActividadesFilAgendaByFiltroCall.isNotEmpty)
-                  if (stateAct.lstActivities.isNotEmpty && !state.muestraCarga)
+                  if (stateAct.lstActivities.isNotEmpty && !muestraCargaLocal)
                     Container(
                       color: Colors.transparent,
                       width: size.width,
@@ -650,7 +682,7 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                     ),
                   
                   //if (contLstAgendaByFiltroCal == 0)
-                  if (!state.muestraCarga && stateAct.lstActivities.isEmpty)
+                  if (!muestraCargaLocal && stateAct.lstActivities.isEmpty)
                     Container(
                       width: size.width * 0.9,
                       height: actualizaListaActAgendaByFiltro2CalCal[1]
