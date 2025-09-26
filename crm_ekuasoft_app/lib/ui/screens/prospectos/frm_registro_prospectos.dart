@@ -585,7 +585,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 style: AppTextStyles.bodyRegular(width: size.width),
                                                 decoration: InputDecorationCvs.formsDecoration(
                                                   labelText: '* Nombre de Prospecto',
-                                                  hintTetx: 'Ej: Juan Valdez',
+                                                  hintTetx: '* Empresa o Contacto *',
                                                   size: size
                                                 ),
                                                 enabled: habilitaGuardar,
@@ -626,7 +626,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 style: AppTextStyles.bodyRegular(width: size.width),
                                                 decoration: InputDecorationCvs.formsDecoration(
                                                   labelText: '* Nombre Oportunidad',
-                                                  hintTetx: 'Ej: Juan Valdez',
+                                                  hintTetx: 'Ej: Nomb. producto + Nomb. prospecto',
                                                   size: size
                                                 ),
                                                 enabled: habilitaGuardar,

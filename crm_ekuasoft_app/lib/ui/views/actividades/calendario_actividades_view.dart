@@ -146,33 +146,54 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
     final gnrBloc = Provider.of<GenericBloc>(context);
     final actBloc = Provider.of<ActivitiesBloc>(context);
 
-    Future<void> refreshDataByFiltro(String filtro) async {
-                    gnrBloc.setMuestraCarga(true);
-                    calendarioActividadesFilAgendaByFiltroCall = [];
-
-                    if (filtro.isNotEmpty) {                      
-                      gnrBloc.setMuestraCarga(false);
-
-                      contLstAgendaByFiltroCal = 0;
-
-                      contLstAgendaByFiltroCal =
-                          calendarioActividadesFilAgendaByFiltroCall.length;
-                    } else {
-                      //calendarioActividadesFilAgendaByFiltroCall =
-                          //rspAct.activities.data;
-                      //actualizaListaActAgendaByFiltro2 = false;
-                    }
-
-                    gnrBloc.setMuestraCarga(false);
-                    setState(() {});
-                  }
-
 
     return BlocBuilder<GenericBloc, GenericState>(
       builder: (context, state) {
       
       return BlocBuilder<ActivitiesBloc, ActivitiesState>(
         builder: (context, stateAct) {
+
+          Future<void> refreshDataByFiltro(String filtro) async {
+            muestraCargaLocal = true;
+            gnrBloc.setMuestraCarga(true);
+            calendarioActividadesFilAgendaByFiltroCall = [];
+
+            if (filtro.isNotEmpty) {
+
+              if(stateAct.lstActivitiesResp.length > stateAct.lstActivities.length){
+                actBloc.setLstActividades(stateAct.lstActivitiesResp);
+              }
+
+              if(stateAct.lstActivities.isEmpty) return;
+
+              List<DatumActivitiesResponse> lstTemp = [];
+
+              calendarioActividadesFilAgendaByFiltroCall = [];
+
+              calendarioActividadesFilAgendaByFiltroCall = stateAct.lstActivities;
+              actBloc.setLstActividadesResp([]);
+              actBloc.setLstActividadesResp(stateAct.lstActivities);
+
+              for(int i = 0; i < calendarioActividadesFilAgendaByFiltroCall.length; i++){
+                if((calendarioActividadesFilAgendaByFiltroCall[i].leadName != null && calendarioActividadesFilAgendaByFiltroCall[i].leadName!.toUpperCase().contains(filtro.toUpperCase()))
+                || (calendarioActividadesFilAgendaByFiltroCall[i].summary != null && calendarioActividadesFilAgendaByFiltroCall[i].summary!.toUpperCase().contains(filtro.toUpperCase()))){
+                  lstTemp.add(calendarioActividadesFilAgendaByFiltroCall[i]);
+                }
+              }
+
+              actBloc.setLstActividades(lstTemp);
+
+            }
+
+            if(filtro.isEmpty && stateAct.lstActivitiesResp.length > stateAct.lstActivities.length){
+              actBloc.setLstActividades(stateAct.lstActivitiesResp);
+            }
+
+            muestraCargaLocal = false;
+
+            gnrBloc.setMuestraCarga(false);
+            //setState(() {});
+          }
 
           return Container(
             width: size.width * 0.99,
@@ -396,47 +417,7 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                       onEditingComplete: () async {
                         gnrBloc.setMuestraCarga(true);
 
-                        if (actualizaListaActAgendaByFiltro2CalCal[0]) {
-                          //MES
-                          if (filtroAgendaTxtByFiltroCal.text.isEmpty) {
-                            FocusScope.of(context).unfocus();
-                            return;
-                          }
-
-                          if (_datesByFiltroCal.length == 1) {
-                            FocusScope.of(context).unfocus();
-                            return;
-                          }
-                          ActivitiesPageModel objRsp =
-                              await ActivitiesService()
-                                  .getActivitiesByRangoFechas(
-                                      _datesByFiltroCal,
-                                      objDatumCrmLead?.id ?? 0);
-
-                          calendarioActividadesFilAgendaByFiltroCall =
-                              [];
-                          calendarioActividadesFilAgendaByFiltroCall =
-                              objRsp.activities.data;
-
-                          setState(() {
-                            //rspAct = objRsp; //.activities;
-                            actualizaListaActAgendaByFiltro2 = true;
-                            contLstAgendaByFiltroCal =
-                                calendarioActividadesFilAgendaByFiltroCall
-                                    .length;
-                          });
-
-                          refreshDataByFiltro(
-                              filtroAgendaTxtByFiltroCal.text);
-                        }
-
-                        if (filtroAgendaTxtByFiltroCal
-                            .text.isNotEmpty) {
-                          refreshDataByFiltro(
-                              filtroAgendaTxtByFiltroCal.text);
-                        }
-
-                        gnrBloc.setMuestraCarga(false);
+                        refreshDataByFiltro(filtroAgendaTxtByFiltroCal.text);
 
                         //ignore: use_build_context_synchronously
                         FocusScope.of(context).unfocus();
@@ -453,29 +434,6 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
 
                             filtroAgendaTxtByFiltroCal.text = '';
                             terminoBusquedaActAgendaByFiltroCal = '';
-
-                            if (actualizaListaActAgendaByFiltro2CalCal[0]) {
-                              //MES
-
-                              if (_datesByFiltroCal.length == 1) {
-                                gnrBloc.setMuestraCarga(false);
-                                return;
-                              }
-                              ActivitiesPageModel objRsp = await ActivitiesService().getActivitiesByRangoFechas(_datesByFiltroCal, objDatumCrmLead?.id ?? 0);
-
-                              calendarioActividadesFilAgendaByFiltroCall = [];
-                              calendarioActividadesFilAgendaByFiltroCall = objRsp.activities.data;
-
-                              setState(() {
-                                //rspAct = objRsp; //.activities;
-                                actualizaListaActAgendaByFiltro2 = true;
-                                contLstAgendaByFiltroCal =
-                                    calendarioActividadesFilAgendaByFiltroCall
-                                        .length;
-                              });
-
-                              return;
-                            }
 
                             refreshDataByFiltro('');
                           },
