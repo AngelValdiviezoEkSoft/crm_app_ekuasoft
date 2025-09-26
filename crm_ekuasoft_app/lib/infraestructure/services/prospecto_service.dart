@@ -443,18 +443,18 @@ class ProspectoTypeService extends ChangeNotifier{
         //print('Error al grabar: $ex');
       }
     } else {
-      await storageProspecto.write(key: 'registraProspecto', value: jsonEncode(objProspecto.toJson()));
+      //await storageProspecto.write(key: 'registraProspecto', value: jsonEncode(objProspecto.toJson()));
       //await storageProspecto.write(key: 'TienePendienteRegistros', value: 'S');
 
       return ProspectoRegistroResponseModel(
-        id: 0,
+        id: -1,
         jsonrpc: '',
         result: ProspectoRegistroModel(
           estado: 0, 
           mensaje: '', 
           data: []
         ),
-        mensaje: objMensajesProspectoService.mensajeOffLine
+        mensaje: objMensajesProspectoService.mensajeOffLineGenerico
       );
     }
 

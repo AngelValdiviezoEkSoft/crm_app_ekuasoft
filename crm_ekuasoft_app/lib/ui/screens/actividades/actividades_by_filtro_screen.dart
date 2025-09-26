@@ -335,12 +335,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
 
                               if(objRsp.activities.data.isNotEmpty){
                                 lstActividadesByFiltros = objRsp.activities.data;
-                              }
-    /*
-                              nombreProbFiltroTxt = TextEditingController();
-                              cellFiltroTxt = TextEditingController();
-                              probabilidadFiltroTxt = TextEditingController();
-                              */
+                              }    
 
                               //ignore: use_build_context_synchronously
                               FocusScope.of(context).unfocus();
@@ -379,16 +374,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              /*
-                              Container(
-                                color: Colors.transparent,
-                                width: size.width * 0.95,
-                                height: size.height * 0.09,
-                                alignment: Alignment.center,
-                                child: AutoSizeText('¡HEY!', style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'AristotelicaDisplayDemiBoldTrial',color: objColorsApp.naranjaIntenso,), maxLines: 1,  presetFontSizes: const [58,56,54,52,50,48,46,44,42,40,38,36,34,32,30,28,26,24,22,20,18,16,14,12,10]),
-                              ),
-                              */
-    
+                              
                               if(state.muestraCarga)
                               Container(
                                 width: size.width,
@@ -560,7 +546,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                 child: const AutoSizeText('No existen actividades agendadas', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,), maxLines: 2,  presetFontSizes: [42,40,38,36,34,32,30,28,26,24,22,20,18,16,14,12,10]),
                               ),
                             ],
-                          ), 
+                          ),
                         ),
               
                         SizedBox(

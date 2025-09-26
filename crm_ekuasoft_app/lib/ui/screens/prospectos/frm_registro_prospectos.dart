@@ -1731,12 +1731,14 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                     if(objRsp != null){
                                       String respuestaReg = objRsp.result.mensaje;
                                     int estado = objRsp.result.estado;
-                                    String gifRespuesta = 'assets/gifs/exito.gif';
+                                    String gifRespuesta = '';
                     
                                     //ignore: use_build_context_synchronously
                                     context.pop();
                     
-                                    if(objRsp.mensaje.isNotEmpty){
+                                    if(objRsp.mensaje.isNotEmpty && objRsp.id == -1){
+
+                                      gifRespuesta = 'assets/gifs/gifErrorBlanco.gif';
                                 
                                       showDialog(
                                         //ignore: use_build_context_synchronously
@@ -1784,6 +1786,8 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                     
                                       return;
                                     }
+
+                                    gifRespuesta = '';
                     
                                     if(estado == 200){
                                       gifRespuesta = 'assets/gifs/exito.gif';
