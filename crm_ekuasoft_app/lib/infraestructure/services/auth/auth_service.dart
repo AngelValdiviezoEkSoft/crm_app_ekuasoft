@@ -703,7 +703,11 @@ class AuthService extends ChangeNotifier {
 
   }
 
-  Future<String> getDatosPerfil() async {    
+  Future<String> getDatosPerfil() async {
+
+    var objLog = await storage.read(key: 'RespuestaLogin') ?? '';
+    var objLogDecode = json.decode(objLog);
+
     String resPartner = await storage.read(key: 'RespuestaClientes') ?? '';
     ResPartnerAppModel apiResponse = ResPartnerAppModel.fromRawJson(resPartner);
 
@@ -713,9 +717,15 @@ class AuthService extends ChangeNotifier {
 
     final jsonLog = json.decode(rspLogin);
     var partnerId = jsonLog["result"]["data"][0]["partner_id"]["id"] ?? 0;
+
+    String base = '';
+
+    if(objLogDecode != null){
+      base = '${objLogDecode["result"]['db']}';
+    }
   
     var objFiltrado = apiResponse.data.firstWhere((x) => x.id == partnerId);
-    return jsonEncode(objFiltrado);
+    return '${jsonEncode(objFiltrado)}%%%$base';
   }
 
   saveMemoryDatosPerfil(String cell, String email, String direccion) async {    

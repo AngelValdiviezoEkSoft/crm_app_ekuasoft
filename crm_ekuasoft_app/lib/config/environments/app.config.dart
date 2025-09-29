@@ -50,6 +50,4 @@ class AppConfig {
   //
   final String modalPurpleLine = 'assets/ic_horizontalLine.png';
 
-  //GIFS JSON
-  final String logoPlux = 'assets/gifs/logo.json';
 }

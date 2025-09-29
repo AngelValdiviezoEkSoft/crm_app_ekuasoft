@@ -151,7 +151,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
 
     final size = MediaQuery.of(context).size;
     final gnrBloc = Provider.of<GenericBloc>(context);
-    gnrBloc.setMuestraCarga(false);
+    //gnrBloc.setMuestraCarga(false);
 
     return BlocBuilder<GenericBloc, GenericState>(
       builder: (context, state) {
@@ -309,6 +309,10 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                           child: ElevatedButton(
                             onPressed: () async {
 
+                              gnrBloc.setMuestraCarga(true);
+
+                              lstActividadesByFiltros = [];
+
                               if(campSelectTpAct != '-- Seleccione --' && cellFiltroTxt.text.isEmpty && nombreProbFiltroTxt.text.isEmpty){
                                 for(int i = 0; i < tpActividades.length; i++){
                                   if(campSelectTpAct == tpActividades[i].name){
@@ -331,8 +335,6 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                               
                               ActivitiesPageModel objRsp = await ActivitiesService().getActivitiesByFiltros(nombreProbFiltroTxt.text, cellFiltroTxt.text, activityTypeId, objDatumCrmLead?.id ?? 0);
               
-                              lstActividadesByFiltros = [];
-
                               if(objRsp.activities.data.isNotEmpty){
                                 lstActividadesByFiltros = objRsp.activities.data;
                               }    
@@ -340,6 +342,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                               //ignore: use_build_context_synchronously
                               FocusScope.of(context).unfocus();
 
+                              gnrBloc.setMuestraCarga(false);
     
                               setState(() {
                                 //rspAct = objRsp;//.activities;
@@ -378,7 +381,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                               if(state.muestraCarga)
                               Container(
                                 width: size.width,
-                                height: isSelected[1] ? size.height * 0.53 : size.height * 0.33,
+                                height: size.height * 0.33,
                                 color: Colors.transparent,
                                 child: Image.asset(
                                   "assets/gifs/gif_carga.gif",
@@ -537,7 +540,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                 ),
                               ),
                               
-                              if(lstActividadesByFiltros.isEmpty)
+                              if(lstActividadesByFiltros.isEmpty && !state.muestraCarga)
                               Container(
                                 color: Colors.transparent,
                                 width: size.width * 0.95,
@@ -545,6 +548,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                 alignment: Alignment.topCenter,
                                 child: const AutoSizeText('No existen actividades agendadas', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,), maxLines: 2,  presetFontSizes: [42,40,38,36,34,32,30,28,26,24,22,20,18,16,14,12,10]),
                               ),
+                            
                             ],
                           ),
                         ),

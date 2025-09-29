@@ -8,11 +8,13 @@ import 'package:go_router/go_router.dart';
 
 ResPartnerDatumAppModel? objPerfil;
 late Future<String> dataProf;
+bool isCve = false;
 
 class ProfileScreenGen extends StatelessWidget {
   
   ProfileScreenGen({super.key}){
     dataProf = gtDatosPerfil();
+    isCve = false;
   }
 
   @override
@@ -55,7 +57,18 @@ class ProfileScreenGen extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
 
         if(snapshot.hasData && snapshot.data != null && snapshot.data!.isNotEmpty){
-          objPerfil = ResPartnerDatumAppModel.fromRawJson('${snapshot.data}');
+          String respuesta = '${snapshot.data}';
+
+          List<String> arrayRsp = respuesta.split('%%%');
+
+          objPerfil = ResPartnerDatumAppModel.fromRawJson(arrayRsp[0]);
+
+          String db = arrayRsp[1];
+
+          if(db.isNotEmpty && db.toLowerCase().contains(EnvironmentsProd().baseCentroViajes)){            
+            isCve = true;
+          }
+
         }
 
         return Container(

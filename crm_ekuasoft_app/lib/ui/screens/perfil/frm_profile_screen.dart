@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:crm_ekuasoft_app/domain/domain.dart';
 import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
@@ -36,6 +37,53 @@ class FrmProfileScreen extends StatelessWidget {
           },
         ),
         actions: [
+          if(isCve)
+          IconButton(
+            icon: const Icon(Icons.visibility, color: Colors.white,),
+            onPressed: () {
+              showDialog(
+                //ignore:use_build_context_synchronously
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Container(
+                      color: Colors.transparent,
+                      height: size.height * 0.2,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          
+                          Container(
+                            color: Colors.transparent,
+                            width: size.width * 0.95,
+                            height: size.height * 0.19,
+                            alignment: Alignment.center,
+                            child: const Center(
+                              child: AutoSizeText(
+                                "Si desea actualizar sus datos, envíenos un correo al balcon@centrodeviajesecuador.com solicitando esta acción y los datos que desea actualizar.",
+                                maxLines: 7,
+                                minFontSize: 12,
+                              ),
+                            ),
+                          )
+
+                        ],
+                      )
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {                                                            
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("Aceptar", style: TextStyle(color: Colors.blue[200]),),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+          if(!isCve)
           IconButton(
             icon: const Icon(Icons.edit, color: Colors.white,),
             onPressed: () {
@@ -62,7 +110,11 @@ class FrmProfileScreen extends StatelessWidget {
             }
             else{
 
-              var rsp = ResPartnerDatumAppModel.fromRawJson('${snapshot.data}');
+              String respuesta = '${snapshot.data}';
+
+              List<String> arrayRsp = respuesta.split('%%%');
+
+              var rsp = ResPartnerDatumAppModel.fromRawJson(arrayRsp[0]);
               
               cellProf = rsp.phone ?? '';
               streetProf = rsp.street ?? '';

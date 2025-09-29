@@ -33,6 +33,8 @@ class EnvironmentsProd {
   final String modEkResCountryCanton = 'ek.res.country.canton';
   final String modEkResRegion = 'ek.res.region';
   final String modEkResSector = 'ek.res.sector';
-  final String modEkResCountryCity = 'ek.res.country.city';  
+  final String modEkResCountryCity = 'ek.res.country.city';
+
+  final String baseCentroViajes = 'centroviajes';
 
 }
