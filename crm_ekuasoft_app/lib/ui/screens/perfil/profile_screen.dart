@@ -5,6 +5,7 @@ import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 ResPartnerDatumAppModel? objPerfil;
 late Future<String> dataProf;
@@ -117,9 +118,12 @@ class ProfileScreenGen extends StatelessWidget {
   }
 
   Widget _buildOptionCard(BuildContext context) {
+
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.white : Colors.black,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [BoxShadow(color: Colors.grey.shade300, blurRadius: 5)],
       ),
@@ -134,9 +138,12 @@ class ProfileScreenGen extends StatelessWidget {
   }
 
   Widget _buildAdditionalOptions(BuildContext context) {
+
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.white : Colors.black,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [BoxShadow(color: Colors.grey.shade300, blurRadius: 5)],
       ),
@@ -152,7 +159,7 @@ class ProfileScreenGen extends StatelessWidget {
 
   Widget _buildListTile(BuildContext context, IconData icon, String title) {
     return ListTile(
-      leading: Icon(icon, color: Colors.black54),
+      leading: Icon(icon),
       title: Text(title),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
       onTap: () {

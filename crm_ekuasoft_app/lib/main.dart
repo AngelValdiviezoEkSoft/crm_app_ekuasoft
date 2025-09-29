@@ -7,6 +7,7 @@ import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:secure_application/secure_application.dart';
+import 'package:provider/src/change_notifier_provider.dart' as np;
 
 void main() async {
 
@@ -18,6 +19,8 @@ void main() async {
     MultiBlocProvider(
       providers: [//
       
+        np.ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        
         BlocProvider(create: (context) => getIt<AuthBloc>()..add(AppStarted())),
         BlocProvider(create: (context) => getIt<VerificacionBloc>()),
         BlocProvider(create: (context) => getIt<GenericBloc>()),

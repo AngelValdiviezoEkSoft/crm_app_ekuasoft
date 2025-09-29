@@ -239,9 +239,9 @@ class HomeScreenState extends State<HomeScreen> {
                       ).toList();
                     
                     return Scaffold(
-                      backgroundColor: Colors.white,
+                      //backgroundColor: Colors.white,
                       appBar: AppBar(
-                        backgroundColor: Colors.white,
+                        //backgroundColor: Colors.white,
                         elevation: 0,
                         leading: GestureDetector(
                           onTap: () async {
@@ -299,18 +299,18 @@ class HomeScreenState extends State<HomeScreen> {
 
                           if(mostrarBoton)
                           IconButton(
-                            icon: const Icon(Icons.notifications_active, color: Colors.black),
+                            icon: const Icon(Icons.notifications_active),
                             onPressed: () {},
                           ),
 
                           if(!mostrarBoton)
                           IconButton(
-                            icon: const Icon(Icons.wifi_off, color: Colors.black),
+                            icon: const Icon(Icons.wifi_off),
                             onPressed: () {},
                           ),
 
                           IconButton(
-                            icon: const Icon(Icons.logout, color: Colors.black),
+                            icon: const Icon(Icons.logout),
                             onPressed: () {
                               showDialog(
                                 context: context,
@@ -341,7 +341,7 @@ class HomeScreenState extends State<HomeScreen> {
                                           //context.push(objRutasGen.rutaBienvenida);
 
                                         },
-                                        child: const Text('No', style: TextStyle(color: Colors.black),),
+                                        child: const Text('No'),
                                       ),
                                     ],
                                   );
@@ -355,7 +355,7 @@ class HomeScreenState extends State<HomeScreen> {
                       body: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Scaffold(
-                              backgroundColor: Colors.white,
+                              //backgroundColor: Colors.white,
                               body: SingleChildScrollView(
                                 child: Column(
                                   children: [

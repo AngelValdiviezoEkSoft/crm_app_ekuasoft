@@ -14,6 +14,7 @@ import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 List<int> years = [];
 List<DatumCrmLead> prospectosFiltrados = [];
@@ -250,10 +251,10 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
     objPermisosGen != null && objPermisosGen!.buttons.btnCreateLead ?
     Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.white,
+          //backgroundColor: Colors.white,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+            icon: const Icon(Icons.arrow_back_ios),
             onPressed: () {
               //ignore: use_build_context_synchronously
               FocusScope.of(context).unfocus();
@@ -269,13 +270,13 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
           title: const Text('Prospectos'),
           actions: [
             IconButton(
-              icon: const Icon(Icons.refresh, color: Colors.black),
+              icon: const Icon(Icons.refresh),
               onPressed: () {
                 refreshDataProsp();
               },
             ),
             IconButton(
-              icon: const Icon(Icons.calendar_month, color: Colors.black),
+              icon: const Icon(Icons.calendar_month),
               onPressed: () {
                 //context.push(objRutasGen.rutaAgenda);
                 context.push(objRutasGen.rutaConsultaActividades);
@@ -399,6 +400,8 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                   listaVaciaPrp = true;
                 }
 
+                final themeProvider = Provider.of<ThemeProvider>(context);
+
                 return SingleChildScrollView(
                   child: Column(
                     children: [
@@ -407,7 +410,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                       ),
                   
                       Container(
-                        color: Colors.white,
+                        color: themeProvider.themeMode.index == 0 ? Colors.black : Colors.white,
                         width: size.width * 0.98,
                         child: TextField(
                           inputFormatters: [
@@ -415,6 +418,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                           ],
                           controller: filtroPrspTxt,
                           decoration: InputDecoration(
+                            hintStyle: TextStyle(color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.white : Colors.black,),
                             hintText: 'Buscar prospectos por nombre, correo o celular',
                             border: InputBorder.none,
                             prefixIcon: const Icon(Icons.search, color: Colors.grey),
@@ -460,6 +464,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                         color: Colors.white,
                         width: size.width * 0.96,
                         child: DropdownButtonFormField<int>(
+                          style: TextStyle(color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.white : Colors.black,),
                           hint: const Text('Selecciona un mes'),
                           value: _mesSeleccionado,
                           isExpanded: true,
@@ -491,6 +496,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                         color: Colors.white,
                         width: size.width * 0.96,
                         child: DropdownButtonFormField<int>(
+                          style: TextStyle(color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.white : Colors.black,),
                           value: selectedYear,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
@@ -641,7 +647,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                           prospectosFiltrados[index].name,
                                                           style: const TextStyle(
                                                             fontWeight: FontWeight.bold,                                                                
-                                                            color: Colors.black
+                                                            //color: Colors.black
                                                           ),
                                                           maxLines: 1,
                                                           overflow: TextOverflow.ellipsis,
@@ -656,7 +662,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                           prospectosFiltrados[index].contactName ?? '',
                                                           style: const TextStyle(
                                                             fontWeight: FontWeight.bold,                                                                
-                                                            color: Colors.black
+                                                            //color: Colors.black
                                                           ),
                                                           maxLines: 1,
                                                           overflow: TextOverflow.ellipsis,
@@ -673,7 +679,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                         children: [
                                                           const TextSpan(
                                                             text: 'Email: ',
-                                                            style: TextStyle(color: Colors.black)
+                                                            //style: TextStyle(color: Colors.black)
                                                           ),
                                                           TextSpan(
                                                             text: prospectosFiltrados[index].emailFrom,
@@ -695,7 +701,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                           children: [
                                                             const TextSpan(
                                                               text: 'Teléfono: ',
-                                                              style: TextStyle(color: Colors.black)
+                                                              //style: TextStyle(color: Colors.black)
                                                             ),
                                                             TextSpan(
                                                               text: prospectosFiltrados[index].phone,

@@ -39,7 +39,7 @@ class FrmProfileScreen extends StatelessWidget {
         actions: [
           if(isCve)
           IconButton(
-            icon: const Icon(Icons.visibility, color: Colors.white,),
+            icon: const Icon(Icons.lightbulb_circle, color: Colors.white,),
             onPressed: () {
               showDialog(
                 //ignore:use_build_context_synchronously
@@ -234,7 +234,7 @@ class ProfileField extends StatelessWidget {
           children: [
             TextSpan(
               text: value,
-              style: const TextStyle(color: Colors.black, fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
           ],
         ),

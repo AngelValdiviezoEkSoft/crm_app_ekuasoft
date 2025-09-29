@@ -1,5 +1,7 @@
+import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class SettingsUserScreen extends StatefulWidget {
   const SettingsUserScreen({super.key});
@@ -92,8 +94,8 @@ class _SettingsUserScreenState extends State<SettingsUserScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                brightnessOption('Modo claro', 'Claro', size, 'assets/images/modo_claro.png'),
-                brightnessOption('Modo oscuro', 'Oscuro', size, 'assets/images/modo_oscuro.png'),
+                brightnessOption('Modo claro', 'Modo claro', size, 'assets/images/modo_claro.png'),
+                brightnessOption('Modo oscuro', 'Modo oscuro', size, 'assets/images/modo_oscuro.png'),
                 brightnessOption('Automático', 'Automático', size, 'assets/images/modo_automatico.png'),
               ],
             ),
@@ -104,13 +106,46 @@ class _SettingsUserScreenState extends State<SettingsUserScreen> {
   }
 
   Widget brightnessOption(String label, String mode, Size size, String image) {
+
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     bool isSelected = selectedMode == mode;
+
+    int modoSelect = 0;
+
+    if (mode == "Modo claro") {
+      modoSelect = 1;
+    } else if (mode == "Modo oscuro") {
+      modoSelect = 2;
+    }
+
+    if(!isSelected){
+      if(modoSelect == themeProvider.themeMode.index){
+        isSelected = true;
+      }
+    }
+
+    // Tipo de fondo (0=system,1=light,2=dark)
 
     return GestureDetector(
       onTap: () {
-        setState(() {
-          selectedMode = mode;
-        });
+
+          ThemeMode objThemeMode = ThemeMode.system;
+
+          if (mode == "Modo claro") {
+            objThemeMode = ThemeMode.light;
+          } else if (mode == "Modo oscuro") {
+            objThemeMode = ThemeMode.dark;
+          } else {
+            objThemeMode = ThemeMode.system;
+          }
+
+          themeProvider.setTheme(objThemeMode);
+
+          setState(() {
+            selectedMode = mode;
+          });
+
       },
       child: Column(
         children: [
@@ -127,8 +162,8 @@ class _SettingsUserScreenState extends State<SettingsUserScreen> {
                 border: Border.all(color: Colors.grey),
                 borderRadius: BorderRadius.circular(8),                
                 image: DecorationImage(
-                  image: AssetImage(image), // Imagen local
-                  fit: BoxFit.fill, // Ajusta la imagen al contenedor
+                  image: AssetImage(image),
+                  fit: BoxFit.fill,
                 ),
               ),
               alignment: Alignment.center,
@@ -142,4 +177,5 @@ class _SettingsUserScreenState extends State<SettingsUserScreen> {
       ),
     );
   }
+
 }
