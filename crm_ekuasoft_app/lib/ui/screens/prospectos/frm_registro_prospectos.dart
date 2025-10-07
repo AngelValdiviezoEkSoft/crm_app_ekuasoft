@@ -197,7 +197,15 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                       .map((item) => item["name"]?.toString() ?? '')
                       .toList();
 
-                  List<Map<String, dynamic>> mappedObjAct3 = List<Map<String, dynamic>>.from(objAct3);
+                  List<Map<String, dynamic>> mappedObjAct3 = [];//List<Map<String, dynamic>>.from(objAct3);
+
+                  if(objAct3 == null){
+                    var rst = objAct['result']['data']['mail.activity.type']['data'];
+                    mappedObjAct3 = List<Map<String, dynamic>>.from(rst);
+                  }
+                  else{
+                    mappedObjAct3 = List<Map<String, dynamic>>.from(objAct3);
+                  }
 
                   List<String> lstActividades = mappedObjAct3
                       .map((item) => item["name"]?.toString() ?? '')

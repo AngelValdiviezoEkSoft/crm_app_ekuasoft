@@ -358,12 +358,19 @@ class ActivitiesService extends ChangeNotifier{
   getTipoActividades() async {
     var cmbAct = await storageAct.read(key: 'cmbActividades') ?? '';
 
-    MailActivityTypeAppModel  objFinAct = MailActivityTypeAppModel.fromRawJson(cmbAct);
+    if(cmbAct.isNotEmpty){
+      MailActivityTypeAppModel  objFinAct = MailActivityTypeAppModel.fromRawJson(cmbAct);
 
-    return objFinAct;
+      return objFinAct;
+    }
   }
 
   getActivitiesDiariasByProspecto(fechas, resId) async {
+    String internet = await ValidacionesUtils().validaInternet();
+    
+    //VALIDACIÓN DE INTERNET
+    if(internet == 'N') return;
+
     try{
 
       var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
@@ -377,6 +384,73 @@ class ActivitiesService extends ChangeNotifier{
       var cmbAct = await storageAct.read(key: 'cmbActividades') ?? '';
 
       MailActivityTypeAppModel  objFinAct = MailActivityTypeAppModel.fromRawJson(cmbAct);
+
+      if(objFinAct.data.isEmpty){
+
+        var objAct = json.decode(cmbAct);
+        try{
+          //var rst2 = objAct['result']['data']['mail.activity.type'];
+          var rst = objAct['result']['data']['mail.activity.type'];
+          objFinAct = MailActivityTypeAppModel.fromJson(rst);
+        }
+        catch(ex){
+          //print(ex);
+        }
+
+        try{
+          if(objFinAct.data.isEmpty){
+          
+            var codImei = await storageAct.read(key: 'codImei') ?? '';
+            var objReg = await storageAct.read(key: 'RespuestaRegistro') ?? '';
+            var obj = RegisterDeviceResponseModel.fromJson(objReg);
+            var objLog = await storageAct.read(key: 'RespuestaLogin') ?? '';
+            var objLogDecode = json.decode(objLog);
+
+            List<MultiModel> lstMultiModel = [];
+
+            lstMultiModel.add(
+              MultiModel(model: 'crm.lead')
+            );
+
+            final models = [        
+              {
+                "model": EnvironmentsProd().modActiv,//"mail.activity.type",
+                "filters": [
+                  ["res_model","=",false]
+                ]
+              },
+            ];
+
+
+            ConsultaMultiModelRequestModel objReq = ConsultaMultiModelRequestModel(
+              jsonrpc: EnvironmentsProd().jsonrpc,
+              params: ParamsMultiModels(
+                bearer: obj.result.bearer,
+                company: objLogDecode['result']['current_company'],
+                imei: codImei,
+                key: obj.result.key,
+                tocken: obj.result.tocken,
+                tockenValidDate: obj.result.tockenValidDate,
+                uid: objLogDecode['result']['uid'],
+                models: lstMultiModel
+              )
+            );
+
+            var rsp = await GenericService().getMultiModelosGenNoMemoria(objReq, models);
+
+            var objAct = json.decode(rsp);
+        
+            var rst = objAct['result']['data']['mail.activity.type'];
+            objFinAct = MailActivityTypeAppModel.fromJson(rst);
+            
+            //objFinAct = MailActivityTypeAppModel.fromJson();
+            
+            }
+        }
+        catch(ex){
+          print(ex);
+        }
+      }
 
       if(connectivityResult.isNotEmpty){
         ActivitiesPageModel objRspFinal = ActivitiesPageModel(

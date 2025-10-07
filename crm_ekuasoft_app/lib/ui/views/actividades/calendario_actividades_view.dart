@@ -195,6 +195,10 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
             //setState(() {});
           }
 
+          final themeProvider = Provider.of<ThemeProvider>(context);
+
+          //hint: Text('Selecciona un mes', style: TextStyle(color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 2 ? Colors.white : Colors.black,),),
+
           return Container(
             width: size.width * 0.99,
             height: size.height,
@@ -246,7 +250,7 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: actualizaListaActAgendaByFiltro2CalCal[0] ? Colors.white : Colors.black,
+                            color: actualizaListaActAgendaByFiltro2CalCal[0] ? Colors.white : themeProvider.themeMode.index == 2 ? Colors.white : Colors.black,
                           ),
                         ),
                       ),
@@ -257,7 +261,7 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: actualizaListaActAgendaByFiltro2CalCal[1] ? Colors.white : Colors.black,
+                            color: actualizaListaActAgendaByFiltro2CalCal[1] ? Colors.white : themeProvider.themeMode.index == 2 ? Colors.white : Colors.black,
                           ),
                         ),
                       ),
@@ -406,8 +410,7 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                   SizedBox(height: size.height * 0.008),
 
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 20.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: TextField(
                       controller: filtroAgendaTxtByFiltroCal,
                       onChanged: (value) {
@@ -533,22 +536,18 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                                             .rutaPlanificacionActividades);
                                         //context.push(objRutasGen.rutaPlanificacionActividades);
                                       },
-                                      backgroundColor:
-                                          objColorsApp.fucsia,
+                                      backgroundColor: objColorsApp.fucsia,
                                       foregroundColor: Colors.white,
                                       icon: Icons.account_circle,
-                                      label:
-                                          'Cierre de Calendario de Actividades',
+                                      label: 'Cierre de Calendario de Actividades',
                                     )
                                   ]),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 5.0),
+                                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
                                 child: Card(
                                   elevation: 1,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                   color: stateAct.lstActivities[index].cerrado//calendarioActividadesFilAgendaByFiltroCall[index].cerrado
                                           ? Colors.grey[300]
@@ -559,31 +558,25 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                                               ? Colors.black45
                                               : Colors.grey[300],
                                       child: Stack(children: [
-                                        const Icon(Icons.person),
+                                        Icon(Icons.person, color: themeProvider.themeMode.index == 2 ? Colors.black : Colors.white,),
                                         //if (!calendarioActividadesFilAgendaByFiltroCall[index].cerrado && DateFormat('yyyy-MM-dd','es').format(calendarioActividadesFilAgendaByFiltroCall[index].dateDeadline) == DateFormat('yyyy-MM-dd','es').format(DateTime.now()))
                                         if (!stateAct.lstActivities[index].cerrado && DateFormat('yyyy-MM-dd','es').format(stateAct.lstActivities[index].dateDeadline) == DateFormat('yyyy-MM-dd','es').format(DateTime.now()))
-
                                           Positioned(
                                             top: size.height * 0.01,
                                             left: size.width * 0.02,
                                             child: Container(
-                                                color:
-                                                    Colors.transparent,
-                                                width:
-                                                    size.width * 0.05,
-                                                height:
-                                                    size.height * 0.02,
-                                                child:
-                                                    const IndicatorPointWidget(
-                                                        null)),
+                                              color: Colors.transparent,
+                                              width: size.width * 0.05,
+                                              height: size.height * 0.02,
+                                              child: const IndicatorPointWidget(null)
+                                            ),
                                           )
                                       ]),
                                     ),
                                     //title: Text(calendarioActividadesFilAgendaByFiltroCall[index].summary ??''),
-                                    title: Text(stateAct.lstActivities[index].summary ??''),
+                                    title: Text(stateAct.lstActivities[index].summary ??'', style: const TextStyle(color: Colors.black),),
                                     subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         RichText(
                                           text: TextSpan(

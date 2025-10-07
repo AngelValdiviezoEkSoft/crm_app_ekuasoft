@@ -60,7 +60,7 @@ class PlanActState extends State<PlanificacionActividades> {
   @override
   void initState() {
     super.initState();
-
+    tabAcciones = 0;
     tradeNamePrsp = '-----';
     muestraTextoParaHoy = false;
     contLst = 0;

@@ -266,6 +266,52 @@ class GenericState extends Equatable {
     String cmbPais = await storage.read(key: 'cmbPaises') ?? '';
     String cmbLstAct = await storage.read(key: 'cmbLstActividades') ?? '';
 
+    if(cmbAct.isEmpty){
+      
+
+      var codImei = await storage.read(key: 'codImei') ?? '';
+      var objReg = await storage.read(key: 'RespuestaRegistro') ?? '';
+      var obj = RegisterDeviceResponseModel.fromJson(objReg);
+      var objLog = await storage.read(key: 'RespuestaLogin') ?? '';
+      var objLogDecode = json.decode(objLog);
+
+      List<MultiModel> lstMultiModel = [];
+
+      lstMultiModel.add(
+        MultiModel(model: 'crm.lead')
+      );
+
+      final models = [        
+        {
+          "model": EnvironmentsProd().modActiv,//"mail.activity.type",
+          "filters": [
+            ["res_model","=",false]
+          ]
+        },
+      ];
+
+
+      ConsultaMultiModelRequestModel objReq = ConsultaMultiModelRequestModel(
+        jsonrpc: EnvironmentsProd().jsonrpc,
+        params: ParamsMultiModels(
+          bearer: obj.result.bearer,
+          company: objLogDecode['result']['current_company'],
+          imei: codImei,
+          key: obj.result.key,
+          tocken: obj.result.tocken,
+          tockenValidDate: obj.result.tockenValidDate,
+          uid: objLogDecode['result']['uid'],
+          models: lstMultiModel
+        )
+      );
+
+      var rsp = await GenericService().getMultiModelosGenNoMemoria(objReq, models);
+      
+      await storageAct.write(key: 'cmbActividades', value: '');
+      await storageAct.write(key: 'cmbActividades', value: rsp);
+      cmbAct = rsp;
+    }
+
     return "$cmbCamp---$cmbOrigen---$cmbMedia---$cmbAct---$cmbPais---$cmbLstAct";
   }
 

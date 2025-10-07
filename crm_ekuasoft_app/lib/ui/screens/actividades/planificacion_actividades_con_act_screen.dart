@@ -11,6 +11,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+bool _isButtonPressed = false;
 String tradeNameProsp = '';
 String channelProsp = '';
 String ciudadPrsp = '';
@@ -55,6 +56,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
   @override
   void initState() {
     super.initState();
+    _isButtonPressed = false;
     //objActividadEscogida = null;
     tradeNameProsp = '-----';
     contLstActiv = 0;
@@ -611,22 +613,24 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                     width: size.width * 0.04,
                   ),
                   GestureDetector(
-                      onTap: () async {
-                        //ignore:use_build_context_synchronously
-                        context.pop();
+                    onTap: () async {
+                      if (_isButtonPressed) return;
 
-                        //ignore:use_build_context_synchronously
-                        context.pop();
+                      //ignore:use_build_context_synchronously
+                      context.pop();
 
-                        //ignore:use_build_context_synchronously
-                        context.push(objRutasGen.rutaPlanActivConActiv);
-                      },
-                      child: const Icon(
-                        Icons.refresh,
-                        color: Colors.white,
-                        size: 30,
-                      )
-                    ),
+                      //ignore:use_build_context_synchronously
+                      context.pop();
+
+                      //ignore:use_build_context_synchronously
+                      context.push(objRutasGen.rutaPlanActivConActiv);
+                    },
+                    child: const Icon(
+                      Icons.refresh,
+                      color: Colors.white,
+                      size: 30,
+                    )
+                  ),
                   SizedBox(
                     width: size.width * 0.04,
                   )

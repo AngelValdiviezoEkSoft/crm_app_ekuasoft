@@ -563,7 +563,7 @@ class MailActivityTypeAppModel {
     String toRawJson() => json.encode(toJson());
 
     factory MailActivityTypeAppModel.fromJson(Map<String, dynamic> json) => MailActivityTypeAppModel(
-        length: json["length"],
+        length: json["length"] ?? 0,
         fields: json["fields"] != null ? MailActivityTypeFieldsAppModel.fromJson(json["fields"])
         : MailActivityTypeFieldsAppModel(category: '', decorationType: '', defaultNote: '', delayCount: '', delayFrom: '', icon: '', name: '', resModel: '', sequence: '', 
         summary: ''),
