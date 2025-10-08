@@ -28,8 +28,8 @@ class ActivitiesService extends ChangeNotifier{
       var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
       var objLogDecode = json.decode(objLog);
 
-      var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
-      IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+      var objRspIrModel = await storageDataInicial.read(key: 'IdIrModelForAct') ?? '';
+      int resModelId = int.parse(objRspIrModel);
       
       List<MultiModel> lstMultiModel = [];
 
@@ -42,7 +42,7 @@ class ActivitiesService extends ChangeNotifier{
           "model": EnvironmentsProd().modMailAct,
           "filters": [
             ["user_id", "=", objLogDecode['result']['uid']],
-            ["res_model_id","=",objIrModel.data[0].id]
+            ["res_model_id","=",resModelId]
           ]
         },
       ];
@@ -136,8 +136,8 @@ class ActivitiesService extends ChangeNotifier{
       var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
       var objLogDecode = json.decode(objLog);
 
-      var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
-      IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+      var objRspIrModel = await storageDataInicial.read(key: 'IdIrModelForAct') ?? '';
+      int resModelId = int.parse(objRspIrModel);
       
       if(id == 0){
         var strMem = await storageAct.read(key: 'idMem') ?? '';
@@ -158,7 +158,7 @@ class ActivitiesService extends ChangeNotifier{
             ["user_id", "=", objLogDecode['result']['uid']],
             ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(DateTime.now())],
             ["res_id","=",id],
-            ["res_model_id","=",objIrModel.data[0].id]
+            ["res_model_id","=",resModelId]
           ]
         },
       ];
@@ -252,8 +252,8 @@ class ActivitiesService extends ChangeNotifier{
       var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
       var objLogDecode = json.decode(objLog);
 
-      var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
-      IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+      var objRspIrModel = await storageDataInicial.read(key: 'IdIrModelForAct') ?? '';
+      int resModelId = int.parse(objRspIrModel);
 
       List<MultiModel> lstMultiModel = [];
 
@@ -267,7 +267,7 @@ class ActivitiesService extends ChangeNotifier{
           "filters": [
             ["user_id", "=", objLogDecode['result']['uid']],
             ["date_deadline","=",fecha],            
-            ["res_model_id","=",objIrModel.data[0].id]
+            ["res_model_id","=",resModelId]
           ]
         },
       ];
@@ -376,8 +376,8 @@ class ActivitiesService extends ChangeNotifier{
       var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
       var objLogDecode = json.decode(objLog);
 
-      var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
-      IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+      var objRspIrModel = await storageDataInicial.read(key: 'IdIrModelForAct') ?? '';
+      int resModelId = int.parse(objRspIrModel);
 
       var connectivityResult = await ValidacionesUtils().validaInternet();
 
@@ -531,7 +531,7 @@ class ActivitiesService extends ChangeNotifier{
             "filters": [            
               ["user_id", "=", objLogDecode['result']['uid']],
               ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(DateTime.now())],            
-              ["res_model_id", "=", objIrModel.data[0].id],
+              ["res_model_id", "=", resModelId],
               if(resId != null && resId > 0)
               ["res_id", "=", resId]
             ]
@@ -548,7 +548,7 @@ class ActivitiesService extends ChangeNotifier{
               ["user_id", "=", objLogDecode['result']['uid']],
               ["date_deadline",">=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],            
               ["date_deadline","<=",DateFormat('yyyy-MM-dd', 'es').format(fechas[1])],
-              ["res_model_id", "=", objIrModel.data[0].id],
+              ["res_model_id", "=", resModelId],
               if(resId != null && resId > 0)
               ["res_id", "=", resId]
             ]
@@ -565,7 +565,7 @@ class ActivitiesService extends ChangeNotifier{
               "filters": [            
                 ["user_id", "=", objLogDecode['result']['uid']],
                 ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],            
-                ["res_model_id", "=", objIrModel.data[0].id],
+                ["res_model_id", "=", resModelId],
                 if(resId != null && resId > 0)
                 ["res_id", "=", resId]
               ]
@@ -766,8 +766,8 @@ class ActivitiesService extends ChangeNotifier{
       var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
       var objLogDecode = json.decode(objLog);
 
-      var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
-      IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+      var objRspIrModel = await storageDataInicial.read(key: 'IdIrModelForAct') ?? '';
+      int resModelId = int.parse(objRspIrModel);
 
       var connectivityResult = await ValidacionesUtils().validaInternet();
 
@@ -851,7 +851,7 @@ class ActivitiesService extends ChangeNotifier{
             "model": modeloConsulta,
             "filters": [            
               ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(DateTime.now())],            
-              ["res_model_id", "=", objIrModel.data[0].id],
+              ["res_model_id", "=", resModelId],
               ["user_id", "=", objLogDecode['result']['uid']],
               if(resId != null && resId > 0)
               ["res_id", "=", resId]
@@ -869,7 +869,7 @@ class ActivitiesService extends ChangeNotifier{
               ["date_deadline",">=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],            
               ["date_deadline","<=",DateFormat('yyyy-MM-dd', 'es').format(fechas[1])],
               ["user_id", "=", objLogDecode['result']['uid']],
-              ["res_model_id", "=", objIrModel.data[0].id],
+              ["res_model_id", "=", resModelId],
               if(resId != null && resId > 0)
               ["res_id", "=", resId]
             ]
@@ -886,7 +886,7 @@ class ActivitiesService extends ChangeNotifier{
               "filters": [           
                 ["user_id", "=", objLogDecode['result']['uid']], 
                 ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],            
-                ["res_model_id", "=", objIrModel.data[0].id],
+                ["res_model_id", "=", resModelId],
                 if(resId != null && resId > 0)
                 ["res_id", "=", resId]
               ]
@@ -1284,8 +1284,8 @@ class ActivitiesService extends ChangeNotifier{
       var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
       var objLogDecode = json.decode(objLog);
 
-      var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
-      IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+      var objRspIrModel = await storageDataInicial.read(key: 'IdIrModelForAct') ?? '';
+      int resModelId = int.parse(objRspIrModel);
 
       var connectivityResult = await ValidacionesUtils().validaInternet();
 
@@ -1340,7 +1340,7 @@ class ActivitiesService extends ChangeNotifier{
             "model": modeloConsulta,
             "filters": [
               ["user_id", "=", objLogDecode['result']['uid']],
-              ["res_model_id", "=", objIrModel.data[0].id],
+              ["res_model_id", "=", resModelId],
               ["lead_name","ilike",nombre]
             ]
           },
@@ -1356,7 +1356,7 @@ class ActivitiesService extends ChangeNotifier{
             "model": modeloConsulta,
             "filters": [
               ["user_id", "=", objLogDecode['result']['uid']],
-              ["res_model_id", "=", objIrModel.data[0].id],
+              ["res_model_id", "=", resModelId],
               ["lead_phone","ilike",newPhone]              
             ]
           },
@@ -1369,7 +1369,7 @@ class ActivitiesService extends ChangeNotifier{
             "model": modeloConsulta,
             "filters": [  
               ["user_id", "=", objLogDecode['result']['uid']],                        
-              ["res_model_id", "=", objIrModel.data[0].id],              
+              ["res_model_id", "=", resModelId],
               ["activity_type_id","=",idTpAct]
             ]
           },
@@ -1383,7 +1383,7 @@ class ActivitiesService extends ChangeNotifier{
             "model": modeloConsulta,
             "filters": [
               ["user_id", "=", objLogDecode['result']['uid']],
-              ["res_model_id", "=", objIrModel.data[0].id],
+              ["res_model_id", "=", resModelId],
               ["lead_name","ilike",nombre],
               ["activity_type_id","=",idTpAct]
             ]
@@ -1401,7 +1401,7 @@ class ActivitiesService extends ChangeNotifier{
             "model": modeloConsulta,
             "filters": [
               ["user_id", "=", objLogDecode['result']['uid']],
-              ["res_model_id", "=", objIrModel.data[0].id],
+              ["res_model_id", "=", resModelId],
               ["lead_phone","ilike",newPhone],
               ["activity_type_id","=",idTpAct]
             ]
@@ -1421,7 +1421,7 @@ class ActivitiesService extends ChangeNotifier{
             "model": modeloConsulta,
             "filters": [      
               ["user_id", "=", objLogDecode['result']['uid']],                    
-              ["res_model_id", "=", objIrModel.data[0].id],
+              ["res_model_id", "=", resModelId],
               ["lead_name","ilike",nombre],
               ["lead_phone","ilike",newPhone],
               ["activity_type_id","=",idTpAct]
@@ -1586,13 +1586,13 @@ class ActivitiesService extends ChangeNotifier{
       String internet = await ValidacionesUtils().validaInternet();
     
 
-      if(lstEncr.isNotEmpty && internet.isEmpty){
+      if(lstEncr.isNotEmpty && internet.isEmpty && objActividades.data.isNotEmpty){
         ActivitiesResponseModel  objMem = ActivitiesResponseModel .fromRawJson(lstEncr);
 
         for(int i = 0; i < objMem.data.length; i++){
-          //String fec = DateFormat('yyyy-MM-dd').format(objMem.data[i].dateDeadline);
-
-          objActividades.data.add(objMem.data[i]);
+          if(objActividades.data[0].resId == objMem.data[i].resId){
+            objActividades.data.add(objMem.data[i]);
+          }          
         }
       }
 
@@ -1617,8 +1617,8 @@ class ActivitiesService extends ChangeNotifier{
       
       try{
 
-        var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
-        IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+        var objRspIrModel = await storageDataInicial.read(key: 'IdIrModelForAct') ?? '';        
+        int resModelId = int.parse(objRspIrModel);
 
         var codImei = await storageProspecto.read(key: 'codImei') ?? '';
 
@@ -1652,6 +1652,8 @@ class ActivitiesService extends ChangeNotifier{
 
         String tockenValidDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(objReq.params.tockenValidDate);
 
+        //int resModelId = objIrModel.data.firstWhere((x) => x.model == "crm.lead").id;
+
         final requestBody = {
           "jsonrpc": jsonRpc,
           "params": {
@@ -1665,7 +1667,7 @@ class ActivitiesService extends ChangeNotifier{
             "create": {
               "date_deadline": DateFormat('yyyy-MM-dd', 'es').format(objActividad.dateDeadline!),//date_deadline
               "activity_type_id": objActividad.activityTypeId,
-              "res_model_id": objIrModel.data[0].id,
+              "res_model_id": resModelId,
               "res_id": objActividad.resId,
               "summary": objActividad.note,
               "note": objActividad.note,
@@ -1879,8 +1881,8 @@ class ActivitiesService extends ChangeNotifier{
     //VALIDACIÓN DE INTERNET
     if(internet.isEmpty){
       
-      var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
-      IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+      var objRspIrModel = await storageDataInicial.read(key: 'IdIrModelForAct') ?? '';
+      int resModelId = int.parse(objRspIrModel);
 
       try{
 
@@ -1928,7 +1930,7 @@ class ActivitiesService extends ChangeNotifier{
             "tocken_valid_date": tockenValidDate,
             "id": objActividad.actId,
             "write": {
-              "res_model_id": objIrModel.data[0].id,
+              "res_model_id": resModelId,
               "user_id": objActividad.userId,
               "res_id": objActividad.resId,
               "note": objActividad.note,
@@ -2048,8 +2050,8 @@ class ActivitiesService extends ChangeNotifier{
     //VALIDACIÓN DE INTERNET
     if(internet.isEmpty){
       
-      var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
-      IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+      var objRspIrModel = await storageDataInicial.read(key: 'IdIrModelForAct') ?? '';
+      int resModelId = int.parse(objRspIrModel);
 
       try{
 
@@ -2091,7 +2093,7 @@ class ActivitiesService extends ChangeNotifier{
           writeList.add({
             "id": lstActividades[i].actId,
             "write": {
-              "res_model_id": objIrModel.data[0].id,
+              "res_model_id": resModelId,
               "user_id": lstActividades[i].userId,
               "res_id": lstActividades[i].resId,
               "note": lstActividades[i].note,

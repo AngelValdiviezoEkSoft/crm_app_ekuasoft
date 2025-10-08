@@ -248,6 +248,9 @@ class GenericService extends ChangeNotifier {
     await storage.write(key: 'cmbLstActividades', value: json.encode(rsp.result.data.mailActivity));
     await storage.write(key: 'RespuestaIrModel', value: json.encode(rsp.result.data.irResponse));
 
+    int resModelId = rsp.result.data.irResponse.data.firstWhere((x) => x.model == "crm.lead").id;
+    await storage.write(key: 'IdIrModelForAct', value: '$resModelId');
+
     await storage.write(key: 'EkClasifProsp', value: json.encode(rsp.result.data.ekClasification));
     await storage.write(key: 'EkResCountryCantonProsp', value: json.encode(rsp.result.data.ekResCountryCanton));
     await storage.write(key: 'EkResRegionProsp', value: json.encode(rsp.result.data.ekResRegion));

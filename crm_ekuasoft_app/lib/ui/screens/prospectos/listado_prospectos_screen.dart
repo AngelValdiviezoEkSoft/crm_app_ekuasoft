@@ -534,6 +534,12 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                             terminoBusqueda = '';
                                             entraXActividad = false;
                                             filtroPrspTxt = TextEditingController();
+
+                                            terminoBusqueda = '';
+                                            filtroPrspTxt.text = '';
+                                            refreshDataByFiltro(objRsp);
+                                            _mesSeleccionado = null;//DateTime.now().month;
+                                            selectedYear = DateTime.now().year;
                           
                                             //context.push(Rutas().rutaPlanificacionActividades);
                                             context.push(Rutas().rutaPlanActivConActiv);
@@ -620,29 +626,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                           textAlign: TextAlign.left,
                                                         ),
                                                       ),
-/*
-                                                      Container(
-                                                    color: Colors.transparent,
-                                                    width: size.width * 0.54,
-                                                    height: size.height * 0.035,
-                                                    child: RichText(
-                                                      overflow: TextOverflow.ellipsis,
-                                                      text: TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                            text: 'Email: ',
-                                                            style: TextStyle(color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white)
-                                                          ),
-                                                          TextSpan(
-                                                            text: prospectosFiltrados[index].emailFrom,
-                                                            style: const TextStyle(color: Colors.blue)
-                                                          ),
-                                                        ]
-                                                      ),
-                                                    )
-                                                
-                                                  ),
-*/
+                                                      
                                                     Container(
                                                     color: Colors.transparent,
                                                     width: size.width * 0.54,
@@ -696,29 +680,6 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                       )
                                                   ),
                                                 
-/*
-                                                  Container(
-                                                    color: Colors.transparent,
-                                                    width: size.width * 0.54,
-                                                    height: size.height * 0.035,
-                                                      child: 
-                                                      RichText(
-                                                        overflow: TextOverflow.ellipsis,
-                                                        text: TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                              text: 'Teléfono: ',
-                                                              style: TextStyle(color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white)
-                                                            ),
-                                                            TextSpan(
-                                                              text: prospectosFiltrados[index].phone,
-                                                              style: const TextStyle(color: Colors.blue)
-                                                            ),
-                                                          ]
-                                                        ),
-                                                      )
-                                                  ),
-                                                  */
                                                   Container(
                                                       color: Colors.transparent,
                                                       width: size.width * 0.54,
@@ -761,10 +722,6 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                     child: IconButton(
                                                       icon: const Icon(Icons.location_pin, color: Colors.grey, size: 20,),
                                                       onPressed: () {
-                                                        /*
-                                                        final gpsBloc = BlocProvider.of<GpsBloc>(context);
-                                                          gpsBloc.askGpsAccess();
-                                                          */
                                                         context.push(Rutas().rutaMap);
                                                       },
                                                     ),

@@ -1042,7 +1042,7 @@ class PlanActivStateTwo extends State<PlanActiv> {
                                   width: size.width * 0.35,
                                   height: size.height * 0.07,
                                   color: Colors.transparent,
-                                  child: const Text('Seleccionar todos', style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),),
+                                  child: const Text('Seleccionar todos', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
                                 ),
 
                                 Container(

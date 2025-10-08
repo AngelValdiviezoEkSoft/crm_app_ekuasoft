@@ -767,7 +767,8 @@ class AuthService extends ChangeNotifier {
     await storage.write(key: 'cmbActividades', value: '');
     await storage.write(key: 'cmbPaises', value: '');
     await storage.write(key: 'DataUser', value: '');
-    //await storage.write(key: 'RespuestaIrModel', value: '');
+    await storage.write(key: 'IdIrModelForAct', value: '');
+    await storage.write(key: 'RespuestaIrModel', value: '');
     
     return;
   }
