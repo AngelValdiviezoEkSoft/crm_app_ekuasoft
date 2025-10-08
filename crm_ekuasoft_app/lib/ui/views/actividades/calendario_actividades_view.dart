@@ -176,7 +176,9 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
 
               for(int i = 0; i < calendarioActividadesFilAgendaByFiltroCall.length; i++){
                 if((calendarioActividadesFilAgendaByFiltroCall[i].leadName != null && calendarioActividadesFilAgendaByFiltroCall[i].leadName!.toUpperCase().contains(filtro.toUpperCase()))
-                || (calendarioActividadesFilAgendaByFiltroCall[i].summary != null && calendarioActividadesFilAgendaByFiltroCall[i].summary!.toUpperCase().contains(filtro.toUpperCase()))){
+                || (calendarioActividadesFilAgendaByFiltroCall[i].summary != null && calendarioActividadesFilAgendaByFiltroCall[i].summary!.toUpperCase().contains(filtro.toUpperCase()))
+                || (calendarioActividadesFilAgendaByFiltroCall[i].activityTypeId.name.toUpperCase().contains(filtro.toUpperCase()))
+                ){
                   lstTemp.add(calendarioActividadesFilAgendaByFiltroCall[i]);
                 }
               }
