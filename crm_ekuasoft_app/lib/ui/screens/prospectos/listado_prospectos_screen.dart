@@ -16,7 +16,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-bool _isDropdownOpen = false;
+String objRspGen = '';
 List<int> years = [];
 List<DatumCrmLead> prospectosFiltrados = [];
 String terminoBusqueda = '';
@@ -24,6 +24,7 @@ DatumCrmLead? objDatumCrmLead;
 late TextEditingController filtroPrspTxt;
 bool listaVaciaPrp = false;
 bool actualizaListaPrp= false;
+bool ingresaUnaVez = true;
 
 class ListaProspectosScreen extends StatefulWidget {
   const ListaProspectosScreen({super.key});
@@ -35,6 +36,7 @@ class ListaProspectosScreen extends StatefulWidget {
 //class MarcacionScreen extends StatelessWidget {
 class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
+  late Future<String> _futureProspectos;
   int selectedYear = DateTime.now().year;
   int? _mesSeleccionado; // mes del 1 al 12  
 
@@ -57,7 +59,8 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
   @override
   void initState() {
     super.initState();
-    _isDropdownOpen = false;
+    objRspGen = '';
+    ingresaUnaVez = true;
     objActividadEscogida = null;
     objCalendarioActividadescogidaByFiltroCal = null;
     actualizaListaPrp = false;
@@ -86,6 +89,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
     years = [];
     years = List.generate(currentYear - 2000 + 1, (index) => 2000 + index);
     
+    _futureProspectos = getProspectos();
   }
 
   @override
@@ -241,6 +245,8 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
   @override
   Widget build(BuildContext context) {
 
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     //VALIDAR QUE SEA SOLO PARA CVE
     final meses = List.generate(12, (index) => DateFormat.MMMM().format(DateTime(0, index + 1)));
     meses.add("-- Todos --");
@@ -274,6 +280,12 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: () {
+                terminoBusqueda = '';
+                filtroPrspTxt.text = '';
+                refreshDataByFiltro(objRspGen);
+                _mesSeleccionado = null;//DateTime.now().month;
+                selectedYear = DateTime.now().year;
+                                
                 refreshDataProsp();
               },
             ),
@@ -289,84 +301,8 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
       body: BlocBuilder<GenericBloc, GenericState>(
         builder: (context,state) {
 
-          Future<void> refreshDataByFiltro(String filtro, String objMemoria) async {            
-            prospectosFiltrados = [];
-
-            CrmLead apiResponse = CrmLead.fromJson(objMemoria);
-
-            if(terminoBusqueda.isNotEmpty){
-              if(prospectosFiltrados.isEmpty){
-                for(int i = 0; i < apiResponse.data.length; i++){
-                  if(apiResponse.data[i].emailFrom.toLowerCase().contains(terminoBusqueda.toLowerCase()) 
-                  || apiResponse.data[i].name.toLowerCase().contains(terminoBusqueda.toLowerCase()) 
-                  || (apiResponse.data[i].contactName != null && apiResponse.data[i].contactName!.toLowerCase().contains(terminoBusqueda.toLowerCase()))){
-                    prospectosFiltrados.add(apiResponse.data[i]);
-                  }
-                }
-              }
-              if(prospectosFiltrados.isEmpty){ //&& (terminoBusqueda.contains('+') || terminoBusqueda.contains('0'))){
-                  for(int i = 0; i < apiResponse.data.length; i++){
-                    if(apiResponse.data[i].phone != null && apiResponse.data[i].phone!.contains(terminoBusqueda)){
-                      prospectosFiltrados.add(apiResponse.data[i]);
-                    }
-                  }
-                }
-              /*
-              if(!terminoBusqueda.contains('+') && !terminoBusqueda.contains('0')){
-                
-                for(int i = 0; i < apiResponse.data.length; i++){
-                  if(apiResponse.data[i].emailFrom.toLowerCase().contains(terminoBusqueda.toLowerCase()) 
-                  || apiResponse.data[i].name.toLowerCase().contains(terminoBusqueda.toLowerCase()) 
-                  || (apiResponse.data[i].contactName != null && apiResponse.data[i].contactName!.toLowerCase().contains(terminoBusqueda.toLowerCase()))){
-                    prospectosFiltrados.add(apiResponse.data[i]);
-                  }
-                }
-
-              } else {
-                if(prospectosFiltrados.isEmpty){ //&& (terminoBusqueda.contains('+') || terminoBusqueda.contains('0'))){
-                  for(int i = 0; i < apiResponse.data.length; i++){
-                    if(apiResponse.data[i].phone != null && apiResponse.data[i].phone!.contains(terminoBusqueda)){
-                      prospectosFiltrados.add(apiResponse.data[i]);
-                    }
-                  }
-                }
-              }
-              */
-
-              contLst = 0;
-
-              contLst = prospectosFiltrados.length;
-            } else{
-              prospectosFiltrados = apiResponse.data;
-            }            
-
-            if(terminoBusqueda.isNotEmpty && actualizaListaPrp) {
-              //setState(() {});
-            }
-
-          }
-
-          
-          Future<void> refreshDataByMes(int mesSelect, String objMemoria, bool muestraTodos) async {            
-            prospectosFiltrados = [];
-
-            CrmLead apiResponse = CrmLead.fromJson(objMemoria);
-
-            if(mesSelect != 0 && !muestraTodos){
-              prospectosFiltrados = apiResponse.data.where((element) => element.dateOpen!.month == mesSelect && element.dateOpen!.year == selectedYear).toList();
-              contLst = 0;
-
-              contLst = prospectosFiltrados.length;
-            } else{
-              prospectosFiltrados = apiResponse.data;
-            }            
-
-            //setState(() {});
-
-          }
-
           return FutureBuilder(
-            future: state.lstProspectos(),
+            future: _futureProspectos,//state.lstProspectos(),
             builder: (context, snapshot) {
 
               if (snapshot.hasError) {
@@ -380,9 +316,12 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
               if (snapshot.hasData) {
 
-                String objRsp = snapshot.data as String;                
+                String objRsp = snapshot.data as String;
+
+                objRspGen = objRsp;
 
                 if(objRsp.isNotEmpty){
+                  
                   var objLogDecode = json.decode(objRsp);
 
                   var tstLength = objLogDecode["length"];
@@ -393,8 +332,10 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
                   contLst = int.parse(contStr);
 
-                  refreshDataByFiltro('', objRsp);
-                  refreshDataByMes(_mesSeleccionado ?? 0, objRsp, _mesSeleccionado == 13);
+                  if(ingresaUnaVez){
+                    refreshDataByFiltro(objRsp);
+                    //refreshDataByMes(_mesSeleccionado ?? 0, objRsp, _mesSeleccionado == 13);
+                  }
                   
                   listaVaciaPrp = false;
                   
@@ -402,7 +343,8 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                   listaVaciaPrp = true;
                 }
 
-                final themeProvider = Provider.of<ThemeProvider>(context);
+
+                ingresaUnaVez = false;
 
                 return SingleChildScrollView(
                   child: Column(
@@ -428,26 +370,32 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                               onPressed: () {
                                 terminoBusqueda = '';
                                 filtroPrspTxt.text = '';
-                                refreshDataByFiltro('', objRsp);
+                                refreshDataByFiltro(objRsp);
+                                _mesSeleccionado = null;//DateTime.now().month;
+                                selectedYear = DateTime.now().year;
+                                
                                 setState(() {
                                   
                                 });
                               },
                               icon: Icon(Icons.cancel,
-                                  size: 24,
-                                  color: AppLightColors()
-                                      .gray900PrimaryText),
+                                size: 24,
+                                color: AppLightColors().gray900PrimaryText
+                              ),
                             ),
                           ),
                           onChanged: (value) {
                             actualizaListaPrp = false;
                             terminoBusqueda = value;
-                            refreshDataByFiltro(value, objRsp);
+                            //refreshDataByFiltro(value, objRsp);
                           },
                           onEditingComplete: () {
                             FocusScope.of(context).unfocus();
                             actualizaListaPrp = true;
                             setState(() { });
+                            WidgetsBinding.instance.addPostFrameCallback((_) async {
+                              refreshDataByFiltro(objRsp);
+                            });
                           },
                           onTapOutside: (event) {
                             FocusScope.of(context).unfocus();
@@ -485,9 +433,8 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                           }),
                           onChanged: (value) {
                             _mesSeleccionado = value;
-                            setState(() {
-                              
-                            });
+                            
+                            refreshDataByMes(_mesSeleccionado ?? 0, objRspGen, _mesSeleccionado == 13);
                           },
                         ),
                       ),
@@ -513,9 +460,8 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                             );
                           }).toList(),                                                    
                           onChanged: (value) {
-                            setState(() {
-                              selectedYear = value!;
-                            });
+                            selectedYear = value!;
+                            refreshDataByMes(_mesSeleccionado ?? 0, objRspGen, _mesSeleccionado == 13);                            
                           },
                         ),
                       ),
@@ -569,7 +515,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                             },
                             child: ListView.builder(
                               controller: scrollListaClt,
-                              itemCount: contLst,
+                              itemCount: prospectosFiltrados.length,//contLst,
                               itemBuilder: ( _, int index ) {
                             
                                 return Slidable(
@@ -674,6 +620,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                           textAlign: TextAlign.left,
                                                         ),
                                                       ),
+/*
                                                       Container(
                                                     color: Colors.transparent,
                                                     width: size.width * 0.54,
@@ -684,7 +631,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                         children: [
                                                           TextSpan(
                                                             text: 'Email: ',
-                                                            style: TextStyle(color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 2 ? Colors.white : Colors.black)
+                                                            style: TextStyle(color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white)
                                                           ),
                                                           TextSpan(
                                                             text: prospectosFiltrados[index].emailFrom,
@@ -695,6 +642,61 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                     )
                                                 
                                                   ),
+*/
+                                                    Container(
+                                                    color: Colors.transparent,
+                                                    width: size.width * 0.54,
+                                                    height: size.height * 0.035,
+                                                      child: 
+                                                      SelectableText.rich(
+                                                         TextSpan(
+                                                            children: [
+                                                              TextSpan(
+                                                                text: 'Email: ',
+                                                                style: TextStyle(
+                                                                  fontSize: 14,
+                                                                  color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white)
+                                                              ),
+                                                              TextSpan(
+                                                                text: prospectosFiltrados[index].emailFrom,
+                                                                style: const TextStyle(
+                                                                  fontSize: 14,
+                                                                  color: Colors.blue)
+                                                              ),
+                                                            ]
+                                                          ),
+                                                        
+                                                      )
+                                                  ),
+                                                
+
+                                                  Container(
+                                                    color: Colors.transparent,
+                                                    width: size.width * 0.54,
+                                                    height: size.height * 0.035,
+                                                      child: 
+                                                      SelectableText.rich(
+                                                         TextSpan(
+                                                            children: [
+                                                              TextSpan(
+                                                                text: 'Teléfono: ',
+                                                                style: TextStyle(
+                                                                  fontSize: 14,
+                                                                  color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white)
+                                                              ),
+                                                              TextSpan(
+                                                                text: prospectosFiltrados[index].phone,
+                                                                style: const TextStyle(
+                                                                  fontSize: 14,
+                                                                  color: Colors.blue)
+                                                              ),
+                                                            ]
+                                                          ),
+                                                        
+                                                      )
+                                                  ),
+                                                
+/*
                                                   Container(
                                                     color: Colors.transparent,
                                                     width: size.width * 0.54,
@@ -706,7 +708,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                           children: [
                                                             TextSpan(
                                                               text: 'Teléfono: ',
-                                                              style: TextStyle(color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 2 ? Colors.white : Colors.black)
+                                                              style: TextStyle(color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white)
                                                             ),
                                                             TextSpan(
                                                               text: prospectosFiltrados[index].phone,
@@ -716,6 +718,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                         ),
                                                       )
                                                   ),
+                                                  */
                                                   Container(
                                                       color: Colors.transparent,
                                                       width: size.width * 0.54,
@@ -886,62 +889,9 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
             },
           ),
           title: const Text('Prospectos'),
-          /*
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.calendar_month, color: Colors.black),
-              onPressed: () {
-                
-              },
-            ),
-          ],
-          */
         ),
       body: BlocBuilder<GenericBloc, GenericState>(
         builder: (context,state) {
-
-          Future<void> refreshDataByFiltro(String filtro, String objMemoria) async {            
-            prospectosFiltrados = [];
-
-            CrmLead apiResponse = CrmLead.fromJson(objMemoria);
-
-            if(terminoBusqueda.isNotEmpty){
-              
-              if(!terminoBusqueda.contains('+') && !terminoBusqueda.contains('0')){
-                prospectosFiltrados = apiResponse.data
-                .where(
-                  (producto) => producto.name.toLowerCase().contains(terminoBusqueda.toLowerCase()))
-                .toList();
-
-                if(prospectosFiltrados.isEmpty){
-                  prospectosFiltrados = apiResponse.data
-                  .where((producto) =>
-                    producto.emailFrom.toLowerCase().contains(terminoBusqueda.toLowerCase())
-                  )
-                  .toList();
-                }
-              } else {
-                if(prospectosFiltrados.isEmpty && (terminoBusqueda.contains('+') || terminoBusqueda.contains('0'))){
-                  for(int i = 0; i < apiResponse.data.length; i++){
-                    if(apiResponse.data[i].phone != null && apiResponse.data[i].phone!.contains(terminoBusqueda)){
-                      prospectosFiltrados.add(apiResponse.data[i]);
-                    }
-                  }
-                }
-              }
-
-              contLst = 0;
-
-              contLst = prospectosFiltrados.length;
-            } else{
-              prospectosFiltrados = apiResponse.data;
-            }            
-
-            if(terminoBusqueda.isNotEmpty && actualizaListaPrp) {
-              setState(() {});
-            }
-
-          }
 
           return FutureBuilder(
             future: ProspectoTypeService().getProspectos(),
@@ -1030,7 +980,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                           onChanged: (value) {
                             actualizaListaPrp = false;
                             terminoBusqueda = value;
-                            refreshDataByFiltro(value, objRsp);                            
+                            //refreshDataByFiltro(value, objRsp);                            
                           },
                           onEditingComplete: () {
                             actualizaListaPrp = true;
@@ -1313,6 +1263,90 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
         
     );
   }
+
+  Future<String> getProspectos() async {
+    return await ProspectoTypeService().lstProspectosMemoria();
+  }
+
+  Future<void> refreshDataByFiltro(String objMemoria) async { 
+               
+    prospectosFiltrados = [];
+
+    CrmLead apiResponse = CrmLead.fromJson(objMemoria);
+
+    if(terminoBusqueda.isNotEmpty){
+      if(prospectosFiltrados.isEmpty){
+        for(int i = 0; i < apiResponse.data.length; i++){
+          if(apiResponse.data[i].emailFrom.toLowerCase().contains(terminoBusqueda.toLowerCase()) 
+          || apiResponse.data[i].name.toLowerCase().contains(terminoBusqueda.toLowerCase()) 
+          || (apiResponse.data[i].contactName != null && apiResponse.data[i].contactName!.toLowerCase().contains(terminoBusqueda.toLowerCase()))){
+            prospectosFiltrados.add(apiResponse.data[i]);
+          }
+        }
+      }
+      if(prospectosFiltrados.isEmpty){ //&& (terminoBusqueda.contains('+') || terminoBusqueda.contains('0'))){
+        for(int i = 0; i < apiResponse.data.length; i++){
+          if(apiResponse.data[i].phone != null && apiResponse.data[i].phone!.contains(terminoBusqueda)){
+            prospectosFiltrados.add(apiResponse.data[i]);
+          }
+        }
+      }
+
+      contLst = 0;
+
+      contLst = prospectosFiltrados.length;
+    } else{
+      prospectosFiltrados = apiResponse.data;
+    }
+
+    return;
+
+  }
+
+  Future<void> refreshDataByMes(int mesSelect, String objMemoria, bool muestraTodos) async {            
+    prospectosFiltrados = [];
+
+    CrmLead apiResponse = CrmLead.fromJson(objMemoria);
+
+    if(terminoBusqueda.isEmpty){
+      if(mesSelect != 0 && !muestraTodos){
+        prospectosFiltrados = apiResponse.data.where((element) => element.dateOpen!.month == mesSelect && element.dateOpen!.year == selectedYear).toList();
+        contLst = 0;
+
+        contLst = prospectosFiltrados.length;
+      } else{
+        prospectosFiltrados = apiResponse.data;
+      }
+    }
+    else{
+      if(prospectosFiltrados.isEmpty){
+        for(int i = 0; i < apiResponse.data.length; i++){
+          if(apiResponse.data[i].dateOpen!.month == mesSelect && apiResponse.data[i].dateOpen!.year == selectedYear
+            && (
+              apiResponse.data[i].emailFrom.toLowerCase().contains(terminoBusqueda.toLowerCase()) 
+          || apiResponse.data[i].name.toLowerCase().contains(terminoBusqueda.toLowerCase()) 
+          || (apiResponse.data[i].contactName != null && apiResponse.data[i].contactName!.toLowerCase().contains(terminoBusqueda.toLowerCase()))
+            )
+          ){
+            prospectosFiltrados.add(apiResponse.data[i]);
+          }
+        }
+      }
+      if(prospectosFiltrados.isEmpty){ //&& (terminoBusqueda.contains('+') || terminoBusqueda.contains('0'))){
+        for(int i = 0; i < apiResponse.data.length; i++){
+          if(apiResponse.data[i].dateOpen!.month == mesSelect && apiResponse.data[i].dateOpen!.year == selectedYear
+            && (apiResponse.data[i].phone != null && apiResponse.data[i].phone!.contains(terminoBusqueda))
+          ){
+            prospectosFiltrados.add(apiResponse.data[i]);
+          }
+        }
+      }
+    }
+
+    //setState(() {});
+
+  }
+
 }
 
 //void doNothing(BuildContext context) {}

@@ -152,7 +152,7 @@ class ScanQrScreenState extends State<ScanQrScreen> {
                               if (valorScaneado.isNotEmpty) {
 
                                 rutaServerWelcome = valorScaneado;
-                                //rutaServerWelcome = 'https://ekuasoft-taller-16347134.dev.odoo.com';
+                                rutaServerWelcome = 'https://centroviajes-taller-23283010.dev.odoo.com';
 
                                 context.pop();
 

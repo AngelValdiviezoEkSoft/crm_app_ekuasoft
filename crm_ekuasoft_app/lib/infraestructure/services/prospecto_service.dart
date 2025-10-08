@@ -794,4 +794,9 @@ class ProspectoTypeService extends ChangeNotifier{
 
   }
 
+  Future<String> lstProspectosMemoria() async {
+    var rsp = await storageProspecto.read(key: 'RespuestaProspectos') ?? '';
+    
+    return rsp;
+  }
 }
