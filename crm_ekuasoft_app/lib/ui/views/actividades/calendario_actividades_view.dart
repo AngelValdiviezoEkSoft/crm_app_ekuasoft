@@ -592,11 +592,9 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                                                 ),
                                               ),
                                               TextSpan(
-                                                text: calendarioActividadesFilAgendaByFiltroCall[index].activityTypeId.name,
-                                                
+                                                text: stateAct.lstActivities[index].leadName,
                                                 style: const TextStyle(
-                                                  color:
-                                                      Colors.blueGrey,
+                                                  color: Colors.blueGrey,
                                                   fontSize: 12,
                                                 ),
                                               ),
