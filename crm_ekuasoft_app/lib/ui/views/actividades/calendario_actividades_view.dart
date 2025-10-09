@@ -580,18 +580,40 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                                     subtitle: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
+                                        
                                         RichText(
                                           text: TextSpan(
                                             children: [
                                               const TextSpan(
-                                                text: 'Tipo de agenda:',
+                                                text: 'Prospecto: ',
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 12,
                                                 ),
                                               ),
                                               TextSpan(
-                                                //text: calendarioActividadesFilAgendaByFiltroCall[index].activityTypeId.name,
+                                                text: calendarioActividadesFilAgendaByFiltroCall[index].activityTypeId.name,
+                                                
+                                                style: const TextStyle(
+                                                  color:
+                                                      Colors.blueGrey,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              const TextSpan(
+                                                text: 'Tipo de agenda: ',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                              TextSpan(
                                                 text: stateAct.lstActivities[index].activityTypeId.name,
                                                 style: const TextStyle(
                                                   color:
@@ -606,8 +628,7 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                                           text: TextSpan(
                                             children: [
                                               const TextSpan(
-                                                text:
-                                                    'Fecha planificada:',
+                                                text: 'Fecha planificada: ',
                                                 style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 12,

@@ -83,15 +83,13 @@ class CrmEkuasoftAppState extends State<CrmEkuasoftApp> {
   @override
   Widget build(BuildContext context) {
 
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    themeProvider.loadTheme();
-
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    
-    return MaterialApp.router(
+
+    return Consumer<ThemeProvider>( builder: (context, themeProvider, _) {
+      return MaterialApp.router(
         title: 'Centro de viajes',
         debugShowCheckedModeBanner: false,
         routerConfig: appRouter,
@@ -99,26 +97,7 @@ class CrmEkuasoftAppState extends State<CrmEkuasoftApp> {
         darkTheme: ThemeData.dark(),
         themeMode: themeProvider.themeMode,
       );
+    });
+        
   }
 }
-
-/*
-class CentroViajesApp extends StatelessWidget {
-  const CentroViajesApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-    
-    return MaterialApp.router(
-        title: 'Centro de viajes',
-        debugShowCheckedModeBanner: false,
-        routerConfig: appRouter,
-      );
-  }
-}
-*/

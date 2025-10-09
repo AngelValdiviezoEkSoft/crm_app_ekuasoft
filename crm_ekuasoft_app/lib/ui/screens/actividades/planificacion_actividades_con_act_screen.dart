@@ -53,6 +53,11 @@ class PlanificacionActividadesConActividadScreen extends StatefulWidget {
 
 class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
 
+  String paisSelect = 'Ecuador';
+  String campSelect = '';
+  String mediaSelect = '';
+  String originSelect = '';
+
   @override
   void initState() {
     super.initState();
@@ -964,6 +969,7 @@ class PlanActivStateTwo extends State<PlanActiv> {
 
     final gnrBloc = Provider.of<GenericBloc>(context);
     gnrBloc.setMuestraCarga(true);
+    final themeProvider = Provider.of<ThemeProvider>(context);
   
     return BlocBuilder<GenericBloc, GenericState>(
       builder: (context,state) {
@@ -971,34 +977,6 @@ class PlanActivStateTwo extends State<PlanActiv> {
         if(!state.inicioCarga){
           gnrBloc.setMuestraCarga(false);
         }
-
-/*
-        Future<void> refreshDataByFiltro(String filtro) async {            
-                actividadesFiltradasAct = [];
-
-                //CrmLead apiResponse = CrmLead.fromJson(objMemoria);
-
-                if(terminoBusquedaActiv.isNotEmpty){
-                  
-                  actividadesFiltradasAct = rspAct.data
-                  .where(
-                    (producto) => producto.activityTypeId.name.toLowerCase().contains(terminoBusquedaActiv.toLowerCase()))
-                  .toList();
-
-                  contLstActiv = 0;
-
-                  contLstActiv = actividadesFiltradasAct.length;
-                } else{
-                  actividadesFiltradasAct = rspAct.data;
-                  actualizaListaActiv = false;
-                }            
-
-                if(terminoBusquedaActiv.isNotEmpty && actualizaListaActiv) {
-                  setState(() {});
-                }
-
-              }
-*/
 
               String formatearTiempo(int segundos) {
                 int horas = segundos ~/ 3600;
@@ -1256,7 +1234,10 @@ class PlanActivStateTwo extends State<PlanActiv> {
                               ],
                               cursorColor: AppLightColors().primary,
                               autovalidateMode: AutovalidateMode.onUserInteraction,
-                              style: AppTextStyles.bodyRegular(width: size.width),
+                              style: AppTextStyles.bodyRegular(
+                                width: size.width,
+                                color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                              ),
                               decoration: const InputDecoration(
                                 label: Text('Notas'),
                                 border: OutlineInputBorder(),
@@ -1758,6 +1739,7 @@ class BtnSlidableActionActivState extends State<BtnSlidableActionActiv> {
   Widget build(BuildContext context) {
 
     final size = MediaQuery.of(context).size;
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return SlidableAction(
       onPressed: (context) {
@@ -1809,7 +1791,10 @@ class BtnSlidableActionActivState extends State<BtnSlidableActionActiv> {
                           ],
                           cursorColor: AppLightColors().primary,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          style: AppTextStyles.bodyRegular(width: size.width),
+                          style: AppTextStyles.bodyRegular(
+                            width: size.width,
+                            color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                          ),
                           decoration: const InputDecoration(
                             label: Text('Notas'),
                             border: OutlineInputBorder(),

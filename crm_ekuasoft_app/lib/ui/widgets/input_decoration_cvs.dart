@@ -119,9 +119,10 @@ class InputDecorationCvs {
     required Size size,
     String? prefixText,
     String? counterTex,
-    Icon? prefixIcon
+    Icon? prefixIcon,
+    Color? colorTheme
   }) {
-    return InputDecoration(
+    return InputDecoration(      
       enabledBorder: UnderlineInputBorder(
         borderSide: BorderSide(color: AppLightColors().gray500)
       ),
@@ -131,10 +132,14 @@ class InputDecorationCvs {
       counterText: counterTex ?? '',
       contentPadding: const EdgeInsets.only(top: 10, bottom: 0),
       labelText: labelText ?? '',
-      labelStyle: AppTextStyles.h4SemiBold(width: size.width, color: AppLightColors().gray800SecondaryText),
+      labelStyle: AppTextStyles.h4SemiBold(
+        width: size.width, 
+        color: colorTheme!= null ? AppLightColors().gray800SecondaryText : colorTheme
+      ),
       hintText: hintTetx ?? '',
       hintStyle: AppTextStyles.bodyRegular(
-        width: size.width, color: AppLightColors().gray800SecondaryText
+        width: size.width, 
+        color: colorTheme!= null ? AppLightColors().gray800SecondaryText : colorTheme
       ),
       floatingLabelBehavior: FloatingLabelBehavior.auto,
       prefixText: prefixText ?? '',

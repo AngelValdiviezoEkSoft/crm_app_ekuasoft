@@ -639,7 +639,8 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                                 text: 'Email: ',
                                                                 style: TextStyle(
                                                                   fontSize: 14,
-                                                                  color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white)
+                                                                  color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                                )
                                                               ),
                                                               TextSpan(
                                                                 text: prospectosFiltrados[index].emailFrom,

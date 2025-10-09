@@ -12,38 +12,7 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
-
-int tabAccionesRegPrsp = 0;
-
-late TextEditingController nombresTxt;
-late TextEditingController nombresOportTxt;
-late TextEditingController emailTxt;
-late TextEditingController direccionTxt;
-late TextEditingController observacionesTxt;
-late TextEditingController paisTxt;
-late TextEditingController probabilityTxt;
-late TextEditingController telefonoTxt;
-late TextEditingController sectorTxt;
-late TextEditingController ingresoEsperadoTxt;
-late TextEditingController recomendadoPorTxt;
-late TextEditingController fechaCierreContTxt;
-
-String fecCierre = '';
-String fecCierreFin = '';
-String codIsoPhone = '';
-String dialCodePhone = '';
-
-DateTime dateRgPrsp = DateTime.now();
-
-String campSelect = '';
-String mediaSelect = '';
-String originSelect = '';
-String actSelect = '';
-String paisSelect = 'Ecuador';
-String telefonoPrsp = '';
-bool habilitaGuardar = false;
-bool celularValido = false;
-bool validandoCell = false;
+import 'package:provider/provider.dart';
 
 class FrmRegistroProspectoScreen extends StatefulWidget {
   const FrmRegistroProspectoScreen({super.key});
@@ -53,6 +22,38 @@ class FrmRegistroProspectoScreen extends StatefulWidget {
 }
 
 class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen> {
+
+  int tabAccionesRegPrsp = 0;
+
+  late TextEditingController nombresTxt;
+  late TextEditingController nombresOportTxt;
+  late TextEditingController emailTxt;
+  late TextEditingController direccionTxt;
+  late TextEditingController observacionesTxt;
+  late TextEditingController paisTxt;
+  late TextEditingController probabilityTxt;
+  late TextEditingController telefonoTxt;
+  late TextEditingController sectorTxt;
+  late TextEditingController ingresoEsperadoTxt;
+  late TextEditingController recomendadoPorTxt;
+  late TextEditingController fechaCierreContTxt;
+
+  String fecCierre = '';
+  String fecCierreFin = '';
+  String codIsoPhone = '';
+  String dialCodePhone = '';
+
+  DateTime dateRgPrsp = DateTime.now();
+
+  String campSelect = '';
+  String mediaSelect = '';
+  String originSelect = '';
+  String actSelect = '';
+  String paisSelect = 'Ecuador';
+  String telefonoPrsp = '';
+  bool habilitaGuardar = false;
+  bool celularValido = false;
+  bool validandoCell = false;
 
   var currencyFormatter = CurrencyInputFormatter(
     thousandSeparator: ThousandSeparator.None,
@@ -106,6 +107,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
   Widget build(BuildContext context) {
 
     final size = MediaQuery.of(context).size;
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -232,12 +234,6 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                   if(actSelect.isEmpty && lstActividades.isNotEmpty){
                     actSelect = lstActividades.first;
                   }
-
-                  /*
-                  if(paisSelect.isEmpty){
-                    paisSelect = lstPaises.first;
-                  }
-                  */
 
                   return Form(
                     key: formKeyRegPrp,
@@ -485,6 +481,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 colorIcono = Colors.red;
                                                 iconoAlerta = Icons.cancel;
                                                 msmBoton = 'Volver';
+                                                validandoCell = false;
 
                                                 showDialog(
                                                   barrierDismissible: false,
@@ -514,7 +511,9 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 return;
                                               }
                         
-                                            } else {
+                                            } 
+                                            /*
+                                            else {
                                               showDialog(
                                                 barrierDismissible: false,
                                                 //ignore: use_build_context_synchronously
@@ -538,6 +537,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                               //habilitaGuardar = false;
                                               habilitaGuardar = true;
                                             }
+                                            */
                       
                                           }
 
@@ -560,12 +560,23 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                           border: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(8),
                                           ),
+                                          suffixIcon: IconButton(
+                                            onPressed: () {
+                                              telefonoTxt.text = '';
+                                            },
+                                            icon: Icon(
+                                                size: 22,
+                                                Icons.close,
+                                                color: AppLightColors().gray900PrimaryText
+                                            ),
+                                          ), 
                                         ),
                                         onSaved: (PhoneNumber phoneNumber) {
                                           //print('Número guardado: ${phoneNumber.phoneNumber}');
                                         },
                                         //maxLength: 11,
                                         errorMessage: 'Teléfono no válido',
+                                        
                                       ),
                                     ),
                                     
@@ -590,11 +601,15 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 inputFormatters: [
                                                   EmojiInputFormatter()
                                                 ],
-                                                style: AppTextStyles.bodyRegular(width: size.width),
+                                                style: AppTextStyles.bodyRegular(
+                                                  width: size.width, 
+                                                  color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                ),
                                                 decoration: InputDecorationCvs.formsDecoration(
                                                   labelText: '* Nombre de Prospecto',
                                                   hintTetx: '* Empresa o Contacto *',
-                                                  size: size
+                                                  size: size,
+                                                  colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
                                                 ),
                                                 enabled: habilitaGuardar,
                                                 controller: nombresTxt,
@@ -631,11 +646,15 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 inputFormatters: [
                                                   EmojiInputFormatter()
                                                 ],
-                                                style: AppTextStyles.bodyRegular(width: size.width),
+                                                style: AppTextStyles.bodyRegular(
+                                                  width: size.width,
+                                                  color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                ),
                                                 decoration: InputDecorationCvs.formsDecoration(
                                                   labelText: '* Nombre Oportunidad',
                                                   hintTetx: 'Ej: Nomb. producto + Nomb. prospecto',
-                                                  size: size
+                                                  size: size,
+                                                  colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
                                                 ),
                                                 enabled: habilitaGuardar,
                                                 controller: nombresOportTxt,
@@ -876,11 +895,15 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                           textCapitalization: TextCapitalization.sentences,
                                           cursorColor: AppLightColors().primary,
                                           autovalidateMode: AutovalidateMode.onUserInteraction,                                        
-                                          style: AppTextStyles.bodyRegular(width: size.width),
+                                          style: AppTextStyles.bodyRegular(
+                                            width: size.width,
+                                            color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                          ),
                                           decoration: InputDecorationCvs.formsDecoration(
                                             labelText: 'Recomendado por',
                                             hintTetx: 'Ej: Majo Piguave',
-                                            size: size
+                                            size: size,
+                                            colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
                                           ),
                                           controller: recomendadoPorTxt,
                                           autocorrect: false,
@@ -926,7 +949,10 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 enabled: habilitaGuardar,                        
                                                 cursorColor: AppLightColors().primary,
                                                 autovalidateMode: AutovalidateMode.onUserInteraction,                                              
-                                                style: AppTextStyles.bodyRegular(width: size.width),
+                                                style: AppTextStyles.bodyRegular(
+                                                  width: size.width,
+                                                  color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                ),
                                                 decoration: InputDecoration(
                                                   labelText: 'Probabilidad',
                                                   hintStyle: SafeGoogleFont(
@@ -980,7 +1006,10 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 enabled: habilitaGuardar,
                                                 cursorColor: AppLightColors().primary,
                                                 autovalidateMode: AutovalidateMode.onUserInteraction,                    
-                                                style: AppTextStyles.bodyRegular(width: size.width),
+                                                style: AppTextStyles.bodyRegular(
+                                                  width: size.width,
+                                                  color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                ),
                                                 decoration: InputDecoration(
                                                   hintStyle: SafeGoogleFont(
                                                     GoogleFontsApp().fontMulish,
@@ -1037,11 +1066,15 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                               cursorColor: AppLightColors().primary,
                                               autovalidateMode: AutovalidateMode.onUserInteraction,
                                               
-                                              style: AppTextStyles.bodyRegular(width: size.width),
+                                              style: AppTextStyles.bodyRegular(
+                                                width: size.width,
+                                                color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                              ),
                                               decoration: InputDecorationCvs.formsDecoration(
                                                 labelText: 'Correo',
                                                 hintTetx: 'Ej: correo@ejemplo.com',
-                                                size: size
+                                                size: size,
+                                                colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
                                               ),
                                               controller: emailTxt,
                                               autocorrect: false,
@@ -1141,11 +1174,15 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                               inputFormatters: [
                                                 EmojiInputFormatter()
                                               ],
-                                              style: AppTextStyles.bodyRegular(width: size.width),
+                                              style: AppTextStyles.bodyRegular(
+                                                width: size.width,
+                                                color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                              ),
                                               decoration: InputDecorationCvs.formsDecoration(
                                                 labelText: 'Dirección',
                                                 hintTetx: '',
-                                                size: size
+                                                size: size,
+                                                colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
                                               ),
                                               autocorrect: false,
                                               keyboardType: TextInputType.text,
@@ -1200,11 +1237,15 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 ],
                                                 cursorColor: AppLightColors().primary,
                                                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                                                style: AppTextStyles.bodyRegular(width: size.width),
+                                                style: AppTextStyles.bodyRegular(
+                                                  width: size.width,
+                                                  color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                ),
                                                 decoration: InputDecorationCvs.formsDecoration(
                                                   labelText: 'Observaciones',
                                                   hintTetx: 'Ej: Interesado en casa pero no tiene trabajo estable',
-                                                  size: size
+                                                  size: size,
+                                                  colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
                                                 ),
                                                 controller: observacionesTxt,
                                                 autocorrect: false,

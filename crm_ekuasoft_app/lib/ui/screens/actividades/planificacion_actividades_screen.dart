@@ -55,6 +55,11 @@ class PlanificacionActividades extends StatefulWidget {
 
 class PlanActState extends State<PlanificacionActividades> {
 
+  String paisSelect = 'Ecuador';
+  String campSelect = '';
+  String mediaSelect = '';
+  String originSelect = '';
+
   //late Future<ActivitiesPageModel> _futureActividades;
 
   @override
@@ -305,28 +310,22 @@ class PlanActState extends State<PlanificacionActividades> {
                                               TextFormField(
                                                 controller: descripcionActTxt,
                                                 onChanged: (value) {
-                                                  planAct.setHeightModalPlanAct(
-                                                      0.92);
+                                                  planAct.setHeightModalPlanAct(0.92);
                                                 },
                                                 onTap: () {
-                                                  planAct.setHeightModalPlanAct(
-                                                      0.92);
+                                                  planAct.setHeightModalPlanAct(0.92);
                                                 },
                                                 onEditingComplete: () {
-                                                  planAct.setHeightModalPlanAct(
-                                                      0.65);
+                                                  planAct.setHeightModalPlanAct(0.65);
                                                   FocusScope.of(context).unfocus();
                                                 },
                                                 onTapOutside: (event) {
-                                                  planAct.setHeightModalPlanAct(
-                                                      0.65);
+                                                  planAct.setHeightModalPlanAct(0.65);
                                                   FocusScope.of(context).unfocus();
                                                 },
                                                 maxLines: 4,
-                                                decoration:
-                                                    const InputDecoration(
-                                                  labelText:
-                                                      'Ingrese su descripción...',
+                                                decoration: const InputDecoration(
+                                                  labelText: 'Ingrese su descripción...',
                                                   border: OutlineInputBorder(),
                                                 ),
                                               ),
@@ -334,9 +333,7 @@ class PlanActState extends State<PlanificacionActividades> {
                                               SizedBox(height: size.height * 0.035),
                                               
                                               Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
+                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                 children: [
                                                   ElevatedButton(
                                                     onPressed: () {
@@ -347,8 +344,7 @@ class PlanActState extends State<PlanificacionActividades> {
                                                     ),
                                                     child: const Text(
                                                       'Cerrar',
-                                                      style: TextStyle(
-                                                          color: Colors.white),
+                                                      style: TextStyle(color: Colors.white),
                                                     ),
                                                   ),
                                                   ElevatedButton(

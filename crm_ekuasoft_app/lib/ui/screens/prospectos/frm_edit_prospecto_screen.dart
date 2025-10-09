@@ -64,6 +64,11 @@ class FrmEditProspectoScreen extends StatefulWidget {
 
 class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
 
+  String paisSelect = 'Ecuador';
+  String campSelect = '';
+  String mediaSelect = '';
+  String originSelect = '';
+
   late final WebViewController _wvController;
   final LocalAuthentication auth = LocalAuthentication();  
 
