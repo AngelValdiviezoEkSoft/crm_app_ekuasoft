@@ -1243,11 +1243,21 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
         }
       }
       if(prospectosFiltrados.isEmpty){ //&& (terminoBusqueda.contains('+') || terminoBusqueda.contains('0'))){
+
+        String numeroConCodigoPais = '';
+        String primerosDos = terminoBusqueda.substring(0, 2);
+
+        if(primerosDos == '09'){
+          numeroConCodigoPais = terminoBusqueda.replaceFirst(primerosDos, "5939");
+          terminoBusqueda = numeroConCodigoPais;
+        }
+        
         for(int i = 0; i < apiResponse.data.length; i++){
           if(apiResponse.data[i].phone != null && apiResponse.data[i].phone!.contains(terminoBusqueda)){
             prospectosFiltrados.add(apiResponse.data[i]);
           }
         }
+
       }
 
       contLst = 0;
