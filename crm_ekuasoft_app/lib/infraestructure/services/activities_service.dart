@@ -755,7 +755,6 @@ class ActivitiesService extends ChangeNotifier{
     }
   }
 
-
   Future<ActivitiesPageModel> getActivitiesByRangoFechas(fechas, resId) async {
     var cmbAct = await storageAct.read(key: 'cmbActividades') ?? '';
 
@@ -1608,6 +1607,357 @@ class ActivitiesService extends ChangeNotifier{
      //print('Test: $ex');
     }
   }
+
+  getActivitiesHistoricasByProspecto(resId) async {
+    String internet = await ValidacionesUtils().validaInternet();
+    
+    //VALIDACIÓN DE INTERNET
+    if(internet == 'N') return;
+
+    try{
+
+      var objLog = await storageProspecto.read(key: 'RespuestaLogin') ?? '';
+      var objLogDecode = json.decode(objLog);
+
+      var objRspIrModel = await storageDataInicial.read(key: 'IdIrModelForAct') ?? '';
+      int resModelId = int.parse(objRspIrModel);
+
+      var connectivityResult = await ValidacionesUtils().validaInternet();
+
+      var cmbAct = await storageAct.read(key: 'cmbActividades') ?? '';
+
+      MailActivityTypeAppModel  objFinAct = MailActivityTypeAppModel.fromRawJson(cmbAct);
+
+      if(objFinAct.data.isEmpty){
+
+        var objAct = json.decode(cmbAct);
+        try{
+          //var rst2 = objAct['result']['data']['mail.activity.type'];
+          var rst = objAct['result']['data']['mail.activity.type'];
+          objFinAct = MailActivityTypeAppModel.fromJson(rst);
+        }
+        catch(ex){
+          //print(ex);
+        }
+
+        try{
+          if(objFinAct.data.isEmpty){
+          
+            var codImei = await storageAct.read(key: 'codImei') ?? '';
+            var objReg = await storageAct.read(key: 'RespuestaRegistro') ?? '';
+            var obj = RegisterDeviceResponseModel.fromJson(objReg);
+            var objLog = await storageAct.read(key: 'RespuestaLogin') ?? '';
+            var objLogDecode = json.decode(objLog);
+
+            List<MultiModel> lstMultiModel = [];
+
+            lstMultiModel.add(
+              MultiModel(model: 'crm.lead')
+            );
+
+            final models = [        
+              {
+                "model": EnvironmentsProd().modActiv,//"mail.activity.type",
+                "filters": [
+                  ["res_model","=",false]
+                ]
+              },
+            ];
+
+
+            ConsultaMultiModelRequestModel objReq = ConsultaMultiModelRequestModel(
+              jsonrpc: EnvironmentsProd().jsonrpc,
+              params: ParamsMultiModels(
+                bearer: obj.result.bearer,
+                company: objLogDecode['result']['current_company'],
+                imei: codImei,
+                key: obj.result.key,
+                tocken: obj.result.tocken,
+                tockenValidDate: obj.result.tockenValidDate,
+                uid: objLogDecode['result']['uid'],
+                models: lstMultiModel
+              )
+            );
+
+            var rsp = await GenericService().getMultiModelosGenNoMemoria(objReq, models);
+
+            var objAct = json.decode(rsp);
+        
+            var rst = objAct['result']['data']['mail.activity.type'];
+            objFinAct = MailActivityTypeAppModel.fromJson(rst);
+            
+            //objFinAct = MailActivityTypeAppModel.fromJson();
+            
+            }
+        }
+        catch(ex){
+          //print(ex);
+        }
+      }
+
+      if(connectivityResult.isNotEmpty){
+        ActivitiesPageModel objRspFinal = ActivitiesPageModel(
+        activities: ActivitiesResponseModel(
+          data: [],
+          fields: FieldsActivities(code: 'NO_INTERNET', name: '', stateIds: ''),
+          length: 0
+        ),
+        lead: DatumCrmLead(
+          activityIds: [], campaignId: CampaignId(id: 0, name: ''), countryId: StructCombos(id: 0, name: ''),
+          dayClose: 0, emailFrom: '', expectedRevenue: 0, id: 0, lostReasonId: CampaignId(id: 0, name: ''),
+          mediumId: StructCombos(id: 0, name: ''), mobile: '', name: '', partnerId: PartnerId(id: 0, name: '', tradeName: '', cantonId: StructCombos(id: 0, name: ''), regionId: StructCombos(id: 0, name: ''), sectorId: StructCombos(id: 0, name: ''), channelId: StructCombos(id: 0, name: ''), cityId: StructCombos(id: 0, name: ''), clasificationId: StructCombos(id: 0, name: ''), email: ''),
+          priority: '', sourceId: StructCombos(id: 0, name: ''), stageId: StructCombos(id: 0, name: ''),
+          stateId: StructCombos(id: 0, name: ''), tagIds: [], title: CampaignId(id: 0, name: ''),
+          type: '', city: '', contactName: '', dateClose: null, dateDeadline: null, dateOpen: null, description: '',
+          emailCc: '', partnerName: '', phone: '', probability: 0, referred: '', street: '',
+          userId: StructCombos(id: 0, name: '')
+        ),
+        objMailAct: objFinAct
+      );
+
+        return objRspFinal;
+      }
+
+      String modeloConsulta = EnvironmentsProd().modMailAct;
+      String modeloConsultaMailMessage = EnvironmentsProd().modMailMessage;
+
+      List<MultiModel> lstMultiModel = [];
+
+      lstMultiModel.add(
+        MultiModel(model: 'mail.activity')
+      );
+
+      if(resId != null && resId == 0){        
+        var idMem = await storageProspecto.read(key: 'idMem') ?? '';
+
+        if(idMem.isNotEmpty){
+          resId = int.parse(idMem);
+        }        
+      }
+
+      var models = [
+      {
+        "model": modeloConsulta,
+        "filters": [            
+          ["user_id", "=", objLogDecode['result']['uid']],
+          ["res_model_id", "=", resModelId],
+          if(resId != null && resId > 0)
+          ["res_id", "=", resId]
+        ]
+      },
+    ];
+
+      var codImei = await storageProspecto.read(key: 'codImei') ?? '';
+
+      var objReg = await storageProspecto.read(key: 'RespuestaRegistro') ?? '';
+      var obj = RegisterDeviceResponseModel.fromJson(objReg);
+
+      ConsultaMultiModelRequestModel objReq = ConsultaMultiModelRequestModel(
+        jsonrpc: jsonRpc,
+        params: ParamsMultiModels(
+          bearer: obj.result.bearer,
+          company: objLogDecode['result']['current_company'],
+          imei: codImei,
+          key: obj.result.key,
+          tocken: obj.result.tocken,
+          tockenValidDate: obj.result.tockenValidDate,
+          uid: objLogDecode['result']['uid'],
+          models: []
+        )
+      );
+
+      String ruta = '';
+      final objStr = await storageAct.read(key: 'RespuestaRegistro') ?? '';
+      
+      if(objStr.isNotEmpty)
+      {  
+        var obj = RegisterDeviceResponseModel.fromJson(objStr);
+        ruta = '${obj.result.url}/api/v1/${objReq.params.imei}/done/data/multi/models';
+      }
+
+      String tockenValidDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(objReq.params.tockenValidDate);
+
+      final requestBody = {
+        "jsonrpc": jsonRpc,
+        "params": {
+          "key": objReq.params.key,
+          "tocken": objReq.params.tocken,
+          "imei": objReq.params.imei,
+          "uid": objReq.params.uid,
+          "company": objReq.params.company,
+          "bearer": objReq.params.bearer,
+          "tocken_valid_date": tockenValidDate,
+          "models": models
+        }
+      };
+
+      final headers = {
+        "Content-Type": EnvironmentsProd().contentType
+      };
+
+      final response = await http.post(
+        Uri.parse(ruta),
+        headers: headers,
+        body: jsonEncode(requestBody), 
+      );
+      
+      var rsp = AppResponseModel.fromRawJson(response.body);
+
+      //print('Consulta agenda: ${response.body}');
+
+      String cmbLstAct = json.encode(rsp.result.data.mailActivity);//await storageAct.read(key: 'cmbLstActividades') ?? '';
+
+      ActivitiesResponseModel objActividades = ActivitiesResponseModel.fromRawJson(cmbLstAct);
+
+      var lstProsp = await storageAct.read(key: 'RespuestaProspectos') ?? '';
+
+      var objLogDecode2 = json.decode(lstProsp);      
+
+      CrmLeadAppModel apiResponse = CrmLeadAppModel.fromJson(objLogDecode2);
+
+      CrmLeadDatumAppModel? objFin;
+      
+      for(int i = 0; i < apiResponse.data.length; i++){
+        if(apiResponse.data[i].id == resId){
+          objFin = apiResponse.data[i];
+        }
+      }
+
+      DatumCrmLead objDatumCrmLeadFin = DatumCrmLead(
+        activityIds: [],
+        campaignId: CampaignId(
+          id: objFin?.campaignId.id ?? 0,
+          name: objFin?.campaignId.name ?? ''
+        ),
+        countryId: StructCombos(
+          id: objFin?.countryId.id ?? 0,
+          name: objFin?.countryId.name ?? ''
+        ),
+        dayClose: 0,//objFin.dateClose,
+        emailFrom: objFin?.emailFrom ?? '',
+        expectedRevenue: objFin?.expectedRevenue ?? 0,
+        id: objFin?.id ?? 0,
+        lostReasonId: CampaignId(
+          id: objFin?.lostReasonId.id ?? 0,
+          name: objFin?.lostReasonId.name ?? ''
+        ),
+        mediumId: StructCombos(
+          id: objFin?.mediumId.id ?? 0,
+          name: objFin?.mediumId.name ?? ''
+        ),
+        name: objFin?.name ?? '',
+        partnerId: PartnerId(
+          tradeName: '',
+          cantonId: StructCombos(id: 0, name: ''),
+          regionId: StructCombos(id: 0, name: ''),
+          sectorId: StructCombos(id: 0, name: ''),
+          id: objFin?.partnerId.id ?? 0,
+          name: objFin?.partnerId.name ?? '',
+          channelId: StructCombos(id: 0, name: ''),
+          cityId: StructCombos(id: 0, name: ''),
+          clasificationId: StructCombos(id: 0, name: ''),
+          email: ''
+        ),
+        priority: objFin?.priority ?? '',
+        sourceId: StructCombos(
+          id: objFin?.sourceId.id ?? 0,
+          name: objFin?.sourceId.name ?? ''
+        ),
+        stageId: StructCombos(
+          id: objFin?.stageId.id ?? 0,
+          name: objFin?.stageId.name ?? ''
+        ),
+        stateId: StructCombos(
+          id: objFin?.stateId.id ?? 0,
+          name: objFin?.stateId.name ?? ''
+        ),
+        tagIds: objFin?.tagIds ?? [],
+        title: CampaignId(
+          id: objFin?.title.id ?? 0,
+          name: objFin?.title.name ?? ''
+        ),
+        type: objFin?.type ?? '',
+        //city: objFin!.cit
+        contactName: objFin?.contactName,
+        dateClose: objFin?.dateClose,
+        dateDeadline: objFin?.dateDeadline,
+        dateOpen: objFin?.dateOpen,
+        description: objFin?.description,
+        //emailCc: objFin!.em
+        mobile: '',
+        city: '',
+        emailCc: '',
+        partnerName: objFin?.partnerId.name ?? '',
+        phone: objFin?.phone,
+        probability: objFin?.probability,
+        referred: objFin?.referred,
+        street: objFin?.street,
+        userId: StructCombos(
+          id: objFin?.userId.id ?? 0,
+          name: objFin?.userId.name ?? ''
+        ),
+      );
+
+      var models2 = [
+        {
+          "model": modeloConsultaMailMessage,
+          "filters": [            
+            ["user_id", "=", objLogDecode['result']['uid']],          
+          ]
+        },
+      ];
+
+      
+      final requestBody2 = {
+        "jsonrpc": jsonRpc,
+        "params": {
+          "key": objReq.params.key,
+          "tocken": objReq.params.tocken,
+          "imei": objReq.params.imei,
+          "uid": objReq.params.uid,
+          "company": objReq.params.company,
+          "bearer": objReq.params.bearer,
+          "tocken_valid_date": tockenValidDate,
+          "models": models2
+        }
+      };
+
+      final response2 = await http.post(
+        Uri.parse(ruta),
+        headers: headers,
+        body: jsonEncode(requestBody2), 
+      );
+      
+      var rsp2 = AppResponseModel.fromRawJson(response2.body);
+
+      final lstEncr = await storageAct.read(key: 'LstActividadesAbiertasCerradas') ?? '';
+
+      String internet = await ValidacionesUtils().validaInternet();
+    
+
+      if(lstEncr.isNotEmpty && internet.isEmpty){
+        ActivitiesResponseModel  objMem = ActivitiesResponseModel.fromRawJson(lstEncr);
+
+        for(int i = 0; i < objMem.data.length; i++) {
+          if(objMem.data[i].resId == resId){
+            objActividades.data.add(objMem.data[i]);
+          }
+        }
+      }
+      
+      ActivitiesPageModel objRspFinal = ActivitiesPageModel(
+        activities: objActividades,
+        lead: objDatumCrmLeadFin,
+        objMailAct: objFinAct,
+      );
+
+      return objRspFinal;
+    }
+    catch(_){
+     //print('Test: $ex');
+    }
+  }
+
 
   registroActividades(ActivitiesTypeRequestModel objActividad) async {
     String internet = await ValidacionesUtils().validaInternet();

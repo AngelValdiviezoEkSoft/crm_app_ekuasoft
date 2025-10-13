@@ -482,16 +482,43 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                                   ]
                                                 ),
                                             ),
-                                            title: Text(lstActividadesByFiltros[index].summary ?? ''),
+                                            //title: Text(lstActividadesByFiltros[index].summary ?? ''),
+                                            title: Text(
+                                              lstActividadesByFiltros[index].summary ?? '',
+                                              maxLines: 2, 
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
                                             subtitle: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
+
+                                                 RichText(
+                                                  text: TextSpan(
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: 'Prospecto: ',
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                      TextSpan(
+                                                        text: lstActividadesByFiltros[index].leadName,
+                                                        style: const TextStyle(
+                                                          color: Colors.blueGrey,
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              
                     
                                                 RichText(
                                                   text: TextSpan(
                                                     children: [
                                                       const TextSpan(
-                                                        text: 'Tipo de actividad:',
+                                                        text: 'Tipo de actividad: ',
                                                         style: TextStyle(
                                                           color: Colors.black,
                                                           fontSize: 12,
@@ -512,7 +539,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                                   text: TextSpan(
                                                     children: [
                                                       const TextSpan(
-                                                        text: 'Fecha planificada:',
+                                                        text: 'Fecha planificada: ',
                                                         style: TextStyle(
                                                           color: Colors.black,
                                                           fontSize: 12,

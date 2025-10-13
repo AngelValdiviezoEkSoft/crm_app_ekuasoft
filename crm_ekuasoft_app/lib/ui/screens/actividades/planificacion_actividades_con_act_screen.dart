@@ -649,15 +649,6 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
-                          /*
-                          Container(
-                            color: Colors.transparent,
-                              width: size.width * 0.95,
-                              child: Text(
-                                tipoActividadEscogida,//'Compra de terreno con plan de viaje',
-                                style: const TextStyle(color: Colors.white, fontSize: 17),
-                              )),
-                              */
                           const SizedBox(height: 15),
                           const Row(
                             children: [
@@ -784,6 +775,83 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                   ),
                                 ),
                               ),
+                                Expanded(
+                                child: Container(
+                                  color: tabAccionesAct == 2
+                                      ? Colors.white
+                                      : Colors.blue.shade800,
+                                  child: Center(
+                                    child: TextButton(
+                                      onPressed: () async {
+                                        tabAccionesAct = 2;
+
+                                        if(objDatumCrmLead != null){
+                                          try{
+                                            const storage = FlutterSecureStorage();
+
+                                            String resPartner = await storage.read(key: 'RespuestaClientes') ?? '';
+
+                                            String ekClasifProspStr = await storage.read(key: 'EkClasifProsp') ?? '';
+                                            String ekResCountryCantonStr = await storage.read(key: 'EkResCountryCantonProsp') ?? '';
+                                            String ekResRegionStr = await storage.read(key: 'EkResRegionProsp') ?? '';
+                                            String ekResSectorStr = await storage.read(key: 'EkResSectorProsp') ?? '';
+                                            String ekResCityStr = await storage.read(key: 'EkResCountryCityProsp') ?? '';
+
+                                            ResPartnerAppModel apiResponse = ResPartnerAppModel.fromRawJson(resPartner);
+                                            EkClassification  ekClassificationFin = EkClassification.fromRawJson(ekClasifProspStr);
+                                            CantonModel  ekCantonFin = CantonModel.fromRawJson(ekResCountryCantonStr);
+                                            RegionModel  ekRegionModelFin = RegionModel.fromRawJson(ekResRegionStr);
+                                            SectorModel  ekSectorFin = SectorModel.fromRawJson(ekResSectorStr);
+                                            CountryCity  ekCityFin = CountryCity.fromRawJson(ekResCityStr);
+                                            
+                                            var objFiltrado = apiResponse.data.firstWhere((x) => x.id == objDatumCrmLead!.partnerId.id,);
+                                            var objClasif = ekClassificationFin.data.firstWhere((x) => x.id == objFiltrado.ekClasificationId.id);
+                                            var objCiudad = ekCityFin.data.firstWhere((x) => x.id == objFiltrado.cityId.id);
+                                            var objCanton = ekCantonFin.data.firstWhere((x) => x.id == objFiltrado.ekResCountryCantonId.id);
+                                            var objRegion = ekRegionModelFin.data.firstWhere((x) => x.id == objFiltrado.ekResRegionId.id);
+                                            var objSector = ekSectorFin.data.firstWhere((x) => x.id == objFiltrado.ekResSectorId.id);
+
+                                            channelProsp = objFiltrado.channelId.name ?? '';
+
+                                            clasificacionPrsp = objClasif.name ?? '';
+                                            ciudadPrsp = objCiudad.name ?? '';
+                                            regionPrsp = objRegion.name ?? '';
+                                            cantonPrsp = objCanton.name ?? '';
+                                            sectorPrsp = objSector.name ?? '';
+                                            tradeNameProsp = objFiltrado.tradeName ?? '';
+                                          }
+                                          catch(_){
+
+                                          }
+                                        }
+
+                                        setState(() {});
+                                      },
+                                      child: Column(
+                                        children: [
+                                          Icon(
+                                            Icons.history,
+                                            color: tabAccionesAct == 2
+                                                ? Colors.blue.shade800
+                                                : Colors.white,
+                                          ),
+                                          Text(
+                                            'Histórico',
+                                            style: TextStyle(
+                                              //color: Colors.purple.shade700,
+                                              color: tabAccionesAct == 2
+                                                  ? Colors.blue.shade800
+                                                  : Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            
                             ],
                           ),
                         ],
@@ -791,7 +859,6 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                     ),
                     if (tabAccionesAct == 0) const PlanActiv(null),
                     if (tabAccionesAct == 1)
-                      // Información General
                       sectionTitle(Icons.info, "Información General"),
                     if (tabAccionesAct == 1) infoRowAct("Razón Social", objDatumCrmLead?.partnerId.name ?? '-----', size),
                     if (tabAccionesAct == 1)
@@ -800,7 +867,6 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                     if (tabAccionesAct == 1) infoRowAct("Canal", channelProsp, size),
                     if (tabAccionesAct == 1) infoRowAct("Dirección", objDatumCrmLead?.street != null && objDatumCrmLead?.street2 != null ? '${objDatumCrmLead?.street} ${objDatumCrmLead?.street2}' : objDatumCrmLead?.street != null ? '${objDatumCrmLead?.street}' : '-----', size),
                     if (tabAccionesAct == 1)
-                      // Territorio
                       sectionTitleAct(Icons.place, "Territorio"),
                     if (tabAccionesAct == 1) infoRowAct("Estado", objDatumCrmLead?.stageId.name ?? '-----', size),
                     if (tabAccionesAct == 1) infoRowAct("Ciudad", ciudadPrsp, size),
@@ -808,10 +874,11 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                     if (tabAccionesAct == 1) infoRowAct("Región", regionPrsp, size),
                     if (tabAccionesAct == 1) infoRowAct("Sector", sectorPrsp, size),
                     if (tabAccionesAct == 1)
-                      // Precios y Ventas
                       sectionTitleAct(Icons.monetization_on, "Precios y Ventas"),
                     if (tabAccionesAct == 1) infoRowAct("Ingreso esperado", "\$${objDatumCrmLead?.expectedRevenue.toStringAsFixed(2)}", size),
                     if (tabAccionesAct == 1) infoRowAct("Probabilidad", "${probCalculada.toStringAsFixed(0)}%", size),
+                    if (tabAccionesAct == 2) const HistoricoActByProspView(null),
+                    
                   ],
                 ),
               ),

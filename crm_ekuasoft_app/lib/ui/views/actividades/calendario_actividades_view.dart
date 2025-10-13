@@ -575,8 +575,13 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                                           )
                                       ]),
                                     ),
-                                    //title: Text(calendarioActividadesFilAgendaByFiltroCall[index].summary ??''),
-                                    title: Text(stateAct.lstActivities[index].summary ??'', style: const TextStyle(color: Colors.black),),
+                                    //title: Text(stateAct.lstActivities[index].summary ??'', style: const TextStyle(color: Colors.black),),
+                                    title: Text(
+                                      stateAct.lstActivities[index].summary ?? '',
+                                      maxLines: 2, 
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(color: Colors.black),
+                                    ),
                                     subtitle: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [

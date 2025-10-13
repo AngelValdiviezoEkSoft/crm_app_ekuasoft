@@ -1273,7 +1273,14 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
         contLst = prospectosFiltrados.length;
       } else{
-        prospectosFiltrados = apiResponse.data;
+        if(prospectosFiltrados.isEmpty && selectedYear != 0){
+          prospectosFiltrados = apiResponse.data.where((element) => element.dateOpen!.year == selectedYear).toList();
+        }
+        /*
+        else{
+          prospectosFiltrados = apiResponse.data;
+        }
+        */
       }
     }
     else{
@@ -1301,7 +1308,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
       }
     }
 
-    //setState(() {});
+    setState(() {});
 
   }
 
