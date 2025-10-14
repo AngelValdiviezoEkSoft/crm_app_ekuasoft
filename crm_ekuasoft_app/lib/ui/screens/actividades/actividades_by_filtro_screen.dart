@@ -588,7 +588,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                   ),
                 )
                 :
-                const CalendarioActividadesByFiltroView(null),
+                const CalendarioActividadesByFiltroView(),
               );
             
             }

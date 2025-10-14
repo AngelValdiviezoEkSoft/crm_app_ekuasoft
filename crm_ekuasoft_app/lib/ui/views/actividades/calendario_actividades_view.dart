@@ -32,6 +32,7 @@ List<DatumActivitiesResponse> calendarioActividadesFilAgendaByFiltroCall = [];
 int contLstAgendaByFiltroCal = 0;
 bool buscaXCalendarioCal = false;
 
+/*
 class CalendarioActividadesByFiltroView extends StatefulWidget {
   const CalendarioActividadesByFiltroView(Key? key) : super(key: key);
 
@@ -814,6 +815,370 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+*/
+
+class CalendarioActividadesByFiltroView extends StatefulWidget {
+  const CalendarioActividadesByFiltroView({super.key});
+
+  @override
+  State<CalendarioActividadesByFiltroView> createState() =>
+      _CalendarioActividadesByFiltroViewState();
+}
+
+class _CalendarioActividadesByFiltroViewState extends State<CalendarioActividadesByFiltroView> {
+  final ValueNotifier<bool> muestraCargaLocal = ValueNotifier(false);
+  final TextEditingController filtroAgendaTxt = TextEditingController();
+  final ScrollController scrollListaClt = ScrollController();
+
+  late ActivitiesBloc actBloc;
+  late GenericBloc gnrBloc;
+  late ThemeProvider themeProvider;
+
+  CalendarFormat calendarFormat = CalendarFormat.week;
+  ColorsApp objColorsApp = ColorsApp();
+  List<DateTime> _datesFiltro = [];
+  List<bool> toggleValues = [true, false];
+
+  DateTime selectedDay = DateTime.now();
+  DateTime focusedDay = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      gnrBloc = Provider.of<GenericBloc>(context, listen: false);
+      actBloc = Provider.of<ActivitiesBloc>(context, listen: false);
+
+      await _cargarActividadesInicial();
+    });
+  }
+
+  Future<void> _cargarActividadesInicial() async {
+    muestraCargaLocal.value = true;
+    gnrBloc.setMuestraCarga(true);
+
+    try {
+      ActivitiesPageModel rsp = await ActivitiesService()
+          .getActivitiesByRangoFechas('mem', 0);
+      actBloc.setLstActividades(rsp.activities.data);
+    } finally {
+      gnrBloc.setMuestraCarga(false);
+      muestraCargaLocal.value = false;
+    }
+  }
+
+  Future<void> _buscarPorFiltro(String filtro) async {
+    muestraCargaLocal.value = true;
+    gnrBloc.setMuestraCarga(true);
+
+    final listaOriginal = actBloc.state.lstActivitiesResp.isNotEmpty
+        ? actBloc.state.lstActivitiesResp
+        : actBloc.state.lstActivities;
+
+    if (filtro.isEmpty) {
+      actBloc.setLstActividades(listaOriginal);
+    } else {
+      final filtradas = listaOriginal.where((a) {
+        final texto = filtro.toUpperCase();
+        return (a.leadName?.toUpperCase().contains(texto) ?? false) ||
+               (a.summary?.toUpperCase().contains(texto) ?? false) ||
+               a.activityTypeId.name.toUpperCase().contains(texto);
+      }).toList();
+
+      actBloc.setLstActividades(filtradas);
+    }
+
+    gnrBloc.setMuestraCarga(false);
+    muestraCargaLocal.value = false;
+  }
+
+  Future<void> _cargarPorFechas(List<DateTime> fechas) async {
+    if (fechas.isEmpty) return;
+
+    muestraCargaLocal.value = true;
+    gnrBloc.setMuestraCarga(true);
+
+    try {
+      ActivitiesPageModel rsp = await ActivitiesService()
+          .getActivitiesByRangoFechas(fechas, objDatumCrmLead?.id ?? 0);
+      actBloc.setLstActividades(rsp.activities.data);
+    } finally {
+      gnrBloc.setMuestraCarga(false);
+      muestraCargaLocal.value = false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    themeProvider = Provider.of<ThemeProvider>(context);
+    gnrBloc = Provider.of<GenericBloc>(context);
+    actBloc = Provider.of<ActivitiesBloc>(context);
+
+    final size = MediaQuery.of(context).size;
+
+    return BlocBuilder<ActivitiesBloc, ActivitiesState>(
+      builder: (context, stateAct) {
+        return ValueListenableBuilder<bool>(
+          valueListenable: muestraCargaLocal,
+          builder: (context, cargando, _) {
+            return Container(
+              width: size.width,
+              height: size.height,
+              color: Colors.transparent,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    _buildToggleButtons(),
+                    if (toggleValues[0]) _buildTableCalendar(size),
+                    if (toggleValues[1]) _buildRangePicker(size),
+                    _buildSearchBar(),
+                    const SizedBox(height: 10),
+
+                    if (cargando)
+                      Center(
+                        child: Image.asset(
+                          "assets/gifs/gif_carga.gif",
+                          height: size.width * 0.5,
+                        ),
+                      )
+                    else if (stateAct.lstActivities.isEmpty)
+                      _buildEmptyState(size)
+                    else
+                      _buildListaActividades(size, stateAct.lstActivities),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildToggleButtons() {
+    return ToggleButtons(
+      borderColor: Colors.purple,
+      fillColor: Colors.purple,
+      selectedBorderColor: Colors.purple,
+      selectedColor: Colors.white,
+      borderRadius: BorderRadius.circular(20),
+      onPressed: (int index) {
+        setState(() {
+          toggleValues = List.generate(2, (i) => i == index);
+        });
+
+        if (index == 0) {
+          _cargarPorFechas([DateTime.now()]);
+        } else {
+          _cargarPorFechas([DateTime.now().subtract(const Duration(days: 30)), DateTime.now()]);
+        }
+      },
+      isSelected: toggleValues,
+      children: const [
+        Padding(padding: EdgeInsets.symmetric(horizontal: 12), child: Text("Semana")),
+        Padding(padding: EdgeInsets.symmetric(horizontal: 12), child: Text("Mes")),
+      ],
+    );
+  }
+
+  Widget _buildTableCalendar(Size size) {
+    return Container(
+      color: Colors.transparent,
+      width: size.width * 0.95,
+      height: size.height * 0.2,
+      child: TableCalendar(
+        headerStyle: const HeaderStyle(formatButtonVisible: false),
+        calendarFormat: calendarFormat,
+        firstDay: DateTime.utc(2010, 10, 16),
+        lastDay: DateTime(3000),
+        focusedDay: focusedDay,
+        selectedDayPredicate: (day) => isSameDay(day, selectedDay),
+        onDaySelected: (selected, focused) {
+          if (!isSameDay(selectedDay, selected)) {
+            selectedDay = selected;
+            focusedDay = focused;
+            _cargarPorFechas([selected]);
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildRangePicker(Size size) {
+    return Container(
+      color: Colors.transparent,
+      width: size.width * 0.95,
+      height: size.height * 0.36,
+      child: CalendarDatePicker2(
+        config: CalendarDatePicker2Config(calendarType: CalendarDatePicker2Type.range),
+        value: _datesFiltro,
+        onValueChanged: (dates) async {
+          _datesFiltro = dates;
+          if (dates.length > 1) {
+            await _cargarPorFechas(dates);
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: TextField(
+        controller: filtroAgendaTxt,
+        onEditingComplete: () {
+          FocusScope.of(context).unfocus();
+          _buscarPorFiltro(filtroAgendaTxt.text);
+        },
+        decoration: InputDecoration(
+          labelText: 'Buscar agendas...',
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.cancel),
+            onPressed: () {
+              filtroAgendaTxt.clear();
+              _buscarPorFiltro('');
+            },
+          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildListaActividades(Size size, List<DatumActivitiesResponse> actividades) {
+    return Container(
+      color: Colors.transparent,
+      width: size.width,
+      height: size.height * (toggleValues[0] ? 0.54 : 0.43),
+      child: ListView.builder(
+        controller: scrollListaClt,
+        itemCount: actividades.length,
+        itemBuilder: (_, index) {
+          final act = actividades[index];
+          return Slidable(
+            startActionPane: ActionPane(
+              motion: const ScrollMotion(),
+              children: [
+                SlidableAction(
+                  onPressed: (cont) async {
+                    //if (calendarioActividadesFilAgendaByFiltroCall[index].cerrado) {
+                    if (actividades[index].cerrado) {
+                      showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder:
+                            (BuildContext context) {
+                          return ContentAlertDialog(
+                              onPressed: () {
+                                Navigator.of(
+                                        context)
+                                    .pop();
+                              },
+                              onPressedCont: () {
+                                Navigator.of(
+                                        context)
+                                    .pop();
+                              },
+                              tipoAlerta:
+                                  TipoAlerta()
+                                      .alertAccion,
+                              numLineasTitulo: 2,
+                              numLineasMensaje: 2,
+                              titulo: 'Error',
+                              mensajeAlerta:
+                                  'Esta actividad ya fue cerrada.');
+                        },
+                      );
+
+                      return;
+                    }
+
+                    const storage =
+                        FlutterSecureStorage();
+
+                    await storage.write(
+                        key: 'idMem',
+                        value: actividades[index].resId.toString());//calendarioActividadesFilAgendaByFiltroCall[index].resId.toString());
+
+                    await storage.write(
+                        key: 'fecMem',
+                        value: DateFormat('yyyy-MM-dd', 'es').format(actividades[index].dateDeadline));//calendarioActividadesFilAgendaByFiltroCall[index].dateDeadline));
+
+                    idActividadSeleccionadaByFiltroCal = actividades[index].id;//calendarioActividadesFilAgendaByFiltroCall[index].id;
+
+                    objCalendarioActividadescogidaByFiltroCal = actividades[index];//calendarioActividadesFilAgendaByFiltroCall[index];
+
+                    //ignore: use_build_context_synchronously
+                    context.push(objRutasGen
+                        .rutaPlanificacionActividades);
+                    //context.push(objRutasGen.rutaPlanificacionActividades);
+                  },
+                  backgroundColor: objColorsApp.fucsia,
+                  foregroundColor: Colors.white,
+                  icon: Icons.account_circle,
+                  label: 'Cierre de Calendario de Actividades',
+                )
+              ]),
+            child: _buildActividadCard(act, size)
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildActividadCard(DatumActivitiesResponse act, Size size) {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      color: act.cerrado ? Colors.grey[300] : Colors.white,
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: act.cerrado ? Colors.black26 : Colors.grey[200],
+          child: //const Icon(Icons.person),
+          Stack(children: [
+                                        Icon(Icons.person, color: themeProvider.themeMode.index == 2 ? Colors.black : Colors.white,),
+                                        //if (!calendarioActividadesFilAgendaByFiltroCall[index].cerrado && DateFormat('yyyy-MM-dd','es').format(calendarioActividadesFilAgendaByFiltroCall[index].dateDeadline) == DateFormat('yyyy-MM-dd','es').format(DateTime.now()))
+                                        if (!act.cerrado && DateFormat('yyyy-MM-dd','es').format(act.dateDeadline) == DateFormat('yyyy-MM-dd','es').format(DateTime.now()))
+                                          Positioned(
+                                            top: size.height * 0.01,
+                                            left: size.width * 0.02,
+                                            child: Container(
+                                              color: Colors.transparent,
+                                              width: size.width * 0.05,
+                                              height: size.height * 0.02,
+                                              child: const IndicatorPointWidget(null)
+                                            ),
+                                          )
+                                      ]),
+        ),
+        title: Text(act.summary ?? '', maxLines: 2, overflow: TextOverflow.ellipsis),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Prospecto: ${act.leadName}", style: const TextStyle(fontSize: 12)),
+            Text("Tipo: ${act.activityTypeId.name}", style: const TextStyle(fontSize: 12)),
+            Text("Fecha: ${DateFormat('yyyy-MM-dd').format(act.dateDeadline)}",
+                style: const TextStyle(fontSize: 12)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(Size size) {
+    return SizedBox(
+      height: size.height * 0.25,
+      child: const Center(
+        child: Text("No existen actividades agendadas para la fecha seleccionada",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.bold)),
       ),
     );
   }
