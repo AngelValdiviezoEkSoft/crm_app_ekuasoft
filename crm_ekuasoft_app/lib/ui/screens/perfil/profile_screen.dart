@@ -108,7 +108,7 @@ class ProfileScreenGen extends StatelessWidget {
                 onTap: () {
                   context.push(objRutasGen.rutaProf);
                 },
-                child: const Icon(Icons.edit, color: Colors.white)
+                child: const Icon(Icons.visibility, color: Colors.white)
               ),
             ],
           ),
