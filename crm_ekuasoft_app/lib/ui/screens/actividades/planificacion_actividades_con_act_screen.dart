@@ -823,7 +823,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                   ),
                                 ),
                               ),
-                                Expanded(
+                              Expanded(
                                 child: Container(
                                   color: tabAccionesAct == 2
                                       ? Colors.white
@@ -899,7 +899,6 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                   ),
                                 ),
                               ),
-                            
                             ],
                           ),
                         ],
@@ -999,6 +998,8 @@ class PlanActiv extends StatefulWidget {
 
 class PlanActivStateTwo extends State<PlanActiv> {
 
+  bool muestraActividadesDiarias = true;
+
   void iniciarCronometro() {
     if (!_corriendoAct) {
       _corriendoAct = true;
@@ -1029,12 +1030,10 @@ class PlanActivStateTwo extends State<PlanActiv> {
 
   @override
   void initState() {
-    super.initState();
-
+    super.initState();    
+    
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if(actividadesFilAgendaPlanAct.isEmpty && lstActividadesDiariasByProspecto.isEmpty){
-        await cargaActividadesByCliente();
-      }
+      await cargaActividadesByCliente();
       //ignore: use_build_context_synchronously
       final gnrBloc = Provider.of<GenericBloc>(context, listen: false);
       gnrBloc.setMuestraCarga(false);
@@ -1044,42 +1043,78 @@ class PlanActivStateTwo extends State<PlanActiv> {
 
   Future<void> cargaActividadesByCliente() async {
     try {
-      final gnrBloc = Provider.of<GenericBloc>(context, listen: false);
-      gnrBloc.setIniciaCarga(true);
-      
-      ActivitiesPageModel? objRspFinal = await ActivitiesService().getActivitiesDiariasByProspecto(null, objDatumCrmLead?.id ?? 0);
-
-      if(objRspFinal != null && actividadesFilAgendaPlanAct.isEmpty && lstActividadesDiariasByProspecto.isEmpty){
-        lstActividadesDiariasByProspecto = objRspFinal.activities.data;
-        actividadesFilAgendaPlanAct = objRspFinal.objMailAct.data;
+      if(muestraActividadesDiarias){
+        final gnrBloc = Provider.of<GenericBloc>(context, listen: false);
+        gnrBloc.setIniciaCarga(true);
         lstTipoActividades = [];
-        objDatumCrmLead = objRspFinal.lead;        
-      }
+        lstActividadesDiariasByProspecto = [];
+        actividadesFilAgendaPlanAct = [];
+        
+        ActivitiesPageModel? objRspFinal = await ActivitiesService().getActivitiesDiariasByProspecto(null, objDatumCrmLead?.id ?? 0);
 
-      MailActivityTypeAppModel? objRspFinalTpAct = await ActivitiesService().getTipoActividades();
-
-      if(objRspFinalTpAct != null){
-        for(int i = 0; i < objRspFinalTpAct.data.length; i++){
-          lstTipoActividades.add(objRspFinalTpAct.data[i].name ?? '');
+        if(objRspFinal != null){
+          lstActividadesDiariasByProspecto = objRspFinal.activities.data;
+          actividadesFilAgendaPlanAct = objRspFinal.objMailAct.data;
+          
+          objDatumCrmLead = objRspFinal.lead;        
         }
 
-        if(actPlanSelectAct.isEmpty && lstTipoActividades.isNotEmpty){
-          actPlanSelectAct = lstTipoActividades.first;
+        MailActivityTypeAppModel? objRspFinalTpAct = await ActivitiesService().getTipoActividades();
+
+        if(objRspFinalTpAct != null){
+          for(int i = 0; i < objRspFinalTpAct.data.length; i++){
+            lstTipoActividades.add(objRspFinalTpAct.data[i].name ?? '');
+          }
+
+          if(actPlanSelectAct.isEmpty && lstTipoActividades.isNotEmpty){
+            actPlanSelectAct = lstTipoActividades.first;
+          }
         }
+
+        gnrBloc.setIniciaCarga(false);
       }
+      else{
+        final gnrBloc = Provider.of<GenericBloc>(context, listen: false);
+        gnrBloc.setIniciaCarga(true);
 
-      gnrBloc.setIniciaCarga(false);
+        DateTime now = DateTime.now();
 
+        // Primer día del mes actual
+        DateTime firstDay = DateTime(now.year, now.month, 1);
+
+        // Último día del mes actual
+        DateTime lastDay = DateTime(now.year, now.month + 1, 0);
+
+        // Lista con ambos registros
+        List<DateTime> fechas = [firstDay, lastDay];
+        
+        ActivitiesPageModel? objRspFinal = await ActivitiesService().getActivitiesDiariasByProspecto(fechas, objDatumCrmLead?.id ?? 0);
+
+        if(objRspFinal != null){
+          lstActividadesDiariasByProspecto = [];
+          actividadesFilAgendaPlanAct = [];
+          
+          lstActividadesDiariasByProspecto = objRspFinal.activities.data;
+          actividadesFilAgendaPlanAct = objRspFinal.objMailAct.data;          
+          //objDatumCrmLead = objRspFinal.lead;
+        }
+
+        gnrBloc.setIniciaCarga(false);
+      }
     } catch (_) {
       
     }
   }
 
   @override
+  void dispose(){    
+    muestraActividadesDiarias = true;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    //ScrollController scrollListaClt = ScrollController();
-
     final gnrBloc = Provider.of<GenericBloc>(context);
     gnrBloc.setMuestraCarga(true);
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -1115,10 +1150,44 @@ class PlanActivStateTwo extends State<PlanActiv> {
                 
                     if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga)
                     Container(
-                      width: size.width * 0.95,
-                      height: size.height * 0.07,
+                      width: size.width * 0.85,
+                      height: size.height * 0.05,
                       color: Colors.transparent,
-                      child: const Text('Agendado para hoy', style: TextStyle(color: Colors.green, fontSize: 25, fontWeight: FontWeight.bold),),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: size.width * 0.055,
+                            height: size.height * 0.07,
+                            color: Colors.transparent,
+                            alignment: Alignment.centerLeft,
+                            child: Checkbox(
+                              onChanged: (value) {
+                                
+                                muestraActividadesDiarias = !muestraActividadesDiarias;
+                            
+                                cargaActividadesByCliente();
+                            
+                                setState(() {});
+                            
+                              },
+                              value: muestraActividadesDiarias,
+                              checkColor: Colors.green,
+                              activeColor: Colors.white,
+                              //focusColor: Colors.red,
+                            ),
+                          ),
+
+                          SizedBox(width: size.width * 0.025,),
+                                  
+                          Container(
+                            width: size.width * 0.75,
+                            height: size.height * 0.07,
+                            color: Colors.transparent,
+                            alignment: Alignment.centerLeft,
+                            child: const Text('Agendado para hoy', style: TextStyle(color: Colors.green, fontSize: 25, fontWeight: FontWeight.bold),),
+                          ),
+                        ],
+                      ),
                     ),
 
                     if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga)
@@ -1133,6 +1202,7 @@ class PlanActivStateTwo extends State<PlanActiv> {
                             width: size.width * 0.35,
                             height: size.height * 0.07,
                             color: Colors.transparent,
+                            alignment: Alignment.center,
                             child: const Text('Seleccionar todos', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
                           ),
 

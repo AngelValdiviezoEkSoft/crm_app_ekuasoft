@@ -449,7 +449,7 @@ class ActivitiesService extends ChangeNotifier{
             }
         }
         catch(ex){
-          print(ex);
+          //print(ex);
         }
       }
 
