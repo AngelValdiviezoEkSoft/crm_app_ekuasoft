@@ -1376,6 +1376,23 @@ class ActivitiesService extends ChangeNotifier{
         ];
       }
 
+      if(nombre != null && nombre.isNotEmpty && phone != null && phone.isNotEmpty){
+        String newPhone = limpiarNumero(phone);
+
+        models = [];
+        models = [
+          {
+            "model": modeloConsulta,
+            "filters": [
+              ["user_id", "=", objLogDecode['result']['uid']],
+              ["res_model_id", "=", resModelId],
+              ["lead_name","ilike",nombre.toLowerCase()],
+              ["lead_phone","ilike",newPhone],
+            ]
+          },
+        ];
+      }
+
       if(nombre != null && nombre.isNotEmpty && idTpAct != null && idTpAct != 0 && (phone == null || phone.isEmpty)){
         models = [];
         models = [
@@ -1410,7 +1427,7 @@ class ActivitiesService extends ChangeNotifier{
       }
 
       if(nombre != null && nombre.isNotEmpty && phone != null && phone.isNotEmpty
-      && idTpAct != null){
+      && idTpAct != null && idTpAct != 0){
         
         models = [];
 
@@ -2053,7 +2070,7 @@ class ActivitiesService extends ChangeNotifier{
       
         var rspValidacion = json.decode(response.body);
 
-        if(rspValidacion['result']['mensaje'] != null && (rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenNoValido || rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenExpirado)){
+        if(rspValidacion['result']['mensaje'] != null && (rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenNoValido) || rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenExpirado))){
           await tokenManager.checkTokenExpiration();
           await registroActividades(objActividad);
         }
@@ -2210,7 +2227,7 @@ class ActivitiesService extends ChangeNotifier{
       
         var rspValidacion = json.decode(response.body);
 
-        if(rspValidacion['result']['mensaje'] != null && (rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenNoValido || rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenExpirado)){
+        if(rspValidacion['result']['mensaje'] != null && (rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenNoValido) || rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenExpirado))){
           await tokenManager.checkTokenExpiration();
           await registroListadoActividades(lstActividades);
         }

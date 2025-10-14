@@ -206,7 +206,7 @@ class ProspectoTypeService extends ChangeNotifier{
 
       var rspValidacion = json.decode(response.body);
 
-      if(rspValidacion['result']['mensaje'] != null && (rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenNoValido || rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenExpirado)){
+      if(rspValidacion['result']['mensaje'] != null && (rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenNoValido) || rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenExpirado))){
         await tokenManager.checkTokenExpiration();
         await getProspectoRegistrado(phoneProsp, codIsoPhone, dialCodePhone);
       }
@@ -319,7 +319,7 @@ class ProspectoTypeService extends ChangeNotifier{
       
         var rspValidacion = json.decode(response.body);
 
-        if(rspValidacion['result']['mensaje'] != null && (rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenNoValido || rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenExpirado)){
+        if(rspValidacion['result']['mensaje'] != null && (rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenNoValido) || rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenExpirado))){
           await tokenManager.checkTokenExpiration();
           await registraProspecto(objProspecto);
         } 
@@ -554,7 +554,13 @@ class ProspectoTypeService extends ChangeNotifier{
       
         var rspValidacion = json.decode(response.body);
 
-        if(rspValidacion['result']['mensaje'] != null && (rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenNoValido || rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenExpirado)){
+        String msmRsp = '';
+
+        if(rspValidacion['result']['mensaje'] != null){
+          msmRsp = rspValidacion['result']['mensaje'];
+        }
+
+        if(msmRsp.isNotEmpty && (msmRsp.toLowerCase().contains(MensajeValidacion().tockenNoValido) || msmRsp.toLowerCase().contains(MensajeValidacion().tockenExpirado))){
           await tokenManager.checkTokenExpiration();
           await editaProspecto(objProspecto);
         } 

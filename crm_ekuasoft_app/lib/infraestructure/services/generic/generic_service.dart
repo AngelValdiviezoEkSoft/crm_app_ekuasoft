@@ -65,8 +65,8 @@ class GenericService extends ChangeNotifier {
     //if(rspValidacion['result']['mensaje'] == 'El tocken no es valido'){
     if(rspValidacion['result']['mensaje'] != null && 
       (
-        rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenNoValido || 
-        rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenExpirado
+        rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenNoValido) || 
+        rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenExpirado)
       )){
       await tokenManager.checkTokenExpiration();
       await getModelos(objReq, modelBusca);
@@ -123,8 +123,8 @@ class GenericService extends ChangeNotifier {
 
     if(rspValidacion['result']['mensaje'] != null && 
       (
-        rspValidacion['result']['mensaje'].toString().trim().toLowerCase().contains(MensajeValidacion().tockenNoValido) || 
-        rspValidacion['result']['mensaje'].toString().trim().toLowerCase().contains(MensajeValidacion().tockenExpirado)
+        rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenNoValido) || 
+        rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenExpirado)
       )){
       await tokenManager.checkTokenExpiration();
       await getModelos(objReq, modelBusca);
@@ -179,7 +179,7 @@ class GenericService extends ChangeNotifier {
     var rspValidacion = json.decode(response.body);
 
     //if(rspValidacion['result']['mensaje'] == 'El tocken no es valido'){
-    if(rspValidacion['result']['mensaje'] != null && (rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenNoValido || rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenExpirado)){
+    if(rspValidacion['result']['mensaje'] != null && (rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenNoValido) || rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenExpirado))){
       await tokenManager.checkTokenExpiration();
       await getMultiModelos(objReq, modelo);
     }
@@ -228,7 +228,7 @@ class GenericService extends ChangeNotifier {
     var rspValidacion = json.decode(response.body);
 
     //if(rspValidacion['result']['mensaje'] == 'El tocken no es valido'){
-    if(rspValidacion['result']['mensaje'] != null && (rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenNoValido || rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenExpirado)){
+    if(rspValidacion['result']['mensaje'] != null && (rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenNoValido) || rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenExpirado))){
       await tokenManager.checkTokenExpiration();
       await getMultiModelosGen(objReq, lstModels);
     }
@@ -301,7 +301,7 @@ class GenericService extends ChangeNotifier {
     var rspValidacion = json.decode(response.body);
 
     //if(rspValidacion['result']['mensaje'] == 'El tocken no es valido'){
-    if(rspValidacion['result']['mensaje'] != null && (rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenNoValido || rspValidacion['result']['mensaje'].toString().trim().toLowerCase() == MensajeValidacion().tockenExpirado)){
+    if(rspValidacion['result']['mensaje'] != null && (rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenNoValido) || rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenExpirado))){
       await tokenManager.checkTokenExpiration();
       await getMultiModelosGen(objReq, lstModels);
     }

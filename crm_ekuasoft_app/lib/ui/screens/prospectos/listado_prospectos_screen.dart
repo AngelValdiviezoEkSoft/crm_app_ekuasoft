@@ -39,6 +39,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
   late Future<String> _futureProspectos;
   int selectedYear = DateTime.now().year;
   int? _mesSeleccionado; // mes del 1 al 12  
+  bool muestraContador = false;
 
   bool showButtonScrool = false;
   final ScrollController scrollListaClt = ScrollController();
@@ -100,8 +101,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
   Future<void> fetchPage(int pageKey) async {
      try {
-      final url = Uri.parse(
-          "https://api.ejemplo.com/leads?page=$pageKey&size=$_pageSize"); // API ficticia
+      final url = Uri.parse("https://api.ejemplo.com/leads?page=$pageKey&size=$_pageSize"); // API ficticia
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
@@ -373,12 +373,14 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                 refreshDataByFiltro(objRsp);
                                 _mesSeleccionado = null;//DateTime.now().month;
                                 selectedYear = DateTime.now().year;
+                                muestraContador = false;
                                 
                                 setState(() {
                                   
                                 });
                               },
-                              icon: Icon(Icons.cancel,
+                              icon: Icon(
+                                Icons.cancel,
                                 size: 20,
                                 color: themeProvider.themeMode.index == 2 ? Colors.white : AppLightColors().gray900PrimaryText,
                               ),
@@ -432,6 +434,8 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                             );
                           }),
                           onChanged: (value) {
+                            muestraContador = true;
+
                             _mesSeleccionado = value;
                             
                             refreshDataByMes(_mesSeleccionado ?? 0, objRspGen, _mesSeleccionado == 13);
@@ -461,20 +465,52 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                           }).toList(),                                                    
                           onChanged: (value) {
                             selectedYear = value!;
+                            muestraContador = true;
                             refreshDataByMes(_mesSeleccionado ?? 0, objRspGen, _mesSeleccionado == 13);                            
                           },
                         ),
                       ),
 
+                      SizedBox(height: size.height * 0.02,),
 
-                      if(prospectosFiltrados.isNotEmpty)         
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          border: Border.all(color: const Color.fromARGB(255, 217, 217, 217)),
+                          borderRadius: const BorderRadius.all(Radius.circular(10))
+                        ),                        
+                        width: size.width * 0.96,
+                        height: size.height * 0.04,
+                        alignment: Alignment.center,
+                        child: SelectableText.rich(
+                            TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: 'Prospectos registrados: ',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white)
+                                  ),
+                                  TextSpan(
+                                    text: '${prospectosFiltrados.length}',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.blue)
+                                  ),
+                                ]
+                              ),
+                          )
+                      
+                      ),
+
+                      //if(muestraContador && prospectosFiltrados.isNotEmpty)
                       SizedBox(height: size.height * 0.02,),
 
                       if(prospectosFiltrados.isNotEmpty) 
                       Container(
                         color: Colors.transparent,
                         width: size.width,
-                        height: size.height * 0.52,
+                        height: size.height * 0.47,
                         child: Scaffold(
                           /*
                           body: CustomRefreshIndicator(
@@ -810,19 +846,18 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                       ]
                                     ),
                                     child: ListTile(
-                                        title: Container(
+                                      title: Container(
                                         color: Colors.transparent,
                                         width: size.width * 0.98,
                                         child: Container(
-                                        decoration: BoxDecoration(
+                                          decoration: BoxDecoration(
                                             color: Colors.transparent,
-                                            border: Border.all(
-                                                color: const Color.fromARGB(255, 217, 217, 217)),
+                                            border: Border.all(color: const Color.fromARGB(255, 217, 217, 217)),
                                             borderRadius: const BorderRadius.all(Radius.circular(10))
                                           ),
-                                        width: size.width * 0.98,
-                                        height: size.height * 0.195,
-                                        child: Row(
+                                          width: size.width * 0.98,
+                                          height: size.height * 0.195,
+                                          child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
@@ -1044,7 +1079,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                       if(prospectosFiltrados.isEmpty && !listaVaciaPrp)
                       Container(
                         width: size.width * 0.75,
-                        height: size.height * 0.75,
+                        height: size.height * 0.65,
                         color: Colors.transparent,
                         alignment: Alignment.topCenter,
                         child: ConsultaVaciaScreen(null, msmCabBand: 'Atención', msmBand: 'No existe el prospecto buscado', imgCabBand: 'gifs/consulta_vacia.gif',)
@@ -1053,7 +1088,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                       if(prospectosFiltrados.isEmpty && listaVaciaPrp)
                       Container(
                         width: size.width * 0.75,
-                        height: size.height * 0.75,
+                        height: size.height * 0.65,
                         color: Colors.transparent,
                         alignment: Alignment.topCenter,
                         child: ConsultaVaciaScreen(null, msmCabBand: 'Atención', msmBand: 'No existe información para mostrar', imgCabBand: 'gifs/consulta_vacia.gif',)

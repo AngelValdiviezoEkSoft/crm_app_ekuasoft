@@ -242,10 +242,20 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                           height: size.height * 0.09,
                           child: TextFormField(
                             controller: nombreProbFiltroTxt,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               labelText: 'Nombre de oportunidad',
-                              border: OutlineInputBorder(),
-                              suffixIcon: Icon(Icons.person),
+                              border: const OutlineInputBorder(),
+                              suffixIcon: const Icon(Icons.person),
+                              suffix: IconButton(
+                                onPressed: () {
+                                  nombreProbFiltroTxt.text = '';
+                                },
+                                icon: Icon(
+                                  size: 18,
+                                  Icons.close,
+                                  color: AppLightColors().gray900PrimaryText
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -257,12 +267,24 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                           height: size.height * 0.09,
                           child: TextFormField(
                             controller: cellFiltroTxt,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               labelText: 'Número celular',
-                              border: OutlineInputBorder(),
-                              suffixIcon: Icon(Icons.phone_iphone_outlined),
+                              border: const OutlineInputBorder(),
+                              suffixIcon: const Icon(Icons.phone_iphone_outlined),
+                              suffix: IconButton(
+                                onPressed: () {
+                                  cellFiltroTxt.text = '';
+                                },
+                                icon: Icon(
+                                  size: 18,
+                                  Icons.close,
+                                  color: AppLightColors().gray900PrimaryText
+                                ),
+                              ),
+                            
                             ),
                             keyboardType: TextInputType.phone,
+                            
                             /*
                             onChanged: (value) {
                               setState(() {
@@ -600,106 +622,6 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
     );
   }
 
-  // Widget para los botones de Mes/Semana
-  Widget buildToggleButton(String text, bool isSelectedByFiltro) {
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-      child: ElevatedButton(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          /*
-          primary: isSelectedByFiltro ? Colors.blue : Colors.grey[200],
-          onPrimary: isSelectedByFiltro ? Colors.white : Colors.black,
-          */
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-        ),
-        child: Text(text),
-      ),
-    );
-  }
-
-  // Widget para cada elemento de la agenda
-  Widget buildAgendaItem() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-      child: Card(
-        elevation: 1,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: ListTile(
-          leading: CircleAvatar(
-            backgroundColor: Colors.grey[300],
-            child: const Icon(Icons.person),
-          ),
-          title: const Text('Randy Rudolph'),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              //Text('RUC/C: 095011183001', style: TextStyle(fontSize: 12)),
-              RichText(
-                text: const TextSpan(
-                  children: [
-                    TextSpan(
-                      text: 'RUC/C:',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                      ),
-                    ),
-                    TextSpan(
-                      text: '095011183001',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              //Text('COD: 59345', style: TextStyle(fontSize: 12)),
-
-              RichText(
-                text: const TextSpan(
-                  children: [
-                    TextSpan(
-                      text: 'COD:',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                      ),
-                    ),
-                    TextSpan(
-                      text: '59345',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-
-              const Text('Tipo de Agenda: Llamada', style: TextStyle(fontSize: 12)),
-              const Text('Activo', style: TextStyle(fontSize: 12, color: Colors.green)),
-            ],
-          ),
-          trailing: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('10:20 AM', style: TextStyle(fontWeight: FontWeight.bold)),
-              Icon(Icons.phone, color: Colors.grey),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }
 
 Future<String> gtTipoActividades() async {
