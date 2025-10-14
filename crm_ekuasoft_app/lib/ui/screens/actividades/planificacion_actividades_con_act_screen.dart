@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:crm_ekuasoft_app/domain/domain.dart';
 import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
@@ -23,7 +24,7 @@ bool seleccionaTodasActividades = false;
 bool seleccionaUnaActividad = false;
 int activitySelected = 0;
 List<MailActivityTypeDatumAppModel> actividadesFilAgendaPlanAct = [];
-List<String> lstActividadesAct = [];
+List<String> lstTipoActividades = [];
 int idProspectoAct = 0;
 Timer? _timerAct;
 int _segundosAct = 0;
@@ -72,7 +73,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
     actualizaListaActiv= false;
     actividadesFiltradasAct = [];
     idProspectoAct = 0;
-    lstActividadesAct = [];
+    lstTipoActividades = [];
     _segundosAct = 0;
     _corriendoAct = false;
     actividadesFilAgendaPlanAct = [];
@@ -259,7 +260,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                   labelText: 'Seleccione el tipo de actividad...',
                                                 ),
                                                 //value: campSelect,
-                                                items: lstActividadesAct.map((activityPrsp) =>
+                                                items: lstTipoActividades.map((activityPrsp) =>
                                                   DropdownMenuItem(
                                                       value: activityPrsp,
                                                       child: Text(activityPrsp, overflow: TextOverflow.ellipsis, maxLines: 1, style: const TextStyle(fontSize: 12),),                                              
@@ -301,28 +302,22 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                             TextFormField(
                                               controller: descripcionActTxtAct,
                                               onChanged: (value) {
-                                                planActiv.setHeightModalPlanAct(
-                                                    0.92);
+                                                planActiv.setHeightModalPlanAct(0.92);
                                               },
                                               onTap: () {
-                                                planActiv.setHeightModalPlanAct(
-                                                    0.92);
+                                                planActiv.setHeightModalPlanAct(0.92);
                                               },
                                               onEditingComplete: () {
-                                                planActiv.setHeightModalPlanAct(
-                                                    0.65);
+                                                planActiv.setHeightModalPlanAct(0.65);
                                                 FocusScope.of(context).unfocus();
                                               },
                                               onTapOutside: (event) {
-                                                planActiv.setHeightModalPlanAct(
-                                                    0.65);
+                                                planActiv.setHeightModalPlanAct(0.65);
                                                 FocusScope.of(context).unfocus();
                                               },
                                               maxLines: 4,
-                                              decoration:
-                                                  const InputDecoration(
-                                                labelText:
-                                                    'Ingrese su descripción...',
+                                              decoration: const InputDecoration(
+                                                labelText: 'Ingrese su descripción...',
                                                 border: OutlineInputBorder(),
                                               ),
                                             ),
@@ -398,6 +393,13 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                     }
             
                                                     int activityTypeIdFrm = 0;
+
+                                                    MailActivityTypeAppModel? objRspFinalTpAct = await ActivitiesService().getTipoActividades();
+
+                                                    if(objRspFinalTpAct != null){
+                                                      actividadesFilAgendaPlanAct = [];
+                                                      actividadesFilAgendaPlanAct = objRspFinalTpAct.data;
+                                                    }
             
                                                     for(int i = 0; i < actividadesFilAgendaPlanAct.length; i++){
                                                       if(campSelect == actividadesFilAgendaPlanAct[i].name){
@@ -451,6 +453,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                     );
             
                                                     showDialog(
+                                                      //ignore: use_build_context_synchronously
                                                       context: context,
                                                       barrierDismissible: false,
                                                       builder: (context) => SimpleDialog(
@@ -638,7 +641,52 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                   ),
                   SizedBox(
                     width: size.width * 0.04,
-                  )
+                  ),
+
+                  Tooltip(
+                    message: 'Ir al siguiente prospecto',
+                    child: GestureDetector(
+                      onTap: () async {
+                        if(objDatumCrmLead == null) return;
+                        
+                        var lstProspStr = await ProspectoTypeService().getProspectos();
+                        var objLogDecode = json.decode(lstProspStr);
+                    
+                        ProspectoResponseModel apiResponse = ProspectoResponseModel.fromJson(objLogDecode);
+                    
+                        List<DatumCrmLead> prospectosFiltradosNext = apiResponse.result.data.crmLead.data;                      
+                    
+                        for(int i = 0; i < prospectosFiltradosNext.length; i++){
+                          if(prospectosFiltradosNext[i].id == objDatumCrmLead!.id) {
+                            try{
+                              objDatumCrmLead = prospectosFiltradosNext[i + 1];
+                            }
+                            catch(_){
+                              objDatumCrmLead = prospectosFiltradosNext[0];
+                            }
+                    
+                            //ignore:use_build_context_synchronously
+                            context.pop();
+                    
+                            //ignore:use_build_context_synchronously
+                            context.push(objRutasGen.rutaPlanActivConActiv);
+                    
+                            return;
+                          }
+                        }
+                    
+                      },
+                      child: const Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.white,
+                        size: 25,
+                      )
+                    ),
+                  ),
+
+                  SizedBox(
+                    width: size.width * 0.04,
+                  ),
                 ],
               ),
               body: SingleChildScrollView(
@@ -994,8 +1042,7 @@ class PlanActivStateTwo extends State<PlanActiv> {
 
   }
 
-  
-   Future<void> cargaActividadesByCliente() async {
+  Future<void> cargaActividadesByCliente() async {
     try {
       final gnrBloc = Provider.of<GenericBloc>(context, listen: false);
       gnrBloc.setIniciaCarga(true);
@@ -1005,24 +1052,23 @@ class PlanActivStateTwo extends State<PlanActiv> {
       if(objRspFinal != null && actividadesFilAgendaPlanAct.isEmpty && lstActividadesDiariasByProspecto.isEmpty){
         lstActividadesDiariasByProspecto = objRspFinal.activities.data;
         actividadesFilAgendaPlanAct = objRspFinal.objMailAct.data;
-        lstActividadesAct = [];
-        objDatumCrmLead = objRspFinal.lead;
-        
-        for(int i = 0; i < actividadesFilAgendaPlanAct.length; i++){
-          lstActividadesAct.add(actividadesFilAgendaPlanAct[i].name ?? '');
+        lstTipoActividades = [];
+        objDatumCrmLead = objRspFinal.lead;        
+      }
+
+      MailActivityTypeAppModel? objRspFinalTpAct = await ActivitiesService().getTipoActividades();
+
+      if(objRspFinalTpAct != null){
+        for(int i = 0; i < objRspFinalTpAct.data.length; i++){
+          lstTipoActividades.add(objRspFinalTpAct.data[i].name ?? '');
         }
 
-        if(actPlanSelectAct.isEmpty && lstActividadesAct.isNotEmpty){
-          actPlanSelectAct = lstActividadesAct.first;
+        if(actPlanSelectAct.isEmpty && lstTipoActividades.isNotEmpty){
+          actPlanSelectAct = lstTipoActividades.first;
         }
       }
 
       gnrBloc.setIniciaCarga(false);
-/*
-      setState(() {
-        //_mensaje = "¡Datos recibidos!";
-      });
-      */
 
     } catch (_) {
       
@@ -1045,473 +1091,489 @@ class PlanActivStateTwo extends State<PlanActiv> {
           gnrBloc.setMuestraCarga(false);
         }
 
-              String formatearTiempo(int segundos) {
-                int horas = segundos ~/ 3600;
-                int minutos = (segundos % 3600) ~/ 60;
-                int segs = segundos % 60;
-                return '${horas.toString().padLeft(2, '0')}:${minutos.toString().padLeft(2, '0')}:${segs.toString().padLeft(2, '0')}';
-              }
+        String formatearTiempo(int segundos) {
+          int horas = segundos ~/ 3600;
+          int minutos = (segundos % 3600) ~/ 60;
+          int segs = segundos % 60;
+          return '${horas.toString().padLeft(2, '0')}:${minutos.toString().padLeft(2, '0')}:${segs.toString().padLeft(2, '0')}';
+        }
 
-              return !state.muestraCarga 
-              ? 
-                Column(
+        return !state.muestraCarga 
+        ? 
+        Column(
+            children: [
+              Container(
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.all(16),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                
+                    if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga)
                     Container(
-                    decoration: BoxDecoration(
+                      width: size.width * 0.95,
+                      height: size.height * 0.07,
                       color: Colors.transparent,
-                      borderRadius: BorderRadius.circular(10),
+                      child: const Text('Agendado para hoy', style: TextStyle(color: Colors.green, fontSize: 25, fontWeight: FontWeight.bold),),
                     ),
-                    padding: const EdgeInsets.all(16),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+
+                    if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga)
+                    Container(
+                      color: Colors.transparent,
+                      width: size.width * 0.95,
+                      height: size.height * 0.07,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                      
-                          if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga)
                           Container(
-                            width: size.width * 0.95,
+                            width: size.width * 0.35,
                             height: size.height * 0.07,
                             color: Colors.transparent,
-                            child: const Text('Agendado para hoy', style: TextStyle(color: Colors.green, fontSize: 25, fontWeight: FontWeight.bold),),
+                            child: const Text('Seleccionar todos', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
                           ),
 
-                          if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga)
                           Container(
-                            color: Colors.transparent,
-                            width: size.width * 0.95,
+                            width: size.width * 0.25,
                             height: size.height * 0.07,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  width: size.width * 0.35,
-                                  height: size.height * 0.07,
-                                  color: Colors.transparent,
-                                  child: const Text('Seleccionar todos', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
-                                ),
+                            color: Colors.transparent,
+                            child: Checkbox(
+                              onChanged: (value) {
+                                seleccionaTodasActividades = !seleccionaTodasActividades;
+                                seleccionaUnaActividad = seleccionaTodasActividades;
+                                if(lstActividadesDiariasByProspecto.isNotEmpty){
+                                  for(int i = 0; i < lstActividadesDiariasByProspecto.length; i++){
+                                    lstActividadesDiariasByProspecto[i].cerrado = seleccionaTodasActividades;
+                                  }
+                                }
 
-                                Container(
-                                  width: size.width * 0.25,
-                                  height: size.height * 0.07,
-                                  color: Colors.transparent,
-                                  child: Checkbox(
-                                    onChanged: (value) {
-                                      seleccionaTodasActividades = !seleccionaTodasActividades;
-                                      seleccionaUnaActividad = seleccionaTodasActividades;
-                                      if(lstActividadesDiariasByProspecto.isNotEmpty){
-                                        for(int i = 0; i < lstActividadesDiariasByProspecto.length; i++){
-                                          lstActividadesDiariasByProspecto[i].cerrado = seleccionaTodasActividades;
-                                        }
-                                      }
+                                setState(() {
+                                  
+                                });
+                                
+                              },
+                              value: seleccionaTodasActividades,//lstActividadesDiariasByProspecto[index].cerrado,
+                              checkColor: Colors.green,
+                              activeColor: Colors.white,
+                            ),
+                          ),
+
+                        ],
+                      ),
+                    ),
+                
+                    if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga)
+                    Container(
+                      color: Colors.transparent,
+                      width: size.width,
+                      height: size.height * 0.28,//isSelected[1] ? size.height * 0.53 : size.height * 0.33,
+                      child: ListView.builder(
+                        //controller: scrollListaClt,
+                        itemCount: lstActividadesDiariasByProspecto.length,
+                        itemBuilder: ( _, int index ) {
+                              
+                          return Slidable(
+                            key: ValueKey(lstActividadesDiariasByProspecto[index].id),                                
+                            child:  Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                              child: Card(
+                                elevation: 1,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                color: lstActividadesDiariasByProspecto[index].cerrado ? Colors.grey[300] : Colors.white,
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundColor: lstActividadesDiariasByProspecto[index].cerrado ? Colors.black45 : Colors.grey[300],
+                                    child: Stack(
+                                        children: [
+                                          const Icon(Icons.person),
+                                          if(!lstActividadesDiariasByProspecto[index].cerrado && DateFormat('yyyy-MM-dd', 'es').format(lstActividadesDiariasByProspecto[index].dateDeadline) == DateFormat('yyyy-MM-dd', 'es').format(DateTime.now()))
+                                          Positioned(
+                                            top: size.height * 0.01,
+                                            left: size.width * 0.02,
+                                            child: Container(
+                                              color: Colors.transparent,
+                                              width: size.width * 0.05,
+                                              height: size.height * 0.02,
+                                              child: const IndicatorPointWidget(null)
+                                            ),
+                                          )
+                                        ]
+                                      ),
+                                  ),
+                                  title: GestureDetector(
+                                    onTap: () {
+                                      tipoActividadEscogida = lstActividadesDiariasByProspecto[index].summary ?? '';
 
                                       setState(() {
                                         
                                       });
-                                      
                                     },
-                                    value: seleccionaTodasActividades,//lstActividadesDiariasByProspecto[index].cerrado,
-                                    checkColor: Colors.green,
-                                    activeColor: Colors.white,
+                                    child: Text(lstActividadesDiariasByProspecto[index].summary ?? '')
                                   ),
-                                ),
-
-                              ],
-                            ),
-                          ),
-                      
-                          if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga)
-                          Container(
-                            color: Colors.transparent,
-                            width: size.width,
-                            height: size.height * 0.28,//isSelected[1] ? size.height * 0.53 : size.height * 0.33,
-                            child: ListView.builder(
-                              //controller: scrollListaClt,
-                              itemCount: lstActividadesDiariasByProspecto.length,
-                              itemBuilder: ( _, int index ) {
-                                    
-                                return Slidable(
-                                  key: ValueKey(lstActividadesDiariasByProspecto[index].id),                                
-                                  child:  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-                                    child: Card(
-                                      elevation: 1,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      color: lstActividadesDiariasByProspecto[index].cerrado ? Colors.grey[300] : Colors.white,
-                                      child: ListTile(
-                                        leading: CircleAvatar(
-                                          backgroundColor: lstActividadesDiariasByProspecto[index].cerrado ? Colors.black45 : Colors.grey[300],
-                                          child: Stack(
-                                              children: [
-                                                const Icon(Icons.person),
-                                                if(!lstActividadesDiariasByProspecto[index].cerrado && DateFormat('yyyy-MM-dd', 'es').format(lstActividadesDiariasByProspecto[index].dateDeadline) == DateFormat('yyyy-MM-dd', 'es').format(DateTime.now()))
-                                                Positioned(
-                                                  top: size.height * 0.01,
-                                                  left: size.width * 0.02,
-                                                  child: Container(
-                                                    color: Colors.transparent,
-                                                    width: size.width * 0.05,
-                                                    height: size.height * 0.02,
-                                                    child: const IndicatorPointWidget(null)
-                                                  ),
-                                                )
-                                              ]
-                                            ),
-                                        ),
-                                        title: GestureDetector(
-                                          onTap: () {
-                                            tipoActividadEscogida = lstActividadesDiariasByProspecto[index].summary ?? '';
-
-                                            setState(() {
-                                              
-                                            });
-                                          },
-                                          child: Text(lstActividadesDiariasByProspecto[index].summary ?? '')
-                                        ),
-                                        subtitle: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                  subtitle: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                                                      
+                                      RichText(
+                                        text: TextSpan(
                                           children: [
-                                                                            
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  const TextSpan(
-                                                    text: 'Tipo de actividad:',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: lstActividadesDiariasByProspecto[index].activityTypeId.name,
-                                                    style: const TextStyle(
-                                                      color: Colors.blueGrey,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
+                                            const TextSpan(
+                                              text: 'Tipo de actividad:',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 12,
                                               ),
                                             ),
-                                            
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  const TextSpan(
-                                                    text: 'Fecha planificada:',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: DateFormat('yyyy-MM-dd', 'es').format(lstActividadesDiariasByProspecto[index].dateDeadline),
-                                                    style: const TextStyle(
-                                                      color: Colors.blueGrey,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
+                                            TextSpan(
+                                              text: lstActividadesDiariasByProspecto[index].activityTypeId.name,
+                                              style: const TextStyle(
+                                                color: Colors.blueGrey,
+                                                fontSize: 12,
                                               ),
                                             ),
-                                          
                                           ],
                                         ),
-                                        trailing: Container(
-                                          color: Colors.transparent, 
-                                          width: size.width * 0.08,
-                                          child: Checkbox(
-                                            onChanged: (value) {
-                                              setState(() {
-                                                lstActividadesDiariasByProspecto[index].cerrado = !lstActividadesDiariasByProspecto[index].cerrado;
-
-                                                if(!lstActividadesDiariasByProspecto[index].cerrado){
-                                                  seleccionaTodasActividades = false;
-                                                }
-                                                
-                                                tipoActividadEscogida = lstActividadesDiariasByProspecto[index].summary ?? '';
-
-                                                int contCerradas = 0;
-                                                  
-                                                for(int i = 0; i < lstActividadesDiariasByProspecto.length; i++){
-                                                  if(lstActividadesDiariasByProspecto[i].cerrado){
-                                                    contCerradas += 1;
-                                                  }
-                                                }
-
-                                                if(contCerradas == lstActividadesDiariasByProspecto.length){
-                                                  seleccionaTodasActividades = true;
-                                                }
-
-                                                if(contCerradas >= 1){
-                                                  seleccionaUnaActividad = true;
-                                                }
-                                                else{
-                                                  seleccionaUnaActividad = false;
-                                                }
-
-                                              });
-                                            },
-                                            value: lstActividadesDiariasByProspecto[index].cerrado,
-                                            checkColor: Colors.green,
-                                            activeColor: Colors.white,
-                                          ),
+                                      ),
+                                      
+                                      RichText(
+                                        text: TextSpan(
+                                          children: [
+                                            const TextSpan(
+                                              text: 'Fecha planificada:',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: DateFormat('yyyy-MM-dd', 'es').format(lstActividadesDiariasByProspecto[index].dateDeadline),
+                                              style: const TextStyle(
+                                                color: Colors.blueGrey,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ),
-                                  )
-                                );
-                              
-                              },
-                            ),
-                          ),
-                      
-                          if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga)
-                          Container(
-                            width: size.width * 0.99,
-                            color: Colors.transparent,
-                            child: Center(
-                              child: Container(
-                                width: size.width * 0.95,
-                                height: size.height * 0.11,
-                                color: Colors.transparent,
-                                child: Center(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          formatearTiempo(_segundosAct),                                                                  
-                                          style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
-                                        ),
-                                      
-                                      ],
-                                    ),
+                                    
+                                    ],
                                   ),
-                              )
-                            ),
-                          ),
-                      
-                          if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga)
-                          Container(
-                            color: Colors.transparent,
-                            width: size.width * 0.92,
-                            child: TextFormField(
-                              inputFormatters: [
-                                EmojiInputFormatter()
-                              ],
-                              cursorColor: AppLightColors().primary,
-                              autovalidateMode: AutovalidateMode.onUserInteraction,
-                              style: AppTextStyles.bodyRegular(
-                                width: size.width,
-                                color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
-                              ),
-                              decoration: const InputDecoration(
-                                label: Text('Notas'),
-                                border: OutlineInputBorder(),
-                                hintText: 'Notas de la visita o llamada para registrar la acción realizada.',
-                              ),                                              
-                              controller: notasActTxtAct,
-                              autocorrect: false,
-                              keyboardType: TextInputType.multiline,
-                              minLines: 1,
-                              maxLines: 4,
-                              autofocus: false,
-                              textAlign: TextAlign.left,
-                              onEditingComplete: () {
-                                FocusScope.of(context).unfocus();
-                              },
-                              onChanged: (value) {
-                                
-                              },
-                              onTapOutside: (event) {
-                                FocusScope.of(context).unfocus();
-                              },
-                            ),
-                          ),
-                        
-                          if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga)
-                          SizedBox(height: size.height * 0.035),
+                                  trailing: Container(
+                                    color: Colors.transparent, 
+                                    width: size.width * 0.08,
+                                    child: Checkbox(
+                                      onChanged: (value) {
+                                        setState(() {
+                                          lstActividadesDiariasByProspecto[index].cerrado = !lstActividadesDiariasByProspecto[index].cerrado;
 
-                          if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga
-                          && (seleccionaTodasActividades || seleccionaUnaActividad))
-                          Container(
-                            width: size.width * 0.95,
-                            height: size.height * 0.07,
-                            color: Colors.transparent,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    iniciarCronometro();
-                                  },
-                                  child: Container(
-                                    width: size.width * 0.45,
-                                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                                    decoration: BoxDecoration(
-                                      color: Colors.indigo, // Color similar al de la imagen
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const Icon(Icons.login, color: Colors.white),
-                                        SizedBox(width: size.width * 0.01),
-                                        const Text(
-                                          "Llegada",
-                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                        ),
-                                        SizedBox(width: size.width * 0.115),
-                                        const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
-                                      ],
+                                          if(!lstActividadesDiariasByProspecto[index].cerrado){
+                                            seleccionaTodasActividades = false;
+                                          }
+                                          
+                                          tipoActividadEscogida = lstActividadesDiariasByProspecto[index].summary ?? '';
+
+                                          int contCerradas = 0;
+                                            
+                                          for(int i = 0; i < lstActividadesDiariasByProspecto.length; i++){
+                                            if(lstActividadesDiariasByProspecto[i].cerrado){
+                                              contCerradas += 1;
+                                            }
+                                          }
+
+                                          if(contCerradas == lstActividadesDiariasByProspecto.length){
+                                            seleccionaTodasActividades = true;
+                                          }
+
+                                          if(contCerradas >= 1){
+                                            seleccionaUnaActividad = true;
+                                          }
+                                          else{
+                                            seleccionaUnaActividad = false;
+                                          }
+
+                                        });
+                                      },
+                                      value: lstActividadesDiariasByProspecto[index].cerrado,
+                                      checkColor: Colors.green,
+                                      activeColor: Colors.white,
                                     ),
                                   ),
                                 ),
-                      
-                                GestureDetector(
-                                  onTap: () {
-
-                                    if(_segundosAct == 0){
-                                      showDialog(
-                                        //ignore:use_build_context_synchronously
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Container(
-                                              color: Colors.transparent,
-                                              height: size.height * 0.17,
-                                              child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  
-                                                  Container(
-                                                    color: Colors.transparent,
-                                                    height: size.height * 0.09,
-                                                    child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
-                                                  ),
-                      
-                                                  Container(
-                                                    color: Colors.transparent,
-                                                    width: size.width * 0.95,
-                                                    height: size.height * 0.08,
-                                                    alignment: Alignment.center,
-                                                    child: const AutoSizeText(
-                                                      'Debe marcar la llegada de la actividad.',
-                                                      maxLines: 2,
-                                                      minFontSize: 2,
-                                                    ),
-                                                  )
-                                                ],
-                                              )
-                                            ),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                      return;
-                                    }
-
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: const Text('Registro de salida'),
-                                          content: const Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(
-                                                'Desea registrar la salida y cerrar la'
-                                                ' visita de este cliente?',
-                                              ),
-                                            ],
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                //context.pop();
-                                                Navigator.pop(context);                                              
-                                              },
-                                              child: Text(
-                                                'NO',
-                                                style: TextStyle(color: Colors.blue[200]),
-                                              ),
-                                            ),
-                                            TextButton(
-                                              onPressed: () async {
-                      
-                                                if(_segundosAct == 0){
-                                                  showDialog(
-                                                  //ignore:use_build_context_synchronously
-                                                  context: context,
-                                                  builder: (BuildContext context) {
-                                                    return AlertDialog(
-                                                      title: Container(
-                                                        color: Colors.transparent,
-                                                        height: size.height * 0.17,
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            
-                                                            Container(
-                                                              color: Colors.transparent,
-                                                              height: size.height * 0.09,
-                                                              child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
-                                                            ),
+                              ),
+                            )
+                          );
+                        
+                        },
+                      ),
+                    ),
+                
+                    if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga)
+                    Container(
+                      width: size.width * 0.99,
+                      color: Colors.transparent,
+                      child: Center(
+                        child: Container(
+                          width: size.width * 0.95,
+                          height: size.height * 0.11,
+                          color: Colors.transparent,
+                          child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    formatearTiempo(_segundosAct),                                                                  
+                                    style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+                                  ),
                                 
-                                                            Container(
-                                                              color: Colors.transparent,
-                                                              width: size.width * 0.95,
-                                                              height: size.height * 0.08,
-                                                              alignment: Alignment.center,
-                                                              child: const AutoSizeText(
-                                                                'Debe marcar la llegada de la actividad.',
-                                                                maxLines: 2,
-                                                                minFontSize: 2,
-                                                              ),
-                                                            )
-                                                          ],
-                                                        )
+                                ],
+                              ),
+                            ),
+                        )
+                      ),
+                    ),
+                
+                    if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga)
+                    Container(
+                      color: Colors.transparent,
+                      width: size.width * 0.92,
+                      child: TextFormField(
+                        inputFormatters: [
+                          EmojiInputFormatter()
+                        ],
+                        cursorColor: AppLightColors().primary,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        style: AppTextStyles.bodyRegular(
+                          width: size.width,
+                          color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                        ),
+                        decoration: const InputDecoration(
+                          label: Text('Notas'),
+                          border: OutlineInputBorder(),
+                          hintText: 'Notas de la visita o llamada para registrar la acción realizada.',
+                        ),                                              
+                        controller: notasActTxtAct,
+                        autocorrect: false,
+                        keyboardType: TextInputType.multiline,
+                        minLines: 1,
+                        maxLines: 4,
+                        autofocus: false,
+                        textAlign: TextAlign.left,
+                        onEditingComplete: () {
+                          FocusScope.of(context).unfocus();
+                        },
+                        onChanged: (value) {
+                          
+                        },
+                        onTapOutside: (event) {
+                          FocusScope.of(context).unfocus();
+                        },
+                      ),
+                    ),
+                  
+                    if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga)
+                    SizedBox(height: size.height * 0.035),
+
+                    if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga
+                    && (seleccionaTodasActividades || seleccionaUnaActividad))
+                    Container(
+                      width: size.width * 0.95,
+                      height: size.height * 0.07,
+                      color: Colors.transparent,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              iniciarCronometro();
+                            },
+                            child: Container(
+                              width: size.width * 0.45,
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                              decoration: BoxDecoration(
+                                color: Colors.indigo, // Color similar al de la imagen
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.login, color: Colors.white),
+                                  SizedBox(width: size.width * 0.01),
+                                  const Text(
+                                    "Llegada",
+                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(width: size.width * 0.115),
+                                  const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
+                                ],
+                              ),
+                            ),
+                          ),
+                
+                          GestureDetector(
+                            onTap: () {
+
+                              if(_segundosAct == 0){
+                                showDialog(
+                                  //ignore:use_build_context_synchronously
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Container(
+                                        color: Colors.transparent,
+                                        height: size.height * 0.17,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            
+                                            Container(
+                                              color: Colors.transparent,
+                                              height: size.height * 0.09,
+                                              child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
+                                            ),
+                
+                                            Container(
+                                              color: Colors.transparent,
+                                              width: size.width * 0.95,
+                                              height: size.height * 0.08,
+                                              alignment: Alignment.center,
+                                              child: const AutoSizeText(
+                                                'Debe marcar la llegada de la actividad.',
+                                                maxLines: 2,
+                                                minFontSize: 2,
+                                              ),
+                                            )
+                                          ],
+                                        )
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                                return;
+                              }
+
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Registro de salida'),
+                                    content: const Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          'Desea registrar la salida y cerrar la'
+                                          ' visita de este cliente?',
+                                        ),
+                                      ],
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          //context.pop();
+                                          Navigator.pop(context);                                              
+                                        },
+                                        child: Text(
+                                          'NO',
+                                          style: TextStyle(color: Colors.blue[200]),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                
+                                          if(_segundosAct == 0){
+                                            showDialog(
+                                            //ignore:use_build_context_synchronously
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Container(
+                                                  color: Colors.transparent,
+                                                  height: size.height * 0.17,
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      
+                                                      Container(
+                                                        color: Colors.transparent,
+                                                        height: size.height * 0.09,
+                                                        child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
                                                       ),
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            Navigator.of(context).pop();
-                                                          },
-                                                          child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                          
+                                                      Container(
+                                                        color: Colors.transparent,
+                                                        width: size.width * 0.95,
+                                                        height: size.height * 0.08,
+                                                        alignment: Alignment.center,
+                                                        child: const AutoSizeText(
+                                                          'Debe marcar la llegada de la actividad.',
+                                                          maxLines: 2,
+                                                          minFontSize: 2,
                                                         ),
-                                                      ],
-                                                    );
-                                                  },
-                                                );
-                                                  return;
-                                                }
-                      
-                                                int idACt = 0;
-                      
-                                                for(int i = 0; i < actividadesFilAgendaPlanAct.length; i++){
-                                                  if(actPlanSelectAct == actividadesFilAgendaPlanAct[i].name){
-                                                    idACt = actividadesFilAgendaPlanAct[i].id ?? 0;
-                                                  }
-                                                }
-                      
-                                                Navigator.of(context).pop();
-                                                  
-                                                detenerCronometro();
-                      
-                                                double tiempo = double.parse(_segundosAct.toString());
+                                                      )
+                                                    ],
+                                                  )
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                    child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                            return;
+                                          }
+                
+                                          int idACt = 0;
+                
+                                          for(int i = 0; i < actividadesFilAgendaPlanAct.length; i++){
+                                            if(actPlanSelectAct == actividadesFilAgendaPlanAct[i].name){
+                                              idACt = actividadesFilAgendaPlanAct[i].id ?? 0;
+                                            }
+                                          }
+                
+                                          Navigator.of(context).pop();
+                                            
+                                          detenerCronometro();
+                
+                                          double tiempo = double.parse(_segundosAct.toString());
 
-                                                List<ActivitiesTypeRequestModel> lstRqst = [];
+                                          List<ActivitiesTypeRequestModel> lstRqst = [];
 
-                                                /*
-                                                
-                                                ActivitiesTypeRequestModel objReqst = ActivitiesTypeRequestModel(
+                                          showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (context) => SimpleDialog(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                SimpleDialogCargando(
+                                                  null,
+                                                  mensajeMostrar: 'Estamos registrando',
+                                                  mensajeMostrarDialogCargando: 'la nueva actividad para el prospecto.',
+                                                ),
+                                              ]
+                                            ),
+                                          );
+
+                                          for(int i = 0; i < lstActividadesDiariasByProspecto.length; i++){
+                                            if(lstActividadesDiariasByProspecto[i].cerrado){
+                                              lstRqst.add(
+                                                ActivitiesTypeRequestModel(
                                                   active: true,
                                                   createDate: DateTime.now(),//DateTime.parse(fechaActividadContTxtAct.text),
                                                   createUid: 0,
@@ -1523,236 +1585,198 @@ class PlanActivStateTwo extends State<PlanActiv> {
                                                   userId: objDatumCrmLead?.userId!.id ?? 0,
                                                   userCreateId: objDatumCrmLead?.userId!.id ?? 0,
                                                   resId: objDatumCrmLead?.id ?? 0,
-                                                  actId: activitySelected,
+                                                  actId: lstActividadesDiariasByProspecto[i].id,
                                                   workingTime: tiempo,
                                                   summary: '',
-                                                  leadName: objDatumCrmLead?.name ?? '',
-                                                  leadPhone: objDatumCrmLead?.phone ?? ''
-                                                );
-                                                */
-                      
-                                                showDialog(
-                                                  context: context,
-                                                  barrierDismissible: false,
-                                                  builder: (context) => SimpleDialog(
-                                                    alignment: Alignment.center,
-                                                    children: [
-                                                      SimpleDialogCargando(
-                                                        null,
-                                                        mensajeMostrar: 'Estamos registrando',
-                                                        mensajeMostrarDialogCargando: 'la nueva actividad para el prospecto.',
-                                                      ),
-                                                    ]
-                                                  ),
-                                                );
-
-                                                for(int i = 0; i < lstActividadesDiariasByProspecto.length; i++){
-                                                  if(lstActividadesDiariasByProspecto[i].cerrado){
-                                                    lstRqst.add(
-                                                      ActivitiesTypeRequestModel(
-                                                        active: true,
-                                                        createDate: DateTime.now(),//DateTime.parse(fechaActividadContTxtAct.text),
-                                                        createUid: 0,
-                                                        displayName: objDatumCrmLead?.contactName ?? '',
-                                                        previousActivityTypeId: 0,
-                                                        note: descripcionActTxtAct.text,
-                                                        activityTypeId: idACt,
-                                                        dateDeadline: DateTime.now(),
-                                                        userId: objDatumCrmLead?.userId!.id ?? 0,
-                                                        userCreateId: objDatumCrmLead?.userId!.id ?? 0,
-                                                        resId: objDatumCrmLead?.id ?? 0,
-                                                        actId: lstActividadesDiariasByProspecto[i].id,
-                                                        workingTime: tiempo,
-                                                        summary: '',
-                                                        leadName: lstActividadesDiariasByProspecto[i].leadName ?? '',
-                                                        leadPhone: ''//objDatumCrmLead?.phone ?? ''
-                                                      )
-                                                    );
-                                                  }
-                                                }
-                                
-                                                ActividadRegistroResponseModel? objResp = await ActivitiesService().cierreActividadesXIdLista(lstRqst);
-                      
-                                                if(objResp != null){
-                                                  String respuestaReg = objResp.result.mensaje;
-                                                  int estado = objResp.result.estado;
-                                                  String gifRespuesta = '';
-                        
-                                                  if(estado == 200){
-                                                    gifRespuesta = 'assets/gifs/exito.gif';
-                                                  } else {
-                                                    gifRespuesta = 'assets/gifs/gifErrorBlanco.gif';
-                                                  }
-
-                                                  //ignore:use_build_context_synchronously
-                                                  Navigator.of(contextPrincipalGen!).pop();
-                                  
-                                                  showDialog(
-                                                    //ignore:use_build_context_synchronously
-                                                    context: contextPrincipalGen!,
-                                                    builder: (BuildContext context) {
-                                                      return AlertDialog(
-                                                        title: Container(
-                                                          color: Colors.transparent,
-                                                          height: size.height * 0.17,
-                                                          child: Column(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                            children: [
-                                                              
-                                                              Container(
-                                                                color: Colors.transparent,
-                                                                height: size.height * 0.09,
-                                                                child: Image.asset(gifRespuesta),
-                                                              ),
-                                  
-                                                              Container(
-                                                                color: Colors.transparent,
-                                                                width: size.width * 0.95,
-                                                                height: size.height * 0.08,
-                                                                alignment: Alignment.center,
-                                                                child: AutoSizeText(
-                                                                  respuestaReg,
-                                                                  maxLines: 2,
-                                                                  minFontSize: 2,
-                                                                ),
-                                                              )
-                                                            ],
-                                                          )
-                                                        ),
-                                                        actions: [
-                                                          TextButton(
-                                                            onPressed: () {
-                                                              //Navigator.of(contextPrincipalGen!).pop();
-                                                              Navigator.of(contextPrincipalGen!).pop();
-                                                              Navigator.of(contextPrincipalGen!).pop();
-                                                            },
-                                                            child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
-                                                          ),
-                                                        ],
-                                                      );
-                                                    },
-                                                  );
-                                                
-                                                }
-                                                else{
-                                                  //ignore:use_build_context_synchronously
-                                                  Navigator.of(contextPrincipalGen!).pop();
-                                  
-                                                  showDialog(
-                                                    //ignore:use_build_context_synchronously
-                                                    context: contextPrincipalGen!,
-                                                    builder: (BuildContext context) {
-                                                      return AlertDialog(
-                                                        title: Container(
-                                                          color: Colors.transparent,
-                                                          height: size.height * 0.17,
-                                                          child: Column(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                            children: [
-                                                              
-                                                              Container(
-                                                                color: Colors.transparent,
-                                                                height: size.height * 0.09,
-                                                                child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
-                                                              ),
-                                  
-                                                              Container(
-                                                                color: Colors.transparent,
-                                                                width: size.width * 0.95,
-                                                                height: size.height * 0.08,
-                                                                alignment: Alignment.center,
-                                                                child: const AutoSizeText(
-                                                                  'Error de conversión',
-                                                                  maxLines: 2,
-                                                                  minFontSize: 2,
-                                                                ),
-                                                              )
-                                                            ],
-                                                          )
-                                                        ),
-                                                        actions: [
-                                                          TextButton(
-                                                            onPressed: () {
-                                                              //Navigator.of(contextPrincipalGen!).pop();
-                                                              Navigator.of(contextPrincipalGen!).pop();
-                                                              Navigator.of(contextPrincipalGen!).pop();
-                                                            },
-                                                            child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
-                                                          ),
-                                                        ],
-                                                      );
-                                                    },
-                                                  );
-                                              
-                                                }
-                      
-                                                
-                                              },
-                                              child: Text(
-                                                'Sí',
-                                                style: TextStyle(color: Colors.blue[200]),
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  },
-                                  child: Container(
-                                    width: size.width * 0.45,
-                                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                                    decoration: BoxDecoration(
-                                      color: Colors.indigo, // Color similar al de la imagen
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const Icon(Icons.logout, color: Colors.white),
-                                        SizedBox(width: size.width * 0.01),
-                                        const Text(
-                                          "Salida",
-                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                        ),
-                                        SizedBox(width: size.width * 0.14),
-                                        const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                      
-                          if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga)
-                          SizedBox(height: size.height * 0.009),
-                      
-                          if(lstActividadesDiariasByProspecto.isEmpty && !state.muestraCarga)
-                          SizedBox(height: size.height * 0.15),
+                                                  leadName: lstActividadesDiariasByProspecto[i].leadName ?? '',
+                                                  leadPhone: ''//objDatumCrmLead?.phone ?? ''
+                                                )
+                                              );
+                                            }
+                                          }
                           
-                          if(lstActividadesDiariasByProspecto.isEmpty && !state.muestraCarga)
-                          Container(
-                            color: Colors.transparent,
-                            width: size.width * 0.95,
-                            height: size.height * 0.09,
-                            alignment: Alignment.topCenter,
-                            child: const AutoSizeText('No existen actividades agendadas para el día de hoy', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,), maxLines: 2,  presetFontSizes: [42,40,38,36,34,32,30,28,26,24,22,20,18,16,14,12,10]),
+                                          ActividadRegistroResponseModel? objResp = await ActivitiesService().cierreActividadesXIdLista(lstRqst);
+                
+                                          if(objResp != null){
+                                            String respuestaReg = objResp.result.mensaje;
+                                            int estado = objResp.result.estado;
+                                            String gifRespuesta = '';
+                  
+                                            if(estado == 200){
+                                              gifRespuesta = 'assets/gifs/exito.gif';
+                                            } else {
+                                              gifRespuesta = 'assets/gifs/gifErrorBlanco.gif';
+                                            }
+
+                                            //ignore:use_build_context_synchronously
+                                            Navigator.of(contextPrincipalGen!).pop();
+                            
+                                            showDialog(
+                                              //ignore:use_build_context_synchronously
+                                              context: contextPrincipalGen!,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Container(
+                                                    color: Colors.transparent,
+                                                    height: size.height * 0.17,
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        
+                                                        Container(
+                                                          color: Colors.transparent,
+                                                          height: size.height * 0.09,
+                                                          child: Image.asset(gifRespuesta),
+                                                        ),
+                            
+                                                        Container(
+                                                          color: Colors.transparent,
+                                                          width: size.width * 0.95,
+                                                          height: size.height * 0.08,
+                                                          alignment: Alignment.center,
+                                                          child: AutoSizeText(
+                                                            respuestaReg,
+                                                            maxLines: 2,
+                                                            minFontSize: 2,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        //Navigator.of(contextPrincipalGen!).pop();
+                                                        Navigator.of(contextPrincipalGen!).pop();
+                                                        Navigator.of(contextPrincipalGen!).pop();
+                                                      },
+                                                      child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          
+                                          }
+                                          else{
+                                            //ignore:use_build_context_synchronously
+                                            Navigator.of(contextPrincipalGen!).pop();
+                            
+                                            showDialog(
+                                              //ignore:use_build_context_synchronously
+                                              context: contextPrincipalGen!,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Container(
+                                                    color: Colors.transparent,
+                                                    height: size.height * 0.17,
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        
+                                                        Container(
+                                                          color: Colors.transparent,
+                                                          height: size.height * 0.09,
+                                                          child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
+                                                        ),
+                            
+                                                        Container(
+                                                          color: Colors.transparent,
+                                                          width: size.width * 0.95,
+                                                          height: size.height * 0.08,
+                                                          alignment: Alignment.center,
+                                                          child: const AutoSizeText(
+                                                            'Error de conversión',
+                                                            maxLines: 2,
+                                                            minFontSize: 2,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        //Navigator.of(contextPrincipalGen!).pop();
+                                                        Navigator.of(contextPrincipalGen!).pop();
+                                                        Navigator.of(contextPrincipalGen!).pop();
+                                                      },
+                                                      child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                        
+                                          }
+                
+                                          
+                                        },
+                                        child: Text(
+                                          'Sí',
+                                          style: TextStyle(color: Colors.blue[200]),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Container(
+                              width: size.width * 0.45,
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                              decoration: BoxDecoration(
+                                color: Colors.indigo, // Color similar al de la imagen
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.logout, color: Colors.white),
+                                  SizedBox(width: size.width * 0.01),
+                                  const Text(
+                                    "Salida",
+                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(width: size.width * 0.14),
+                                  const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  ),
+                
+                    if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga)
+                    SizedBox(height: size.height * 0.009),
+                
+                    if(lstActividadesDiariasByProspecto.isEmpty && !state.muestraCarga)
+                    SizedBox(height: size.height * 0.15),
+                    
+                    if(lstActividadesDiariasByProspecto.isEmpty && !state.muestraCarga)
+                    Container(
+                      color: Colors.transparent,
+                      width: size.width * 0.95,
+                      height: size.height * 0.09,
+                      alignment: Alignment.topCenter,
+                      child: const AutoSizeText('No existen actividades agendadas para el día de hoy', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,), maxLines: 2,  presetFontSizes: [42,40,38,36,34,32,30,28,26,24,22,20,18,16,14,12,10]),
+                    ),
                   ],
-                )
-              :
-              Center(
-                  child: Image.asset(
-                    "assets/gifs/gif_carga.gif",
-                    height: size.width * 0.85,//150.0,
-                    width: size.width * 0.85,//150.0,
-                  ),
-                );
-          
+                ),
+              ),
+            ),
+            ],
+          )
+        :
+        Center(
+            child: Image.asset(
+              "assets/gifs/gif_carga.gif",
+              height: size.width * 0.85,//150.0,
+              width: size.width * 0.85,//150.0,
+            ),
+          );
+    
       }
     );
   }

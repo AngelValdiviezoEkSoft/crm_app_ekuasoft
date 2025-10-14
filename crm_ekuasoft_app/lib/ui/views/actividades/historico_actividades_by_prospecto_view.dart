@@ -46,9 +46,9 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
       if(objRspFinal != null && lstActividadesHistoricosByProspecto.isEmpty){
         lstActividadesHistoricosByProspecto = objRspFinal.activities.data;
         //actividadesFilAgendaPlanAct = objRspFinal.objMailAct.data;
-        lstActividadesAct = [];
+        //lstActividadesAct = [];
         objDatumCrmLead = objRspFinal.lead;
-        
+        /*
         for(int i = 0; i < actividadesFilAgendaPlanAct.length; i++){
           lstActividadesAct.add(actividadesFilAgendaPlanAct[i].name ?? '');
         }
@@ -56,6 +56,7 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
         if(actPlanSelectAct.isEmpty && lstActividadesAct.isNotEmpty){
           actPlanSelectAct = lstActividadesAct.first;
         }
+        */
       }
 
       gnrBloc.setIniciaCarga(false);

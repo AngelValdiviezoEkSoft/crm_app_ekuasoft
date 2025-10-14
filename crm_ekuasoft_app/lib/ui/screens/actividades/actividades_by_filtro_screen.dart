@@ -191,7 +191,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
 
               return Scaffold(
                 appBar: AppBar(
-                  title: const Text("Agenda"),
+                  title: const Text("Agenda de actividades"),
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back_ios),
                     onPressed: () {

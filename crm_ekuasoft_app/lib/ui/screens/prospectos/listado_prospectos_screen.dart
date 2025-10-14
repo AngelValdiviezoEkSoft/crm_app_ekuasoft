@@ -491,13 +491,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                         child: Container(
                                           height: size.height * 0.07,//30,
                                           width: size.width * 0.08,//30,
-                                          color: Colors.transparent,
-                                          /*
-                                          decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.blueAccent,
-                                          ),
-                                          */
+                                          color: Colors.transparent,                                          
                                           child: const CircularProgressIndicator(
                                             strokeWidth: 1,
                                             valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
@@ -710,7 +704,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
                                                 //color: Colors.black12, // Color del óvalo
-                                                color: themeProvider.themeMode.index == 0 ? Colors.white30 : Colors.white,
+                                                color: themeProvider.themeMode.index == 0 ? Colors.black12 : Colors.white,
                                                 borderRadius: BorderRadius.circular(50), // Bordes redondeados para el óvalo
                                               ),
                                               child: Column(

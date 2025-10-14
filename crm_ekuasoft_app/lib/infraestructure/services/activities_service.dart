@@ -363,6 +363,7 @@ class ActivitiesService extends ChangeNotifier{
 
       return objFinAct;
     }
+
   }
 
   getActivitiesDiariasByProspecto(fechas, resId) async {
