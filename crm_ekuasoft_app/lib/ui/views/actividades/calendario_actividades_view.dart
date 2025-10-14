@@ -58,7 +58,7 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
     _datesByFiltroCal = [];
     calendarioActividadesFilAgendaByFiltroCall = [];
     contLstAgendaByFiltroCal = 0;
-    actualizaListaActAgendaByFiltro2CalCal = [false, true];
+    actualizaListaActAgendaByFiltro2CalCal = [true,false];
     selectedDayGenByFiltroCal = DateTime.now();
     focusedDayGenByFiltroCal = DateTime.now();
     filtroAgendaTxtByFiltroCal = TextEditingController();
@@ -209,14 +209,14 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
               child: Column(
                 children: [
                   SizedBox(
-                    height: size.height * 0.02,
+                    height: size.height * 0.0075,
                   ),
 
                   ToggleButtons(
                     borderColor: Colors.purple,
-                    fillColor: Colors.purple,
-                    borderWidth: 2,
+                    fillColor: Colors.purple,                    
                     selectedBorderColor: Colors.purple,
+                    borderWidth: 2,
                     selectedColor: Colors.white,
                     borderRadius: BorderRadius.circular(20),
                     onPressed: (int index) {
@@ -248,7 +248,7 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12.0),
                         child: Text(
-                          'Mes',
+                          'Semana',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -259,7 +259,7 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12.0),
                         child: Text(
-                          'Semana',
+                          'Mes',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -267,13 +267,99 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                           ),
                         ),
                       ),
+                      
                     ],
                   ),
+
+                    if (actualizaListaActAgendaByFiltro2CalCal[0])
+                    Container(
+                      width: size.width * 0.95,
+                      height: size.height * 0.2,
+                      color: Colors.transparent,
+                      child: TableCalendar(
+                          headerStyle: const HeaderStyle(formatButtonVisible: false),
+                          calendarFormat: calendarFormat,
+                          firstDay: DateTime.utc(2010, 10, 16),
+                          lastDay: DateTime(3000),
+                          focusedDay: focusedDayGenByFiltroCal,
+                          selectedDayPredicate: (day) {
+                            return focusedDayGenByFiltroCal == day;
+                          },
+                          onDaySelected: (selectedDay, focusedDay) async {
+                            muestraCargaLocal = true;
+                            selectedDayGenByFiltroCal = selectedDay;
+                            focusedDayGenByFiltroCal = focusedDay;
+                            actBloc.setLstActividades([]);
+                            gnrBloc.setMuestraCarga(true);
+
+                            setState(() {});
+
+                            WidgetsBinding.instance.addPostFrameCallback((_) async {
+
+                              _datesByFiltroCal = [];
+                              _datesByFiltroCal.add(selectedDay);
+
+                              ActivitiesPageModel objRsp = await ActivitiesService().getActivitiesByRangoFechas(_datesByFiltroCal, objDatumCrmLead?.id ?? 0);
+
+                              actBloc.setLstActividades(objRsp.activities.data);
+                              gnrBloc.setMuestraCarga(false);
+                              muestraCargaLocal = false;
+
+                              if(objRsp.activities.data.isEmpty){
+                                setState(() {
+                                  return;
+                                });
+                              }
+
+                            });
+
+                          }
+                          /*
+                          onDaySelected: (selectedDay, focusedDay) async {
+                            
+                            // Solo cambiamos el estado si realmente hay una consulta que hacer
+                            if (!isSameDay(selectedDayGenByFiltroCal, selectedDay)) {
+                              
+                              selectedDayGenByFiltroCal = selectedDay;
+                              focusedDayGenByFiltroCal = focusedDay;
+
+                              // Mostramos loader
+                              gnrBloc.setMuestraCarga(true);
+
+                              try {
+                                // Aquí llamas a tu servicio para obtener datos                                  
+                                calendarioActividadesFilAgendaByFiltroCall = [];
+
+                                _datesByFiltroCal = [];
+                                _datesByFiltroCal.add(selectedDay);
+                                actBloc.setLstActividades([]);
+
+                                ActivitiesPageModel objRsp = await ActivitiesService().getActivitiesByRangoFechas(_datesByFiltroCal, objDatumCrmLead?.id ?? 0);
+
+                                calendarioActividadesFilAgendaByFiltroCall = objRsp.activities.data;
+
+                                //rspAct = objRsp;
+                                //actualizaListaActAgendaByFiltro2 = true;
+                                contLstAgendaByFiltroCal = calendarioActividadesFilAgendaByFiltroCall.length;
+
+                                actBloc.setLstActividades(objRsp.activities.data);
+                                
+                              } finally {
+                                // Ocultamos loader después de la carga
+                                gnrBloc.setMuestraCarga(false);
+                              }
+
+                            }
+                            
+                          },
+                        */
+                        )
+                      ),
                   
-                  if (actualizaListaActAgendaByFiltro2CalCal[0])
+                  if (actualizaListaActAgendaByFiltro2CalCal[1])
                     Container(
                         width: size.width * 0.95,
-                        height: size.height * 0.39,
+                        height: size.height * 0.36,
                         color: Colors.transparent,
                         child: CalendarDatePicker2(
                             config: CalendarDatePicker2Config(
@@ -324,92 +410,7 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                               //setState(() {});
                             })),
 
-                  if (actualizaListaActAgendaByFiltro2CalCal[1])
-                    Container(
-                        width: size.width * 0.95,
-                        height: size.height * 0.2,
-                        color: Colors.transparent,
-                        child: TableCalendar(
-                            headerStyle: const HeaderStyle(formatButtonVisible: false),
-                            calendarFormat: calendarFormat,
-                            firstDay: DateTime.utc(2010, 10, 16),
-                            lastDay: DateTime(3000),
-                            focusedDay: focusedDayGenByFiltroCal,
-                            selectedDayPredicate: (day) {
-                              return focusedDayGenByFiltroCal == day;
-                            },
-                            onDaySelected: (selectedDay, focusedDay) async {
-                              muestraCargaLocal = true;
-                              selectedDayGenByFiltroCal = selectedDay;
-                              focusedDayGenByFiltroCal = focusedDay;
-                              actBloc.setLstActividades([]);
-                              gnrBloc.setMuestraCarga(true);
-
-                              setState(() {});
-
-                              WidgetsBinding.instance.addPostFrameCallback((_) async {
-
-                                _datesByFiltroCal = [];
-                                _datesByFiltroCal.add(selectedDay);
-
-                                ActivitiesPageModel objRsp = await ActivitiesService().getActivitiesByRangoFechas(_datesByFiltroCal, objDatumCrmLead?.id ?? 0);
-
-                                actBloc.setLstActividades(objRsp.activities.data);
-                                gnrBloc.setMuestraCarga(false);
-                                muestraCargaLocal = false;
-
-                                if(objRsp.activities.data.isEmpty){
-                                  setState(() {
-                                    return;
-                                  });
-                                }
-
-                              });
-
-                            }
-                            /*
-                            onDaySelected: (selectedDay, focusedDay) async {
-                              
-                              // Solo cambiamos el estado si realmente hay una consulta que hacer
-                              if (!isSameDay(selectedDayGenByFiltroCal, selectedDay)) {
-                                
-                                selectedDayGenByFiltroCal = selectedDay;
-                                focusedDayGenByFiltroCal = focusedDay;
-
-                                // Mostramos loader
-                                gnrBloc.setMuestraCarga(true);
-
-                                try {
-                                  // Aquí llamas a tu servicio para obtener datos                                  
-                                  calendarioActividadesFilAgendaByFiltroCall = [];
-
-                                  _datesByFiltroCal = [];
-                                  _datesByFiltroCal.add(selectedDay);
-                                  actBloc.setLstActividades([]);
-
-                                  ActivitiesPageModel objRsp = await ActivitiesService().getActivitiesByRangoFechas(_datesByFiltroCal, objDatumCrmLead?.id ?? 0);
-
-                                  calendarioActividadesFilAgendaByFiltroCall = objRsp.activities.data;
-
-                                  //rspAct = objRsp;
-                                  //actualizaListaActAgendaByFiltro2 = true;
-                                  contLstAgendaByFiltroCal = calendarioActividadesFilAgendaByFiltroCall.length;
-
-                                  actBloc.setLstActividades(objRsp.activities.data);
-                                  
-                                } finally {
-                                  // Ocultamos loader después de la carga
-                                  gnrBloc.setMuestraCarga(false);
-                                }
-
-                              }
-                              
-                            },
-                          */
-                          )
-                        ),
-
-                  SizedBox(height: size.height * 0.008),
+                  SizedBox(height: size.height * 0.005),
 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -451,7 +452,7 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                     ),
                   ),
                   
-                  SizedBox(height: size.height * 0.007),
+                  SizedBox(height: size.height * 0.005),
 
                   if (muestraCargaLocal)
                     Container(
@@ -472,9 +473,9 @@ class CalendarioActividadesByFiltroViewState extends State<CalendarioActividades
                     Container(
                       color: Colors.transparent,
                       width: size.width,
-                      height: actualizaListaActAgendaByFiltro2CalCal[1]
-                          ? size.height * 0.53
-                          : size.height * 0.33,
+                      height: actualizaListaActAgendaByFiltro2CalCal[0]
+                          ? size.height * 0.54
+                          : size.height * 0.43,
                       child: ListView.builder(
                         controller: scrollListaClt,
                         itemCount: stateAct.lstActivities.length,//contLstAgendaByFiltroCal,

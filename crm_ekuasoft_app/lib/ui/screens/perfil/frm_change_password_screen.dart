@@ -7,6 +7,7 @@ import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 bool verValChangPassword = false;
 bool tieneMayusculaChangPassword = false;
@@ -61,6 +62,7 @@ class FrmChangePasswordScreenState extends State<FrmChangePasswordScreen> {
   Widget build(BuildContext context) {
 
     final size = MediaQuery.of(context).size;
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     onPassWordChanged(String password) {
       final numericRegex = RegExp(r'[0-9]');
@@ -138,9 +140,9 @@ class FrmChangePasswordScreenState extends State<FrmChangePasswordScreen> {
 
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0076E4),
+      backgroundColor: themeProvider.themeMode.index == 2 ? Colors.black : const Color(0xFF0076E4),
       appBar: AppBar(
-      backgroundColor: const Color(0xFF0076E4),
+      backgroundColor: themeProvider.themeMode.index == 2 ? Colors.black : const Color(0xFF0076E4),
       leading: IconButton(
         icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
         onPressed: () {
@@ -233,7 +235,7 @@ class FrmChangePasswordScreenState extends State<FrmChangePasswordScreen> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             filled: true,
-                            fillColor: const Color(0xFFF0F0F0),
+                            fillColor: themeProvider.themeMode.index == 2 ? Colors.black : Colors.white,                            
                           ),
                         ),
                         
@@ -267,7 +269,7 @@ class FrmChangePasswordScreenState extends State<FrmChangePasswordScreen> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             filled: true,
-                            fillColor: const Color(0xFFF0F0F0),
+                            fillColor: themeProvider.themeMode.index == 2 ? Colors.black : Colors.white,
                           ),
                         ),
                         
@@ -573,6 +575,7 @@ class FrmChangePasswordScreenState extends State<FrmChangePasswordScreen> {
                             ),
                           ),
                         
+                        
                         if (verValChangPassword)
                         SizedBox(
                           height: size.height * 0.02,
@@ -597,7 +600,7 @@ class FrmChangePasswordScreenState extends State<FrmChangePasswordScreen> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             filled: true,
-                            fillColor: const Color(0xFFF0F0F0),
+                            fillColor: themeProvider.themeMode.index == 2 ? Colors.black : Colors.white,
                           ),
                         ),
                         
@@ -710,7 +713,7 @@ class FrmChangePasswordScreenState extends State<FrmChangePasswordScreen> {
                               
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF0076E4),
+                              backgroundColor: themeProvider.themeMode.index == 2 ? Colors.black : const Color(0xFF0076E4),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),

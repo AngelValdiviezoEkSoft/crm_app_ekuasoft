@@ -565,11 +565,11 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                               telefonoTxt.text = '';
                                             },
                                             icon: Icon(
-                                                size: 22,
+                                                size: 18,
                                                 Icons.close,
                                                 color: AppLightColors().gray900PrimaryText
                                             ),
-                                          ), 
+                                          ),
                                         ),
                                         onSaved: (PhoneNumber phoneNumber) {
                                           //print('Número guardado: ${phoneNumber.phoneNumber}');
@@ -609,7 +609,17 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                   labelText: '* Nombre de Prospecto',
                                                   hintTetx: '* Empresa o Contacto *',
                                                   size: size,
-                                                  colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                  colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
+                                                  suffixIcon: IconButton(
+                                                    onPressed: () {
+                                                      nombresTxt.text = '';
+                                                    },
+                                                    icon: Icon(
+                                                        size: 18,
+                                                        Icons.close,
+                                                        color: AppLightColors().gray900PrimaryText
+                                                    ),
+                                                  ),
                                                 ),
                                                 enabled: habilitaGuardar,
                                                 controller: nombresTxt,
@@ -654,7 +664,17 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                   labelText: '* Nombre Oportunidad',
                                                   hintTetx: 'Ej: Nomb. producto + Nomb. prospecto',
                                                   size: size,
-                                                  colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                  colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
+                                                  suffixIcon: IconButton(
+                                                    onPressed: () {
+                                                      nombresOportTxt.text = '';
+                                                    },
+                                                    icon: Icon(
+                                                        size: 18,
+                                                        Icons.close,
+                                                        color: AppLightColors().gray900PrimaryText
+                                                    ),
+                                                  ),
                                                 ),
                                                 enabled: habilitaGuardar,
                                                 controller: nombresOportTxt,
@@ -903,7 +923,17 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                             labelText: 'Recomendado por',
                                             hintTetx: 'Ej: Majo Piguave',
                                             size: size,
-                                            colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                            colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
+                                            suffixIcon: IconButton(
+                                              onPressed: () {
+                                                recomendadoPorTxt.text = '';
+                                              },
+                                              icon: Icon(
+                                                  size: 18,
+                                                  Icons.close,
+                                                  color: AppLightColors().gray900PrimaryText
+                                              ),
+                                            ),
                                           ),
                                           controller: recomendadoPorTxt,
                                           autocorrect: false,
@@ -965,6 +995,16 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                       
                                                   hintText: "100%",
                                                   suffixText: '%',
+                                                  suffixIcon: IconButton(
+                                                    onPressed: () {
+                                                      probabilityTxt.text = '';
+                                                    },
+                                                    icon: Icon(
+                                                        size: 18,
+                                                        Icons.close,
+                                                        color: AppLightColors().gray900PrimaryText
+                                                    ),
+                                                  ),
                                                 ),
                                                 inputFormatters: [currencyFormatter],
                                                 controller: probabilityTxt,
@@ -1020,7 +1060,18 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                   ),
                                                   labelText: 'Ingreso esperado en dólares',
                                                   hintText: "0.00",
-                                                  suffixText: '\$',
+                                                  prefixText: '\$',
+                                                  //suffixText: '\$',
+                                                  suffixIcon: IconButton(
+                                                    onPressed: () {
+                                                      ingresoEsperadoTxt.text = '';
+                                                    },
+                                                    icon: Icon(
+                                                        size: 18,
+                                                        Icons.close,
+                                                        color: AppLightColors().gray900PrimaryText
+                                                    ),
+                                                  ),
                                                 ),
                                                 controller: ingresoEsperadoTxt,
                                                 autocorrect: false,
@@ -1074,7 +1125,17 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 labelText: 'Correo',
                                                 hintTetx: 'Ej: correo@ejemplo.com',
                                                 size: size,
-                                                colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
+                                                suffixIcon: IconButton(
+                                                  onPressed: () {
+                                                    emailTxt.text = '';
+                                                  },
+                                                  icon: Icon(
+                                                      size: 18,
+                                                      Icons.close,
+                                                      color: AppLightColors().gray900PrimaryText
+                                                  ),
+                                                ),
                                               ),
                                               controller: emailTxt,
                                               autocorrect: false,
@@ -1182,7 +1243,17 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 labelText: 'Dirección',
                                                 hintTetx: '',
                                                 size: size,
-                                                colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
+                                                suffixIcon: IconButton(
+                                                  onPressed: () {
+                                                    direccionTxt.text = '';
+                                                  },
+                                                  icon: Icon(
+                                                      size: 18,
+                                                      Icons.close,
+                                                      color: AppLightColors().gray900PrimaryText
+                                                  ),
+                                                ),
                                               ),
                                               autocorrect: false,
                                               keyboardType: TextInputType.text,
@@ -1245,7 +1316,17 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                   labelText: 'Observaciones',
                                                   hintTetx: 'Ej: Interesado en casa pero no tiene trabajo estable',
                                                   size: size,
-                                                  colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                  colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
+                                                  suffixIcon: IconButton(
+                                                  onPressed: () {
+                                                    observacionesTxt.text = '';
+                                                  },
+                                                  icon: Icon(
+                                                      size: 18,
+                                                      Icons.close,
+                                                      color: AppLightColors().gray900PrimaryText
+                                                  ),
+                                                ),
                                                 ),
                                                 controller: observacionesTxt,
                                                 autocorrect: false,

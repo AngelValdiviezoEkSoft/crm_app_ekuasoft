@@ -379,8 +379,8 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                 });
                               },
                               icon: Icon(Icons.cancel,
-                                size: 24,
-                                color: AppLightColors().gray900PrimaryText
+                                size: 20,
+                                color: themeProvider.themeMode.index == 2 ? Colors.white : AppLightColors().gray900PrimaryText,
                               ),
                             ),
                           ),
