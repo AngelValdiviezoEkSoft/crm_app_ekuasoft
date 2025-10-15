@@ -512,7 +512,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                       color: Colors.transparent,
                                       width: size.width * 0.92,
                                       child: InternationalPhoneNumberInput(
-                                        //isEnabled: false,
+                                        isEnabled: false,
                                       onInputChanged: (PhoneNumber phoneNumber) async {
                                         
                                       },
