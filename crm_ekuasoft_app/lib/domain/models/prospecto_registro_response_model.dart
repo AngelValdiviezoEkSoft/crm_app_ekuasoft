@@ -287,6 +287,7 @@ class DatumProspectoRegistro {
     DataCombos? title;
     String? type;
     DataCombos? userId;
+    bool active;
 
     DatumProspectoRegistro({
         required this.id,
@@ -314,6 +315,7 @@ class DatumProspectoRegistro {
         required this.title,
         required this.type,
         required this.userId,
+        required this.active,
     });
 
     factory DatumProspectoRegistro.fromRawJson(String str) => DatumProspectoRegistro.fromJson(json.decode(str));
@@ -346,6 +348,7 @@ class DatumProspectoRegistro {
         title: json["title"] != null ? DataCombos.fromJson(json["title"]) : DataCombos(id: 0, name: ''),
         type: json["type"] ?? '',
         userId: json["user_id"] != null ? DataCombos.fromJson(json["user_id"]) : DataCombos(id: 0, name: ''),
+        active: json["active"] ?? false,
     );
 
     Map<String, dynamic> toJson() => {
@@ -374,6 +377,7 @@ class DatumProspectoRegistro {
         "title": title!.toJson(),
         "type": type,
         "user_id": userId!.toJson(),
+        "active": active
     };
 }
 

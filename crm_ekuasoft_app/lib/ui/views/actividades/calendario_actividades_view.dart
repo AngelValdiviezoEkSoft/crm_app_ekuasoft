@@ -903,8 +903,7 @@ class _CalendarioActividadesByFiltroViewState extends State<CalendarioActividade
     gnrBloc.setMuestraCarga(true);
 
     try {
-      ActivitiesPageModel rsp = await ActivitiesService()
-          .getActivitiesByRangoFechas(fechas, objDatumCrmLead?.id ?? 0);
+      ActivitiesPageModel rsp = await ActivitiesService().getActivitiesByRangoFechas(fechas, objDatumCrmLead?.id ?? 0);
       actBloc.setLstActividades(rsp.activities.data);
     } finally {
       gnrBloc.setMuestraCarga(false);
@@ -1162,7 +1161,7 @@ class _CalendarioActividadesByFiltroViewState extends State<CalendarioActividade
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Prospecto: ${act.leadName}", style: const TextStyle(fontSize: 12)),
+            Text("Prospecto: ${act.contactName}", style: const TextStyle(fontSize: 12)),
             Text("Tipo: ${act.activityTypeId.name}", style: const TextStyle(fontSize: 12)),
             Text("Fecha: ${DateFormat('yyyy-MM-dd').format(act.dateDeadline)}",
                 style: const TextStyle(fontSize: 12)),

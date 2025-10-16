@@ -449,7 +449,8 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                       workingTime: tiempo,
                                                       summary: '',
                                                       leadName: objDatumCrmLead?.name ?? '',
-                                                      leadPhone: objDatumCrmLead?.phone ?? ''
+                                                      leadPhone: objDatumCrmLead?.phone ?? '',                                                      
+                                                      contactName: objDatumCrmLead?.contactName ?? ''
                                                     );
             
                                                     showDialog(
@@ -614,7 +615,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                       child: const Icon(
                         Icons.document_scanner_sharp,
                         color: Colors.white,
-                        size: 30,
+                        size: 21,
                       )
                     ),
                   SizedBox(
@@ -636,11 +637,56 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                     child: const Icon(
                       Icons.refresh,
                       color: Colors.white,
-                      size: 30,
+                      size: 23,
                     )
                   ),
                   SizedBox(
                     width: size.width * 0.04,
+                  ),
+
+                  Tooltip(
+                    message: 'Regresar al prospecto anterior',
+                    child: GestureDetector(
+                      onTap: () async {
+                        if(objDatumCrmLead == null) return;
+                        
+                        var lstProspStr = await ProspectoTypeService().getProspectos();
+                        var objLogDecode = json.decode(lstProspStr);
+                    
+                        ProspectoResponseModel apiResponse = ProspectoResponseModel.fromJson(objLogDecode);
+                    
+                        List<DatumCrmLead> prospectosFiltradosNext = apiResponse.result.data.crmLead.data;                      
+                    
+                        for(int i = 0; i < prospectosFiltradosNext.length; i++){
+                          if(prospectosFiltradosNext[i].id == objDatumCrmLead!.id) {
+                            try{
+                              objDatumCrmLead = prospectosFiltradosNext[i - 1];
+                            }
+                            catch(_){
+                              objDatumCrmLead = prospectosFiltradosNext[0];
+                            }
+                    
+                            //ignore:use_build_context_synchronously
+                            context.pop();
+                    
+                            //ignore:use_build_context_synchronously
+                            context.push(objRutasGen.rutaPlanActivConActiv);
+                    
+                            return;
+                          }
+                        }
+                    
+                      },
+                      child: const Icon(
+                        Icons.keyboard_double_arrow_left_sharp,
+                        color: Colors.white,
+                        size: 23,
+                      )
+                    ),
+                  ),
+
+                  SizedBox(
+                    width: size.width * 0.025,
                   ),
 
                   Tooltip(
@@ -677,7 +723,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                     
                       },
                       child: const Icon(
-                        Icons.arrow_forward_ios,
+                        Icons.keyboard_double_arrow_right_sharp,
                         color: Colors.white,
                         size: 25,
                       )
@@ -1148,7 +1194,7 @@ class PlanActivStateTwo extends State<PlanActiv> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                 
-                    if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga)
+                    //if(lstActividadesDiariasByProspecto.isNotEmpty && !state.muestraCarga)
                     Container(
                       width: size.width * 0.85,
                       height: size.height * 0.05,
@@ -1659,7 +1705,8 @@ class PlanActivStateTwo extends State<PlanActiv> {
                                                   workingTime: tiempo,
                                                   summary: '',
                                                   leadName: lstActividadesDiariasByProspecto[i].leadName ?? '',
-                                                  leadPhone: ''//objDatumCrmLead?.phone ?? ''
+                                                  leadPhone: '',//objDatumCrmLead?.phone ?? ''
+                                                  contactName: objDatumCrmLead?.contactName ?? ''
                                                 )
                                               );
                                             }
@@ -1828,9 +1875,9 @@ class PlanActivStateTwo extends State<PlanActiv> {
                     Container(
                       color: Colors.transparent,
                       width: size.width * 0.95,
-                      height: size.height * 0.09,
+                      height: size.height * 0.11,
                       alignment: Alignment.topCenter,
-                      child: const AutoSizeText('No existen actividades agendadas para el día de hoy', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,), maxLines: 2,  presetFontSizes: [42,40,38,36,34,32,30,28,26,24,22,20,18,16,14,12,10]),
+                      child: const AutoSizeText('No existen actividades agendadas', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold,), maxLines: 3,  presetFontSizes: [50, 48, 46, 42,40,38,36,34,32,30,28,26,24,22,20,18,16,14,12,10]),
                     ),
                   ],
                 ),

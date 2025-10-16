@@ -16,7 +16,8 @@ class ActivitiesTypeRequestModel {
     int activityTypeId;
     double workingTime;
     String leadName;
-    String leadPhone; 
+    String leadPhone;
+    String contactName;
 
     ActivitiesTypeRequestModel({
       required this.resId,
@@ -34,7 +35,8 @@ class ActivitiesTypeRequestModel {
         required this.workingTime,
         required this.summary,
         required this.leadName,
-        required this.leadPhone
+        required this.leadPhone,
+        required this.contactName
     });
 
     factory ActivitiesTypeRequestModel.fromJson(String str) => ActivitiesTypeRequestModel.fromMap(json.decode(str));
@@ -57,7 +59,8 @@ class ActivitiesTypeRequestModel {
       workingTime: 0,
       summary: json["summary"] ?? '',
       leadName: json["lead_name"] ?? '',
-      leadPhone: json["lead_phone"] ?? ''
+      leadPhone: json["lead_phone"] ?? '',
+      contactName: ''
     );
 
     factory ActivitiesTypeRequestModel.fromMap2(Map<String, dynamic> json) {
@@ -78,7 +81,8 @@ class ActivitiesTypeRequestModel {
         activityTypeId: json["activity_type_id"],
         workingTime: 0,
         leadName: json["lead_name"] ?? '',
-        leadPhone: json["lead_phone"] ?? ''
+        leadPhone: json["lead_phone"] ?? '',
+        contactName: ''
       );
     }
 
@@ -99,7 +103,8 @@ class ActivitiesTypeRequestModel {
       'workingTime': workingTime,
       'summary': summary,
       'lead_name': leadName,
-      'lead_phone': leadPhone
+      'lead_phone': leadPhone,
+      'contact_name': contactName
     };
   }
 
@@ -119,6 +124,7 @@ class ActivitiesTypeRequestModel {
       'workingTime': workingTime,
       'summary': summary,
       'lead_name': leadName,
-      'lead_phone': leadPhone
+      'lead_phone': leadPhone,
+      'contact_name': contactName
     };
 }

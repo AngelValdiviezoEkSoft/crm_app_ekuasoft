@@ -1085,7 +1085,8 @@ class ActivitiesService extends ChangeNotifier{
                     id: 0,
                     name: '',
                   ),
-                  leadName: objRsp.result.data.mailMessage.data[i].recordName
+                  leadName: objRsp.result.data.mailMessage.data[i].recordName,
+                  contactName: objRsp.result.data.mailMessage.data[i].recordName,                  
                 )
               );
           }
@@ -2042,7 +2043,8 @@ class ActivitiesService extends ChangeNotifier{
               "lead_name": objActividad.leadName,
               "lead_phone": objActividad.leadPhone,
               "is_done_app": true,
-              "user_id": objReq.params.uid
+              "user_id": objReq.params.uid,
+              "lead_contact_name": objActividad.contactName
             },
           }
         };
@@ -2361,7 +2363,8 @@ class ActivitiesService extends ChangeNotifier{
               summary: objActividad.summary,
               userId: IdActivities (id: objMem.data.length, name: 'Test ${objMem.data.length}'),
               cerrado: true,
-              leadName: ''
+              leadName: '',
+              contactName: ''
             )
           );
 
@@ -2380,7 +2383,8 @@ class ActivitiesService extends ChangeNotifier{
                 summary: objActividad.summary,
                 userId: IdActivities (id: 1, name: 'Test 1'),
                 cerrado: true,
-                leadName: ''
+                leadName: '',
+                contactName: ''
               )
             ],
             length: 0,
@@ -2531,7 +2535,8 @@ class ActivitiesService extends ChangeNotifier{
                 summary: lstActividades[i].summary,
                 userId: IdActivities (id: objMem.data.length, name: 'Test ${objMem.data.length}'),
                 cerrado: true,
-                leadName: ''
+                leadName: '',
+                contactName: ''
               )
             );
           }
@@ -2552,7 +2557,8 @@ class ActivitiesService extends ChangeNotifier{
                   summary: lstActividades[i].summary,
                   userId: IdActivities (id: 1, name: 'Test 1'),
                   cerrado: true,
-                  leadName: ''
+                  leadName: '',
+                  contactName: ''
                 )
               ],
               length: 0,

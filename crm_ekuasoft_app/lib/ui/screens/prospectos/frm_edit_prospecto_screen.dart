@@ -182,22 +182,105 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
 
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.blue.shade800,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
             onPressed: () {
               context.pop();
             },
           ),
-          title: const Text('Edición de Prospecto'),
+          title: const Text('Edición de Prospecto', style: TextStyle(color: Colors.white)),
           actions: [
-            /*
-            IconButton(
-              icon: const Icon(Icons.filter_list, color: Colors.black),
-              onPressed: () {},
+            Tooltip(
+              message: 'Regresar al prospecto anterior',
+              child: GestureDetector(
+                onTap: () async {
+                  if(objDatumCrmLead == null) return;
+                  
+                  var lstProspStr = await ProspectoTypeService().getProspectos();
+                  var objLogDecode = json.decode(lstProspStr);
+              
+                  ProspectoResponseModel apiResponse = ProspectoResponseModel.fromJson(objLogDecode);
+              
+                  List<DatumCrmLead> prospectosFiltradosNext = apiResponse.result.data.crmLead.data;                      
+              
+                  for(int i = 0; i < prospectosFiltradosNext.length; i++){
+                    if(prospectosFiltradosNext[i].id == objDatumCrmLead!.id) {
+                      try{
+                        objDatumCrmLead = prospectosFiltradosNext[i - 1];
+                      }
+                      catch(_){
+                        objDatumCrmLead = prospectosFiltradosNext[0];
+                      }
+              
+                      //ignore:use_build_context_synchronously
+                      context.pop();
+              
+                      //ignore:use_build_context_synchronously
+                      context.push(objRutasGen.rutaEditProsp);
+              
+                      return;
+                    }
+                  }
+              
+                },
+                child: const Icon(
+                  Icons.keyboard_double_arrow_left_sharp,
+                  color: Colors.white,
+                  size: 23,
+                )
+              ),
             ),
-            */
+
+            SizedBox(
+              width: size.width * 0.025,
+            ),
+
+            Tooltip(
+              message: 'Ir al siguiente prospecto',
+              child: GestureDetector(
+                onTap: () async {
+                  if(objDatumCrmLead == null) return;
+                  
+                  var lstProspStr = await ProspectoTypeService().getProspectos();
+                  var objLogDecode = json.decode(lstProspStr);
+              
+                  ProspectoResponseModel apiResponse = ProspectoResponseModel.fromJson(objLogDecode);
+              
+                  List<DatumCrmLead> prospectosFiltradosNext = apiResponse.result.data.crmLead.data;                      
+              
+                  for(int i = 0; i < prospectosFiltradosNext.length; i++){
+                    if(prospectosFiltradosNext[i].id == objDatumCrmLead!.id) {
+                      try{
+                        objDatumCrmLead = prospectosFiltradosNext[i + 1];
+                      }
+                      catch(_){
+                        objDatumCrmLead = prospectosFiltradosNext[0];
+                      }
+              
+                      //ignore:use_build_context_synchronously
+                      context.pop();
+              
+                      //ignore:use_build_context_synchronously
+                      context.push(objRutasGen.rutaEditProsp);
+              
+                      return;
+                    }
+                  }
+              
+                },
+                child: const Icon(
+                  Icons.keyboard_double_arrow_right_sharp,
+                  color: Colors.white,
+                  size: 25,
+                )
+              ),
+            ),
+
+            SizedBox(
+              width: size.width * 0.04,
+            ),
           ],
         ),
       body: BlocBuilder<GenericBloc, GenericState>(

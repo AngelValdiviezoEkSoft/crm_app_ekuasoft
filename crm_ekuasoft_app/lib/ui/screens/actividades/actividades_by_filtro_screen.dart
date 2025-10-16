@@ -525,7 +525,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                                         ),
                                                       ),
                                                       TextSpan(
-                                                        text: lstActividadesByFiltros[index].leadName,
+                                                        text: lstActividadesByFiltros[index].contactName,
                                                         style: const TextStyle(
                                                           color: Colors.blueGrey,
                                                           fontSize: 12,
@@ -569,6 +569,27 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                                       ),
                                                       TextSpan(
                                                         text: DateFormat('yyyy-MM-dd', 'es').format(lstActividadesByFiltros[index].dateDeadline),
+                                                        style: const TextStyle(
+                                                          color: Colors.blueGrey,
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              
+                                                RichText(
+                                                  text: TextSpan(
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: 'Fecha de creación: ',
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                      TextSpan(
+                                                        text: DateFormat('yyyy-MM-dd', 'es').format(lstActividadesByFiltros[index].dateCreate),
                                                         style: const TextStyle(
                                                           color: Colors.blueGrey,
                                                           fontSize: 12,
