@@ -102,6 +102,7 @@ class CrmLead {
 
 class DatumCrmLead {
     int id;
+    bool? active;
     List<StructCombos> activityIds;
     CampaignId? campaignId;
     CampaignId lostReasonId;
@@ -168,7 +169,8 @@ class DatumCrmLead {
         this.probability,
         this.dateClose,
         this.userId,
-        this.referred
+        this.referred,
+        this.active
     });
 
     factory DatumCrmLead.fromJson(String str) => DatumCrmLead.fromMap(json.decode(str));
@@ -208,7 +210,8 @@ class DatumCrmLead {
         probability: json["probability"] ?? 0,
         userId: json["user_id"] == null ? null : StructCombos.fromMap(json["user_id"]),
         expectedRevenue: json["expected_revenue"] ?? 0,
-        referred: json["referred"] ?? ''        
+        referred: json["referred"] ?? '',
+        active: json["active"] ?? false
     );
 
     factory DatumCrmLead.fromMap2(Map<String, dynamic> json) {
@@ -248,6 +251,7 @@ class DatumCrmLead {
         userId: json['user_id'],
         expectedRevenue: (json['expected_revenue'] as num).toDouble(),
         referred: json['referred'],
+        active: json['active'] ?? false
       );
     }
 
@@ -284,7 +288,8 @@ class DatumCrmLead {
       'probability': probability,
       'user_id': userId,
       'expected_revenue': expectedRevenue,
-      'referred': referred
+      'referred': referred,
+      'active': active
     };
   }
 
@@ -320,7 +325,8 @@ class DatumCrmLead {
         "probability": 0,
         "user_id": userId?.toJson(),
         "expected_revenue": expectedRevenue,
-        "referred": referred
+        "referred": referred,
+        "active": active
     };
 }
 

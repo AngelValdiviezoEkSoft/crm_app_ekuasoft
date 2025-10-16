@@ -36,6 +36,8 @@ class ListaProspectosScreen extends StatefulWidget {
 //class MarcacionScreen extends StatelessWidget {
 class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
+  List<String> lstEstadosPrsp = [];
+  String estadoPrspSelect = '-- Todos --';
   late Future<String> _futureProspectos;
   int selectedYear = DateTime.now().year;
   int? _mesSeleccionado; // mes del 1 al 12  
@@ -60,6 +62,12 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
   @override
   void initState() {
     super.initState();
+    estadoPrspSelect = '-- Todos --';
+    lstEstadosPrsp = [
+      'Ganados',
+      'Perdidos',
+      '-- Todos --'
+    ];
     objRspGen = '';
     ingresaUnaVez = true;
     objActividadEscogida = null;
@@ -262,7 +270,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
           //backgroundColor: Colors.white,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
+            icon: const Icon(Icons.arrow_back_ios, size: 19,),
             onPressed: () {
               //ignore: use_build_context_synchronously
               FocusScope.of(context).unfocus();
@@ -271,12 +279,36 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
               filtroPrspTxt = TextEditingController();
               context.pop();
 
-              //ignore:use_build_context_synchronously
-              //context.push(objRutasGen.rutaHome);
             },
           ),
-          title: const Text('Prospectos'),
+          title: const Text('Prospectos', style: TextStyle(fontSize: 18),),
           actions: [
+            Container(
+              color: Colors.transparent,
+              width: size.width * 0.25,
+              height: size.height * 0.055,
+              child: DropdownButton<String>(
+                  hint: const Icon(Icons.flip_camera_android_rounded), // Ícono del ComboBox
+                  value: estadoPrspSelect,
+                  onChanged: (String? newValue) {
+                    estadoPrspSelect = newValue ?? '';
+
+                    refreshDataByEstado(objRspGen, estadoPrspSelect);
+
+                    setState(() {
+                      //compSelect = newValue ?? '';
+                    });
+                  },
+                  items: lstEstadosPrsp
+                  .map((statePrsp) =>
+                    DropdownMenuItem(
+                      value: statePrsp,
+                      child: AutoSizeText(statePrsp, maxLines: 1, style: const TextStyle(fontSize: 11), presetFontSizes: const [14,12,10,8,6,4],),
+                    ))
+                  .toList(),
+                ),
+            ),
+
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: () {
@@ -289,6 +321,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                 refreshDataProsp();
               },
             ),
+            
             IconButton(
               icon: const Icon(Icons.calendar_month),
               onPressed: () {
@@ -1611,6 +1644,37 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
     }
 
     setState(() {});
+
+  }
+
+  Future<void> refreshDataByEstado(String objMemoria, String state) async { 
+               
+    prospectosFiltrados = [];
+
+    CrmLead apiResponse = CrmLead.fromJson(objMemoria);
+
+    if(state != '-- Todos --'){
+      for(int i = 0; i < apiResponse.data.length; i++){
+        if(
+          state.toLowerCase() == 'ganados' &&
+          apiResponse.data[i].active != null && apiResponse.data[i].active == true
+        ){
+          prospectosFiltrados.add(apiResponse.data[i]);
+        }
+        if(
+          state.toLowerCase() == 'perdidos' &&
+          apiResponse.data[i].active != null && apiResponse.data[i].active == false
+        ){
+          prospectosFiltrados.add(apiResponse.data[i]);
+        }
+      }
+
+    }
+    else{
+      prospectosFiltrados = apiResponse.data;
+    }
+
+    return;
 
   }
 

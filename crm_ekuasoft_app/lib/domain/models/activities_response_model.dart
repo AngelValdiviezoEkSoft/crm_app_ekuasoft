@@ -37,7 +37,7 @@ class ActivitiesResponseModel {
 class DatumActivitiesResponse {
     int id;
     DateTime dateDeadline;
-    DateTime dateCreate;
+    DateTime? dateCreate;
     int resId;
     String resModel;
     IdActivities activityTypeId;
@@ -45,7 +45,10 @@ class DatumActivitiesResponse {
     String? summary;
     String? leadName;
     String? contactName;
+    String? activityCategory;
     bool cerrado;
+    String? cell;
+    String? mail;
 
     DatumActivitiesResponse({
         required this.id,
@@ -58,7 +61,10 @@ class DatumActivitiesResponse {
         required this.cerrado,
         required this.leadName,
         required this.contactName,
-        required this.dateCreate
+        required this.dateCreate,
+        required this.activityCategory,
+        required this.cell,
+        required this.mail
     });
 
     factory DatumActivitiesResponse.fromRawJson(String str) => DatumActivitiesResponse.fromJson(json.decode(str));
@@ -68,7 +74,7 @@ class DatumActivitiesResponse {
     factory DatumActivitiesResponse.fromJson(Map<String, dynamic> json) => DatumActivitiesResponse(
         id: json["id"] ?? 0,
         dateDeadline: DateTime.parse(json["date_deadline"]),
-        dateCreate: DateTime.parse(json["create_date"]),
+        dateCreate: json["create_date"] != null ? DateTime.parse(json["create_date"]) : null,
         resId: json["res_id"],
         resModel: json["res_model"],
         activityTypeId: IdActivities.fromJson(json["activity_type_id"]),
@@ -76,7 +82,10 @@ class DatumActivitiesResponse {
         summary: json["summary"] ?? '',
         cerrado: json["cerrado"] ?? false,
         leadName: json["lead_name"] ?? '',
-        contactName: json["lead_contact_name"] ?? ''
+        contactName: json["lead_contact_name"] ?? '',
+        activityCategory: json["activity_category"] ?? '',
+        cell: json["cell"] ?? '',
+        mail: json["mail"] ?? ''
     );
 
     Map<String, dynamic> toJson() => {
@@ -91,6 +100,9 @@ class DatumActivitiesResponse {
         "lead_name": leadName,
         "lead_contact_name": contactName,
         "create_date": dateCreate,
+        "activity_category": activityCategory,
+        "cell": cell,
+        "mail": mail
     };
 }
 

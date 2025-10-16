@@ -1164,9 +1164,12 @@ class MailActivityDatumAppModel {
     String? summary;
     String? leadName;
     String? leadContactName;
-
     CombosAppModel activityTypeId;
     CombosAppModel userId;
+    DateTime? createDate;
+    String? activityCategory;
+    String? cell;
+    String? mail;
 
     MailActivityDatumAppModel({
         required this.id,
@@ -1177,7 +1180,11 @@ class MailActivityDatumAppModel {
         required this.userId,
         required this.summary,
         required this.leadName,
-        required this.leadContactName
+        required this.leadContactName,
+        required this.createDate,
+        required this.activityCategory,
+        required this.cell,
+        required this.mail,
     });
 
     factory MailActivityDatumAppModel.fromRawJson(String str) => MailActivityDatumAppModel.fromJson(json.decode(str));
@@ -1191,7 +1198,11 @@ class MailActivityDatumAppModel {
         resId: json["res_id"] ?? 0,
         resModel: json['res_model'] ?? '',
         leadName: json['lead_name'] ?? '',
+        activityCategory: json['activity_category'] ?? '',
+        cell: json['cell'] ?? '',
+        mail: json['mail'] ?? '',
         leadContactName: json['lead_contact_name'] ?? '',
+        createDate: json["create_date"] == null ? null : DateTime.parse(json["create_date"]),
         activityTypeId: json["activity_type_id"] != null ? 
         CombosAppModel.fromJson(json["activity_type_id"])
         : CombosAppModel(id: 0, name: ''),
@@ -1205,11 +1216,15 @@ class MailActivityDatumAppModel {
         "date_deadline": dateDadline,
         "res_id": resId,
         "res_model": resModel,
-        "activity_type_id": activityTypeId.toJson(),//List<dynamic>.from(activityTypeId.map((x) => x.toJson())),
+        "activity_type_id": activityTypeId.toJson(),
         "user_id": userId.toJson(),
         "summary":summary,
         "lead_name": leadName,
-        "lead_contact_name": leadContactName
+        "lead_contact_name": leadContactName,
+        "create_date": createDate.toString(),
+        "activity_category": activityCategory,
+        "cell": cell,
+        "mail": mail
     };
 }
 

@@ -1086,7 +1086,11 @@ class ActivitiesService extends ChangeNotifier{
                     name: '',
                   ),
                   leadName: objRsp.result.data.mailMessage.data[i].recordName,
-                  contactName: objRsp.result.data.mailMessage.data[i].recordName,                  
+                  contactName: objRsp.result.data.mailMessage.data[i].recordName,
+                  dateCreate: objRsp.result.data.mailMessage.data[i].date,
+                  activityCategory: '',
+                  cell: '',
+                  mail: ''
                 )
               );
           }
@@ -1506,7 +1510,7 @@ class ActivitiesService extends ChangeNotifier{
       
       var rsp = AppResponseModel.fromRawJson(response.body);
 
-      String cmbLstAct = json.encode(rsp.result.data.mailActivity);//await storageAct.read(key: 'cmbLstActividades') ?? '';
+      String cmbLstAct = json.encode(rsp.result.data.mailActivity);
 
       ActivitiesResponseModel objActividades = ActivitiesResponseModel.fromRawJson(cmbLstAct);
 
@@ -1622,8 +1626,8 @@ class ActivitiesService extends ChangeNotifier{
 
       return objRspFinal;
     }
-    catch(_){
-     //print('Test: $ex');
+    catch(ex){
+     print('Test: $ex');
     }
   }
 
@@ -2364,7 +2368,11 @@ class ActivitiesService extends ChangeNotifier{
               userId: IdActivities (id: objMem.data.length, name: 'Test ${objMem.data.length}'),
               cerrado: true,
               leadName: '',
-              contactName: ''
+              contactName: '',
+              dateCreate: DateTime.now(),
+              activityCategory: '',
+              cell: '',
+              mail: ''
             )
           );
 
@@ -2384,7 +2392,11 @@ class ActivitiesService extends ChangeNotifier{
                 userId: IdActivities (id: 1, name: 'Test 1'),
                 cerrado: true,
                 leadName: '',
-                contactName: ''
+                contactName: '',
+                dateCreate: DateTime.now(),
+                activityCategory: '',
+                cell: '',
+                mail: ''
               )
             ],
             length: 0,
@@ -2536,7 +2548,11 @@ class ActivitiesService extends ChangeNotifier{
                 userId: IdActivities (id: objMem.data.length, name: 'Test ${objMem.data.length}'),
                 cerrado: true,
                 leadName: '',
-                contactName: ''
+                contactName: '',
+                dateCreate: DateTime.now(),
+                activityCategory: '',
+                cell: '',
+                mail: ''
               )
             );
           }
@@ -2558,7 +2574,11 @@ class ActivitiesService extends ChangeNotifier{
                   userId: IdActivities (id: 1, name: 'Test 1'),
                   cerrado: true,
                   leadName: '',
-                  contactName: ''
+                  contactName: '',
+                  dateCreate: DateTime.now(),
+                  activityCategory: '',
+                  cell: '',
+                  mail: ''
                 )
               ],
               length: 0,

@@ -4,6 +4,7 @@ import 'package:crm_ekuasoft_app/domain/domain.dart';
 import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -834,6 +835,10 @@ class _CalendarioActividadesByFiltroViewState extends State<CalendarioActividade
   final TextEditingController filtroAgendaTxt = TextEditingController();
   final ScrollController scrollListaClt = ScrollController();
 
+  static const platformPhone = MethodChannel('call_channel');
+
+  static const platformEmail = MethodChannel('email_channel');
+
   late ActivitiesBloc actBloc;
   late GenericBloc gnrBloc;
   late ThemeProvider themeProvider;
@@ -1133,6 +1138,23 @@ class _CalendarioActividadesByFiltroViewState extends State<CalendarioActividade
   }
 
   Widget _buildActividadCard(DatumActivitiesResponse act, Size size) {
+
+    void makePhoneCall(String cell) async {    
+      try {
+        await platformPhone.invokeMethod('makePhoneCall', {'phone': cell});
+      } on PlatformException catch (_) {
+        //print("Error al abrir la app de llamada: ${e.message}");
+      }        
+    }
+
+    void openEmailApp(String email) async {   
+      try {
+        await platformEmail.invokeMethod('openEmailApp', {'email': email});
+      } on PlatformException catch (_) {
+        //print("Error al abrir la app de correos: ${e.message}");
+      }    
+    }
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -1142,29 +1164,50 @@ class _CalendarioActividadesByFiltroViewState extends State<CalendarioActividade
           backgroundColor: act.cerrado ? Colors.black26 : Colors.grey[200],
           child: //const Icon(Icons.person),
           Stack(children: [
-                                        Icon(Icons.person, color: themeProvider.themeMode.index == 2 ? Colors.black : Colors.white,),
-                                        //if (!calendarioActividadesFilAgendaByFiltroCall[index].cerrado && DateFormat('yyyy-MM-dd','es').format(calendarioActividadesFilAgendaByFiltroCall[index].dateDeadline) == DateFormat('yyyy-MM-dd','es').format(DateTime.now()))
-                                        if (!act.cerrado && DateFormat('yyyy-MM-dd','es').format(act.dateDeadline) == DateFormat('yyyy-MM-dd','es').format(DateTime.now()))
-                                          Positioned(
-                                            top: size.height * 0.01,
-                                            left: size.width * 0.02,
-                                            child: Container(
-                                              color: Colors.transparent,
-                                              width: size.width * 0.05,
-                                              height: size.height * 0.02,
-                                              child: const IndicatorPointWidget(null)
-                                            ),
-                                          )
-                                      ]),
+            Icon(Icons.person, color: themeProvider.themeMode.index == 2 ? Colors.black : Colors.white,),
+            //if (!calendarioActividadesFilAgendaByFiltroCall[index].cerrado && DateFormat('yyyy-MM-dd','es').format(calendarioActividadesFilAgendaByFiltroCall[index].dateDeadline) == DateFormat('yyyy-MM-dd','es').format(DateTime.now()))
+            if (!act.cerrado && DateFormat('yyyy-MM-dd','es').format(act.dateDeadline) == DateFormat('yyyy-MM-dd','es').format(DateTime.now()))
+              Positioned(
+                top: size.height * 0.01,
+                left: size.width * 0.02,
+                child: Container(
+                  color: Colors.transparent,
+                  width: size.width * 0.05,
+                  height: size.height * 0.02,
+                  child: const IndicatorPointWidget(null)
+                ),
+              )
+          ]),
         ),
         title: Text(act.summary ?? '', maxLines: 2, overflow: TextOverflow.ellipsis),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Prospecto: ${act.contactName}", style: const TextStyle(fontSize: 12)),
-            Text("Tipo: ${act.activityTypeId.name}", style: const TextStyle(fontSize: 12)),
-            Text("Fecha: ${DateFormat('yyyy-MM-dd').format(act.dateDeadline)}",
-                style: const TextStyle(fontSize: 12)),
+            Text("Prospecto: ${act.contactName}", style: const TextStyle(fontSize: 12)),            
+            Row(children: [
+              Text("Tipo de actividad: ${act.activityTypeId.name}", style: const TextStyle(fontSize: 12)),
+              SizedBox(width: size.width * 0.04,),
+                                                    
+              if(act.activityCategory != null && act.activityCategory!.toLowerCase() == 'phonecall')
+              GestureDetector(
+                onTap: () {
+                  //makePhoneCall(act.cell!);
+                  makePhoneCall('0988665834');
+                },
+                child: const Icon(Icons.call, size: 12,)
+              ),
+
+              if(act.activityCategory != null && act.activityCategory!.toLowerCase() == 'default')
+              GestureDetector(
+                onTap: () {
+                  //openEmailApp(act.mail!);
+                  openEmailApp('av@gmail.com');
+                },
+                child: const Icon(Icons.email, size: 12,)
+              )
+            ],),
+            Text("Fecha: ${DateFormat('dd/MM/yyyy').format(act.dateDeadline)}",style: const TextStyle(fontSize: 12)),
+            Text("Fecha creación: ${DateFormat('dd/MM/yyyy HH:MM').format(act.dateCreate!)}",style: const TextStyle(fontSize: 12)),
           ],
         ),
       ),

@@ -5,6 +5,7 @@ import 'package:crm_ekuasoft_app/domain/domain.dart';
 import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -50,6 +51,12 @@ class ActividadesByFiltro extends StatefulWidget {
 
 
 class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
+
+  static const platformPhone = MethodChannel('call_channel');
+
+  static const platformEmail = MethodChannel('email_channel');
+
+  ScrollController scrollListaClt = ScrollController();
 
   late Future<String> _futureActividades;
 
@@ -144,7 +151,22 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
 
   }
 
-  ScrollController scrollListaClt = ScrollController();
+  void makePhoneCall(String cell) async {    
+    try {
+      await platformPhone.invokeMethod('makePhoneCall', {'phone': cell});
+    } on PlatformException catch (_) {
+      //print("Error al abrir la app de llamada: ${e.message}");
+    }        
+  }
+
+  void openEmailApp(String email) async {   
+    try {
+      await platformEmail.invokeMethod('openEmailApp', {'email': email});
+    } on PlatformException catch (_) {
+      //print("Error al abrir la app de correos: ${e.message}");
+    }    
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -536,25 +558,50 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                                 ),
                                               
                     
-                                                RichText(
-                                                  text: TextSpan(
-                                                    children: [
-                                                      const TextSpan(
-                                                        text: 'Tipo de actividad: ',
-                                                        style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 12,
-                                                        ),
+                                                Row(
+                                                  children: [
+                                                    RichText(
+                                                      text: TextSpan(
+                                                        children: [
+                                                          const TextSpan(
+                                                            text: 'Tipo de actividad: ',
+                                                            style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontSize: 12,
+                                                            ),
+                                                          ),
+                                                          TextSpan(
+                                                            text: lstActividadesByFiltros[index].activityTypeId.name,
+                                                            style: const TextStyle(
+                                                              color: Colors.blueGrey,
+                                                              fontSize: 12,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                      TextSpan(
-                                                        text: lstActividadesByFiltros[index].activityTypeId.name,
-                                                        style: const TextStyle(
-                                                          color: Colors.blueGrey,
-                                                          fontSize: 12,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
+                                                    ),
+
+                                                    SizedBox(width: size.width * 0.04,),
+                                                    
+                                                    if(lstActividadesByFiltros[index].activityCategory != null && lstActividadesByFiltros[index].activityCategory!.toLowerCase() == 'phonecall')
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        //makePhoneCall(lstActividadesByFiltros[index].cell!);
+                                                        makePhoneCall('0988665834');
+                                                      },
+                                                      child: const Icon(Icons.call, size: 12,)
+                                                    ),
+
+                                                    if(lstActividadesByFiltros[index].activityCategory != null && lstActividadesByFiltros[index].activityCategory!.toLowerCase() == 'default')
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        //openEmailApp(lstActividadesByFiltros[index].mail!);
+                                                        openEmailApp('av@gmail.com');
+                                                      },
+                                                      child: const Icon(Icons.email, size: 12,)
+                                                    )
+                                                  
+                                                  ],
                                                 ),
                                                 
                                                 RichText(
@@ -568,7 +615,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                                         ),
                                                       ),
                                                       TextSpan(
-                                                        text: DateFormat('yyyy-MM-dd', 'es').format(lstActividadesByFiltros[index].dateDeadline),
+                                                        text: DateFormat('dd/MM/yyyy', 'es').format(lstActividadesByFiltros[index].dateDeadline),
                                                         style: const TextStyle(
                                                           color: Colors.blueGrey,
                                                           fontSize: 12,
@@ -589,7 +636,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                                         ),
                                                       ),
                                                       TextSpan(
-                                                        text: DateFormat('yyyy-MM-dd', 'es').format(lstActividadesByFiltros[index].dateCreate),
+                                                        text: lstActividadesByFiltros[index].dateCreate != null ? DateFormat('dd/MM/yyyy HH:MM', 'es').format(lstActividadesByFiltros[index].dateCreate!) : "",
                                                         style: const TextStyle(
                                                           color: Colors.blueGrey,
                                                           fontSize: 12,
