@@ -450,7 +450,8 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                       summary: '',
                                                       leadName: objDatumCrmLead?.name ?? '',
                                                       leadPhone: objDatumCrmLead?.phone ?? '',                                                      
-                                                      contactName: objDatumCrmLead?.contactName ?? ''
+                                                      contactName: objDatumCrmLead?.contactName ?? '',
+                                                      leadEmail: objDatumCrmLead?.emailFrom ?? ''
                                                     );
             
                                                     showDialog(
@@ -1837,8 +1838,9 @@ class PlanActivStateTwo extends State<PlanActiv> {
                                                   workingTime: tiempo,
                                                   summary: '',
                                                   leadName: lstActividadesDiariasByProspecto[i].leadName ?? '',
-                                                  leadPhone: '',//objDatumCrmLead?.phone ?? ''
-                                                  contactName: objDatumCrmLead?.contactName ?? ''
+                                                  leadPhone: objDatumCrmLead?.phone ?? '',
+                                                  contactName: objDatumCrmLead?.contactName ?? '',
+                                                  leadEmail: objDatumCrmLead?.emailFrom ?? ''
                                                 )
                                               );
                                             }

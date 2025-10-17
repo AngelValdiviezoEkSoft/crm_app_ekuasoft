@@ -2046,6 +2046,7 @@ class ActivitiesService extends ChangeNotifier{
               "note": objActividad.note,
               "lead_name": objActividad.leadName,
               "lead_phone": objActividad.leadPhone,
+              "lead_email": objActividad.leadEmail,
               "is_done_app": true,
               "user_id": objReq.params.uid,
               "lead_contact_name": objActividad.contactName

@@ -17,6 +17,7 @@ class ActivitiesTypeRequestModel {
     double workingTime;
     String leadName;
     String leadPhone;
+    String leadEmail;
     String contactName;
 
     ActivitiesTypeRequestModel({
@@ -36,7 +37,8 @@ class ActivitiesTypeRequestModel {
         required this.summary,
         required this.leadName,
         required this.leadPhone,
-        required this.contactName
+        required this.contactName,
+        required this.leadEmail
     });
 
     factory ActivitiesTypeRequestModel.fromJson(String str) => ActivitiesTypeRequestModel.fromMap(json.decode(str));
@@ -60,6 +62,7 @@ class ActivitiesTypeRequestModel {
       summary: json["summary"] ?? '',
       leadName: json["lead_name"] ?? '',
       leadPhone: json["lead_phone"] ?? '',
+      leadEmail: json["lead_email"] ?? '',
       contactName: ''
     );
 
@@ -82,6 +85,7 @@ class ActivitiesTypeRequestModel {
         workingTime: 0,
         leadName: json["lead_name"] ?? '',
         leadPhone: json["lead_phone"] ?? '',
+        leadEmail: json["lead_email"] ?? '',
         contactName: ''
       );
     }
@@ -104,7 +108,8 @@ class ActivitiesTypeRequestModel {
       'summary': summary,
       'lead_name': leadName,
       'lead_phone': leadPhone,
-      'contact_name': contactName
+      'contact_name': contactName,
+      'lead_email': leadEmail
     };
   }
 
@@ -125,6 +130,7 @@ class ActivitiesTypeRequestModel {
       'summary': summary,
       'lead_name': leadName,
       'lead_phone': leadPhone,
-      'contact_name': contactName
+      'contact_name': contactName,
+      'lead_email': leadEmail
     };
 }

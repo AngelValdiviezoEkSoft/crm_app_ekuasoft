@@ -592,7 +592,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                                       child: const Icon(Icons.call, size: 12,)
                                                     ),
 
-                                                    if(lstActividadesByFiltros[index].activityCategory != null && lstActividadesByFiltros[index].activityCategory!.toLowerCase() == 'default' && lstActividadesByFiltros[index].leadEmail != null && lstActividadesByFiltros[index].leadEmail!.isNotEmpty)
+                                                    //if(lstActividadesByFiltros[index].activityCategory != null && lstActividadesByFiltros[index].activityCategory!.toLowerCase() == 'default' && lstActividadesByFiltros[index].leadEmail != null && lstActividadesByFiltros[index].leadEmail!.isNotEmpty)
                                                     GestureDetector(
                                                       onTap: () {
                                                         openEmailApp(lstActividadesByFiltros[index].leadEmail!);
