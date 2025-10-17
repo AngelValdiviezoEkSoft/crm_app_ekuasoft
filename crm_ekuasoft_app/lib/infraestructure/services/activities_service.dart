@@ -771,8 +771,6 @@ class ActivitiesService extends ChangeNotifier{
 
       var connectivityResult = await ValidacionesUtils().validaInternet();
 
-      
-
       if(connectivityResult.isNotEmpty){
         ActivitiesPageModel objRspFinal = ActivitiesPageModel(
         activities: ActivitiesResponseModel(
@@ -946,7 +944,7 @@ class ActivitiesService extends ChangeNotifier{
       final response = await http.post(
         Uri.parse(ruta),
         headers: headers,
-        body: jsonEncode(requestBody), 
+        body: jsonEncode(requestBody),
       );
       
       var rsp = AppResponseModel.fromRawJson(response.body);

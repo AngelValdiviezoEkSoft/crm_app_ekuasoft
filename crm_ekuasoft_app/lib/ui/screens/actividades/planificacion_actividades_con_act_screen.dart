@@ -119,6 +119,14 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
     final size = MediaQuery.of(context).size;
     
     final planActiv = BlocProvider.of<GenericBloc>(context);
+    
+/*
+    final bool tecladoVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+
+    if (tecladoVisible) {
+      FocusScope.of(context).unfocus();
+    }
+    */
 
     return BlocBuilder<GenericBloc, GenericState>(
         builder: (context,state) {
