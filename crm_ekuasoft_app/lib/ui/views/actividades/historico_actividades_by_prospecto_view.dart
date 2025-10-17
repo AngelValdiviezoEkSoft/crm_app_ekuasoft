@@ -114,7 +114,7 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
                           Container(
                             color: Colors.transparent,
                             width: size.width,
-                            height: size.height * 0.55,
+                            height: size.height * 0.75,
                             child: ListView.builder(
                               itemCount: lstActividadesHistoricosByProspecto.length,
                               itemBuilder: ( _, int index ) {

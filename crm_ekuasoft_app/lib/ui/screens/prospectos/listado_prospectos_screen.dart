@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:crm_ekuasoft_app/domain/domain.dart';
 import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
+import 'package:crm_ekuasoft_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -383,7 +384,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: size.height * 0.02,
+                        height: size.height * 0.002,
                       ),
                   
                       Container(
@@ -441,69 +442,78 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                       ),
 
                       SizedBox(
-                        height: size.height * 0.02,
+                        height: size.height * 0.009,
                       ),
 
-                      //VALIDAR QUE SEA SOLO PARA CVE
                       Container(
-                        color: Colors.white,
+                        color: Colors.transparent,
                         width: size.width * 0.96,
-                        child: DropdownButtonFormField<int>(
-                          //dropdownColor: themeProvider.themeMode.index == 0 ? Colors.white : Colors.black,
-                          //style: TextStyle(color: themeProvider.themeMode.index == 0 ? Colors.white : Colors.black,),
-                          hint: const Text('Selecciona un mes', style: TextStyle(color: Colors.black),),//, style: TextStyle(color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 2 ? Colors.white : Colors.black,),),
-                          value: _mesSeleccionado,
-                          isExpanded: true,
-                          decoration: const InputDecoration(
-                            //filled: true,
-                            border: OutlineInputBorder(),
-                            //fillColor: themeProvider.themeMode.index == 0 ? Colors.white : Colors.black
-                          ),
-                          items: List.generate(13, (index) {
-                            return DropdownMenuItem(
-                              value: index + 1,                                                            
-                              //enabled: true,
-                              child: Text(meses[index]),
-                            );
-                          }),
-                          onChanged: (value) {
-                            muestraContador = true;
+                        height: size.height * 0.07,
+                        child: Row(
+                          children: [
+                             //VALIDAR QUE SEA SOLO PARA CVE
+                            Container(
+                              color: Colors.white,
+                              width: size.width * 0.45,
+                              child: DropdownButtonFormField<int>(
+                                alignment: Alignment.center,
+                                hint: const Text('Selecciona mes', style: TextStyle(color: Colors.black),),//, style: TextStyle(color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 2 ? Colors.white : Colors.black,),),
+                                value: _mesSeleccionado,
+                                isExpanded: true,
+                                decoration: const InputDecoration(
+                                  //filled: true,
+                                  border: OutlineInputBorder(),
+                                  //fillColor: themeProvider.themeMode.index == 0 ? Colors.white : Colors.black
+                                ),
+                                items: List.generate(13, (index) {
+                                  return DropdownMenuItem(
+                                    value: index + 1,                                                            
+                                    //enabled: true,
+                                    child: Text(meses[index]),
+                                  );
+                                }),
+                                onChanged: (value) {
+                                  estadoPrspSelect = '-- Todos --';
+                                  muestraContador = true;
 
-                            _mesSeleccionado = value;
-                            
-                            refreshDataByMes(_mesSeleccionado ?? 0, objRspGen, _mesSeleccionado == 13);
-                          },
+                                  _mesSeleccionado = value;
+                                  
+                                  refreshDataByMes(_mesSeleccionado ?? 0, objRspGen, _mesSeleccionado == 13);
+                                },
+                              ),
+                            ),
+
+                            SizedBox(width: size.width * 0.05,),
+
+                            Container(
+                              color: Colors.white,
+                              width: size.width * 0.45,
+                              child: DropdownButtonFormField<int>(
+                                //style: TextStyle(color: !_isDropdownOpen && (themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 2) ? Colors.white : Colors.black,),
+                                value: selectedYear,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                ),
+                                items: years.map((year) {
+                                  return DropdownMenuItem(
+                                    value: year,
+                                    child: Text(year.toString()),
+                                  );
+                                }).toList(),                                                    
+                                onChanged: (value) {
+                                  estadoPrspSelect = '-- Todos --';
+                                  selectedYear = value!;
+                                  muestraContador = true;
+                                  refreshDataByMes(_mesSeleccionado ?? 0, objRspGen, _mesSeleccionado == 13);                            
+                                },
+                              ),
+                            ),
+
+                          ],
                         ),
                       ),
-
-                      SizedBox(
-                        height: size.height * 0.02,
-                      ),
-
                       //VALIDAR QUE SEA SOLO PARA CVE
-                      Container(
-                        color: Colors.white,
-                        width: size.width * 0.96,
-                        child: DropdownButtonFormField<int>(
-                          //style: TextStyle(color: !_isDropdownOpen && (themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 2) ? Colors.white : Colors.black,),
-                          value: selectedYear,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                          ),
-                          items: years.map((year) {
-                            return DropdownMenuItem(
-                              value: year,
-                              child: Text(year.toString()),
-                            );
-                          }).toList(),                                                    
-                          onChanged: (value) {
-                            selectedYear = value!;
-                            muestraContador = true;
-                            refreshDataByMes(_mesSeleccionado ?? 0, objRspGen, _mesSeleccionado == 13);                            
-                          },
-                        ),
-                      ),
-
+                    
                       SizedBox(height: size.height * 0.02,),
 
                       Container(
@@ -537,13 +547,13 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                       ),
 
                       //if(muestraContador && prospectosFiltrados.isNotEmpty)
-                      SizedBox(height: size.height * 0.02,),
+                      SizedBox(height: size.height * 0.007,),
 
                       if(prospectosFiltrados.isNotEmpty) 
                       Container(
                         color: Colors.transparent,
                         width: size.width,
-                        height: size.height * 0.47,
+                        height: size.height * 0.6,
                         child: Scaffold(
                           /*
                           body: CustomRefreshIndicator(
@@ -869,6 +879,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                             selectedYear = DateTime.now().year;
                           
                                             //context.push(Rutas().rutaPlanificacionActividades);
+                                            rutaActualGen = Rutas().rutaPlanActivConActiv;
                                             context.push(Rutas().rutaPlanActivConActiv);
                                           },
                                           backgroundColor: objColorsApp.celeste,
@@ -926,30 +937,47 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                         color: Colors.transparent,
                                                         width: size.width * 0.54,
                                                         height: size.height * 0.04,
-                                                        child: Text(
-                                                          prospectosFiltrados[index].name,
-                                                          style: const TextStyle(
-                                                            fontWeight: FontWeight.bold,                                                                
-                                                            //color: Colors.black
-                                                          ),
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow.ellipsis,
-                                                          textAlign: TextAlign.left,
+                                                        child: SelectableText.rich(
+                                                          TextSpan(
+                                                          children: [
+                                                            TextSpan(
+                                                              text: prospectosFiltrados[index].name,
+                                                              style: const TextStyle(
+                                                                fontWeight: FontWeight.bold,                                                                
+                                                                //color: Colors.black
+                                                              ),
+                                                              /*
+                                                              maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
+                                                              textAlign: TextAlign.left,
+                                                              */
+                                                            ),
+                                                          ],
                                                         ),
+                                                        )
                                                       ),
+
                                                       Container(
                                                         color: Colors.transparent,
                                                         width: size.width * 0.54,
                                                         height: size.height * 0.04,
-                                                        child: Text(
-                                                          prospectosFiltrados[index].contactName ?? '',
-                                                          style: const TextStyle(
-                                                            fontWeight: FontWeight.bold,                                                                
-                                                            //color: Colors.black
+                                                        child: SelectableText.rich(
+                                                          TextSpan(
+                                                            children: [
+                                                              TextSpan(
+                                                                text: prospectosFiltrados[index].contactName ?? '',
+                                                                style: const TextStyle(
+                                                                  fontWeight: FontWeight.bold,                                                                
+                                                                  //color: Colors.black
+                                                                ),
+                                                                /*
+                                                                maxLines: 1,
+                                                                overflow: TextOverflow.ellipsis,
+                                                                textAlign: TextAlign.left,
+                                                                */
+                                                              ),
+                                                            ],
                                                           ),
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow.ellipsis,
-                                                          textAlign: TextAlign.left,
                                                         ),
                                                       ),
                                                       
@@ -1068,7 +1096,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                     color: Colors.transparent,
                                                     height: size.height * 0.04,
                                                     child: IconButton(
-                                                      icon: const Icon(Icons.info, color: Colors.grey, size: 20,),
+                                                      icon: const Icon(Icons.edit, color: Colors.grey, size: 20,),
                                                       onPressed: () {
                             
                                                         objDatumCrmLead = prospectosFiltrados[index];
@@ -1078,6 +1106,8 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                             
                                                         terminoBusqueda = '';
                                                         filtroPrspTxt = TextEditingController();
+
+                                                        rutaActualGen = Rutas().rutaEditProsp;
                             
                                                         context.push(Rutas().rutaEditProsp);
                                                       },
@@ -1596,7 +1626,10 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
   }
 
-  Future<void> refreshDataByMes(int mesSelect, String objMemoria, bool muestraTodos) async {            
+  Future<void> refreshDataByMes(int mesSelect, String objMemoria, bool muestraTodos) async {
+
+    refreshDataByEstado(objMemoria, '-- Todos --');
+
     prospectosFiltrados = [];
 
     CrmLead apiResponse = CrmLead.fromJson(objMemoria);
@@ -1668,7 +1701,6 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
           prospectosFiltrados.add(apiResponse.data[i]);
         }
       }
-
     }
     else{
       prospectosFiltrados = apiResponse.data;

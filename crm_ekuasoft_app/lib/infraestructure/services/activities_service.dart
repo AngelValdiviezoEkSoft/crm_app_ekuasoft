@@ -1089,8 +1089,8 @@ class ActivitiesService extends ChangeNotifier{
                   contactName: objRsp.result.data.mailMessage.data[i].recordName,
                   dateCreate: objRsp.result.data.mailMessage.data[i].date,
                   activityCategory: '',
-                  cell: '',
-                  mail: ''
+                  leadPhone: '',
+                  leadEmail: ''
                 )
               );
           }
@@ -2371,8 +2371,8 @@ class ActivitiesService extends ChangeNotifier{
               contactName: '',
               dateCreate: DateTime.now(),
               activityCategory: '',
-              cell: '',
-              mail: ''
+              leadPhone: '',
+              leadEmail: ''
             )
           );
 
@@ -2395,8 +2395,8 @@ class ActivitiesService extends ChangeNotifier{
                 contactName: '',
                 dateCreate: DateTime.now(),
                 activityCategory: '',
-                cell: '',
-                mail: ''
+                leadPhone: '',
+                leadEmail: ''
               )
             ],
             length: 0,
@@ -2551,8 +2551,8 @@ class ActivitiesService extends ChangeNotifier{
                 contactName: '',
                 dateCreate: DateTime.now(),
                 activityCategory: '',
-                cell: '',
-                mail: ''
+                leadPhone: '',
+                leadEmail: ''
               )
             );
           }
@@ -2577,8 +2577,8 @@ class ActivitiesService extends ChangeNotifier{
                   contactName: '',
                   dateCreate: DateTime.now(),
                   activityCategory: '',
-                  cell: '',
-                  mail: ''
+                  leadPhone: '',
+                  leadEmail: ''
                 )
               ],
               length: 0,

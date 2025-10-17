@@ -219,7 +219,7 @@ class ListaNotificaciones extends StatelessWidget {
     child: BlocBuilder<AuthBloc, AuthState>(
       builder: (context,state) { 
         return GestureDetector(
-          onTap: () {            
+          onTap: () {      
             context.push(rutaNavegacionFin!);            
           },
           child: Column(

@@ -211,7 +211,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                         objDatumCrmLead = prospectosFiltradosNext[i - 1];
                       }
                       catch(_){
-                        objDatumCrmLead = prospectosFiltradosNext[0];
+                        objDatumCrmLead = prospectosFiltradosNext[prospectosFiltradosNext.length - 1];
                       }
               
                       //ignore:use_build_context_synchronously
@@ -502,6 +502,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                                   ? Colors.blue.shade800
                                                                   : Colors.white,
                                                               fontWeight: FontWeight.bold,
+                                                              fontSize: 9.85
                                                             ),
                                                           ),
                                                         ],
@@ -537,6 +538,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                                   ? Colors.blue.shade800
                                                                   : Colors.white,
                                                               fontWeight: FontWeight.bold,
+                                                              fontSize: 9.85
                                                             ),
                                                           ),
                                                         ],
@@ -559,8 +561,44 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                       child: Column(
                                                         children: [
                                                           Icon(
-                                                            Icons.add_business_rounded,
+                                                            Icons.bookmark,
                                                             color: tabAccionesEditPrsp == 2
+                                                                ? Colors.blue.shade800
+                                                                : Colors.white,
+                                                          ),
+                                                          Text(
+                                                            'Observaciones',
+                                                            style: TextStyle(
+                                                              //color: Colors.purple.shade700,
+                                                              color: tabAccionesEditPrsp == 2
+                                                                  ? Colors.blue.shade800
+                                                                  : Colors.white,
+                                                              fontWeight: FontWeight.bold,
+                                                              fontSize: 9.85
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  color: tabAccionesEditPrsp == 3
+                                                      ? Colors.white
+                                                      : Colors.blue.shade800,
+                                                  child: Center(
+                                                    child: TextButton(
+                                                      onPressed: () {
+                                                        tabAccionesEditPrsp = 3;
+                                                        setState(() {});
+                                                      },
+                                                      child: Column(
+                                                        children: [
+                                                          Icon(
+                                                            Icons.book,
+                                                            color: tabAccionesEditPrsp == 3
                                                                 ? Colors.blue.shade800
                                                                 : Colors.white,
                                                           ),
@@ -568,10 +606,11 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                             'Notas Int.',
                                                             style: TextStyle(
                                                               //color: Colors.purple.shade700,
-                                                              color: tabAccionesEditPrsp == 2
+                                                              color: tabAccionesEditPrsp == 3
                                                                   ? Colors.blue.shade800
                                                                   : Colors.white,
                                                               fontWeight: FontWeight.bold,
+                                                              fontSize: 9.85
                                                             ),
                                                           ),
                                                         ],
@@ -626,6 +665,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                     ),
                                     ),
                                     
+                                    if(tabAccionesEditPrsp != 3)
                                     SizedBox(
                                       height: size.height * 0.02,
                                     ),
@@ -1313,6 +1353,8 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                       ),
                                     ),
                                 
+                                    if(tabAccionesEditPrsp == 3)
+                                    const FrmNotasInternasView(),
                                   ],
                                 ),
                               ),

@@ -663,7 +663,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                               objDatumCrmLead = prospectosFiltradosNext[i - 1];
                             }
                             catch(_){
-                              objDatumCrmLead = prospectosFiltradosNext[0];
+                              objDatumCrmLead = prospectosFiltradosNext[prospectosFiltradosNext.length - 1];
                             }
                     
                             //ignore:use_build_context_synchronously
@@ -743,14 +743,70 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
-                          const SizedBox(height: 15),
-                          const Row(
+                          SizedBox(width: size.width * 0.015),
+                          Row(
                             children: [
-                              Text(
+                              const Text(
                                 "⭐⭐⭐⭐⭐",
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.yellow,
+                                ),
+                              ),
+                              
+                              SizedBox(width: size.width * 0.32),
+
+                              Container(
+                                color: Colors.transparent,
+                                width: size.width * 0.35,
+                                height: size.height * 0.07,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(content: Text('Prospecto Ganado :)')),
+                                          );
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.green,
+                                          padding: const EdgeInsets.symmetric(vertical: 14),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          'Ganado',
+                                          style: TextStyle(fontSize: 16, color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                    
+                                    SizedBox(width: size.width * 0.015),
+                                    
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(content: Text('Prospecto Perdido :(')),
+                                          );
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.redAccent,
+                                          padding: const EdgeInsets.symmetric(vertical: 14),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          'Perdido',
+                                          style: TextStyle(fontSize: 16, color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
@@ -924,8 +980,84 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                       child: Column(
                                         children: [
                                           Icon(
-                                            Icons.history,
+                                            Icons.book,
                                             color: tabAccionesAct == 2
+                                                ? Colors.blue.shade800
+                                                : Colors.white,
+                                          ),
+                                          Text(
+                                            'Notas Int.',
+                                            style: TextStyle(
+                                              //color: Colors.purple.shade700,
+                                              color: tabAccionesAct == 2
+                                                  ? Colors.blue.shade800
+                                                  : Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  color: tabAccionesAct == 3
+                                      ? Colors.white
+                                      : Colors.blue.shade800,
+                                  child: Center(
+                                    child: TextButton(
+                                      onPressed: () async {
+                                        tabAccionesAct = 3;
+
+                                        if(objDatumCrmLead != null){
+                                          try{
+                                            const storage = FlutterSecureStorage();
+
+                                            String resPartner = await storage.read(key: 'RespuestaClientes') ?? '';
+
+                                            String ekClasifProspStr = await storage.read(key: 'EkClasifProsp') ?? '';
+                                            String ekResCountryCantonStr = await storage.read(key: 'EkResCountryCantonProsp') ?? '';
+                                            String ekResRegionStr = await storage.read(key: 'EkResRegionProsp') ?? '';
+                                            String ekResSectorStr = await storage.read(key: 'EkResSectorProsp') ?? '';
+                                            String ekResCityStr = await storage.read(key: 'EkResCountryCityProsp') ?? '';
+
+                                            ResPartnerAppModel apiResponse = ResPartnerAppModel.fromRawJson(resPartner);
+                                            EkClassification  ekClassificationFin = EkClassification.fromRawJson(ekClasifProspStr);
+                                            CantonModel  ekCantonFin = CantonModel.fromRawJson(ekResCountryCantonStr);
+                                            RegionModel  ekRegionModelFin = RegionModel.fromRawJson(ekResRegionStr);
+                                            SectorModel  ekSectorFin = SectorModel.fromRawJson(ekResSectorStr);
+                                            CountryCity  ekCityFin = CountryCity.fromRawJson(ekResCityStr);
+                                            
+                                            var objFiltrado = apiResponse.data.firstWhere((x) => x.id == objDatumCrmLead!.partnerId.id,);
+                                            var objClasif = ekClassificationFin.data.firstWhere((x) => x.id == objFiltrado.ekClasificationId.id);
+                                            var objCiudad = ekCityFin.data.firstWhere((x) => x.id == objFiltrado.cityId.id);
+                                            var objCanton = ekCantonFin.data.firstWhere((x) => x.id == objFiltrado.ekResCountryCantonId.id);
+                                            var objRegion = ekRegionModelFin.data.firstWhere((x) => x.id == objFiltrado.ekResRegionId.id);
+                                            var objSector = ekSectorFin.data.firstWhere((x) => x.id == objFiltrado.ekResSectorId.id);
+
+                                            channelProsp = objFiltrado.channelId.name ?? '';
+
+                                            clasificacionPrsp = objClasif.name ?? '';
+                                            ciudadPrsp = objCiudad.name ?? '';
+                                            regionPrsp = objRegion.name ?? '';
+                                            cantonPrsp = objCanton.name ?? '';
+                                            sectorPrsp = objSector.name ?? '';
+                                            tradeNameProsp = objFiltrado.tradeName ?? '';
+                                          }
+                                          catch(_){
+
+                                          }
+                                        }
+
+                                        setState(() {});
+                                      },
+                                      child: Column(
+                                        children: [
+                                          Icon(
+                                            Icons.history,
+                                            color: tabAccionesAct == 3
                                                 ? Colors.blue.shade800
                                                 : Colors.white,
                                           ),
@@ -933,7 +1065,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                             'Histórico',
                                             style: TextStyle(
                                               //color: Colors.purple.shade700,
-                                              color: tabAccionesAct == 2
+                                              color: tabAccionesAct == 3
                                                   ? Colors.blue.shade800
                                                   : Colors.white,
                                               fontWeight: FontWeight.bold,
@@ -970,8 +1102,8 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                       sectionTitleAct(Icons.monetization_on, "Precios y Ventas"),
                     if (tabAccionesAct == 1) infoRowAct("Ingreso esperado", "\$${objDatumCrmLead?.expectedRevenue.toStringAsFixed(2)}", size),
                     if (tabAccionesAct == 1) infoRowAct("Probabilidad", "${probCalculada.toStringAsFixed(0)}%", size),
-                    if (tabAccionesAct == 2) const HistoricoActByProspView(null),
-                    
+                    if(tabAccionesAct == 2) const FrmNotasInternasView(),
+                    if (tabAccionesAct == 3) const HistoricoActByProspView(null),                    
                   ],
                 ),
               ),

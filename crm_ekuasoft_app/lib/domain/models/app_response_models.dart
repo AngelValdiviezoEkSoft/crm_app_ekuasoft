@@ -270,6 +270,7 @@ class CrmLeadDatumAppModel {
   DateTime? dateClose;
   DateTime? dateDeadline;
   String? description;
+  bool? active;
 
   CrmLeadDatumAppModel({
       required this.id,
@@ -300,6 +301,7 @@ class CrmLeadDatumAppModel {
       required this.dateClose,
       required this.dateDeadline,
       this.description,
+      this.active
   });
 
   factory CrmLeadDatumAppModel.fromRawJson(String str) => CrmLeadDatumAppModel.fromJson(json.decode(str));
@@ -348,6 +350,7 @@ class CrmLeadDatumAppModel {
     dateDeadline: json['date_deadline'] == null ? DateTime.now() : DateTime.parse(json['date_deadline']),
     probability: json["probability"] ?? 0,
     description: json["description"],
+    active: json["active"] ?? false,
 );
 
   Map<String, dynamic> toJson() => {
@@ -379,6 +382,7 @@ class CrmLeadDatumAppModel {
     'probability': probability,
     'date_deadline': dateDeadline?.toIso8601String(),
     'description': description,
+    'active': active
   };
 
 }
@@ -1168,8 +1172,8 @@ class MailActivityDatumAppModel {
     CombosAppModel userId;
     DateTime? createDate;
     String? activityCategory;
-    String? cell;
-    String? mail;
+    String? leadPhone;
+    String? leadEmail;
 
     MailActivityDatumAppModel({
         required this.id,
@@ -1183,8 +1187,8 @@ class MailActivityDatumAppModel {
         required this.leadContactName,
         required this.createDate,
         required this.activityCategory,
-        required this.cell,
-        required this.mail,
+        required this.leadPhone,
+        required this.leadEmail
     });
 
     factory MailActivityDatumAppModel.fromRawJson(String str) => MailActivityDatumAppModel.fromJson(json.decode(str));
@@ -1199,8 +1203,8 @@ class MailActivityDatumAppModel {
         resModel: json['res_model'] ?? '',
         leadName: json['lead_name'] ?? '',
         activityCategory: json['activity_category'] ?? '',
-        cell: json['cell'] ?? '',
-        mail: json['mail'] ?? '',
+        leadPhone: json['lead_phone'] ?? '',
+        leadEmail: json['lead_email'] ?? '',
         leadContactName: json['lead_contact_name'] ?? '',
         createDate: json["create_date"] == null ? null : DateTime.parse(json["create_date"]),
         activityTypeId: json["activity_type_id"] != null ? 
@@ -1223,8 +1227,8 @@ class MailActivityDatumAppModel {
         "lead_contact_name": leadContactName,
         "create_date": createDate.toString(),
         "activity_category": activityCategory,
-        "cell": cell,
-        "mail": mail
+        "lead_phone": leadPhone,
+        "lead_email": leadEmail
     };
 }
 

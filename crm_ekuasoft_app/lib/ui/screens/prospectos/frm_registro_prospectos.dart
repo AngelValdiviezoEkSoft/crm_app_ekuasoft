@@ -119,13 +119,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
               context.pop();
             },
           ),
-          title: const Text('Prospectos'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.filter_list, color: Colors.black),
-              onPressed: () {},
-            ),
-          ],
+          title: const Text('Prospectos'),          
         ),
       body: BlocBuilder<GenericBloc, GenericState>(
         builder: (context,state) {
@@ -357,13 +351,13 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                       child: Column(
                                                         children: [
                                                           Icon(
-                                                            Icons.add_business_rounded,
+                                                            Icons.bookmark,
                                                             color: tabAccionesRegPrsp == 2
                                                                 ? Colors.blue.shade800
                                                                 : Colors.white,
                                                           ),
                                                           Text(
-                                                            'Notas Int.',
+                                                            'Observaciones',
                                                             style: TextStyle(
                                                               //color: Colors.purple.shade700,
                                                               color: tabAccionesRegPrsp == 2

@@ -1191,23 +1191,23 @@ class _CalendarioActividadesByFiltroViewState extends State<CalendarioActividade
               if(act.activityCategory != null && act.activityCategory!.toLowerCase() == 'phonecall')
               GestureDetector(
                 onTap: () {
-                  //makePhoneCall(act.cell!);
-                  makePhoneCall('0988665834');
+                  makePhoneCall(act.leadPhone!);
+                  //makePhoneCall('0988665834');
                 },
                 child: const Icon(Icons.call, size: 12,)
               ),
 
-              if(act.activityCategory != null && act.activityCategory!.toLowerCase() == 'default')
+              if(act.activityCategory != null && act.activityCategory!.toLowerCase() == 'default' && act.leadEmail != null && act.leadEmail!.isNotEmpty)
               GestureDetector(
                 onTap: () {
-                  //openEmailApp(act.mail!);
-                  openEmailApp('av@gmail.com');
+                  openEmailApp(act.leadEmail!);
+                  //openEmailApp('av@gmail.com');
                 },
                 child: const Icon(Icons.email, size: 12,)
               )
             ],),
             Text("Fecha: ${DateFormat('dd/MM/yyyy').format(act.dateDeadline)}",style: const TextStyle(fontSize: 12)),
-            Text("Fecha creación: ${DateFormat('dd/MM/yyyy HH:MM').format(act.dateCreate!)}",style: const TextStyle(fontSize: 12)),
+            Text("Creado en: ${DateFormat('dd/MM/yyyy HH:MM:SS').format(act.dateCreate!)}",style: const TextStyle(fontSize: 12)),
           ],
         ),
       ),

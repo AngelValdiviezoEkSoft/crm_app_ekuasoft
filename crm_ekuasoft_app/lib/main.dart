@@ -9,6 +9,8 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:secure_application/secure_application.dart';
 import 'package:provider/src/change_notifier_provider.dart' as np;
 
+String rutaActualGen = '';
+
 void main() async {
 
   setupServiceLocator();

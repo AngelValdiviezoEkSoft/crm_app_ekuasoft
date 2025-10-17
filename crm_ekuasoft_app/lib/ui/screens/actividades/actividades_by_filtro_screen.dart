@@ -586,17 +586,17 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                                     if(lstActividadesByFiltros[index].activityCategory != null && lstActividadesByFiltros[index].activityCategory!.toLowerCase() == 'phonecall')
                                                     GestureDetector(
                                                       onTap: () {
-                                                        //makePhoneCall(lstActividadesByFiltros[index].cell!);
-                                                        makePhoneCall('0988665834');
+                                                        makePhoneCall(lstActividadesByFiltros[index].leadPhone!);
+                                                        //makePhoneCall('0988665834');
                                                       },
                                                       child: const Icon(Icons.call, size: 12,)
                                                     ),
 
-                                                    if(lstActividadesByFiltros[index].activityCategory != null && lstActividadesByFiltros[index].activityCategory!.toLowerCase() == 'default')
+                                                    if(lstActividadesByFiltros[index].activityCategory != null && lstActividadesByFiltros[index].activityCategory!.toLowerCase() == 'default' && lstActividadesByFiltros[index].leadEmail != null && lstActividadesByFiltros[index].leadEmail!.isNotEmpty)
                                                     GestureDetector(
                                                       onTap: () {
-                                                        //openEmailApp(lstActividadesByFiltros[index].mail!);
-                                                        openEmailApp('av@gmail.com');
+                                                        openEmailApp(lstActividadesByFiltros[index].leadEmail!);
+                                                        //openEmailApp('av@gmail.com');
                                                       },
                                                       child: const Icon(Icons.email, size: 12,)
                                                     )
@@ -629,14 +629,14 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                                   text: TextSpan(
                                                     children: [
                                                       const TextSpan(
-                                                        text: 'Fecha de creación: ',
+                                                        text: 'Creado en: ',
                                                         style: TextStyle(
                                                           color: Colors.black,
                                                           fontSize: 12,
                                                         ),
                                                       ),
                                                       TextSpan(
-                                                        text: lstActividadesByFiltros[index].dateCreate != null ? DateFormat('dd/MM/yyyy HH:MM', 'es').format(lstActividadesByFiltros[index].dateCreate!) : "",
+                                                        text: lstActividadesByFiltros[index].dateCreate != null ? DateFormat('dd/MM/yyyy HH:MM:SS', 'es').format(lstActividadesByFiltros[index].dateCreate!) : "",
                                                         style: const TextStyle(
                                                           color: Colors.blueGrey,
                                                           fontSize: 12,

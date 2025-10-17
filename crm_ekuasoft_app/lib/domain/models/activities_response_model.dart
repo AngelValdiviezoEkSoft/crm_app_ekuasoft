@@ -47,8 +47,8 @@ class DatumActivitiesResponse {
     String? contactName;
     String? activityCategory;
     bool cerrado;
-    String? cell;
-    String? mail;
+    String? leadPhone;
+    String? leadEmail;
 
     DatumActivitiesResponse({
         required this.id,
@@ -63,8 +63,8 @@ class DatumActivitiesResponse {
         required this.contactName,
         required this.dateCreate,
         required this.activityCategory,
-        required this.cell,
-        required this.mail
+        required this.leadPhone,
+        required this.leadEmail
     });
 
     factory DatumActivitiesResponse.fromRawJson(String str) => DatumActivitiesResponse.fromJson(json.decode(str));
@@ -84,8 +84,8 @@ class DatumActivitiesResponse {
         leadName: json["lead_name"] ?? '',
         contactName: json["lead_contact_name"] ?? '',
         activityCategory: json["activity_category"] ?? '',
-        cell: json["cell"] ?? '',
-        mail: json["mail"] ?? ''
+        leadPhone: json["lead_phone"] ?? '',
+        leadEmail: json["lead_email"] ?? ''
     );
 
     Map<String, dynamic> toJson() => {
@@ -101,8 +101,8 @@ class DatumActivitiesResponse {
         "lead_contact_name": contactName,
         "create_date": dateCreate,
         "activity_category": activityCategory,
-        "cell": cell,
-        "mail": mail
+        "lead_phone": leadPhone,
+        "lead_email": leadEmail
     };
 }
 
