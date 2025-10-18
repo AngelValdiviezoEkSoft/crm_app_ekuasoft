@@ -170,7 +170,8 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
       CrmLeadAppModel apiResponse = CrmLeadAppModel.fromJson(objLogDecode2["result"]["data"]["crm.lead"]);
 
-      List<CrmLeadDatumAppModel> prospectosFiltrados = [];
+      //List<CrmLeadDatumAppModel> prospectosFiltrados = [];
+      prospectosFiltrados = [];
 
       if(terminoBusqueda.isNotEmpty){
         
@@ -178,7 +179,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
           for(int i = 0; i < apiResponse.data.length; i++){
             if(apiResponse.data[i].name != null && apiResponse.data[i].name!.toLowerCase().contains(terminoBusqueda.toLowerCase())){
-              prospectosFiltrados.add(apiResponse.data[i]);
+              //prospectosFiltrados.add(apiResponse.data[i]);
             }
           }
 
@@ -186,7 +187,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
             for(int i = 0; i < apiResponse.data.length; i++){
               if(apiResponse.data[i].contactName != null && apiResponse.data[i].contactName!.toLowerCase().contains(terminoBusqueda.toLowerCase())){
-                prospectosFiltrados.add(apiResponse.data[i]);
+                //prospectosFiltrados.add(apiResponse.data[i]);
               }
             }
 
@@ -196,7 +197,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
             for(int i = 0; i < apiResponse.data.length; i++){
               if(apiResponse.data[i].emailFrom != null && apiResponse.data[i].emailFrom!.toLowerCase().contains(terminoBusqueda.toLowerCase())){
-                prospectosFiltrados.add(apiResponse.data[i]);
+                //prospectosFiltrados.add(apiResponse.data[i]);
               }
             }
           }
@@ -204,7 +205,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
           if(prospectosFiltrados.isEmpty && (terminoBusqueda.contains('+') || terminoBusqueda.contains('0'))){
             for(int i = 0; i < apiResponse.data.length; i++){
               if(apiResponse.data[i].phone != null && apiResponse.data[i].phone!.contains(terminoBusqueda)){
-                prospectosFiltrados.add(apiResponse.data[i]);
+                //prospectosFiltrados.add(apiResponse.data[i]);
               }
             }
           }
@@ -212,7 +213,109 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
         contLst = prospectosFiltrados.length;
       } else{
-        prospectosFiltrados = apiResponse.data;
+        for(int i = 0; i < apiResponse.data.length; i++){
+          List<StructCombos> lstComboActivityId = [];
+          
+          CampaignId objCampaign = CampaignId(
+            id: apiResponse.data[i].campaignId.id ?? 0,
+            name: apiResponse.data[i].campaignId.name ?? ''
+          );
+
+          StructCombos objCountryId = StructCombos(
+            id: apiResponse.data[i].countryId.id ?? 0,
+            name: apiResponse.data[i].countryId.name ?? ''
+          );
+
+          CampaignId objLostReason = CampaignId (
+            id: apiResponse.data[i].lostReasonId.id ?? 0,
+            name: apiResponse.data[i].lostReasonId.name ?? ''
+          );
+
+          StructCombos objMedios = StructCombos(
+            id: apiResponse.data[i].mediumId.id ?? 0,
+            name: apiResponse.data[i].mediumId.name ?? ''
+          );
+
+          StructCombos objSource = StructCombos(
+            id: apiResponse.data[i].sourceId.id ?? 0,
+            name: apiResponse.data[i].sourceId.name ?? ''
+          );
+
+          StructCombos objStage = StructCombos(
+            id: apiResponse.data[i].stageId.id ?? 0,
+            name: apiResponse.data[i].stageId.name ?? ''
+          );
+
+          StructCombos objState = StructCombos(
+            id: apiResponse.data[i].stateId.id ?? 0,
+            name: apiResponse.data[i].stateId.name ?? ''
+          );
+
+          CampaignId objTitle = CampaignId(
+            id: apiResponse.data[i].title.id ?? 0,
+            name: apiResponse.data[i].title.name ?? '',
+          );
+
+          PartnerId objPartnerId = PartnerId(
+            cantonId: StructCombos (id: 0, name: ''),
+            channelId: StructCombos (id: 0, name: ''),
+            cityId: StructCombos (id: 0, name: ''),
+            clasificationId: StructCombos (id: 0, name: ''),
+            email: '',
+            id: apiResponse.data[i].partnerId.id ?? 0,
+            name: apiResponse.data[i].partnerId.name ?? '',
+            regionId: StructCombos (id: 0, name: ''),
+            sectorId: StructCombos (id: 0, name: ''),
+            tradeName: ''
+          );
+
+          for(int j = 0; j < apiResponse.data[i].activityIds.length; j++){
+
+            StructCombos objStruc = StructCombos(
+              id: apiResponse.data[i].activityIds[j].id ?? 0,
+              name: apiResponse.data[i].activityIds[j].name ?? ''
+            );
+
+            lstComboActivityId.add(
+              objStruc
+            );
+          }
+
+          prospectosFiltrados.add(
+            DatumCrmLead(
+              activityIds: lstComboActivityId,
+              campaignId: objCampaign,
+              countryId: objCountryId,
+              dayClose: apiResponse.data[i].dayClose ?? 0,
+              emailFrom: apiResponse.data[i].emailFrom ?? '',
+              expectedRevenue: apiResponse.data[i].expectedRevenue ?? 0,
+              id: apiResponse.data[i].id ?? 0,
+              lostReasonId: objLostReason,
+              mediumId: objMedios,
+              mobile: apiResponse.data[i].phone ?? '',
+              name: apiResponse.data[i].name ?? '',
+              partnerId: objPartnerId,
+              priority: apiResponse.data[i].priority ?? '',
+              sourceId: objSource,
+              stageId: objStage,
+              stateId: objState,
+              tagIds: [],
+              title: objTitle,
+              type: apiResponse.data[i].type ?? '',
+              active: apiResponse.data[i].active,
+              contactName: apiResponse.data[i].contactName ?? '',
+              description: apiResponse.data[i].description ?? '',
+              phone: apiResponse.data[i].phone ?? '',
+              probability: apiResponse.data[i].probability ?? 0,
+              referred: apiResponse.data[i].referred ?? '',
+              street: apiResponse.data[i].street ?? '',
+              dateOpen: apiResponse.data[i].dateOpen,
+              dateClose: apiResponse.data[i].dateClose,
+              dateDeadline: apiResponse.data[i].dateDeadline
+            )
+          );
+
+        }
       }
 
       //ignore:use_build_context_synchronously
@@ -315,7 +418,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
               onPressed: () {
                 terminoBusqueda = '';
                 filtroPrspTxt.text = '';
-                refreshDataByFiltro(objRspGen);
+                //refreshDataByFiltro(objRspGen);
                 _mesSeleccionado = null;//DateTime.now().month;
                 selectedYear = DateTime.now().year;
                                 
@@ -555,298 +658,6 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                         width: size.width,
                         height: size.height * 0.6,
                         child: Scaffold(
-                          /*
-                          body: CustomRefreshIndicator(
-                            onRefresh: refreshDataProsp,
-                            builder: (context, child, controllerOp) {
-                               // Personalización del indicador
-                              return Stack(
-                                alignment: Alignment.topCenter,
-                                children: [
-                                  if (controllerOp.isDragging || controllerOp.value > 0)
-                                    Positioned(
-                                      top: size.height * 0.01,//50,
-                                      child: Opacity(
-                                        opacity: 1,//controllerOp.value,
-                                        child: Container(
-                                          height: size.height * 0.07,//30,
-                                          width: size.width * 0.08,//30,
-                                          color: Colors.transparent,                                          
-                                          child: const CircularProgressIndicator(
-                                            strokeWidth: 1,
-                                            valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  
-                                  Transform.translate(
-                                    offset: Offset(0, 100 * controllerOp.value),
-                                    child: child,
-                                  ),
-                                ],
-                              );
-                            },
-                            child: ListView.builder(
-                              controller: scrollListaClt,
-                              itemCount: prospectosFiltrados.length,//contLst,
-                              itemBuilder: ( _, int index ) {
-                            
-                                return Slidable(
-                                  key: ValueKey(prospectosFiltrados[index].id),
-                                  startActionPane: ActionPane(
-                                    motion: const ScrollMotion(),
-                                      children: [
-                                        SlidableAction(
-                                          onPressed: (context) 
-                                          {
-                                            objDatumCrmLead = prospectosFiltrados[index];
-                          
-                                            //ignore: use_build_context_synchronously
-                                            FocusScope.of(context).unfocus();
-                          
-                                            terminoBusqueda = '';
-                                            entraXActividad = false;
-                                            filtroPrspTxt = TextEditingController();
-
-                                            terminoBusqueda = '';
-                                            filtroPrspTxt.text = '';
-                                            refreshDataByFiltro(objRsp);
-                                            _mesSeleccionado = null;//DateTime.now().month;
-                                            selectedYear = DateTime.now().year;
-                          
-                                            //context.push(Rutas().rutaPlanificacionActividades);
-                                            context.push(Rutas().rutaPlanActivConActiv);
-                                          },
-                                          backgroundColor: objColorsApp.celeste,
-                                          foregroundColor: Colors.white,
-                                          icon: Icons.call_outlined,
-                                          label: 'Actividades',
-                                        ),
-                                      ]
-                                    ),
-                                    child: ListTile(
-                                        title: Container(
-                                        color: Colors.transparent,
-                                        width: size.width * 0.98,
-                                        child: Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.transparent,
-                                            border: Border.all(
-                                                color: const Color.fromARGB(255, 217, 217, 217)),
-                                            borderRadius: const BorderRadius.all(Radius.circular(10))
-                                          ),
-                                        width: size.width * 0.98,
-                                        height: size.height * 0.195,
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              color: Colors.transparent,
-                                              width: size.width * 0.7,
-                                              height: size.height * 0.25,
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                children: [
-                                                  SizedBox(width: size.width * 0.01,),
-                                                  Container(
-                                                    color: Colors.transparent,
-                                                    width: size.width * 0.14,
-                                                    height: size.height * 0.1,
-                                                    child: CircleAvatar(
-                                                      radius: 30.0,
-                                                      backgroundColor: Colors.grey[200],
-                                                      child: const Icon(Icons.person, color: Colors.grey, size: 40.0),
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: size.width * 0.02,),
-                                                  Container(
-                                                    color: Colors.transparent,
-                                                    width: size.width * 0.52,
-                                                    height: size.height * 0.25,
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                                    children: [
-                                                      Container(
-                                                        color: Colors.transparent,
-                                                        width: size.width * 0.54,
-                                                        height: size.height * 0.04,
-                                                        child: Text(
-                                                          prospectosFiltrados[index].name,
-                                                          style: const TextStyle(
-                                                            fontWeight: FontWeight.bold,                                                                
-                                                            //color: Colors.black
-                                                          ),
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow.ellipsis,
-                                                          textAlign: TextAlign.left,
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        color: Colors.transparent,
-                                                        width: size.width * 0.54,
-                                                        height: size.height * 0.04,
-                                                        child: Text(
-                                                          prospectosFiltrados[index].contactName ?? '',
-                                                          style: const TextStyle(
-                                                            fontWeight: FontWeight.bold,                                                                
-                                                            //color: Colors.black
-                                                          ),
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow.ellipsis,
-                                                          textAlign: TextAlign.left,
-                                                        ),
-                                                      ),
-                                                      
-                                                    Container(
-                                                    color: Colors.transparent,
-                                                    width: size.width * 0.54,
-                                                    height: size.height * 0.035,
-                                                      child: 
-                                                      SelectableText.rich(
-                                                         TextSpan(
-                                                            children: [
-                                                              TextSpan(
-                                                                text: 'Email: ',
-                                                                style: TextStyle(
-                                                                  fontSize: 14,
-                                                                  color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
-                                                                )
-                                                              ),
-                                                              TextSpan(
-                                                                text: prospectosFiltrados[index].emailFrom,
-                                                                style: const TextStyle(
-                                                                  fontSize: 14,
-                                                                  color: Colors.blue)
-                                                              ),
-                                                            ]
-                                                          ),
-                                                        
-                                                      )
-                                                  ),
-                                                
-
-                                                  Container(
-                                                    color: Colors.transparent,
-                                                    width: size.width * 0.54,
-                                                    height: size.height * 0.035,
-                                                      child: 
-                                                      SelectableText.rich(
-                                                         TextSpan(
-                                                            children: [
-                                                              TextSpan(
-                                                                text: 'Teléfono: ',
-                                                                style: TextStyle(
-                                                                  fontSize: 14,
-                                                                  color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white)
-                                                              ),
-                                                              TextSpan(
-                                                                text: prospectosFiltrados[index].phone,
-                                                                style: const TextStyle(
-                                                                  fontSize: 14,
-                                                                  color: Colors.blue)
-                                                              ),
-                                                            ]
-                                                          ),
-                                                        
-                                                      )
-                                                  ),
-                                                
-                                                  Container(
-                                                      color: Colors.transparent,
-                                                      width: size.width * 0.54,
-                                                    height: size.height * 0.035,
-                                                      child: AutoSizeText(
-                                                          prospectosFiltrados[index].stageId.name,
-                                                            style: const TextStyle(
-                                                              fontWeight: FontWeight.bold,
-                                                              fontSize: 10,
-                                                              color: Colors.green
-                                                            ),
-                                                            maxLines: 2,
-                                                            textAlign: TextAlign.left,),
-                                                  ),
-                                                
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  
-                                                  
-                                                ],
-                                              )
-                                            ),
-                                            Container(
-                                              width: size.width * 0.13,
-                                              height: size.height * 0.17,
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                //color: Colors.black12, // Color del óvalo
-                                                color: themeProvider.themeMode.index == 0 ? Colors.black12 : Colors.white,
-                                                borderRadius: BorderRadius.circular(50), // Bordes redondeados para el óvalo
-                                              ),
-                                              child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                children: [
-                                                  Container(
-                                                    color: Colors.transparent,
-                                                    height: size.height * 0.04,
-                                                    alignment: Alignment.topCenter,
-                                                    child: IconButton(
-                                                      icon: const Icon(Icons.location_pin, color: Colors.grey, size: 20,),
-                                                      onPressed: () {
-                                                        context.push(Rutas().rutaMap);
-                                                      },
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    color: Colors.transparent,
-                                                    height: size.height * 0.04,
-                                                    alignment: Alignment.topCenter,
-                                                    child: IconButton(
-                                                      icon: const Icon(Icons.route, color: Colors.grey, size: 20,),
-                                                      onPressed: () {
-                                                        
-                                                      },
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    color: Colors.transparent,
-                                                    height: size.height * 0.04,
-                                                    child: IconButton(
-                                                      icon: const Icon(Icons.info, color: Colors.grey, size: 20,),
-                                                      onPressed: () {
-                            
-                                                        objDatumCrmLead = prospectosFiltrados[index];
-                            
-                                                        //ignore: use_build_context_synchronously
-                                                        FocusScope.of(context).unfocus();
-                            
-                                                        terminoBusqueda = '';
-                                                        filtroPrspTxt = TextEditingController();
-                            
-                                                        context.push(Rutas().rutaEditProsp);
-                                                      },
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: size.height * 0.004,)
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(width: size.width * 0.01,)
-                                          ],
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  );
-                                },
-                              ),
-                          
-                          ),
-                          */
                           body: LiquidPullToRefresh(
                             onRefresh: refreshDataProsp,
                             color: Colors.blue[300],

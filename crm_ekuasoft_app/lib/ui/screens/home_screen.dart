@@ -104,48 +104,48 @@ class HomeScreenState extends State<HomeScreen> {
                     if(msmInternet == 'G'){
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Container(
-                              color: Colors.transparent,
-                              height: size.height * 0.17,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  
-                                  Container(
-                                    color: Colors.transparent,
-                                    height: size.height * 0.09,
-                                    child: Image.asset('assets/gifs/exito.gif'),
-                                  ),
-
-                                  Container(
-                                    color: Colors.transparent,
-                                    width: size.width * 0.95,
-                                    height: size.height * 0.08,
-                                    alignment: Alignment.center,
-                                    child: const AutoSizeText(
-                                      'Los datos que se encontraban en memoria han sido registrados.',
-                                      maxLines: 2,
-                                      minFontSize: 2,
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Container(
+                                color: Colors.transparent,
+                                height: size.height * 0.17,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    
+                                    Container(
+                                      color: Colors.transparent,
+                                      height: size.height * 0.09,
+                                      child: Image.asset('assets/gifs/exito.gif'),
                                     ),
-                                  )
-                                ],
-                              )
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  msmInternet = "";
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+
+                                    Container(
+                                      color: Colors.transparent,
+                                      width: size.width * 0.95,
+                                      height: size.height * 0.08,
+                                      alignment: Alignment.center,
+                                      child: const AutoSizeText(
+                                        'Los datos que se encontraban en memoria han sido registrados.',
+                                        maxLines: 2,
+                                        minFontSize: 2,
+                                      ),
+                                    )
+                                  ],
+                                )
                               ),
-                            ],
-                          );
-                        },
-                      );
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    msmInternet = "";
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       });
                     }
 

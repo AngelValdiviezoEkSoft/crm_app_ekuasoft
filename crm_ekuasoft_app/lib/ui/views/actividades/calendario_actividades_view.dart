@@ -8,10 +8,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 bool muestraCargaLocal = false;
 
@@ -189,7 +191,7 @@ class _CalendarioActividadesByFiltroViewState extends State<CalendarioActividade
         if (index == 0) {
           _cargarPorFechas([DateTime.now()]);
         } else {
-          _cargarPorFechas([DateTime.now().subtract(const Duration(days: 30)), DateTime.now()]);
+          _cargarPorFechas([DateTime.now(), DateTime.now()]);
         }
       },
       isSelected: toggleValues,
@@ -365,6 +367,65 @@ class _CalendarioActividadesByFiltroViewState extends State<CalendarioActividade
       }    
     }
 
+    Future<void> abrirWhatsapp(String numeroCelular, {String? mensaje}) async {
+      final String url = mensaje != null
+          ? 'https://wa.me/$numeroCelular?text=${Uri.encodeComponent(mensaje)}'
+          : 'https://wa.me/$numeroCelular';
+
+      final Uri uri = Uri.parse(url);
+
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(
+          uri,
+          mode: LaunchMode.externalApplication,
+        );
+      } else {
+        showDialog(
+        //ignore: use_build_context_synchronously
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Container(
+              color: Colors.transparent,
+              height: size.height * 0.17,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  
+                  Container(
+                    color: Colors.transparent,
+                    height: size.height * 0.09,
+                    child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
+                  ),
+
+                  Container(
+                    color: Colors.transparent,
+                    width: size.width * 0.95,
+                    height: size.height * 0.08,
+                    alignment: Alignment.center,
+                    child: const AutoSizeText(
+                      'No se pudo abrir WhatsApp. Asegúrese de tenerlo instalado.',
+                      maxLines: 2,
+                      minFontSize: 2,
+                    ),
+                  )
+                ],
+              )
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+              ),
+            ],
+          );
+        },
+      );
+      }
+    }
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -374,7 +435,38 @@ class _CalendarioActividadesByFiltroViewState extends State<CalendarioActividade
           backgroundColor: act.cerrado ? Colors.black26 : Colors.grey[200],
           child: //const Icon(Icons.person),
           Stack(children: [
+            if(act.activityCategory != null 
+              && act.activityCategory!.toLowerCase() != 'whatsapp'
+              && act.activityCategory!.toLowerCase() != 'phonecall'
+              && (act.activityCategory!.toLowerCase() != 'email' || act.leadEmail == null || act.leadEmail!.isEmpty))
             Icon(Icons.person, color: themeProvider.themeMode.index == 2 ? Colors.black : Colors.white,),
+
+             if (!act.cerrado &&act.activityCategory != null && act.activityCategory!.toLowerCase() == 'phonecall')
+              GestureDetector(
+                onTap: () {
+                  makePhoneCall(act.leadPhone!);
+                  //makePhoneCall('0988665834');
+                },
+                child: const Icon(Icons.call, size: 22,)
+              ),
+
+              if (!act.cerrado &&act.activityCategory != null && act.activityCategory!.toLowerCase() == 'email' && act.leadEmail != null && act.leadEmail!.isNotEmpty)
+              GestureDetector(
+                onTap: () {
+                  openEmailApp(act.leadEmail!);
+                },
+                child: const Icon(Icons.email, size: 22, color: Colors.white,)
+              ),
+
+              if (!act.cerrado && act.activityCategory != null && act.activityCategory!.toLowerCase() == 'whatsapp' && act.leadEmail != null && act.leadEmail!.isNotEmpty)
+              GestureDetector(
+                onTap: () {
+                  abrirWhatsapp(act.leadPhone!);
+                },
+                child: const FaIcon(FontAwesomeIcons.whatsapp, size: 22, color: Colors.green,)
+              ),
+            
+
             //if (!calendarioActividadesFilAgendaByFiltroCall[index].cerrado && DateFormat('yyyy-MM-dd','es').format(calendarioActividadesFilAgendaByFiltroCall[index].dateDeadline) == DateFormat('yyyy-MM-dd','es').format(DateTime.now()))
             if (!act.cerrado && DateFormat('yyyy-MM-dd','es').format(act.dateDeadline) == DateFormat('yyyy-MM-dd','es').format(DateTime.now()))
               Positioned(
@@ -398,25 +490,12 @@ class _CalendarioActividadesByFiltroViewState extends State<CalendarioActividade
               Text("Tipo de actividad: ${act.activityTypeId.name}", style: const TextStyle(fontSize: 12)),
               SizedBox(width: size.width * 0.04,),
                                                     
-              if(act.activityCategory != null && act.activityCategory!.toLowerCase() == 'phonecall')
-              GestureDetector(
-                onTap: () {
-                  makePhoneCall(act.leadPhone!);
-                  //makePhoneCall('0988665834');
-                },
-                child: const Icon(Icons.call, size: 12,)
-              ),
-
-              if(act.activityCategory != null && act.activityCategory!.toLowerCase() == 'default' && act.leadEmail != null && act.leadEmail!.isNotEmpty)
-              GestureDetector(
-                onTap: () {
-                  openEmailApp(act.leadEmail!);
-                  //openEmailApp('av@gmail.com');
-                },
-                child: const Icon(Icons.email, size: 12,)
-              )
-            ],),
-            Text("Fecha: ${DateFormat('dd/MM/yyyy').format(act.dateDeadline)}",style: const TextStyle(fontSize: 12)),
+             
+            ],
+            
+            ),
+            Text("Fecha planificada: ${DateFormat('dd/MM/yyyy').format(act.dateDeadline)}",style: const TextStyle(fontSize: 12)),
+            Text("Hora planificada: ${act.scheduledTimeFormula}",style: const TextStyle(fontSize: 12)),
             Text("Creado en: ${DateFormat('dd/MM/yyyy HH:MM:SS').format(act.dateCreate!)}",style: const TextStyle(fontSize: 12)),
           ],
         ),

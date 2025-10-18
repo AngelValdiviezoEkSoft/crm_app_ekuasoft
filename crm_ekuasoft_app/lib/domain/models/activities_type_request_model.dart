@@ -19,6 +19,7 @@ class ActivitiesTypeRequestModel {
     String leadPhone;
     String leadEmail;
     String contactName;
+    double scheduleTime;
 
     ActivitiesTypeRequestModel({
       required this.resId,
@@ -38,7 +39,8 @@ class ActivitiesTypeRequestModel {
         required this.leadName,
         required this.leadPhone,
         required this.contactName,
-        required this.leadEmail
+        required this.leadEmail,
+        required this.scheduleTime,
     });
 
     factory ActivitiesTypeRequestModel.fromJson(String str) => ActivitiesTypeRequestModel.fromMap(json.decode(str));
@@ -63,7 +65,8 @@ class ActivitiesTypeRequestModel {
       leadName: json["lead_name"] ?? '',
       leadPhone: json["lead_phone"] ?? '',
       leadEmail: json["lead_email"] ?? '',
-      contactName: ''
+      contactName: '',
+      scheduleTime: 0
     );
 
     factory ActivitiesTypeRequestModel.fromMap2(Map<String, dynamic> json) {
@@ -86,7 +89,8 @@ class ActivitiesTypeRequestModel {
         leadName: json["lead_name"] ?? '',
         leadPhone: json["lead_phone"] ?? '',
         leadEmail: json["lead_email"] ?? '',
-        contactName: ''
+        contactName: '',
+        scheduleTime: 0
       );
     }
 

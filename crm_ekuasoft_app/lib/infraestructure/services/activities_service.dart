@@ -1088,7 +1088,8 @@ class ActivitiesService extends ChangeNotifier{
                   dateCreate: objRsp.result.data.mailMessage.data[i].date,
                   activityCategory: '',
                   leadPhone: '',
-                  leadEmail: ''
+                  leadEmail: '',
+                  scheduleTime: 0
                 )
               );
           }
@@ -2047,7 +2048,8 @@ class ActivitiesService extends ChangeNotifier{
               "lead_email": objActividad.leadEmail,
               "is_done_app": true,
               "user_id": objReq.params.uid,
-              "lead_contact_name": objActividad.contactName
+              "lead_contact_name": objActividad.contactName,
+              "scheduled_time": objActividad.scheduleTime
             },
           }
         };
@@ -2371,7 +2373,8 @@ class ActivitiesService extends ChangeNotifier{
               dateCreate: DateTime.now(),
               activityCategory: '',
               leadPhone: '',
-              leadEmail: ''
+              leadEmail: '',
+              scheduleTime: 0
             )
           );
 
@@ -2395,7 +2398,8 @@ class ActivitiesService extends ChangeNotifier{
                 dateCreate: DateTime.now(),
                 activityCategory: '',
                 leadPhone: '',
-                leadEmail: ''
+                leadEmail: '',
+                scheduleTime: 0
               )
             ],
             length: 0,
@@ -2530,6 +2534,7 @@ class ActivitiesService extends ChangeNotifier{
           )
         );
 
+/*
         final lstEncr = await storageAct.read(key: 'LstActividadesAbiertasCerradas') ?? '';
 
         if(lstEncr.isNotEmpty){
@@ -2587,6 +2592,7 @@ class ActivitiesService extends ChangeNotifier{
             await storageAct.write(key: 'LstActividadesAbiertasCerradas', value: jsonEncode(objMem.toJson()));
           }
         }
+        */
 
         return objRsp;
       } 

@@ -1,4 +1,6 @@
 
+export 'package:crm_ekuasoft_app/ui/widgets/rating_stars_widget.dart';
+
 export 'package:crm_ekuasoft_app/ui/widgets/indicator_point_widget.dart';
 
 export 'package:crm_ekuasoft_app/ui/widgets/map/map.dart';

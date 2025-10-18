@@ -446,7 +446,8 @@ class PlanActState extends State<PlanificacionActividades> {
                                                         leadName: objDatumCrmLead?.name ?? '',
                                                         leadPhone: objDatumCrmLead?.phone ?? '',
                                                         contactName: objDatumCrmLead?.contactName ?? '',
-                                                        leadEmail: objDatumCrmLead?.emailFrom ?? ''
+                                                        leadEmail: objDatumCrmLead?.emailFrom ?? '',
+                                                        scheduleTime: 0
                                                       );
               
                                                       showDialog(
@@ -1325,7 +1326,8 @@ class PlanActStateTwo extends State<PlanAct> {
                                                     leadName: objActividadEscogida?.leadName ?? '',
                                                     leadPhone: objDatumCrmLead?.phone ?? '',
                                                     contactName: objDatumCrmLead?.contactName ?? '',
-                                                    leadEmail: objDatumCrmLead?.emailFrom ?? ''
+                                                    leadEmail: objDatumCrmLead?.emailFrom ?? '',
+                                                    scheduleTime: 0
                                                   )
                                                 );
                               

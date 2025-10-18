@@ -114,16 +114,10 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
 
     if(objDatumCrmLead != null){
       objDatumCrmLeadEdit = objDatumCrmLead;
-      //nombresEditTxt.text = objDatumCrmLeadEdit!.contactName ?? '';
-      //emailEditTxt.text = objDatumCrmLeadEdit!.emailFrom;
-      //direccionEditTxt.text = objDatumCrmLeadEdit!.street ?? '';
-      //observacionesEditTxt.text = objDatumCrmLeadEdit!.description ?? '';
-      //probabilityEditTxt.text = objDatumCrmLeadEdit!.probability?.toString() ?? "0";
 
       String cell = separatePhoneNumber(objDatumCrmLeadEdit!.phone ?? '');
 
       telefonoEditTxt.text = cell;
-      //recomendadoPorEditTxt.text = objDatumCrmLeadEdit!.referred ?? '';
 
       rutaFinal = objDatumCrmLeadEdit!.description ?? '';
 
@@ -322,7 +316,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                     
                   }
 
-                  if(!comienzaEditarCorreo){
+                  if(!comienzaEditarCorreo && emailEditTxt.text.isEmpty){
                     emailEditTxt.text = objDatumCrmLeadEdit!.emailFrom;
                   }
 

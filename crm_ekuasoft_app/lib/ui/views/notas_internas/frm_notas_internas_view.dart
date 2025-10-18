@@ -67,7 +67,8 @@ class _FrmNotasInternasViewState extends State<FrmNotasInternasView> {
         leadName: objDatumCrmLead?.name ?? '',
         leadPhone: objDatumCrmLead?.phone ?? '',                                                      
         contactName: objDatumCrmLead?.contactName ?? '',
-        leadEmail: objDatumCrmLead?.emailFrom ?? ''
+        leadEmail: objDatumCrmLead?.emailFrom ?? '',
+        scheduleTime: 0
       );
 
       await NotasInternasService().registroNotasInternas(objReqst, _observacionesController.text);

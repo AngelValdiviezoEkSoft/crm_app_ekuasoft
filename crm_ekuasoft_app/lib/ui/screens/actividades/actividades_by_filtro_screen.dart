@@ -9,9 +9,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 List<MailActivityTypeDatumAppModel> tpActividades = [];
 List<String> lstActividadesActByFlt = [];
@@ -165,6 +167,65 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
     } on PlatformException catch (_) {
       //print("Error al abrir la app de correos: ${e.message}");
     }    
+  }
+
+  Future<void> abrirWhatsapp(String numeroCelular, Size size, {String? mensaje}) async {
+    final String url = mensaje != null
+        ? 'https://wa.me/$numeroCelular?text=${Uri.encodeComponent(mensaje)}'
+        : 'https://wa.me/$numeroCelular';
+
+    final Uri uri = Uri.parse(url);
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+    } else {
+        showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Container(
+              color: Colors.transparent,
+              height: size.height * 0.17,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  
+                  Container(
+                    color: Colors.transparent,
+                    height: size.height * 0.09,
+                    child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
+                  ),
+
+                  Container(
+                    color: Colors.transparent,
+                    width: size.width * 0.95,
+                    height: size.height * 0.08,
+                    alignment: Alignment.center,
+                    child: const AutoSizeText(
+                      'No se pudo abrir WhatsApp. Asegúrese de tenerlo instalado.',
+                      maxLines: 2,
+                      minFontSize: 2,
+                    ),
+                  )
+                ],
+              )
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+              ),
+            ],
+          );
+        },
+      );
+    
+    }
   }
 
 
@@ -511,7 +572,36 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                               backgroundColor: lstActividadesByFiltros[index].cerrado ? Colors.black45 : Colors.grey[300],
                                               child: Stack(
                                                   children: [
+                                                    if(lstActividadesByFiltros[index].activityCategory != null 
+                                                        && lstActividadesByFiltros[index].activityCategory!.toLowerCase() != 'whatsapp'
+                                                        && lstActividadesByFiltros[index].activityCategory!.toLowerCase() != 'phonecall'
+                                                        && (lstActividadesByFiltros[index].activityCategory!.toLowerCase() != 'email' || lstActividadesByFiltros[index].leadEmail == null || lstActividadesByFiltros[index].leadEmail!.isEmpty))
                                                     const Icon(Icons.person),
+                                                    
+                                                    if(lstActividadesByFiltros[index].activityCategory != null && lstActividadesByFiltros[index].activityCategory!.toLowerCase() == 'phonecall')
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        makePhoneCall(lstActividadesByFiltros[index].leadPhone!);                                                        
+                                                      },
+                                                      child: const Icon(Icons.call, size: 22,)
+                                                    ),
+
+                                                    if(lstActividadesByFiltros[index].activityCategory != null && lstActividadesByFiltros[index].activityCategory!.toLowerCase() == 'email' && lstActividadesByFiltros[index].leadEmail != null && lstActividadesByFiltros[index].leadEmail!.isNotEmpty)
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        openEmailApp(lstActividadesByFiltros[index].leadEmail!);                                                        
+                                                      },
+                                                      child: const Icon(Icons.email, size: 22, color: Colors.white,)
+                                                    ),
+
+                                                    if(lstActividadesByFiltros[index].activityCategory != null && lstActividadesByFiltros[index].activityCategory!.toLowerCase() == 'whatsapp' && lstActividadesByFiltros[index].leadEmail != null && lstActividadesByFiltros[index].leadEmail!.isNotEmpty)
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        abrirWhatsapp(lstActividadesByFiltros[index].leadPhone!, size);
+                                                      },
+                                                      child: const FaIcon(FontAwesomeIcons.whatsapp, size: 22, color: Colors.green,)
+                                                    ),
+
                                                     if(!lstActividadesByFiltros[index].cerrado && DateFormat('yyyy-MM-dd', 'es').format(lstActividadesByFiltros[index].dateDeadline) == DateFormat('yyyy-MM-dd', 'es').format(DateTime.now()))
                                                     Positioned(
                                                       top: size.height * 0.01,
@@ -583,24 +673,6 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
 
                                                     SizedBox(width: size.width * 0.04,),
                                                     
-                                                    if(lstActividadesByFiltros[index].activityCategory != null && lstActividadesByFiltros[index].activityCategory!.toLowerCase() == 'phonecall')
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        makePhoneCall(lstActividadesByFiltros[index].leadPhone!);
-                                                        //makePhoneCall('0988665834');
-                                                      },
-                                                      child: const Icon(Icons.call, size: 12,)
-                                                    ),
-
-                                                    if(lstActividadesByFiltros[index].activityCategory != null && lstActividadesByFiltros[index].activityCategory!.toLowerCase() == 'default' && lstActividadesByFiltros[index].leadEmail != null && lstActividadesByFiltros[index].leadEmail!.isNotEmpty)
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        openEmailApp(lstActividadesByFiltros[index].leadEmail!);
-                                                        //openEmailApp('av@gmail.com');
-                                                      },
-                                                      child: const Icon(Icons.email, size: 12,)
-                                                    )
-                                                  
                                                   ],
                                                 ),
                                                 
@@ -625,6 +697,27 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                                                   ),
                                                 ),
                                               
+                                                RichText(
+                                                  text: TextSpan(
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: 'Hora planificada: ',
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                      TextSpan(
+                                                        text: lstActividadesByFiltros[index].scheduledTimeFormula,
+                                                        style: const TextStyle(
+                                                          color: Colors.blueGrey,
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+
                                                 RichText(
                                                   text: TextSpan(
                                                     children: [

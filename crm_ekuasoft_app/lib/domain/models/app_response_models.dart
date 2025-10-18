@@ -1174,6 +1174,7 @@ class MailActivityDatumAppModel {
     String? activityCategory;
     String? leadPhone;
     String? leadEmail;
+    double? scheduleTime;
 
     MailActivityDatumAppModel({
         required this.id,
@@ -1188,7 +1189,8 @@ class MailActivityDatumAppModel {
         required this.createDate,
         required this.activityCategory,
         required this.leadPhone,
-        required this.leadEmail
+        required this.leadEmail,
+        required this.scheduleTime
     });
 
     factory MailActivityDatumAppModel.fromRawJson(String str) => MailActivityDatumAppModel.fromJson(json.decode(str));
@@ -1205,6 +1207,7 @@ class MailActivityDatumAppModel {
         activityCategory: json['activity_category'] ?? '',
         leadPhone: json['lead_phone'] ?? '',
         leadEmail: json['lead_email'] ?? '',
+        scheduleTime: json['scheduled_time'] ?? 0,
         leadContactName: json['lead_contact_name'] ?? '',
         createDate: json["create_date"] == null ? null : DateTime.parse(json["create_date"]),
         activityTypeId: json["activity_type_id"] != null ? 
@@ -1228,7 +1231,8 @@ class MailActivityDatumAppModel {
         "create_date": createDate.toString(),
         "activity_category": activityCategory,
         "lead_phone": leadPhone,
-        "lead_email": leadEmail
+        "lead_email": leadEmail,
+        "schedule_time": scheduleTime
     };
 }
 

@@ -5,12 +5,15 @@ import 'package:crm_ekuasoft_app/domain/domain.dart';
 import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 bool _isButtonPressed = false;
 String tradeNameProsp = '';
@@ -38,6 +41,7 @@ String actPlanSelectAct = '';
 String tipoActividadEscogida = '';
 
 late TextEditingController fechaActividadContTxtAct;
+late TextEditingController horaActividadContTxtAct;
 late TextEditingController descripcionActTxtAct;
 
 int tabAccionesAct = 0;
@@ -58,6 +62,8 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
   String campSelect = '';
   String mediaSelect = '';
   String originSelect = '';
+  TimeOfDay? horaSeleccionada;
+  double horaGuardarAct = 0;
 
   @override
   void initState() {
@@ -68,6 +74,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
     contLstActiv = 0;
     notasActTxtAct = TextEditingController();
     fechaActividadContTxtAct = TextEditingController();
+    horaActividadContTxtAct = TextEditingController();
     descripcionActTxtAct = TextEditingController();
     terminoBusquedaActiv = '';
     actualizaListaActiv= false;
@@ -88,6 +95,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
     cantonPrsp = '-----';
     regionPrsp = '-----';
     sectorPrsp = '-----';
+    horaGuardarAct = 0;
   }
 
    Future<void> actualizaActividadesByCliente() async {
@@ -285,27 +293,71 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                             
                                             const SizedBox(height: 16),
                                             
-                                            TextFormField(
-                                              controller: fechaActividadContTxtAct,
-                                              readOnly: true,
-                                              decoration: const InputDecoration(
-                                                labelText: 'Seleccione la fecha...',
-                                                border: OutlineInputBorder(),
-                                                suffixIcon: Icon(Icons.calendar_today),
-                                              ),
-                                              onTap: () async {
-                                                DateTime? pickedDate = await showDatePicker(
-                                                  context: context,
-                                                  initialDate: DateTime.now(),
-                                                  firstDate: DateTime.now(),//DateTime(2020),
-                                                  lastDate: DateTime(DateTime.now().year + 1),
-                                                );
-                                                
-                                                if (pickedDate != null) {
-                                                  fechaActividadContTxtAct.text = DateFormat('yyyy-MM-dd', 'es').format(pickedDate);                                                        
-                                                }
-                                              },
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  color: Colors.transparent,
+                                                  width: size.width * 0.45,
+                                                  child: TextFormField(
+                                                    controller: fechaActividadContTxtAct,
+                                                    readOnly: true,
+                                                    decoration: const InputDecoration(
+                                                      labelText: 'Fecha actividad',
+                                                      border: OutlineInputBorder(),
+                                                      suffixIcon: Icon(Icons.calendar_today),
+                                                    ),
+                                                    onTap: () async {
+                                                      DateTime? pickedDate = await showDatePicker(
+                                                        context: context,
+                                                        initialDate: DateTime.now(),
+                                                        firstDate: DateTime.now(),//DateTime(2020),
+                                                        lastDate: DateTime(DateTime.now().year + 1),
+                                                      );
+                                                      
+                                                      if (pickedDate != null) {
+                                                        fechaActividadContTxtAct.text = DateFormat('yyyy-MM-dd', 'es').format(pickedDate);                                                        
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
+                                                SizedBox(width: size.width * 0.02,),
+                                                Container(
+                                                  color: Colors.transparent,
+                                                  width: size.width * 0.45,
+                                                  child: TextFormField(
+                                                    controller: horaActividadContTxtAct,
+                                                    readOnly: true,
+                                                    decoration: const InputDecoration(
+                                                      labelText: 'Hora actividad',
+                                                      border: OutlineInputBorder(),
+                                                      suffixIcon: Icon(Icons.work_history_rounded),
+                                                    ),
+                                                    onTap: () async {
+                                                      final TimeOfDay? hora = await showTimePicker(
+                                                        context: context,
+                                                        initialTime: horaSeleccionada ?? TimeOfDay.now(),
+                                                      );
+                                                      
+                                                      if (hora != null) {
+                                                        horaSeleccionada = hora;
+
+                                                        horaGuardarAct = (hora.minute / 60) + hora.hour;
+
+                                                        String conversionTmp = horaGuardarAct.toStringAsFixed(4);
+
+                                                        horaGuardarAct = double.parse(conversionTmp);
+
+                                                        //ignore: use_build_context_synchronously
+                                                        horaActividadContTxtAct.text = hora.format(context);
+
+                                                      }
+                                                  
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
                                             ),
+                                            
                                             const SizedBox(height: 16),
                                             TextFormField(
                                               controller: descripcionActTxtAct,
@@ -331,9 +383,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                             ),
                                             SizedBox(height: size.height * 0.035),
                                             Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceEvenly,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 ElevatedButton(
                                                   onPressed: () {
@@ -459,7 +509,8 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                       leadName: objDatumCrmLead?.name ?? '',
                                                       leadPhone: objDatumCrmLead?.phone ?? '',                                                      
                                                       contactName: objDatumCrmLead?.contactName ?? '',
-                                                      leadEmail: objDatumCrmLead?.emailFrom ?? ''
+                                                      leadEmail: objDatumCrmLead?.emailFrom ?? '',
+                                                      scheduleTime: horaGuardarAct
                                                     );
             
                                                     showDialog(
@@ -624,7 +675,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                       child: const Icon(
                         Icons.document_scanner_sharp,
                         color: Colors.white,
-                        size: 21,
+                        size: 24,
                       )
                     ),
                   SizedBox(
@@ -637,8 +688,11 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                       //ignore:use_build_context_synchronously
                       context.pop();
 
-                      //ignore:use_build_context_synchronously
-                      context.pop();
+                      try{
+                        //ignore:use_build_context_synchronously
+                        context.pop();
+                      }
+                      catch(_){}
 
                       //ignore:use_build_context_synchronously
                       context.push(objRutasGen.rutaPlanActivConActiv);
@@ -755,15 +809,15 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                           SizedBox(width: size.width * 0.015),
                           Row(
                             children: [
-                              const Text(
-                                "⭐⭐⭐⭐⭐",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.yellow,
-                                ),
+
+                              RatingStarsWidget(
+                                initialRating: 0,
+                                onRatingChanged: (valor) {
+                                  print('⭐ Calificación seleccionada: $valor');
+                                },
                               ),
                               
-                              SizedBox(width: size.width * 0.32),
+                              SizedBox(width: size.width * 0.19),
 
                               Container(
                                 color: Colors.transparent,
@@ -1185,6 +1239,10 @@ class PlanActiv extends StatefulWidget {
 
 class PlanActivStateTwo extends State<PlanActiv> {
 
+  static const platformPhone = MethodChannel('call_channel');
+
+  static const platformEmail = MethodChannel('email_channel');
+
   bool muestraActividadesDiarias = true;
 
   void iniciarCronometro() {
@@ -1299,6 +1357,82 @@ class PlanActivStateTwo extends State<PlanActiv> {
     super.dispose();
   }
 
+    void makePhoneCall(String cell) async {    
+    try {
+      await platformPhone.invokeMethod('makePhoneCall', {'phone': cell});
+    } on PlatformException catch (_) {
+      //print("Error al abrir la app de llamada: ${e.message}");      
+    }        
+  }
+
+  void openEmailApp(String email) async {   
+    try {
+      await platformEmail.invokeMethod('openEmailApp', {'email': email});
+    } on PlatformException catch (_) {
+      //print("Error al abrir la app de correos: ${e.message}");
+    }    
+  }
+
+  Future<void> abrirWhatsapp(String numeroCelular, Size size, {String? mensaje}) async {
+    final String url = mensaje != null
+        ? 'https://wa.me/$numeroCelular?text=${Uri.encodeComponent(mensaje)}'
+        : 'https://wa.me/$numeroCelular';
+
+    final Uri uri = Uri.parse(url);
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Container(
+              color: Colors.transparent,
+              height: size.height * 0.17,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  
+                  Container(
+                    color: Colors.transparent,
+                    height: size.height * 0.09,
+                    child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
+                  ),
+
+                  Container(
+                    color: Colors.transparent,
+                    width: size.width * 0.95,
+                    height: size.height * 0.08,
+                    alignment: Alignment.center,
+                    child: const AutoSizeText(
+                      'No se pudo abrir WhatsApp. Asegúrese de tenerlo instalado.',
+                      maxLines: 2,
+                      minFontSize: 2,
+                    ),
+                  )
+                ],
+              )
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -1371,7 +1505,7 @@ class PlanActivStateTwo extends State<PlanActiv> {
                             height: size.height * 0.07,
                             color: Colors.transparent,
                             alignment: Alignment.centerLeft,
-                            child: const Text('Agendado para hoy', style: TextStyle(color: Colors.green, fontSize: 25, fontWeight: FontWeight.bold),),
+                            child: const Text('Agendadas para hoy', style: TextStyle(color: Colors.green, fontSize: 25, fontWeight: FontWeight.bold),),
                           ),
                         ],
                       ),
@@ -1390,7 +1524,7 @@ class PlanActivStateTwo extends State<PlanActiv> {
                             height: size.height * 0.07,
                             color: Colors.transparent,
                             alignment: Alignment.center,
-                            child: const Text('Seleccionar todos', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                            child: const Text('Seleccionar todas', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
                           ),
 
                           Container(
@@ -1447,7 +1581,36 @@ class PlanActivStateTwo extends State<PlanActiv> {
                                     backgroundColor: lstActividadesDiariasByProspecto[index].cerrado ? Colors.black45 : Colors.grey[300],
                                     child: Stack(
                                         children: [
+                                          if(lstActividadesDiariasByProspecto[index].activityCategory != null 
+                                          && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() != 'whatsapp'
+                                          && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() != 'phonecall'
+                                          && (lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() != 'email' || lstActividadesDiariasByProspecto[index].leadEmail == null || lstActividadesDiariasByProspecto[index].leadEmail!.isEmpty))
                                           const Icon(Icons.person),
+
+                                          if(lstActividadesDiariasByProspecto[index].activityCategory != null && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() == 'phonecall')
+                                          GestureDetector(
+                                            onTap: () {
+                                              makePhoneCall(lstActividadesDiariasByProspecto[index].leadPhone!);                                                        
+                                            },
+                                            child: const Icon(Icons.call, size: 22,)
+                                          ),
+
+                                          if(lstActividadesDiariasByProspecto[index].activityCategory != null && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() == 'email' && lstActividadesDiariasByProspecto[index].leadEmail != null && lstActividadesDiariasByProspecto[index].leadEmail!.isNotEmpty)
+                                          GestureDetector(
+                                            onTap: () {
+                                              openEmailApp(lstActividadesDiariasByProspecto[index].leadEmail!);                                                        
+                                            },
+                                            child: const Icon(Icons.email, color: Colors.white, size: 22,)
+                                          ),
+
+                                          if(lstActividadesDiariasByProspecto[index].activityCategory != null && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() == 'whatsapp' && lstActividadesDiariasByProspecto[index].leadEmail != null && lstActividadesDiariasByProspecto[index].leadEmail!.isNotEmpty)
+                                          GestureDetector(
+                                            onTap: () {
+                                              abrirWhatsapp(lstActividadesDiariasByProspecto[index].leadPhone!, size);
+                                            },
+                                            child: const FaIcon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 22,)
+                                          ),
+
                                           if(!lstActividadesDiariasByProspecto[index].cerrado && DateFormat('yyyy-MM-dd', 'es').format(lstActividadesDiariasByProspecto[index].dateDeadline) == DateFormat('yyyy-MM-dd', 'es').format(DateTime.now()))
                                           Positioned(
                                             top: size.height * 0.01,
@@ -1476,25 +1639,37 @@ class PlanActivStateTwo extends State<PlanActiv> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                                                       
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            const TextSpan(
-                                              text: 'Tipo de actividad:',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 12,
+                                      Row(
+                                        children: [
+                                          Container(
+                                            color: Colors.transparent,
+                                            width: size.width * 0.42,
+                                            child: RichText(
+                                              text: TextSpan(
+                                                children: [
+                                                  const TextSpan(
+                                                    text: 'Tipo de actividad: ',
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                  TextSpan(
+                                                    text: lstActividadesDiariasByProspecto[index].activityTypeId.name,                                                  
+                                                    style: const TextStyle(
+                                                      overflow: TextOverflow.ellipsis,
+                                                      color: Colors.blueGrey,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                            TextSpan(
-                                              text: lstActividadesDiariasByProspecto[index].activityTypeId.name,
-                                              style: const TextStyle(
-                                                color: Colors.blueGrey,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                          ),
+
+                                          SizedBox(width: size.width * 0.04,),
+                                          
+                                        ],
                                       ),
                                       
                                       RichText(
@@ -1508,7 +1683,49 @@ class PlanActivStateTwo extends State<PlanActiv> {
                                               ),
                                             ),
                                             TextSpan(
-                                              text: DateFormat('yyyy-MM-dd', 'es').format(lstActividadesDiariasByProspecto[index].dateDeadline),
+                                              text: DateFormat('dd/MM/yyyy', 'es').format(lstActividadesDiariasByProspecto[index].dateDeadline),
+                                              style: const TextStyle(
+                                                color: Colors.blueGrey,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+
+                                      RichText(
+                                        text: TextSpan(
+                                          children: [
+                                            const TextSpan(
+                                              text: 'Hora planificada: ',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: lstActividadesDiariasByProspecto[index].scheduledTimeFormula,
+                                              style: const TextStyle(
+                                                color: Colors.blueGrey,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+
+                                      RichText(
+                                        text: TextSpan(
+                                          children: [
+                                            const TextSpan(
+                                              text: 'Creado en: ',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: lstActividadesDiariasByProspecto[index].dateCreate != null ? DateFormat('dd/MM/yyyy HH:MM:SS', 'es').format(lstActividadesDiariasByProspecto[index].dateCreate!) : "",
                                               style: const TextStyle(
                                                 color: Colors.blueGrey,
                                                 fontSize: 12,
@@ -1848,7 +2065,8 @@ class PlanActivStateTwo extends State<PlanActiv> {
                                                   leadName: lstActividadesDiariasByProspecto[i].leadName ?? '',
                                                   leadPhone: objDatumCrmLead?.phone ?? '',
                                                   contactName: objDatumCrmLead?.contactName ?? '',
-                                                  leadEmail: objDatumCrmLead?.emailFrom ?? ''
+                                                  leadEmail: objDatumCrmLead?.emailFrom ?? '',
+                                                  scheduleTime: 0
                                                 )
                                               );
                                             }

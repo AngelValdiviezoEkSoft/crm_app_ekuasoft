@@ -51,7 +51,8 @@ class ProspectoTypeService extends ChangeNotifier{
         {
           "model": EnvironmentsProd().modCrmLead,//"crm.lead"
           "filters": [
-            ['user_id', '=', objLogDecode['result']['uid']]
+            ['user_id', '=', objLogDecode['result']['uid']],
+            '|',['active','=',false],['active','=',true]
           ]
         },
       ];

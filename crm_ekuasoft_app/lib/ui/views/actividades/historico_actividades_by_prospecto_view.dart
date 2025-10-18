@@ -6,6 +6,7 @@ import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -114,7 +115,7 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
                           Container(
                             color: Colors.transparent,
                             width: size.width,
-                            height: size.height * 0.75,
+                            height: size.height * 0.62,
                             child: ListView.builder(
                               itemCount: lstActividadesHistoricosByProspecto.length,
                               itemBuilder: ( _, int index ) {
@@ -134,7 +135,37 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
                                           backgroundColor: lstActividadesHistoricosByProspecto[index].cerrado ? Colors.black45 : Colors.grey[300],
                                           child: Stack(
                                               children: [
+                                                if(lstActividadesHistoricosByProspecto[index].activityCategory != null 
+                                                  && lstActividadesHistoricosByProspecto[index].activityCategory!.toLowerCase() != 'whatsapp'
+                                                  && lstActividadesHistoricosByProspecto[index].activityCategory!.toLowerCase() != 'phonecall'
+                                                  && (lstActividadesHistoricosByProspecto[index].activityCategory!.toLowerCase() != 'email' || lstActividadesHistoricosByProspecto[index].leadEmail == null || lstActividadesHistoricosByProspecto[index].leadEmail!.isEmpty))
                                                 const Icon(Icons.person),
+
+                                                if(lstActividadesHistoricosByProspecto[index].activityCategory != null && lstActividadesHistoricosByProspecto[index].activityCategory!.toLowerCase() == 'phonecall')
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    //makePhoneCall(lstActividadesDiariasByProspecto[index].leadPhone!);                                                        
+                                                  },
+                                                  child: const Icon(Icons.call, size: 22,)
+                                                ),
+
+                                                if(lstActividadesHistoricosByProspecto[index].activityCategory != null && lstActividadesHistoricosByProspecto[index].activityCategory!.toLowerCase() == 'email' && lstActividadesHistoricosByProspecto[index].leadEmail != null && lstActividadesHistoricosByProspecto[index].leadEmail!.isNotEmpty)
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    //openEmailApp(lstActividadesDiariasByProspecto[index].leadEmail!);                                                        
+                                                  },
+                                                  child: const Icon(Icons.email, color: Colors.white, size: 22,)
+                                                ),
+
+                                                if(lstActividadesHistoricosByProspecto[index].activityCategory != null && lstActividadesHistoricosByProspecto[index].activityCategory!.toLowerCase() == 'whatsapp' && lstActividadesHistoricosByProspecto[index].leadEmail != null && lstActividadesHistoricosByProspecto[index].leadEmail!.isNotEmpty)
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    //abrirWhatsapp(lstActividadesDiariasByProspecto[index].leadPhone!, size);
+                                                  },
+                                                  child: const FaIcon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 22,)
+                                                ),
+
+
                                                 if(!lstActividadesHistoricosByProspecto[index].cerrado && DateFormat('yyyy-MM-dd', 'es').format(lstActividadesHistoricosByProspecto[index].dateDeadline) == DateFormat('yyyy-MM-dd', 'es').format(DateTime.now()))
                                                 Positioned(
                                                   top: size.height * 0.01,
@@ -195,7 +226,7 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
                                                     ),
                                                   ),
                                                   TextSpan(
-                                                    text: DateFormat('yyyy-MM-dd', 'es').format(lstActividadesHistoricosByProspecto[index].dateDeadline),
+                                                    text: DateFormat('dd/MM/yyyy', 'es').format(lstActividadesHistoricosByProspecto[index].dateDeadline),
                                                     style: const TextStyle(
                                                       color: Colors.blueGrey,
                                                       fontSize: 12,
@@ -204,6 +235,50 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
                                                 ],
                                               ),
                                             ),
+
+                                            RichText(
+                                              text: TextSpan(
+                                                children: [
+                                                  const TextSpan(
+                                                    text: 'Hora planificada: ',
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                  TextSpan(
+                                                    text: lstActividadesHistoricosByProspecto[index].scheduledTimeFormula,
+                                                    style: const TextStyle(
+                                                      color: Colors.blueGrey,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+
+
+                                            RichText(
+                                              text: TextSpan(
+                                                children: [
+                                                  const TextSpan(
+                                                    text: 'Creado en: ',
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                  TextSpan(
+                                                    text: lstActividadesHistoricosByProspecto[index].dateCreate != null ? DateFormat('dd/MM/yyyy HH:MM:SS', 'es').format(lstActividadesHistoricosByProspecto[index].dateCreate!) : "",
+                                                    style: const TextStyle(
+                                                      color: Colors.blueGrey,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          
                                           
                                           ],
                                         ),

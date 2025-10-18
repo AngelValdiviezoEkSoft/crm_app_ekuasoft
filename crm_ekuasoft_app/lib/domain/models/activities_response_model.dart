@@ -49,6 +49,7 @@ class DatumActivitiesResponse {
     bool cerrado;
     String? leadPhone;
     String? leadEmail;
+    double? scheduleTime;
 
     DatumActivitiesResponse({
         required this.id,
@@ -64,8 +65,20 @@ class DatumActivitiesResponse {
         required this.dateCreate,
         required this.activityCategory,
         required this.leadPhone,
-        required this.leadEmail
+        required this.leadEmail,
+        required this.scheduleTime
     });
+
+    String? get scheduledTimeFormula {
+      if (scheduleTime == null) return null;
+
+      int horas = scheduleTime!.floor();
+      double restante = scheduleTime! - horas;
+      int minutos = (restante * 60).round();
+
+
+      return '$horas:$minutos';
+    }
 
     factory DatumActivitiesResponse.fromRawJson(String str) => DatumActivitiesResponse.fromJson(json.decode(str));
 
@@ -85,7 +98,8 @@ class DatumActivitiesResponse {
         contactName: json["lead_contact_name"] ?? '',
         activityCategory: json["activity_category"] ?? '',
         leadPhone: json["lead_phone"] ?? '',
-        leadEmail: json["lead_email"] ?? ''
+        leadEmail: json["lead_email"] ?? '',
+        scheduleTime: json["schedule_time"] ?? 0
     );
 
     Map<String, dynamic> toJson() => {
@@ -102,7 +116,8 @@ class DatumActivitiesResponse {
         "create_date": dateCreate,
         "activity_category": activityCategory,
         "lead_phone": leadPhone,
-        "lead_email": leadEmail
+        "lead_email": leadEmail,
+        "schedule_time": scheduleTime
     };
 }
 
