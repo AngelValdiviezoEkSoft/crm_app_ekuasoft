@@ -806,4 +806,15 @@ class ProspectoTypeService extends ChangeNotifier{
     
     return rsp;
   }
+
+  getMotivoPerdidaProspecto() async {
+    var cmbAct = await storageAct.read(key: 'cmbLstMotivoPerdidaProspecto') ?? '';
+
+    if(cmbAct.isNotEmpty){
+      CrmLostReasonResponse  objFinAct = CrmLostReasonResponse.fromRawJson(cmbAct);
+
+      return objFinAct;
+    }
+
+  }
 }

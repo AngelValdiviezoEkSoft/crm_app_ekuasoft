@@ -308,6 +308,10 @@ class AuthService extends ChangeNotifier {
           "model": EnvironmentsProd().modEkResCountryCity,//"ek.res.country.city",
           "filters": []
         },
+        {
+          "model": EnvironmentsProd().modCrmLostReason,//"crm.lost.reason",
+          "filters": []
+        },
       ];
 
       //print('Result Login: ${response.body}');

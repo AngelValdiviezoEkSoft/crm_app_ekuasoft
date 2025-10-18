@@ -71,7 +71,6 @@ class ListaNotasInternasViewState extends State<ListaNotasInternasView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Encabezado del modal
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: const BoxDecoration(
@@ -93,7 +92,6 @@ class ListaNotasInternasViewState extends State<ListaNotasInternasView> {
                 ),
               ),
 
-              // Contenido con WebView
               Expanded(
                 child: ClipRRect(
                   borderRadius: const BorderRadius.vertical(
@@ -107,7 +105,6 @@ class ListaNotasInternasViewState extends State<ListaNotasInternasView> {
                 ),
               ),
 
-              // Botón de cerrar
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                 child: ElevatedButton.icon(
@@ -168,16 +165,14 @@ class ListaNotasInternasViewState extends State<ListaNotasInternasView> {
                   : 'Sin fecha';
 
               return Card(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 elevation: 2,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: ListTile(                  
                   title: Text(
-                    nota.description?.replaceAll(RegExp(r'<[^>]*>'), '') ??
-                        '(Sin descripción)',
+                    nota.description?.replaceAll(RegExp(r'<[^>]*>'), '') ??'(Sin descripción)',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -195,7 +190,6 @@ class ListaNotasInternasViewState extends State<ListaNotasInternasView> {
           );
         }
 
-        // 🔹 Si no hay datos
         return const Center(
           child: Text('No hay notas registradas.'),
         );

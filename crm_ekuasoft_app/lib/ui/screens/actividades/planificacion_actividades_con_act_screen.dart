@@ -28,11 +28,12 @@ bool seleccionaUnaActividad = false;
 int activitySelected = 0;
 List<MailActivityTypeDatumAppModel> actividadesFilAgendaPlanAct = [];
 List<String> lstTipoActividades = [];
+List<String> lstMotivoPerdida = [];
 int idProspectoAct = 0;
 Timer? _timerAct;
 int _segundosAct = 0;
 bool _corriendoAct = false;
-
+String motPerdSelect = '';
 String terminoBusquedaActiv = '';
 bool actualizaListaActiv= false;
 int contLstActiv = 0;
@@ -64,12 +65,17 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
   String originSelect = '';
   TimeOfDay? horaSeleccionada;
   double horaGuardarAct = 0;
+  final TextEditingController motivoPerdidaTxtController = TextEditingController();
+  bool muestraMotivoPerdida = false;
 
   @override
   void initState() {
     super.initState();
     _isButtonPressed = false;
+    muestraMotivoPerdida = false;
+    motPerdSelect = '';
     //objActividadEscogida = null;
+    lstMotivoPerdida = [];
     tradeNameProsp = '-----';
     contLstActiv = 0;
     notasActTxtAct = TextEditingController();
@@ -98,7 +104,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
     horaGuardarAct = 0;
   }
 
-   Future<void> actualizaActividadesByCliente() async {
+  Future<void> actualizaActividadesByCliente() async {
     try {
       lstActividadesDiariasByProspecto = [];
       ActivitiesPageModel? objRspFinal = await ActivitiesService().getActivitiesDiariasByProspecto( null, objDatumCrmLead?.id ?? 0);
@@ -127,14 +133,6 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
     final size = MediaQuery.of(context).size;
     
     final planActiv = BlocProvider.of<GenericBloc>(context);
-    
-/*
-    final bool tecladoVisible = MediaQuery.of(context).viewInsets.bottom > 0;
-
-    if (tecladoVisible) {
-      FocusScope.of(context).unfocus();
-    }
-    */
 
     return BlocBuilder<GenericBloc, GenericState>(
         builder: (context,state) {
@@ -233,10 +231,8 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                           state.heightModalPlanAct, //0.57,
                                       child: SingleChildScrollView(
                                         child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             SizedBox(
                                               height: AppSpacing.space03(),
@@ -443,6 +439,30 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                             numLineasMensaje: 2,
                                                             titulo: 'Error',
                                                             mensajeAlerta: 'Ingrese la descripción de la actividad.'
+                                                          );
+                                                        },
+                                                      );
+                                    
+                                                      return;
+                                                    }
+
+                                                    if(horaActividadContTxtAct.text.isEmpty){
+                                                      showDialog(
+                                                        barrierDismissible: false,
+                                                        context: context,
+                                                        builder: (BuildContext context) {
+                                                          return ContentAlertDialog(
+                                                            onPressed: () {
+                                                              Navigator.of(context).pop();
+                                                            },
+                                                            onPressedCont: () {
+                                                              Navigator.of(context).pop();
+                                                            },
+                                                            tipoAlerta: TipoAlerta().alertAccion,
+                                                            numLineasTitulo: 2,
+                                                            numLineasMensaje: 2,
+                                                            titulo: 'Error',
+                                                            mensajeAlerta: 'Selecciona hora para la actividad.'
                                                           );
                                                         },
                                                       );
@@ -813,7 +833,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                               RatingStarsWidget(
                                 initialRating: 0,
                                 onRatingChanged: (valor) {
-                                  print('⭐ Calificación seleccionada: $valor');
+                                  
                                 },
                               ),
                               
@@ -852,9 +872,201 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                     Expanded(
                                       child: ElevatedButton(
                                         onPressed: () {
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(content: Text('Prospecto Perdido :(')),
+                                          muestraMotivoPerdida = false;
+
+                                          motPerdSelect = lstMotivoPerdida.first;
+
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return StatefulBuilder(
+                                                builder: (context, setStateDialog) => Dialog(
+                                                  insetPadding: const EdgeInsets.all(20),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(16),
+                                                  ),
+                                                  child: SizedBox(
+                                                    width: size.width * 0.92,
+                                                    height: !muestraMotivoPerdida
+                                                        ? size.height * 0.28
+                                                        : size.height * 0.38,
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                      children: [
+                                                        
+                                                        Container(
+                                                          padding: const EdgeInsets.all(12),
+                                                          decoration: const BoxDecoration(
+                                                            color: Colors.blueAccent,
+                                                            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                                                          ),
+                                                          child: const Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                'Registra pérdida del prospecto',
+                                                                style: TextStyle(
+                                                                  color: Colors.white,
+                                                                  fontWeight: FontWeight.bold,
+                                                                  fontSize: 18,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+
+                                                        SizedBox(height: size.height * 0.02),
+
+                                                        Container(
+                                                          color: Colors.transparent,
+                                                          width: size.width * 0.92,
+                                                          height: size.height * 0.1,
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            children: [
+                                                              Container(
+                                                                color: Colors.transparent,
+                                                                width: size.width * 0.82,
+                                                                height: size.height * 0.1,
+                                                                child: DropdownButtonFormField<String>(
+                                                                  decoration: const InputDecoration(
+                                                                    border: OutlineInputBorder(),
+                                                                    labelText: 'Seleccione motivo de pérdida...',
+                                                                  ),
+                                                                  value: motPerdSelect.isEmpty ? null : motPerdSelect,
+                                                                  items: lstMotivoPerdida
+                                                                      .map(
+                                                                        (activityPrsp) => DropdownMenuItem(
+                                                                          value: activityPrsp,
+                                                                          child: Text(
+                                                                            activityPrsp,
+                                                                            overflow: TextOverflow.ellipsis,
+                                                                            maxLines: 1,
+                                                                            style: const TextStyle(fontSize: 12),
+                                                                          ),
+                                                                        ),
+                                                                      )
+                                                                      .toList(),
+                                                                  onChanged: (String? newValue) {
+                                                                    setStateDialog(() {
+                                                                      if (newValue != null &&
+                                                                          newValue.toLowerCase() == 'otros') {
+                                                                        muestraMotivoPerdida = true;
+                                                                      } else {
+                                                                        muestraMotivoPerdida = false;
+                                                                      }
+                                                                      motPerdSelect = newValue ?? '';
+                                                                    });
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+
+                                                        if (muestraMotivoPerdida)
+                                                          Container(
+                                                            color: Colors.transparent,
+                                                            width: size.width * 0.92,
+                                                            height: size.height * 0.1,
+                                                            child: Row(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                                              children: [
+                                                                Container(
+                                                                  color: Colors.transparent,
+                                                                  width: size.width * 0.82,
+                                                                  height: size.height * 0.1,
+                                                                  child: TextFormField(
+                                                                    controller: motivoPerdidaTxtController,
+                                                                    maxLines: 5,
+                                                                    onTapOutside: (event) {
+                                                                      FocusScope.of(context).unfocus();
+                                                                    },
+                                                                    decoration: InputDecoration(
+                                                                      hintText: 'Escribe el motivo aquí...',
+                                                                      border: OutlineInputBorder(
+                                                                        borderRadius: BorderRadius.circular(10),
+                                                                      ),
+                                                                      filled: true,
+                                                                      fillColor: Colors.transparent,
+                                                                    ),
+                                                                    validator: (value) {
+                                                                      if (value == null || value.trim().isEmpty) {
+                                                                        return 'Por favor ingresa una observación';
+                                                                      }
+                                                                      return null;
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+
+                                                        SizedBox(height: size.height * 0.01),
+
+                                                        Container(
+                                                          color: Colors.transparent,
+                                                          width: size.width * 0.9,
+                                                          height: size.height * 0.07,
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets.symmetric(
+                                                                    vertical: 10, horizontal: 16),
+                                                                child: ElevatedButton.icon(
+                                                                  onPressed: () {
+                                                                    FocusScope.of(context).unfocus();
+                                                                    Navigator.pop(context);
+                                                                  },
+                                                                  icon: const Icon(
+                                                                    Icons.close,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                  label: const Text(
+                                                                    'Cerrar',
+                                                                    style: TextStyle(color: Colors.white),
+                                                                  ),
+                                                                  style: ElevatedButton.styleFrom(
+                                                                    backgroundColor: Colors.grey,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets.symmetric(
+                                                                    vertical: 10, horizontal: 16),
+                                                                child: ElevatedButton.icon(
+                                                                  onPressed: () {
+                                                                    FocusScope.of(context).unfocus();
+                                                                    Navigator.pop(context);
+                                                                  },
+                                                                  icon: const Icon(
+                                                                    Icons.save,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                  label: const Text(
+                                                                    'Confirmar',
+                                                                    style: TextStyle(color: Colors.white),
+                                                                  ),
+                                                                  style: ElevatedButton.styleFrom(
+                                                                    backgroundColor: Colors.blueAccent,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            },
                                           );
+
                                         },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.redAccent,
@@ -1278,10 +1490,14 @@ class PlanActivStateTwo extends State<PlanActiv> {
     super.initState();    
     
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      
       await cargaActividadesByCliente();
+      await cargaMotivosPerdida();
+
       //ignore: use_build_context_synchronously
       final gnrBloc = Provider.of<GenericBloc>(context, listen: false);
       gnrBloc.setMuestraCarga(false);
+
     });
 
   }
@@ -1341,11 +1557,37 @@ class PlanActivStateTwo extends State<PlanActiv> {
           
           lstActividadesDiariasByProspecto = objRspFinal.activities.data;
           actividadesFilAgendaPlanAct = objRspFinal.objMailAct.data;          
-          //objDatumCrmLead = objRspFinal.lead;
         }
 
         gnrBloc.setIniciaCarga(false);
       }
+    } catch (_) {
+      
+    }
+  }
+  
+  Future<void> cargaMotivosPerdida() async {
+    try {
+      final gnrBloc = Provider.of<GenericBloc>(context, listen: false);
+      gnrBloc.setIniciaCarga(true);
+      lstMotivoPerdida = [];
+      
+      CrmLostReasonResponse? objRspFinalTpAct = await ProspectoTypeService().getMotivoPerdidaProspecto();
+
+      if(objRspFinalTpAct != null){
+        for(int i = 0; i < objRspFinalTpAct.data.length; i++){
+          lstMotivoPerdida.add(objRspFinalTpAct.data[i].name);
+        }
+
+        if(motPerdSelect.isEmpty && lstMotivoPerdida.isNotEmpty){
+          motPerdSelect = lstMotivoPerdida.first;
+        }
+      }
+
+      lstMotivoPerdida.add('Otros');
+
+      gnrBloc.setIniciaCarga(false);
+      
     } catch (_) {
       
     }

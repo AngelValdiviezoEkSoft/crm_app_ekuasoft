@@ -23,6 +23,7 @@ class AppResponseModel {
         id: json["id"] ?? 0,
         result: json["result"] != null ? AppModel.fromJson(json["result"]) : 
           AppModel(estado: 0, data: DataAppModel(
+            lostReason: CrmLostReasonResponse(data: [], length: 0, fields: Map<String, String>()),
             crmLead: CrmLeadAppModel(data: [], length: 0, fields: CrmLeadFieldsAppModel(activityIds: '', campaignId: '', city: '', contactName: '', countryId: '', dateClosed: '', dateDeadline: '', dateOpen: '', dayClose: '', description: '', emailCc: '', emailFrom: '', expectedRevenue: '', function: '', lostReasonId: '', mediumId: '', mobile: '', name: '', partnerId: '', partnerName: '', phone: '', priority: '', referred: '', sourceId: '', stageId: '', stateId: '', street: '', tagIds: '', title: '', type: '', userId: '')), 
             irResponse: IrModel(data: [], fields: FieldsIr(id: '', model: ''), length: 0), 
             mailActivity: MailActivityAppModel(data: [], length: 0, fields: MailActivityFieldsAppModel(code: '', name: '', stateIds: '')), 
@@ -63,20 +64,21 @@ class AppModel {
     factory AppModel.fromJson(Map<String, dynamic> json) => AppModel(
         estado: json["estado"] ?? 0,
         data: json["data"] != null ? DataAppModel.fromJson(json["data"]) : DataAppModel(
-            crmLead: CrmLeadAppModel(data: [], length: 0, fields: CrmLeadFieldsAppModel(activityIds: '', campaignId: '', city: '', contactName: '', countryId: '', dateClosed: '', dateDeadline: '', dateOpen: '', dayClose: '', description: '', emailCc: '', emailFrom: '', expectedRevenue: '', function: '', lostReasonId: '', mediumId: '', mobile: '', name: '', partnerId: '', partnerName: '', phone: '', priority: '', referred: '', sourceId: '', stageId: '', stateId: '', street: '', tagIds: '', title: '', type: '', userId: '')), 
-            irResponse: IrModel(data: [], fields: FieldsIr(id: '', model: ''), length: 0), 
-            mailActivity: MailActivityAppModel(data: [], length: 0, fields: MailActivityFieldsAppModel(code: '', name: '', stateIds: '')), 
-            mailActivityType: MailActivityTypeAppModel(data: [], length: 0, fields: MailActivityTypeFieldsAppModel(category: '', decorationType: '', defaultNote: '', delayCount: '', delayFrom: '', icon: '', name: '', resModel: '', sequence: '', summary: '')),
-            resCountry: ResCountryAppModel(data: [], length: 0, fields: ResCountryFieldsAppModel(code: '', name: '', stateIds: '')), 
-            resPartner: ResPartnerAppModel(data: [], length: 0, fields: ResPartnerFieldsAppModel(accountRepresentedCompanyIds: '', barcode: '', categoryId: '', channelIds: '', childIds: '', cityId: '', companyType: '', countryId: '', date: '', email: '', name: '')),
-            utmCampaign: UtmCampaignAppModel(data: [], length: 0, fields: UtmCampaignFieldsAppModel(active: '', name: '', title: '')), 
-            utmMedium: UtmAppModel(data: [], length: 0, fields: UtmMediumFields(name: '')), 
-            utmSource: UtmAppModel(data: [], length: 0, fields: UtmMediumFields(name: '')),
-            ekClasification: EkClassification(data: [],fields: Map<String, String>(), length: 0),
-            ekResCountryCanton: CantonModel(data: [],fields: Map<String, String>(), length: 0),
-            ekResCountryCity: CountryCity(data: [],fields: Map<String, String>(), length: 0),
-            ekResRegion: RegionModel(data: [],fields: Map<String, String>(), length: 0),
-            ekResSector: SectorModel(data: [],fields: Map<String, String>(), length: 0)),
+          lostReason: CrmLostReasonResponse(data: [], length: 0, fields: Map<String, String>()),
+          crmLead: CrmLeadAppModel(data: [], length: 0, fields: CrmLeadFieldsAppModel(activityIds: '', campaignId: '', city: '', contactName: '', countryId: '', dateClosed: '', dateDeadline: '', dateOpen: '', dayClose: '', description: '', emailCc: '', emailFrom: '', expectedRevenue: '', function: '', lostReasonId: '', mediumId: '', mobile: '', name: '', partnerId: '', partnerName: '', phone: '', priority: '', referred: '', sourceId: '', stageId: '', stateId: '', street: '', tagIds: '', title: '', type: '', userId: '')), 
+          irResponse: IrModel(data: [], fields: FieldsIr(id: '', model: ''), length: 0), 
+          mailActivity: MailActivityAppModel(data: [], length: 0, fields: MailActivityFieldsAppModel(code: '', name: '', stateIds: '')), 
+          mailActivityType: MailActivityTypeAppModel(data: [], length: 0, fields: MailActivityTypeFieldsAppModel(category: '', decorationType: '', defaultNote: '', delayCount: '', delayFrom: '', icon: '', name: '', resModel: '', sequence: '', summary: '')),
+          resCountry: ResCountryAppModel(data: [], length: 0, fields: ResCountryFieldsAppModel(code: '', name: '', stateIds: '')), 
+          resPartner: ResPartnerAppModel(data: [], length: 0, fields: ResPartnerFieldsAppModel(accountRepresentedCompanyIds: '', barcode: '', categoryId: '', channelIds: '', childIds: '', cityId: '', companyType: '', countryId: '', date: '', email: '', name: '')),
+          utmCampaign: UtmCampaignAppModel(data: [], length: 0, fields: UtmCampaignFieldsAppModel(active: '', name: '', title: '')), 
+          utmMedium: UtmAppModel(data: [], length: 0, fields: UtmMediumFields(name: '')), 
+          utmSource: UtmAppModel(data: [], length: 0, fields: UtmMediumFields(name: '')),
+          ekClasification: EkClassification(data: [],fields: Map<String, String>(), length: 0),
+          ekResCountryCanton: CantonModel(data: [],fields: Map<String, String>(), length: 0),
+          ekResCountryCity: CountryCity(data: [],fields: Map<String, String>(), length: 0),
+          ekResRegion: RegionModel(data: [],fields: Map<String, String>(), length: 0),
+          ekResSector: SectorModel(data: [],fields: Map<String, String>(), length: 0)),            
     );
 
     Map<String, dynamic> toJson() => {
@@ -101,6 +103,7 @@ class DataAppModel {
     RegionModel ekResRegion;
     SectorModel ekResSector;
     CountryCity ekResCountryCity;
+    CrmLostReasonResponse lostReason;
 
     DataAppModel({
         required this.crmLead,
@@ -116,7 +119,8 @@ class DataAppModel {
         required this.ekResCountryCanton,
         required this.ekResRegion,
         required this.ekResSector,
-        required this.ekResCountryCity
+        required this.ekResCountryCity,
+        required this.lostReason
     });
 
     factory DataAppModel.fromRawJson(String str) => DataAppModel.fromJson(json.decode(str));
@@ -188,7 +192,9 @@ class DataAppModel {
             json["ek.res.country.city"] != null ? 
                 CountryCity.fromJson(json["ek.res.country.city"])
             : CountryCity(data: [], length: 0, fields: Map<String, String>()),
-
+        lostReason: json["crm.lost.reason"] != null ? 
+                CrmLostReasonResponse.fromJson(json["crm.lost.reason"])
+            : CrmLostReasonResponse(data: [], length: 0, fields: Map<String, String>()),
 
     );
 
@@ -206,6 +212,7 @@ class DataAppModel {
       "ek.res.region": ekResRegion.toJson(),
       "ek.res.sector": ekResSector.toJson(),
       "ek.res.country.city": ekResCountryCity.toJson(),
+      "crm.lost.reason": lostReason.toJson(),
     };
 }
 
@@ -1422,4 +1429,113 @@ class CountryCity {
       'data': data.map((e) => e.toJson()).toList(),
     };
   }
+}
+
+class CrmLostReasonResponse {
+  final int length;
+  final Map<String, String> fields;
+  final List<CrmLostReasonData> data;
+
+  CrmLostReasonResponse({
+    required this.length,
+    required this.fields,
+    required this.data,
+  });
+
+  factory CrmLostReasonResponse.fromRawJson(String str) => CrmLostReasonResponse.fromJson(json.decode(str));
+
+  factory CrmLostReasonResponse.fromJson(Map<String, dynamic> json) {
+    return CrmLostReasonResponse(
+      length: json['length'] ?? 0,
+      fields: Map<String, String>.from(json['fields'] ?? {}),
+      data: (json['data'] as List<dynamic>?)
+              ?.map((e) => CrmLostReasonData.fromJson(e))
+              .toList() ??
+          [],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'length': length,
+        'fields': fields,
+        'data': data.map((e) => e.toJson()).toList(),
+      };
+}
+
+// Datos individuales dentro de "data"
+class CrmLostReasonData {
+  final int id;
+  final String lastUpdate;
+  final bool active;
+  final String createDate;
+  final Many2One createUid;
+  final String displayName;
+  final int leadsCount;
+  final String name;
+  final String writeDate;
+  final Many2One writeUid;
+
+  CrmLostReasonData({
+    required this.id,
+    required this.lastUpdate,
+    required this.active,
+    required this.createDate,
+    required this.createUid,
+    required this.displayName,
+    required this.leadsCount,
+    required this.name,
+    required this.writeDate,
+    required this.writeUid,
+  });
+
+  factory CrmLostReasonData.fromJson(Map<String, dynamic> json) {
+    return CrmLostReasonData(
+      id: json['id'] ?? 0,
+      lastUpdate: json['__last_update'] ?? '',
+      active: json['active'] ?? false,
+      createDate: json['create_date'] ?? '',
+      createUid: Many2One.fromJson(json['create_uid'] ?? {}),
+      displayName: json['display_name'] ?? '',
+      leadsCount: json['leads_count'] ?? 0,
+      name: json['name'] ?? '',
+      writeDate: json['write_date'] ?? '',
+      writeUid: Many2One.fromJson(json['write_uid'] ?? {}),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        '__last_update': lastUpdate,
+        'active': active,
+        'create_date': createDate,
+        'create_uid': createUid.toJson(),
+        'display_name': displayName,
+        'leads_count': leadsCount,
+        'name': name,
+        'write_date': writeDate,
+        'write_uid': writeUid.toJson(),
+      };
+}
+
+// Relación many2one
+class Many2One {
+  final int id;
+  final String name;
+
+  Many2One({
+    required this.id,
+    required this.name,
+  });
+
+  factory Many2One.fromJson(Map<String, dynamic> json) {
+    return Many2One(
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+      };
 }

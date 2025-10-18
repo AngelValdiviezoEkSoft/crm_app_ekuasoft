@@ -34,6 +34,7 @@ class EnvironmentsProd {
   final String modEkResRegion = 'ek.res.region';
   final String modEkResSector = 'ek.res.sector';
   final String modEkResCountryCity = 'ek.res.country.city';
+  final String modCrmLostReason = 'crm.lost.reason';
 
   final String baseCentroViajes = 'centroviajes';
 

@@ -239,6 +239,7 @@ class GenericService extends ChangeNotifier {
 
     await storage.write(key: 'RespuestaProspectos', value: json.encode(rsp.result.data.crmLead));
     await storage.write(key: 'RespuestaClientes', value: json.encode(rsp.result.data.resPartner));
+    await storage.write(key: 'RespuestaIrModel', value: json.encode(rsp.result.data.irResponse));
 
     await storage.write(key: 'cmbCampania', value: json.encode(rsp.result.data.utmCampaign));
     await storage.write(key: 'cmbOrigen', value: json.encode(rsp.result.data.utmSource));
@@ -246,7 +247,7 @@ class GenericService extends ChangeNotifier {
     await storage.write(key: 'cmbActividades', value: json.encode(rsp.result.data.mailActivityType));
     await storage.write(key: 'cmbPaises', value: json.encode(rsp.result.data.resCountry));
     await storage.write(key: 'cmbLstActividades', value: json.encode(rsp.result.data.mailActivity));
-    await storage.write(key: 'RespuestaIrModel', value: json.encode(rsp.result.data.irResponse));
+    await storage.write(key: 'cmbLstMotivoPerdidaProspecto', value: json.encode(rsp.result.data.lostReason));    
 
     int resModelId = rsp.result.data.irResponse.data.firstWhere((x) => x.model == "crm.lead").id;
     await storage.write(key: 'IdIrModelForAct', value: '$resModelId');

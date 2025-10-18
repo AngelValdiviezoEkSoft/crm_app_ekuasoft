@@ -116,7 +116,7 @@ class _FrmNotasInternasViewState extends State<FrmNotasInternasView> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   filled: true,
-                  fillColor: Colors.grey[100],
+                  fillColor: Colors.transparent,
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
