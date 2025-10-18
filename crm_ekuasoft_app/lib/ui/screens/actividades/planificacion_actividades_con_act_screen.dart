@@ -1827,14 +1827,14 @@ class PlanActivStateTwo extends State<PlanActiv> {
                                           && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() != 'whatsapp'
                                           && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() != 'phonecall'
                                           && (lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() != 'email' || lstActividadesDiariasByProspecto[index].leadEmail == null || lstActividadesDiariasByProspecto[index].leadEmail!.isEmpty))
-                                          const Icon(Icons.person),
+                                          const Icon(Icons.person, color: Colors.black,),
 
                                           if(lstActividadesDiariasByProspecto[index].activityCategory != null && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() == 'phonecall')
                                           GestureDetector(
                                             onTap: () {
                                               makePhoneCall(lstActividadesDiariasByProspecto[index].leadPhone!);                                                        
                                             },
-                                            child: const Icon(Icons.call, size: 22,)
+                                            child: const Icon(Icons.call, size: 22, color: Colors.black,)
                                           ),
 
                                           if(lstActividadesDiariasByProspecto[index].activityCategory != null && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() == 'email' && lstActividadesDiariasByProspecto[index].leadEmail != null && lstActividadesDiariasByProspecto[index].leadEmail!.isNotEmpty)
@@ -2832,7 +2832,7 @@ Widget _buildAgendaItem() {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text('10:20 AM', style: TextStyle(fontWeight: FontWeight.bold)),
-              Icon(Icons.phone, color: Colors.grey),
+              Icon(Icons.phone, color: Colors.black),
             ],
           ),
         ),
