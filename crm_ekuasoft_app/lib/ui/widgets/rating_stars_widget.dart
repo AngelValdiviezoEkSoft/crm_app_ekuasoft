@@ -27,9 +27,9 @@ class _RatingStarsWidgetState extends State<RatingStarsWidget> {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(5, (index) {
+      children: List.generate(4, (index) {
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 2), // Espacio mínimo
+          padding: const EdgeInsets.symmetric(horizontal: 2),
           child: GestureDetector(
             onTap: () {
               setState(() {

@@ -356,6 +356,50 @@ class ActivitiesService extends ChangeNotifier{
   }
 
   getTipoActividades() async {
+    
+    var codImei = await storageAct.read(key: 'codImei') ?? '';
+    var objReg = await storageProspecto.read(key: 'RespuestaRegistro') ?? '';
+    var obj = RegisterDeviceResponseModel.fromJson(objReg);
+    var objLog = await storageAct.read(key: 'RespuestaLogin') ?? '';
+    var objLogDecode = json.decode(objLog);
+    
+    final models = [
+      {
+        "model": EnvironmentsProd().modActiv,
+        "filters": [
+          ["res_model","=",false]
+        ]
+      },
+    ];
+
+    ConsultaMultiModelRequestModel objReq = ConsultaMultiModelRequestModel(
+      jsonrpc: EnvironmentsProd().jsonrpc,
+      params: ParamsMultiModels(
+        bearer: obj.result.bearer,
+        company: objLogDecode['result']['current_company'],
+        imei: codImei,
+        key: obj.result.key,
+        tocken: obj.result.tocken,
+        tockenValidDate: obj.result.tockenValidDate,
+        uid: objLogDecode['result']['uid'],
+        models: []
+      )
+    );
+
+    var rsp = await GenericService().getMultiModelosGenNoMemoria(objReq, models);
+
+    final jsonData = jsonDecode(rsp);
+    final crmLostReasonJson = jsonData['result']['data'][EnvironmentsProd().modActiv];
+
+    var objFinal = MailActivityTypeAppModel.fromJson(crmLostReasonJson);
+
+    await storageAct.write(key: 'cmbActividades', value: '');
+    await storageAct.write(key: 'cmbActividades', value: json.encode(objFinal));
+
+    return objFinal;
+  }
+
+  getTipoActividadesMemoria() async {
     var cmbAct = await storageAct.read(key: 'cmbActividades') ?? '';
 
     if(cmbAct.isNotEmpty){
@@ -413,7 +457,7 @@ class ActivitiesService extends ChangeNotifier{
               MultiModel(model: 'crm.lead')
             );
 
-            final models = [        
+            final models = [
               {
                 "model": EnvironmentsProd().modActiv,//"mail.activity.type",
                 "filters": [

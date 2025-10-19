@@ -67,15 +67,20 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
   double horaGuardarAct = 0;
   final TextEditingController motivoPerdidaTxtController = TextEditingController();
   bool muestraMotivoPerdida = false;
+  int prioridadPrsp = 0;
 
   @override
   void initState() {
     super.initState();
+    
+    if(objDatumCrmLead != null){
+      prioridadPrsp = int.parse(objDatumCrmLead!.priority);
+    }
+    
     _isButtonPressed = false;
     muestraMotivoPerdida = false;
     motPerdSelect = '';
-    //objActividadEscogida = null;
-    lstMotivoPerdida = [];
+    //objActividadEscogida = null;    
     tradeNameProsp = '-----';
     contLstActiv = 0;
     notasActTxtAct = TextEditingController();
@@ -86,7 +91,6 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
     actualizaListaActiv= false;
     actividadesFiltradasAct = [];
     idProspectoAct = 0;
-    lstTipoActividades = [];
     _segundosAct = 0;
     _corriendoAct = false;
     actividadesFilAgendaPlanAct = [];
@@ -102,6 +106,12 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
     regionPrsp = '-----';
     sectorPrsp = '-----';
     horaGuardarAct = 0;
+    //prioridadPrsp = 0;
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
   }
 
   Future<void> actualizaActividadesByCliente() async {
@@ -227,8 +237,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                     child: Container(
                                       color: Colors.transparent,
                                       width: size.width,
-                                      height: size.height *
-                                          state.heightModalPlanAct, //0.57,
+                                      height: size.height * state.heightModalPlanAct, //0.57,
                                       child: SingleChildScrollView(
                                         child: Column(
                                           mainAxisAlignment: MainAxisAlignment.center,
@@ -250,17 +259,19 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                             const Text(
                                               'Registrar actividad',
                                               style: TextStyle(
-                                                  fontSize: 24,
-                                                  fontWeight:
-                                                      FontWeight.bold),
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.bold
+                                              ),
                                             ),
                                             const SizedBox(height: 8),
                                             Text(
                                               'En esta interfaz es posible registrar las actividades que serán realizadas con los prospectos/leads asignados',
                                               style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.grey[700]),
+                                                fontSize: 14,
+                                                color: Colors.grey[700]
+                                              ),
                                             ),
+
                                             const SizedBox(height: 24),
                                             
                                             Container(
@@ -471,13 +482,6 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                     }
             
                                                     int activityTypeIdFrm = 0;
-
-                                                    MailActivityTypeAppModel? objRspFinalTpAct = await ActivitiesService().getTipoActividades();
-
-                                                    if(objRspFinalTpAct != null){
-                                                      actividadesFilAgendaPlanAct = [];
-                                                      actividadesFilAgendaPlanAct = objRspFinalTpAct.data;
-                                                    }
             
                                                     for(int i = 0; i < actividadesFilAgendaPlanAct.length; i++){
                                                       if(campSelect == actividadesFilAgendaPlanAct[i].name){
@@ -669,7 +673,6 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                           );
                                                         },
                                                       );
-                                                    
                                                     }
                                                   },
                                                   style: ElevatedButton.styleFrom(
@@ -831,13 +834,13 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                             children: [
 
                               RatingStarsWidget(
-                                initialRating: 0,
+                                initialRating: prioridadPrsp,//aquí reemplazar con valor dinámico
                                 onRatingChanged: (valor) {
                                   
                                 },
                               ),
                               
-                              SizedBox(width: size.width * 0.19),
+                              SizedBox(width: size.width * 0.267),
 
                               Container(
                                 color: Colors.transparent,
@@ -848,10 +851,170 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                   children: [
                                     Expanded(
                                       child: ElevatedButton(
-                                        onPressed: () {
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(content: Text('Prospecto Ganado :)')),
+                                        onPressed: () async {
+                                          ActivitiesTypeRequestModel objReqst = ActivitiesTypeRequestModel(
+                                            active: false,
+                                            createDate: DateTime.now(),//DateTime.parse(fechaActividadContTxtAct.text),
+                                            createUid: 0,
+                                            displayName: objDatumCrmLead?.contactName ?? '',
+                                            previousActivityTypeId: 0,
+                                            note: '',
+                                            activityTypeId: 0,
+                                            dateDeadline: DateTime.now(),//DateTime.parse(fechaActividadContTxtAct.text),//objDatumCrmLead?.dateDeadline ?? DateTime.now(),
+                                            userId: objDatumCrmLead?.userId!.id ?? 0,
+                                            userCreateId: objDatumCrmLead?.userId!.id ?? 0,
+                                            resId: objDatumCrmLead?.id ?? 0,
+                                            actId: 0,
+                                            workingTime: 0,
+                                            summary: '',
+                                            leadName: objDatumCrmLead?.name ?? '',
+                                            leadPhone: objDatumCrmLead?.phone ?? '',                                                      
+                                            contactName: objDatumCrmLead?.contactName ?? '',
+                                            leadEmail: objDatumCrmLead?.emailFrom ?? '',
+                                            scheduleTime: 0
                                           );
+  
+                                          showDialog(
+                                            //ignore: use_build_context_synchronously
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (context) => SimpleDialog(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                SimpleDialogCargando(
+                                                  null,
+                                                  mensajeMostrar: 'Estamos registrando',
+                                                  mensajeMostrarDialogCargando: 'motivo de pérdida del prospecto.',
+                                                ),
+                                              ]
+                                            ),
+                                          );
+                          
+                                          ActividadRegistroResponseModel? objResp = await ProspectoTypeService().registraProspectoByEstado(false, true, null);
+
+                                          if(objResp != null){
+                                            String respuestaReg = objResp.result.mensaje;
+                                            int estado = objResp.result.estado;
+                                            String gifRespuesta = '';
+    
+                                            //ignore: use_build_context_synchronously
+                                            context.pop();
+    
+                                            if(estado == 200){
+                                              gifRespuesta = 'assets/gifs/exito.gif';
+                                            } else {
+                                              gifRespuesta = 'assets/gifs/gifErrorBlanco.gif';
+                                            }
+    
+                                            //ignore:use_build_context_synchronously
+                                            context.pop();                                                      
+
+                                            showDialog(
+                                              //ignore:use_build_context_synchronously
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Container(
+                                                    color: Colors.transparent,
+                                                    height: size.height * 0.17,
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        
+                                                        Container(
+                                                          color: Colors.transparent,
+                                                          height: size.height * 0.09,
+                                                          child: Image.asset(gifRespuesta),
+                                                        ),
+                            
+                                                        Container(
+                                                          color: Colors.transparent,
+                                                          width: size.width * 0.95,
+                                                          height: size.height * 0.08,
+                                                          alignment: Alignment.center,
+                                                          child: AutoSizeText(
+                                                            respuestaReg,
+                                                            maxLines: 2,
+                                                            minFontSize: 2,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          
+                                            //POR AQUÍ AEVG
+                                            //ignore:use_build_context_synchronously
+                                            context.pop();
+
+                                            //ignore:use_build_context_synchronously
+                                            context.pop();
+
+                                            //ignore:use_build_context_synchronously
+                                            context.push(objRutasGen.rutaPlanActivConActiv);
+                                          }
+                                          else{
+                                            //ignore:use_build_context_synchronously
+                                            context.pop();                                                      
+
+                                            showDialog(
+                                              //ignore:use_build_context_synchronously
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Container(
+                                                    color: Colors.transparent,
+                                                    height: size.height * 0.17,
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        
+                                                        Container(
+                                                          color: Colors.transparent,
+                                                          height: size.height * 0.09,
+                                                          child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
+                                                        ),
+                            
+                                                        Container(
+                                                          color: Colors.transparent,
+                                                          width: size.width * 0.95,
+                                                          height: size.height * 0.08,
+                                                          alignment: Alignment.center,
+                                                          child: const AutoSizeText(
+                                                            'Error al crear una nueva actividad',
+                                                            maxLines: 2,
+                                                            minFontSize: 2,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          }
+/*
+                                          FocusScope.of(context).unfocus();
+                                          Navigator.pop(context);
+                                          */
                                         },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.green,
@@ -1015,8 +1178,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                             crossAxisAlignment: CrossAxisAlignment.center,
                                                             children: [
                                                               Padding(
-                                                                padding: const EdgeInsets.symmetric(
-                                                                    vertical: 10, horizontal: 16),
+                                                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                                                                 child: ElevatedButton.icon(
                                                                   onPressed: () {
                                                                     FocusScope.of(context).unfocus();
@@ -1036,12 +1198,173 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                                 ),
                                                               ),
                                                               Padding(
-                                                                padding: const EdgeInsets.symmetric(
-                                                                    vertical: 10, horizontal: 16),
+                                                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                                                                 child: ElevatedButton.icon(
-                                                                  onPressed: () {
+                                                                  onPressed: () async {
+
+                                                                    ActivitiesTypeRequestModel objReqst = ActivitiesTypeRequestModel(
+                                                                      active: false,
+                                                                      createDate: DateTime.now(),//DateTime.parse(fechaActividadContTxtAct.text),
+                                                                      createUid: 0,
+                                                                      displayName: objDatumCrmLead?.contactName ?? '',
+                                                                      previousActivityTypeId: 0,
+                                                                      note: '',
+                                                                      activityTypeId: 0,
+                                                                      dateDeadline: DateTime.now(),//DateTime.parse(fechaActividadContTxtAct.text),//objDatumCrmLead?.dateDeadline ?? DateTime.now(),
+                                                                      userId: objDatumCrmLead?.userId!.id ?? 0,
+                                                                      userCreateId: objDatumCrmLead?.userId!.id ?? 0,
+                                                                      resId: objDatumCrmLead?.id ?? 0,
+                                                                      actId: 0,
+                                                                      workingTime: 0,
+                                                                      summary: '',
+                                                                      leadName: objDatumCrmLead?.name ?? '',
+                                                                      leadPhone: objDatumCrmLead?.phone ?? '',                                                      
+                                                                      contactName: objDatumCrmLead?.contactName ?? '',
+                                                                      leadEmail: objDatumCrmLead?.emailFrom ?? '',
+                                                                      scheduleTime: 0
+                                                                    );
+                            
+                                                                    showDialog(
+                                                                      //ignore: use_build_context_synchronously
+                                                                      context: context,
+                                                                      barrierDismissible: false,
+                                                                      builder: (context) => SimpleDialog(
+                                                                        alignment: Alignment.center,
+                                                                        children: [
+                                                                          SimpleDialogCargando(
+                                                                            null,
+                                                                            mensajeMostrar: 'Estamos registrando',
+                                                                            mensajeMostrarDialogCargando: 'motivo de pérdida del prospecto.',
+                                                                          ),
+                                                                        ]
+                                                                      ),
+                                                                    );
+                                                    
+                                                                    ActividadRegistroResponseModel? objResp = await ProspectoTypeService().registraProspectoByEstado(true, false, null);
+
+                                                                    if(objResp != null){
+                                                                      String respuestaReg = objResp.result.mensaje;
+                                                                      int estado = objResp.result.estado;
+                                                                      String gifRespuesta = '';
+                              
+                                                                      //ignore: use_build_context_synchronously
+                                                                      context.pop();
+                              
+                                                                      if(estado == 200){
+                                                                        gifRespuesta = 'assets/gifs/exito.gif';
+                                                                      } else {
+                                                                        gifRespuesta = 'assets/gifs/gifErrorBlanco.gif';
+                                                                      }
+                              
+                                                                      //ignore:use_build_context_synchronously
+                                                                      context.pop();                                                      
+
+                                                                      showDialog(
+                                                                        //ignore:use_build_context_synchronously
+                                                                        context: context,
+                                                                        builder: (BuildContext context) {
+                                                                          return AlertDialog(
+                                                                            title: Container(
+                                                                              color: Colors.transparent,
+                                                                              height: size.height * 0.17,
+                                                                              child: Column(
+                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                children: [
+                                                                                  
+                                                                                  Container(
+                                                                                    color: Colors.transparent,
+                                                                                    height: size.height * 0.09,
+                                                                                    child: Image.asset(gifRespuesta),
+                                                                                  ),
+                                                      
+                                                                                  Container(
+                                                                                    color: Colors.transparent,
+                                                                                    width: size.width * 0.95,
+                                                                                    height: size.height * 0.08,
+                                                                                    alignment: Alignment.center,
+                                                                                    child: AutoSizeText(
+                                                                                      respuestaReg,
+                                                                                      maxLines: 2,
+                                                                                      minFontSize: 2,
+                                                                                    ),
+                                                                                  )
+                                                                                ],
+                                                                              )
+                                                                            ),
+                                                                            actions: [
+                                                                              TextButton(
+                                                                                onPressed: () {
+                                                                                  Navigator.of(context).pop();
+                                                                                },
+                                                                                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                                                              ),
+                                                                            ],
+                                                                          );
+                                                                        },
+                                                                      );
+                                                                    
+                                                                      //POR AQUÍ AEVG
+                                                                      //ignore:use_build_context_synchronously
+                                                                      context.pop();
+
+                                                                      //ignore:use_build_context_synchronously
+                                                                      context.pop();
+
+                                                                      //ignore:use_build_context_synchronously
+                                                                      context.push(objRutasGen.rutaPlanActivConActiv);
+                                                                    }
+                                                                    else{
+                                                                      //ignore:use_build_context_synchronously
+                                                                      context.pop();                                                      
+
+                                                                      showDialog(
+                                                                        //ignore:use_build_context_synchronously
+                                                                        context: context,
+                                                                        builder: (BuildContext context) {
+                                                                          return AlertDialog(
+                                                                            title: Container(
+                                                                              color: Colors.transparent,
+                                                                              height: size.height * 0.17,
+                                                                              child: Column(
+                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                children: [
+                                                                                  
+                                                                                  Container(
+                                                                                    color: Colors.transparent,
+                                                                                    height: size.height * 0.09,
+                                                                                    child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
+                                                                                  ),
+                                                      
+                                                                                  Container(
+                                                                                    color: Colors.transparent,
+                                                                                    width: size.width * 0.95,
+                                                                                    height: size.height * 0.08,
+                                                                                    alignment: Alignment.center,
+                                                                                    child: const AutoSizeText(
+                                                                                      'Error al crear una nueva actividad',
+                                                                                      maxLines: 2,
+                                                                                      minFontSize: 2,
+                                                                                    ),
+                                                                                  )
+                                                                                ],
+                                                                              )
+                                                                            ),
+                                                                            actions: [
+                                                                              TextButton(
+                                                                                onPressed: () {
+                                                                                  Navigator.of(context).pop();
+                                                                                },
+                                                                                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                                                              ),
+                                                                            ],
+                                                                          );
+                                                                        },
+                                                                      );
+                                                                    }
+/*
                                                                     FocusScope.of(context).unfocus();
                                                                     Navigator.pop(context);
+                                                                    */
                                                                   },
                                                                   icon: const Icon(
                                                                     Icons.save,
@@ -1492,6 +1815,7 @@ class PlanActivStateTwo extends State<PlanActiv> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       
       await cargaActividadesByCliente();
+      await cargaTipoActividades();
       await cargaMotivosPerdida();
 
       //ignore: use_build_context_synchronously
@@ -1507,7 +1831,7 @@ class PlanActivStateTwo extends State<PlanActiv> {
       if(muestraActividadesDiarias){
         final gnrBloc = Provider.of<GenericBloc>(context, listen: false);
         gnrBloc.setIniciaCarga(true);
-        lstTipoActividades = [];
+        //lstTipoActividades = [];
         lstActividadesDiariasByProspecto = [];
         actividadesFilAgendaPlanAct = [];
         
@@ -1518,18 +1842,6 @@ class PlanActivStateTwo extends State<PlanActiv> {
           actividadesFilAgendaPlanAct = objRspFinal.objMailAct.data;
           
           objDatumCrmLead = objRspFinal.lead;        
-        }
-
-        MailActivityTypeAppModel? objRspFinalTpAct = await ActivitiesService().getTipoActividades();
-
-        if(objRspFinalTpAct != null){
-          for(int i = 0; i < objRspFinalTpAct.data.length; i++){
-            lstTipoActividades.add(objRspFinalTpAct.data[i].name ?? '');
-          }
-
-          if(actPlanSelectAct.isEmpty && lstTipoActividades.isNotEmpty){
-            actPlanSelectAct = lstTipoActividades.first;
-          }
         }
 
         gnrBloc.setIniciaCarga(false);
@@ -1565,14 +1877,62 @@ class PlanActivStateTwo extends State<PlanActiv> {
       
     }
   }
-  
+
+  Future<void> cargaTipoActividades() async {
+    try {
+      final gnrBloc = Provider.of<GenericBloc>(context, listen: false);
+      gnrBloc.setIniciaCarga(true);
+
+      MailActivityTypeAppModel? objRspFinalTpAct;
+      //lstMotivoPerdida = [];
+
+      if(lstTipoActividades.isEmpty){
+        objRspFinalTpAct = await ActivitiesService().getTipoActividadesMemoria();
+      }
+      else {
+        lstTipoActividades = [];
+
+        objRspFinalTpAct = await ActivitiesService().getTipoActividades();
+      }
+
+      if(objRspFinalTpAct != null){
+        for(int i = 0; i < objRspFinalTpAct.data.length; i++){
+          lstTipoActividades.add(objRspFinalTpAct.data[i].name ?? '');
+        }
+
+        if(actPlanSelectAct.isEmpty && lstTipoActividades.isNotEmpty){
+          actPlanSelectAct = lstTipoActividades.first;
+        }
+
+        actividadesFilAgendaPlanAct = objRspFinalTpAct.data;
+      }
+
+      //lstMotivoPerdida.add('Otros');
+      
+      gnrBloc.setIniciaCarga(false);
+      
+    } catch (_) {
+      
+    }
+  }
+
+
   Future<void> cargaMotivosPerdida() async {
     try {
       final gnrBloc = Provider.of<GenericBloc>(context, listen: false);
       gnrBloc.setIniciaCarga(true);
-      lstMotivoPerdida = [];
-      
-      CrmLostReasonResponse? objRspFinalTpAct = await ProspectoTypeService().getMotivoPerdidaProspecto();
+
+      CrmLostReasonResponse? objRspFinalTpAct;
+      //lstMotivoPerdida = [];
+
+      if(lstMotivoPerdida.isEmpty){
+        objRspFinalTpAct = await ProspectoTypeService().getMotivoPerdidaProspectoMemoria();
+      }
+      else {
+        lstMotivoPerdida = [];
+
+        objRspFinalTpAct = await ProspectoTypeService().getMotivoPerdidaProspecto();
+      }
 
       if(objRspFinalTpAct != null){
         for(int i = 0; i < objRspFinalTpAct.data.length; i++){
@@ -1584,8 +1944,8 @@ class PlanActivStateTwo extends State<PlanActiv> {
         }
       }
 
-      lstMotivoPerdida.add('Otros');
-
+      //lstMotivoPerdida.add('Otros');
+      
       gnrBloc.setIniciaCarga(false);
       
     } catch (_) {

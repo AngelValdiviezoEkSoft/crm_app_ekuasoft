@@ -129,38 +129,38 @@ class DataAppModel {
 
     factory DataAppModel.fromJson(Map<String, dynamic> json) => DataAppModel(
         crmLead: 
-          json["crm.lead"] != null ? 
-            CrmLeadAppModel.fromJson(json["crm.lead"])  
+          json[EnvironmentsProd().modCrmLead] != null ? 
+            CrmLeadAppModel.fromJson(json[EnvironmentsProd().modCrmLead])  
             : 
             CrmLeadAppModel(data: [], fields: CrmLeadFieldsAppModel(activityIds: '', campaignId: '', city: '', contactName: '', countryId: '', dateClosed: '', dateDeadline: '', dateOpen: '', dayClose: '', description: '', emailCc: '', emailFrom: '', expectedRevenue: '',function: '', lostReasonId: '', mediumId: '', mobile: '', name: '', partnerId: '', partnerName: '', phone: '', priority: '', referred: '', sourceId: '', stageId: '', stateId: '', street: '', tagIds: '', title: '', type: '', userId: ''), length: 0),
         resPartner: 
-            json["res.partner"] != null ? 
-            ResPartnerAppModel.fromJson(json["res.partner"]) 
+            json[EnvironmentsProd().modClien] != null ? 
+            ResPartnerAppModel.fromJson(json[EnvironmentsProd().modClien]) 
             : 
             ResPartnerAppModel(data: [], fields: ResPartnerFieldsAppModel(accountRepresentedCompanyIds: '', barcode: '', categoryId: '', channelIds: '', childIds: '', cityId: '', companyType: '', countryId: '', date: '', email: '', name: ''), length: 0),
         utmCampaign: 
-            json["utm.campaign"] != null ? 
-            UtmCampaignAppModel.fromJson(json["utm.campaign"]) 
+            json[EnvironmentsProd().modCampa] != null ? 
+            UtmCampaignAppModel.fromJson(json[EnvironmentsProd().modCampa]) 
             : 
             UtmCampaignAppModel(data: [], length: 0, fields: UtmCampaignFieldsAppModel(active: '', name: '', title: '')),
         utmSource: 
-            json["utm.source"] != null ? 
-            UtmAppModel.fromJson(json["utm.source"]) 
+            json[EnvironmentsProd().modOrige] != null ? 
+            UtmAppModel.fromJson(json[EnvironmentsProd().modOrige]) 
             : 
             UtmAppModel(data: [], length: 0, fields: UtmMediumFields(name: '')),
         utmMedium: 
-            json["utm.medium"] != null ? 
-            UtmAppModel.fromJson(json["utm.medium"]) 
+            json[EnvironmentsProd().modMedio] != null ? 
+            UtmAppModel.fromJson(json[EnvironmentsProd().modMedio]) 
             : 
             UtmAppModel(data: [], length: 0, fields: UtmMediumFields(name: '')),
         mailActivityType: 
-            json["mail.activity.type"] != null ? 
-            MailActivityTypeAppModel.fromJson(json["mail.activity.type"]) 
+            json[EnvironmentsProd().modActiv] != null ? 
+            MailActivityTypeAppModel.fromJson(json[EnvironmentsProd().modActiv]) 
             : 
             MailActivityTypeAppModel(data: [], length: 0, fields: MailActivityTypeFieldsAppModel(category: '', decorationType: '', defaultNote: '', delayCount: '', delayFrom: '', icon: '', name: '', resModel: '', sequence: '', summary: '')),
         resCountry: 
-            json["res.country"] != null ? 
-            ResCountryAppModel.fromJson(json["res.country"]) 
+            json[EnvironmentsProd().modPaise] != null ? 
+            ResCountryAppModel.fromJson(json[EnvironmentsProd().modPaise]) 
             : 
             ResCountryAppModel(data: [], length: 0, fields: ResCountryFieldsAppModel(code: '', name: '', stateIds: '')),
         mailActivity: json['mail.activity'] != null ?
@@ -173,46 +173,46 @@ class DataAppModel {
           IrModel(data: [], length: 0, fields: FieldsIr(id: '', model: '')),
 
         ekClasification: 
-            json["ek.classification"] != null ? 
-                EkClassification.fromJson(json["ek.classification"])
+            json[EnvironmentsProd().modEkClasif] != null ? 
+                EkClassification.fromJson(json[EnvironmentsProd().modEkClasif])
             : EkClassification(data: [],fields: Map<String, String>(), length: 0),
         ekResCountryCanton: 
-            json["ek.res.country.canton"] != null ? 
-                CantonModel.fromJson(json["ek.res.country.canton"])
+            json[EnvironmentsProd().modEkResCountryCanton] != null ? 
+                CantonModel.fromJson(json[EnvironmentsProd().modEkResCountryCanton])
             : CantonModel(data: [],length: 0, fields: Map<String, String>()),
         ekResRegion: 
-            json["ek.res.region"] != null ? 
-                RegionModel.fromJson(json["ek.res.region"])
+            json[EnvironmentsProd().modEkResRegion] != null ? 
+                RegionModel.fromJson(json[EnvironmentsProd().modEkResRegion])
             : RegionModel(data: [], length: 0, fields: Map<String, String>()),
         ekResSector: 
-            json["ek.res.sector"] != null ? 
-                SectorModel.fromJson(json["ek.res.sector"])
+            json[EnvironmentsProd().modEkResSector] != null ? 
+                SectorModel.fromJson(json[EnvironmentsProd().modEkResSector])
             : SectorModel(data: [], length: 0, fields: Map<String, String>()),
         ekResCountryCity: 
-            json["ek.res.country.city"] != null ? 
-                CountryCity.fromJson(json["ek.res.country.city"])
+            json[EnvironmentsProd().modEkResCountryCity] != null ? 
+                CountryCity.fromJson(json[EnvironmentsProd().modEkResCountryCity])
             : CountryCity(data: [], length: 0, fields: Map<String, String>()),
-        lostReason: json["crm.lost.reason"] != null ? 
-                CrmLostReasonResponse.fromJson(json["crm.lost.reason"])
+        lostReason: json[EnvironmentsProd().modCrmLostReason] != null ? 
+                CrmLostReasonResponse.fromJson(json[EnvironmentsProd().modCrmLostReason])
             : CrmLostReasonResponse(data: [], length: 0, fields: Map<String, String>()),
 
     );
 
     Map<String, dynamic> toJson() => {
-      "crm.lead": crmLead.toJson(),
-      "res.partner": resPartner.toJson(),
-      "utm.campaign": utmCampaign.toJson(),
-      "utm.source": utmSource.toJson(),
-      "utm.medium": utmMedium.toJson(),
-      "mail.activity.type": mailActivityType.toJson(),
-      "res.country": resCountry.toJson(),
+      EnvironmentsProd().modCrmLead: crmLead.toJson(),
+      EnvironmentsProd().modClien: resPartner.toJson(),
+      EnvironmentsProd().modCampa: utmCampaign.toJson(),
+      EnvironmentsProd().modOrige: utmSource.toJson(),
+      EnvironmentsProd().modMedio: utmMedium.toJson(),
+      EnvironmentsProd().modActiv: mailActivityType.toJson(),
+      EnvironmentsProd().modPaise: resCountry.toJson(),
       "mail.activity": mailActivity.toJson(),
-      "ek.classification": ekClasification.toJson(),
-      "ek.res.country.canton": ekResCountryCanton.toJson(),
-      "ek.res.region": ekResRegion.toJson(),
-      "ek.res.sector": ekResSector.toJson(),
-      "ek.res.country.city": ekResCountryCity.toJson(),
-      "crm.lost.reason": lostReason.toJson(),
+      EnvironmentsProd().modEkClasif: ekClasification.toJson(),
+      EnvironmentsProd().modEkResCountryCanton: ekResCountryCanton.toJson(),
+      EnvironmentsProd().modEkResRegion: ekResRegion.toJson(),
+      EnvironmentsProd().modEkResSector: ekResSector.toJson(),
+      EnvironmentsProd().modEkResCountryCity: ekResCountryCity.toJson(),
+      EnvironmentsProd().modCrmLostReason: lostReason.toJson(),
     };
 }
 

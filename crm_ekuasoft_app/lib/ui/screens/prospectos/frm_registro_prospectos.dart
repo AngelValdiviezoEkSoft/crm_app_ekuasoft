@@ -119,7 +119,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
               context.pop();
             },
           ),
-          title: const Text('Prospectos'),          
+          title: const Text('Prospectos', style: TextStyle(fontSize: 18),),
         ),
       body: BlocBuilder<GenericBloc, GenericState>(
         builder: (context,state) {
@@ -240,7 +240,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                               Container(
                                 color: Colors.transparent,
                                 width: size.width * 0.95, //- 100,
-                                height: size.height * 0.045, //40,
+                                height: size.height * 0.038, //40,
                                 alignment: Alignment.centerLeft,
                                 child: const AutoSizeText(
                                   'Registre nuevo prospecto',  

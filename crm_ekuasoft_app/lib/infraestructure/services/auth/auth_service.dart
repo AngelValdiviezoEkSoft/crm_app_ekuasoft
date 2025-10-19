@@ -350,7 +350,7 @@ class AuthService extends ChangeNotifier {
 
       return response.body;
     } catch (ex) {
-      print('Test Error1: $ex');
+      //print('Test Error1: $ex');
     }
   }
 

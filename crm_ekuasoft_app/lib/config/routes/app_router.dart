@@ -92,7 +92,7 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: objRutas.rutaConsultaActividades,
-      builder: (context, state) => const ActividadesByFiltro(null),
+      builder: (context, state) => const ActividadesByFiltroScreen(null),
     ),
     GoRoute(
       path: objRutas.rutaBienvenida,

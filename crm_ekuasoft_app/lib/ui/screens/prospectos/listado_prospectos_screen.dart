@@ -62,7 +62,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
   @override
   void initState() {
-    super.initState();
+    super.initState();    
     estadoPrspSelect = '-- Todos --';
     lstEstadosPrsp = [
       'Ganados',
@@ -392,7 +392,6 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
               width: size.width * 0.25,
               height: size.height * 0.055,
               child: DropdownButton<String>(
-                  hint: const Icon(Icons.flip_camera_android_rounded), // Ícono del ComboBox
                   value: estadoPrspSelect,
                   onChanged: (String? newValue) {
                     estadoPrspSelect = newValue ?? '';
@@ -688,6 +687,8 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                             refreshDataByFiltro(objRsp);
                                             _mesSeleccionado = null;//DateTime.now().month;
                                             selectedYear = DateTime.now().year;
+                                            lstTipoActividades = [];
+                                            lstMotivoPerdida = [];
                           
                                             //context.push(Rutas().rutaPlanificacionActividades);
                                             rutaActualGen = Rutas().rutaPlanActivConActiv;

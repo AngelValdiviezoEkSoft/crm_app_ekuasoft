@@ -42,17 +42,17 @@ bool actualizaListaActAgendaByFiltro2FiltroCampos = false;
 String campSelectTpAct = '';
 int activityTypeId= 0;
 
-class ActividadesByFiltro extends StatefulWidget {
+class ActividadesByFiltroScreen extends StatefulWidget {
   
-  const ActividadesByFiltro(Key? key) : super(key: key);
+  const ActividadesByFiltroScreen(Key? key) : super(key: key);
 
   @override
-  State<ActividadesByFiltro> createState() => ActividadesByFiltroState();
+  State<ActividadesByFiltroScreen> createState() => ActividadesByFiltroScreenState();
 
 }
 
 
-class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
+class ActividadesByFiltroScreenState extends State<ActividadesByFiltroScreen>  {
 
   static const platformPhone = MethodChannel('call_channel');
 
@@ -274,7 +274,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
 
               return Scaffold(
                 appBar: AppBar(
-                  title: const Text("Agenda de actividades"),
+                  title: const Text("Agenda de actividades", style: TextStyle(fontSize: 18),),
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back_ios),
                     onPressed: () {
@@ -303,6 +303,17 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
                         });
                       },
                     ),
+                  
+                    IconButton(
+                      icon: const Icon(Icons.refresh),
+                      onPressed: () async {
+                        gtTipoActividades();
+                        setState(() {
+                          
+                        });
+                      },
+                    ),
+    
                   ],
                   backgroundColor: Colors.white,
                   elevation: 0,
@@ -785,6 +796,7 @@ class ActividadesByFiltroState extends State<ActividadesByFiltro>  {
 
 }
 
+/*
 Future<String> gtTipoActividades() async {
   try{
     MailActivityTypeAppModel rsp = await ActivitiesService().getTipoActividades();
@@ -797,3 +809,31 @@ Future<String> gtTipoActividades() async {
     return '';
   }
 }
+*/
+
+Future<String> gtTipoActividades() async {
+    try {
+
+      MailActivityTypeAppModel? objRspFinalTpAct;
+      //lstMotivoPerdida = [];
+
+      if(lstActividadesActByFlt.isEmpty){
+        objRspFinalTpAct = await ActivitiesService().getTipoActividadesMemoria();
+      }
+      else {
+        lstActividadesActByFlt = [];
+
+        objRspFinalTpAct = await ActivitiesService().getTipoActividades();
+      }
+
+      if(objRspFinalTpAct != null){
+        final jsonString = jsonEncode(objRspFinalTpAct);
+
+        return jsonString;
+      }
+
+      return '';
+    } catch (_) {
+      return '';
+    }
+  }

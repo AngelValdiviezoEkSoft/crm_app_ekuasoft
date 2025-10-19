@@ -890,6 +890,7 @@ class PlanActStateTwo extends State<PlanAct> {
   }
 
   Future<void> cargaActividadesByCliente() async {
+    /*
     try {
       
       MailActivityTypeAppModel? objRspFinal = await ActivitiesService().getTipoActividades();
@@ -916,6 +917,7 @@ class PlanActStateTwo extends State<PlanAct> {
     } catch (_) {
       
     }
+    */
   }
 
 
