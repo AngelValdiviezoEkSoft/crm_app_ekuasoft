@@ -211,7 +211,7 @@ class DatumCrmLead {
         userId: json["user_id"] == null ? null : StructCombos.fromMap(json["user_id"]),
         expectedRevenue: json["expected_revenue"] ?? 0,
         referred: json["referred"] ?? '',
-        active: json["active"] ?? false
+        active: json["active"] ?? true
     );
 
     factory DatumCrmLead.fromMap2(Map<String, dynamic> json) {

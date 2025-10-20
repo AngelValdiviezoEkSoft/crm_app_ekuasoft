@@ -908,7 +908,7 @@ class ActivitiesService extends ChangeNotifier{
             {
             "model": modeloConsulta,
             "filters": [            
-              ["date_deadline",">=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],            
+              ["date_deadline",">=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],
               ["date_deadline","<=",DateFormat('yyyy-MM-dd', 'es').format(fechas[1])],
               ["user_id", "=", objLogDecode['result']['uid']],
               ["res_model_id", "=", resModelId],
@@ -927,7 +927,7 @@ class ActivitiesService extends ChangeNotifier{
               "model": modeloConsulta,
               "filters": [           
                 ["user_id", "=", objLogDecode['result']['uid']], 
-                ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],            
+                ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],
                 ["res_model_id", "=", resModelId],
                 if(resId != null && resId > 0)
                 ["res_id", "=", resId]
@@ -1088,6 +1088,114 @@ class ActivitiesService extends ChangeNotifier{
         ),
       );
 
+/*
+      var models2 = [];
+
+      if(fechas != null && fechas.isNotEmpty){
+        try{
+            models2 = [
+            {
+              "model": EnvironmentsProd().modMailMessage,
+              "filters": [
+                ['model', '=', 'crm.lead'],
+                //['res_id', '=', resId],
+                ['is_done_app', '=', true],
+                ['parent_id', '!=', false],
+                ['message_type', '=', 'notification'],
+                ['reply_to_force_new', '=', false],
+                ["date_deadline",">=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],
+                ["date_deadline","<=",DateFormat('yyyy-MM-dd', 'es').format(fechas[1])],
+              ]
+            },
+          ];        
+        }
+        catch(_){
+          models2 = [
+            {
+              "model": EnvironmentsProd().modMailMessage,
+              "filters": [
+                ['model', '=', 'crm.lead'],
+                //['res_id', '=', resId],
+                ['is_done_app', '=', true],
+                ['parent_id', '!=', false],
+                ['message_type', '=', 'notification'],
+                ['reply_to_force_new', '=', false],
+                ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],
+              ]
+            },
+          ];
+        
+        }
+        
+      }      
+
+      final requestBody2 = {
+        "jsonrpc": jsonRpc,
+        "params": {
+          "key": objReq.params.key,
+          "tocken": objReq.params.tocken,
+          "imei": objReq.params.imei,
+          "uid": objReq.params.uid,
+          "company": objReq.params.company,
+          "bearer": objReq.params.bearer,
+          "tocken_valid_date": tockenValidDate,
+          "models": models2
+        }
+      };
+
+      final response2 = await http.post(
+        Uri.parse(ruta),
+        headers: headers,
+        body: jsonEncode(requestBody2), 
+      );
+
+      var actividadesCerradasResult = ActivitiesClosedResponseModel.fromRawJson(response2.body);
+
+      if(actividadesCerradasResult.result.data.data.isNotEmpty){
+        for(int i = 0; i < actividadesCerradasResult.result.data.data.length; i++) {
+          if(actividadesCerradasResult.result.data.data[i].resId == resId){
+
+            String fechaString = actividadesCerradasResult.result.data.data[i].activityDateDeadLine.trim();
+            List<String> partes = fechaString.split('-');
+            DateTime fechaDeadLine = DateTime(
+              int.parse(partes[0]),
+              int.parse(partes[1]),
+              int.parse(partes[2]),
+            );
+            
+            DatumActivitiesResponse objDatumActivitiesResponse = DatumActivitiesResponse(
+              activityCategory: actividadesCerradasResult.result.data.data[i].activityCategory,
+              activityTypeId: IdActivities(
+                id: actividadesCerradasResult.result.data.data[i].activityTypeId?.id ?? 0,
+                name: actividadesCerradasResult.result.data.data[i].activityTypeId?.name ?? ''
+              ),
+              cerrado: true,
+              contactName: '',
+              dateCreate: actividadesCerradasResult.result.data.data[i].createDate != null ? DateTime.parse(actividadesCerradasResult.result.data.data[i].createDate!) : DateTime.now(),
+              dateDeadline: fechaDeadLine,
+              id: actividadesCerradasResult.result.data.data[i].id,
+              leadEmail: '',
+              leadName: actividadesCerradasResult.result.data.data[i].leadName,
+              leadPhone: actividadesCerradasResult.result.data.data[i].leadPhone,
+              resId: actividadesCerradasResult.result.data.data[i].resId ?? 0,
+              resModel: '',
+              scheduleTime: actividadesCerradasResult.result.data.data[i].scheduledTime,
+              summary: actividadesCerradasResult.result.data.data[i].summary,
+              userId: IdActivities (
+                id: actividadesCerradasResult.result.data.data[i].userId?.id ?? 0,
+                name: actividadesCerradasResult.result.data.data[i].userId?.name ?? ''
+              )
+            );
+
+            objActividades.data.add(
+              objDatumActivitiesResponse
+            );
+          }
+        }
+      }
+      */
+
+      //AEVG CAL
       final lstEncr = await storageAct.read(key: 'LstActividadesAbiertasCerradas') ?? '';
 
       String internet = await ValidacionesUtils().validaInternet();    
@@ -2053,7 +2161,7 @@ class ActivitiesService extends ChangeNotifier{
       return objRspFinal;
     }
     catch(ex){
-     print('Test: $ex');
+     //print('Test: $ex');
     }
   }
 

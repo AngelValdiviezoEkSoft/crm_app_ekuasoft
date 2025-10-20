@@ -357,7 +357,7 @@ class CrmLeadDatumAppModel {
     dateDeadline: json['date_deadline'] == null ? DateTime.now() : DateTime.parse(json['date_deadline']),
     probability: json["probability"] ?? 0,
     description: json["description"],
-    active: json["active"] ?? false,
+    active: json["active"] ?? true,
 );
 
   Map<String, dynamic> toJson() => {

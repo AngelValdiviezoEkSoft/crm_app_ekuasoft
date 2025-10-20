@@ -845,6 +845,12 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                   prioridadPrsp = valor;
                                   objDatumCrmLead!.priority = '$valor';
 
+                                  for(int i = 0; i < prospectosFiltrados.length; i++){
+                                    if(prospectosFiltrados[i].id == objDatumCrmLead!.id){
+                                      prospectosFiltrados[i].priority = '$valor';
+                                    }                                    
+                                  }
+
                                   showDialog(
                                     //ignore: use_build_context_synchronously
                                     context: context,

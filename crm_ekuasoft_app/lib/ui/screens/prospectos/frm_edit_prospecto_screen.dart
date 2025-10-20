@@ -1561,7 +1561,8 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                       ),
                                     tagIds: [],
                                     expectedRevenue: double.parse(ingresoEsperadoEditTxt.text),
-                                    referred: recomendadoPorEditTxt.text
+                                    referred: recomendadoPorEditTxt.text,
+                                    active: objDatumCrmLeadEdit?.active
                                   );
 
                                     ProspectoRegistroResponseModel? objRsp = await ProspectoTypeService().editaProspecto(objProsp);
