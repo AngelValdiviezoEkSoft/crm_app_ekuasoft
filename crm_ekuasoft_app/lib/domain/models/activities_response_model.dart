@@ -76,8 +76,14 @@ class DatumActivitiesResponse {
       double restante = scheduleTime! - horas;
       int minutos = (restante * 60).round();
 
+      if(horas == 0 && minutos == 0)
+      {
+        return '00:00';
+      }
 
-      return '$horas:$minutos';
+      String minutosStr = minutos < 10 ? '0$minutos' : '$minutos';
+
+      return '$horas:$minutosStr';
     }
 
     factory DatumActivitiesResponse.fromRawJson(String str) => DatumActivitiesResponse.fromJson(json.decode(str));

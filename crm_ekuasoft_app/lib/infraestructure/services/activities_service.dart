@@ -1967,13 +1967,18 @@ class ActivitiesService extends ChangeNotifier{
       var models2 = [
         {
           "model": modeloConsultaMailMessage,
-          "filters": [            
-            ["user_id", "=", objLogDecode['result']['uid']],          
+          "filters": [
+            ['model', '=', 'crm.lead'],
+            ['res_id', '=', resId],
+            ['is_done_app', '=', true],
+            ['parent_id', '!=', false],
+            ['message_type', '=', 'notification'],
+            ['reply_to_force_new', '=', false]
+
           ]
         },
       ];
 
-      
       final requestBody2 = {
         "jsonrpc": jsonRpc,
         "params": {
@@ -1993,20 +1998,48 @@ class ActivitiesService extends ChangeNotifier{
         headers: headers,
         body: jsonEncode(requestBody2), 
       );
-      
-      var rsp2 = AppResponseModel.fromRawJson(response2.body);
 
-      final lstEncr = await storageAct.read(key: 'LstActividadesAbiertasCerradas') ?? '';
+      var actividadesCerradasResult = ActivitiesClosedResponseModel.fromRawJson(response2.body);
 
-      String internet = await ValidacionesUtils().validaInternet();
-    
+      if(actividadesCerradasResult.result.data.data.isNotEmpty){
+        for(int i = 0; i < actividadesCerradasResult.result.data.data.length; i++) {
+          if(actividadesCerradasResult.result.data.data[i].resId == resId){
 
-      if(lstEncr.isNotEmpty && internet.isEmpty){
-        ActivitiesResponseModel  objMem = ActivitiesResponseModel.fromRawJson(lstEncr);
+            String fechaString = actividadesCerradasResult.result.data.data[i].activityDateDeadLine.trim();
+            List<String> partes = fechaString.split('-');
+            DateTime fechaDeadLine = DateTime(
+              int.parse(partes[0]),
+              int.parse(partes[1]),
+              int.parse(partes[2]),
+            );
+            
+            DatumActivitiesResponse objDatumActivitiesResponse = DatumActivitiesResponse(
+              activityCategory: actividadesCerradasResult.result.data.data[i].activityCategory,
+              activityTypeId: IdActivities(
+                id: actividadesCerradasResult.result.data.data[i].activityTypeId?.id ?? 0,
+                name: actividadesCerradasResult.result.data.data[i].activityTypeId?.name ?? ''
+              ),
+              cerrado: true,
+              contactName: '',
+              dateCreate: actividadesCerradasResult.result.data.data[i].createDate != null ? DateTime.parse(actividadesCerradasResult.result.data.data[i].createDate!) : DateTime.now(),
+              dateDeadline: fechaDeadLine,
+              id: actividadesCerradasResult.result.data.data[i].id,
+              leadEmail: '',
+              leadName: actividadesCerradasResult.result.data.data[i].leadName,
+              leadPhone: actividadesCerradasResult.result.data.data[i].leadPhone,
+              resId: actividadesCerradasResult.result.data.data[i].resId ?? 0,
+              resModel: '',
+              scheduleTime: actividadesCerradasResult.result.data.data[i].scheduledTime,
+              summary: actividadesCerradasResult.result.data.data[i].summary,
+              userId: IdActivities (
+                id: actividadesCerradasResult.result.data.data[i].userId?.id ?? 0,
+                name: actividadesCerradasResult.result.data.data[i].userId?.name ?? ''
+              )
+            );
 
-        for(int i = 0; i < objMem.data.length; i++) {
-          if(objMem.data[i].resId == resId){
-            objActividades.data.add(objMem.data[i]);
+            objActividades.data.add(
+              objDatumActivitiesResponse
+            );
           }
         }
       }
@@ -2019,11 +2052,10 @@ class ActivitiesService extends ChangeNotifier{
 
       return objRspFinal;
     }
-    catch(_){
-     //print('Test: $ex');
+    catch(ex){
+     print('Test: $ex');
     }
   }
-
 
   registroActividades(ActivitiesTypeRequestModel objActividad) async {
     String internet = await ValidacionesUtils().validaInternet();

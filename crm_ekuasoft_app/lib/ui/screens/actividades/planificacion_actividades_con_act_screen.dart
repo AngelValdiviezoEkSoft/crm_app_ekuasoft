@@ -50,6 +50,7 @@ late TextEditingController notasActTxtAct;
 
 List<DatumActivitiesResponse> actividadesFiltradasAct = [];
 List<DatumActivitiesResponse> lstActividadesDiariasByProspecto = [];
+List<CrmLostReasonData> motivosPerdida = [];
 
 class PlanificacionActividadesConActividadScreen extends StatefulWidget {
   const PlanificacionActividadesConActividadScreen(Key? key) : super (key: key);
@@ -59,6 +60,7 @@ class PlanificacionActividadesConActividadScreen extends StatefulWidget {
 
 class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
 
+  final GlobalKey<ListaProspectosScreenState> listaProspectosKey =  GlobalKey<ListaProspectosScreenState>();
   String paisSelect = 'Ecuador';
   String campSelect = '';
   String mediaSelect = '';
@@ -72,15 +74,15 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
   @override
   void initState() {
     super.initState();
+    motivosPerdida = [];
     
-    if(objDatumCrmLead != null){
+    if(objDatumCrmLead != null && objDatumCrmLead!.priority.isNotEmpty){
       prioridadPrsp = int.parse(objDatumCrmLead!.priority);
     }
     
     _isButtonPressed = false;
     muestraMotivoPerdida = false;
     motPerdSelect = '';
-    //objActividadEscogida = null;    
     tradeNameProsp = '-----';
     contLstActiv = 0;
     notasActTxtAct = TextEditingController();
@@ -710,12 +712,15 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
 
                       //ignore:use_build_context_synchronously
                       context.pop();
-
+/*
                       try{
                         //ignore:use_build_context_synchronously
                         context.pop();
                       }
-                      catch(_){}
+                      catch(_){
+                        var sfs =0;
+                      }
+                      */
 
                       //ignore:use_build_context_synchronously
                       context.push(objRutasGen.rutaPlanActivConActiv);
@@ -835,8 +840,143 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
 
                               RatingStarsWidget(
                                 initialRating: prioridadPrsp,//aquí reemplazar con valor dinámico
-                                onRatingChanged: (valor) {
+                                onRatingChanged: (valor) async {
+
+                                  prioridadPrsp = valor;
+                                  objDatumCrmLead!.priority = '$valor';
+
+                                  showDialog(
+                                    //ignore: use_build_context_synchronously
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (context) => SimpleDialog(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        SimpleDialogCargando(
+                                          null,
+                                          mensajeMostrar: 'Estamos cambiando',
+                                          mensajeMostrarDialogCargando: 'la prioridad del prospecto',
+                                        ),
+                                      ]
+                                    ),
+                                  );
+                          
+                                  ResponseGenericModel? objResp = await ProspectoTypeService().editaPrioridadProspecto(valor, objDatumCrmLead?.id ?? 0);
                                   
+                                  if(objResp != null){
+                                    String respuestaReg = objResp.result.mensaje;
+                                    int estado = objResp.result.estado;
+                                    String gifRespuesta = '';
+
+                                    if(estado == 200){
+                                      gifRespuesta = 'assets/gifs/exito.gif';
+                                    } else {
+                                      gifRespuesta = 'assets/gifs/gifErrorBlanco.gif';
+                                    }
+
+                                    //ignore:use_build_context_synchronously
+                                    context.pop();
+
+                                    showDialog(
+                                      //ignore:use_build_context_synchronously
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Container(
+                                            color: Colors.transparent,
+                                            height: size.height * 0.17,
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                
+                                                Container(
+                                                  color: Colors.transparent,
+                                                  height: size.height * 0.09,
+                                                  child: Image.asset(gifRespuesta),
+                                                ),
+                    
+                                                Container(
+                                                  color: Colors.transparent,
+                                                  width: size.width * 0.95,
+                                                  height: size.height * 0.08,
+                                                  alignment: Alignment.center,
+                                                  child: AutoSizeText(
+                                                    respuestaReg,
+                                                    maxLines: 2,
+                                                    minFontSize: 2,
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                context.pop();
+                                                
+                                                listaProspectosKey.currentState?.refreshDataProsp();
+                                                /*
+                                                listaProspectosKey.currentState!.setState(() {
+        
+                                                });
+                                                */
+                                              },
+                                              child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  
+                                  }
+                                  else{
+                                    //ignore:use_build_context_synchronously
+                                    context.pop();
+
+                                    showDialog(
+                                      //ignore:use_build_context_synchronously
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Container(
+                                            color: Colors.transparent,
+                                            height: size.height * 0.17,
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                
+                                                Container(
+                                                  color: Colors.transparent,
+                                                  height: size.height * 0.09,
+                                                  child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
+                                                ),
+                    
+                                                Container(
+                                                  color: Colors.transparent,
+                                                  width: size.width * 0.95,
+                                                  height: size.height * 0.08,
+                                                  alignment: Alignment.center,
+                                                  child: const AutoSizeText(
+                                                    'Error al crear una nueva actividad',
+                                                    maxLines: 2,
+                                                    minFontSize: 2,
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
                                 },
                               ),
                               
@@ -852,27 +992,6 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                     Expanded(
                                       child: ElevatedButton(
                                         onPressed: () async {
-                                          ActivitiesTypeRequestModel objReqst = ActivitiesTypeRequestModel(
-                                            active: false,
-                                            createDate: DateTime.now(),//DateTime.parse(fechaActividadContTxtAct.text),
-                                            createUid: 0,
-                                            displayName: objDatumCrmLead?.contactName ?? '',
-                                            previousActivityTypeId: 0,
-                                            note: '',
-                                            activityTypeId: 0,
-                                            dateDeadline: DateTime.now(),//DateTime.parse(fechaActividadContTxtAct.text),//objDatumCrmLead?.dateDeadline ?? DateTime.now(),
-                                            userId: objDatumCrmLead?.userId!.id ?? 0,
-                                            userCreateId: objDatumCrmLead?.userId!.id ?? 0,
-                                            resId: objDatumCrmLead?.id ?? 0,
-                                            actId: 0,
-                                            workingTime: 0,
-                                            summary: '',
-                                            leadName: objDatumCrmLead?.name ?? '',
-                                            leadPhone: objDatumCrmLead?.phone ?? '',                                                      
-                                            contactName: objDatumCrmLead?.contactName ?? '',
-                                            leadEmail: objDatumCrmLead?.emailFrom ?? '',
-                                            scheduleTime: 0
-                                          );
   
                                           showDialog(
                                             //ignore: use_build_context_synchronously
@@ -890,7 +1009,15 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                             ),
                                           );
                           
-                                          ActividadRegistroResponseModel? objResp = await ProspectoTypeService().registraProspectoByEstado(false, true, null);
+                                          int idMotPerd = 0;
+
+                                          for(int i = 0; i < motivosPerdida.length; i++){
+                                            if(motPerdSelect == motivosPerdida[i].name){
+                                              idMotPerd = motivosPerdida[i].id;
+                                            }
+                                          }
+
+                                          ActividadRegistroResponseModel? objResp = await ProspectoTypeService().editaEstadoProspecto(true, idMotPerd, objDatumCrmLead?.id ?? 0);
 
                                           if(objResp != null){
                                             String respuestaReg = objResp.result.mensaje;
@@ -1201,28 +1328,6 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                                                                 child: ElevatedButton.icon(
                                                                   onPressed: () async {
-
-                                                                    ActivitiesTypeRequestModel objReqst = ActivitiesTypeRequestModel(
-                                                                      active: false,
-                                                                      createDate: DateTime.now(),//DateTime.parse(fechaActividadContTxtAct.text),
-                                                                      createUid: 0,
-                                                                      displayName: objDatumCrmLead?.contactName ?? '',
-                                                                      previousActivityTypeId: 0,
-                                                                      note: '',
-                                                                      activityTypeId: 0,
-                                                                      dateDeadline: DateTime.now(),//DateTime.parse(fechaActividadContTxtAct.text),//objDatumCrmLead?.dateDeadline ?? DateTime.now(),
-                                                                      userId: objDatumCrmLead?.userId!.id ?? 0,
-                                                                      userCreateId: objDatumCrmLead?.userId!.id ?? 0,
-                                                                      resId: objDatumCrmLead?.id ?? 0,
-                                                                      actId: 0,
-                                                                      workingTime: 0,
-                                                                      summary: '',
-                                                                      leadName: objDatumCrmLead?.name ?? '',
-                                                                      leadPhone: objDatumCrmLead?.phone ?? '',                                                      
-                                                                      contactName: objDatumCrmLead?.contactName ?? '',
-                                                                      leadEmail: objDatumCrmLead?.emailFrom ?? '',
-                                                                      scheduleTime: 0
-                                                                    );
                             
                                                                     showDialog(
                                                                       //ignore: use_build_context_synchronously
@@ -1240,7 +1345,15 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                                       ),
                                                                     );
                                                     
-                                                                    ActividadRegistroResponseModel? objResp = await ProspectoTypeService().registraProspectoByEstado(true, false, null);
+                                                                    int idMotPerd = 0;
+
+                                                                    for(int i = 0; i < motivosPerdida.length; i++){
+                                                                      if(motPerdSelect == motivosPerdida[i].name){
+                                                                        idMotPerd = motivosPerdida[i].id;
+                                                                      }
+                                                                    }
+
+                                                                    ResponseGenericModel? objResp = await ProspectoTypeService().editaEstadoProspecto(false, idMotPerd, objDatumCrmLead?.id ?? 0);
 
                                                                     if(objResp != null){
                                                                       String respuestaReg = objResp.result.mensaje;
@@ -1295,23 +1408,16 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                                               TextButton(
                                                                                 onPressed: () {
                                                                                   Navigator.of(context).pop();
+                                                                                  //ignore:use_build_context_synchronously
+                                                                                  context.pop();
                                                                                 },
                                                                                 child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
                                                                               ),
                                                                             ],
                                                                           );
                                                                         },
-                                                                      );
-                                                                    
-                                                                      //POR AQUÍ AEVG
-                                                                      //ignore:use_build_context_synchronously
-                                                                      context.pop();
+                                                                      );                                                                    
 
-                                                                      //ignore:use_build_context_synchronously
-                                                                      context.pop();
-
-                                                                      //ignore:use_build_context_synchronously
-                                                                      context.push(objRutasGen.rutaPlanActivConActiv);
                                                                     }
                                                                     else{
                                                                       //ignore:use_build_context_synchronously
@@ -1919,6 +2025,7 @@ class PlanActivStateTwo extends State<PlanActiv> {
 
   Future<void> cargaMotivosPerdida() async {
     try {
+      
       final gnrBloc = Provider.of<GenericBloc>(context, listen: false);
       gnrBloc.setIniciaCarga(true);
 
@@ -1935,6 +2042,8 @@ class PlanActivStateTwo extends State<PlanActiv> {
       }
 
       if(objRspFinalTpAct != null){
+        motivosPerdida = objRspFinalTpAct.data;
+
         for(int i = 0; i < objRspFinalTpAct.data.length; i++){
           lstMotivoPerdida.add(objRspFinalTpAct.data[i].name);
         }

@@ -1,24 +1,24 @@
 import 'dart:convert';
 
-class CambioClaveResponseModel {
+class ResponseGenericModel {
     String jsonrpc;
     dynamic id;
-    CambioClaveResponseResult result;
+    GenericModel result;
 
-    CambioClaveResponseModel({
+    ResponseGenericModel({
         required this.jsonrpc,
         required this.id,
         required this.result,
     });
 
-    factory CambioClaveResponseModel.fromRawJson(String str) => CambioClaveResponseModel.fromJson(json.decode(str));
+    factory ResponseGenericModel.fromRawJson(String str) => ResponseGenericModel.fromJson(json.decode(str));
 
     String toRawJson() => json.encode(toJson());
 
-    factory CambioClaveResponseModel.fromJson(Map<String, dynamic> json) => CambioClaveResponseModel(
+    factory ResponseGenericModel.fromJson(Map<String, dynamic> json) => ResponseGenericModel(
         jsonrpc: json["jsonrpc"],
         id: json["id"],
-        result: CambioClaveResponseResult.fromJson(json["result"]),
+        result: GenericModel.fromJson(json["result"]),
     );
 
     Map<String, dynamic> toJson() => {
@@ -28,20 +28,20 @@ class CambioClaveResponseModel {
     };
 }
 
-class CambioClaveResponseResult {
+class GenericModel {
     int estado;
     String mensaje;
 
-    CambioClaveResponseResult({
+    GenericModel({
         required this.estado,
         required this.mensaje,
     });
 
-    factory CambioClaveResponseResult.fromRawJson(String str) => CambioClaveResponseResult.fromJson(json.decode(str));
+    factory GenericModel.fromRawJson(String str) => GenericModel.fromJson(json.decode(str));
 
     String toRawJson() => json.encode(toJson());
 
-    factory CambioClaveResponseResult.fromJson(Map<String, dynamic> json) => CambioClaveResponseResult(
+    factory GenericModel.fromJson(Map<String, dynamic> json) => GenericModel(
         estado: json["estado"],
         mensaje: json["mensaje"],
     );

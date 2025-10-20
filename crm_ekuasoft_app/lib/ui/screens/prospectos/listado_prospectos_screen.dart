@@ -13,7 +13,6 @@ import 'package:local_auth/local_auth.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -31,11 +30,11 @@ class ListaProspectosScreen extends StatefulWidget {
   const ListaProspectosScreen({super.key});
 
   @override
-  State<ListaProspectosScreen> createState() => _ListaProspectosScreenState();
+  State<ListaProspectosScreen> createState() => ListaProspectosScreenState();
 }
 
 //class MarcacionScreen extends StatelessWidget {
-class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
+class ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
   List<String> lstEstadosPrsp = [];
   String estadoPrspSelect = '-- Todos --';
@@ -47,7 +46,6 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
   bool showButtonScrool = false;
   final ScrollController scrollListaClt = ScrollController();
 
-  late int _pageSize;
   int contLst = 0;
   final LocalAuthentication auth = LocalAuthentication();
   final PagingController<int, DatumCrmLead> pagingController = PagingController(firstPageKey: 0);
@@ -106,32 +104,6 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
   void dispose() {
     pagingController.dispose();
     super.dispose();
-  }
-
-  Future<void> fetchPage(int pageKey) async {
-     try {
-      final url = Uri.parse("https://api.ejemplo.com/leads?page=$pageKey&size=$_pageSize"); // API ficticia
-      final response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final newItems = (data['items'] as List)
-            .map((item) => DatumCrmLead.fromJson(item))
-            .toList();
-
-        final isLastPage = newItems.length < _pageSize;
-        if (isLastPage) {
-          pagingController.appendLastPage(newItems);
-        } else {
-          final nextPageKey = pageKey + 1;
-          pagingController.appendPage(newItems, nextPageKey);
-        }
-      } else {
-        throw Exception('Error al cargar datos paginados');
-      }
-    } catch (error) {
-      pagingController.error = error;
-    }
   }
 
   Future<void> refreshDataProsp() async {
@@ -251,6 +223,11 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
             name: apiResponse.data[i].stateId.name ?? ''
           );
 
+          StructCombos objUserId = StructCombos(
+            id: apiResponse.data[i].userId.id ?? 0,
+            name: apiResponse.data[i].userId.name ?? ''
+          );
+
           CampaignId objTitle = CampaignId(
             id: apiResponse.data[i].title.id ?? 0,
             name: apiResponse.data[i].title.name ?? '',
@@ -311,12 +288,16 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
               street: apiResponse.data[i].street ?? '',
               dateOpen: apiResponse.data[i].dateOpen,
               dateClose: apiResponse.data[i].dateClose,
-              dateDeadline: apiResponse.data[i].dateDeadline
+              dateDeadline: apiResponse.data[i].dateDeadline,
+              userId: objUserId
             )
           );
 
         }
       }
+
+      objRspGen = '';
+      objRspGen = jsonEncode(prospectosFiltrados);
 
       //ignore:use_build_context_synchronously
       context.pop();
@@ -707,7 +688,7 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                         width: size.width * 0.98,
                                         child: Container(
                                           decoration: BoxDecoration(
-                                            color: Colors.transparent,
+                                            color: prospectosFiltrados[index].active != null && prospectosFiltrados[index].active == true ? Colors.transparent : Colors.grey[300],
                                             border: Border.all(color: const Color.fromARGB(255, 217, 217, 217)),
                                             borderRadius: const BorderRadius.all(Radius.circular(10))
                                           ),
@@ -853,10 +834,10 @@ class _ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                     height: size.height * 0.035,
                                                       child: AutoSizeText(
                                                           prospectosFiltrados[index].stageId.name,
-                                                            style: const TextStyle(
+                                                            style: TextStyle(
                                                               fontWeight: FontWeight.bold,
                                                               fontSize: 10,
-                                                              color: Colors.green
+                                                              color: prospectosFiltrados[index].stageId.name.toLowerCase() == 'lost' ? Colors.red : Colors.green
                                                             ),
                                                             maxLines: 2,
                                                             textAlign: TextAlign.left,),

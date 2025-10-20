@@ -10,6 +10,7 @@ import 'package:secure_application/secure_application.dart';
 import 'package:provider/src/change_notifier_provider.dart' as np;
 
 String rutaActualGen = '';
+final GlobalKey<ListaProspectosScreenState> listaProspectosKey = GlobalKey<ListaProspectosScreenState>();
 
 void main() async {
 

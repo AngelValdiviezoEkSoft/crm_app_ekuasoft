@@ -237,6 +237,11 @@ class GenericService extends ChangeNotifier {
 
     //print('Respuesta MODELOS: ${response.body}');
 
+    List<CrmLeadDatumAppModel> listaDescendente = List.of(rsp.result.data.crmLead.data)
+      ..sort((a, b) => b.priority!.compareTo(a.priority!));
+
+    rsp.result.data.crmLead.data = listaDescendente;
+
     await storage.write(key: 'RespuestaProspectos', value: json.encode(rsp.result.data.crmLead));
     await storage.write(key: 'RespuestaClientes', value: json.encode(rsp.result.data.resPartner));
     await storage.write(key: 'RespuestaIrModel', value: json.encode(rsp.result.data.irResponse));

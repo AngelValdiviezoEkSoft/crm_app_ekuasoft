@@ -1,4 +1,5 @@
 
+import 'package:crm_ekuasoft_app/main.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -64,7 +65,8 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: objRutas.rutaListaProspectos,
-      builder: (context, state) => const ListaProspectosScreen(),      
+      //builder: (context, state) => const ListaProspectosScreen(),
+      builder: (context, state) => ListaProspectosScreen(key: listaProspectosKey),
     ),
     GoRoute(
       path: objRutas.rutaReasignaCliente,

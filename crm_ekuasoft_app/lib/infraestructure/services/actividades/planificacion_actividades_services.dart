@@ -192,6 +192,12 @@ class PlanificacionActividadesService extends ChangeNotifier{
         }
 
         objLead.length = objLead.data.length;
+
+        List<CrmLeadDatumAppModel> listaDescendente = List.of(objLead.data)
+        ..sort((a, b) => b.priority!.compareTo(a.priority!));
+
+        objLead.data = listaDescendente;
+
         await storageProspecto.write(key: 'RespuestaProspectos', value: '');
         await storageProspecto.write(key: 'RespuestaProspectos', value: json.encode(objLead));
 

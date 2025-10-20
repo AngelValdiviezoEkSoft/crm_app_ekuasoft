@@ -198,7 +198,7 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
                                               text: TextSpan(
                                                 children: [
                                                   const TextSpan(
-                                                    text: 'Tipo de actividad:',
+                                                    text: 'Tipo de actividad: ',
                                                     style: TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 12,
@@ -219,7 +219,7 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
                                               text: TextSpan(
                                                 children: [
                                                   const TextSpan(
-                                                    text: 'Fecha planificada:',
+                                                    text: 'Fecha planificada: ',
                                                     style: TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 12,
