@@ -1,10 +1,12 @@
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:crm_ekuasoft_app/domain/domain.dart';
 import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
 import 'package:crm_ekuasoft_app/main.dart';
+import 'package:excel/excel.dart' as Exc;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -14,6 +16,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 String objRspGen = '';
@@ -367,11 +371,11 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
             },
           ),
-          title: const Text('Prospectos', style: TextStyle(fontSize: 18),),
+          title: const Text('Prospectos', style: TextStyle(fontSize: 19),),
           actions: [
             Container(
               color: Colors.transparent,
-              width: size.width * 0.25,
+              width: size.width * 0.22,
               height: size.height * 0.055,
               child: DropdownButton<String>(
                   value: estadoPrspSelect,
@@ -412,6 +416,13 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
               onPressed: () {
                 //context.push(objRutasGen.rutaAgenda);
                 context.push(objRutasGen.rutaConsultaActividades);
+              },
+            ),
+
+            IconButton(
+              icon: const Icon(Icons.download),
+              onPressed: () {
+                generarReporte(context);
               },
             ),
           ],
@@ -594,8 +605,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                           ],
                         ),
                       ),
-                      //VALIDAR QUE SEA SOLO PARA CVE
-                    
+                      
                       SizedBox(height: size.height * 0.02,),
 
                       Container(
@@ -831,7 +841,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                             style: TextStyle(
                                                               fontWeight: FontWeight.bold,
                                                               fontSize: 10,
-                                                              color: prospectosFiltrados[index].stageId.name.toLowerCase() == 'lost' ? Colors.red : Colors.green
+                                                              color: prospectosFiltrados[index].stageId.name.toLowerCase() == 'perdido' ? Colors.red : Colors.green
                                                             ),
                                                             maxLines: 2,
                                                             textAlign: TextAlign.left,),
@@ -1513,5 +1523,73 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
     return;
 
   }
+
+  Future<void> generarReporte(BuildContext context) async {
+  try {
+    // Crear libro Excel y hoja
+    final excel = Exc.Excel.createExcel();
+    final sheet = excel['Reporte'];
+
+    final headerStyle = Exc.CellStyle(
+      bold: true,
+      horizontalAlign: Exc.HorizontalAlign.Center,
+      backgroundColorHex: Exc.ExcelColor.grey300//"#DDDDDD", // gris suave
+    );
+
+    final headers = [
+      Exc.TextCellValue('Nombre'),
+      Exc.TextCellValue('Celular'),
+      Exc.TextCellValue('Fecha de creación'),
+      Exc.TextCellValue('Oportunidad'),
+      Exc.TextCellValue('Correo'),
+    ];
+
+    sheet.appendRow(headers);
+
+    // Aplicar estilo a la primera fila (índice 0)
+    for (int i = 0; i < headers.length; i++) {
+      final cell = sheet.cell(Exc.CellIndex.indexByColumnRow(columnIndex: i, rowIndex: 0));
+      cell.cellStyle = headerStyle;
+    }
+
+    // Llenar datos dinámicamente
+    for (var d in prospectosFiltrados) {
+      sheet.appendRow([
+        Exc.TextCellValue(d.contactName ?? ''),
+        Exc.TextCellValue(d.phone ?? ''),
+        Exc.TextCellValue(
+          d.dateOpen != null
+              ? DateFormat('dd/MM/yyyy', 'es').format(d.dateOpen!)
+              : '',
+        ),
+        Exc.TextCellValue(d.partnerName ?? ''),
+        Exc.TextCellValue(d.emailFrom),
+      ]);
+    }
+
+    // Obtener directorio temporal
+    final dir = await getTemporaryDirectory();
+    final filePath = '${dir.path}/ReporteProspectos2.xlsx';
+
+    // Guardar archivo
+    final file = File(filePath)
+      ..createSync(recursive: true)
+      ..writeAsBytesSync(excel.encode()!);
+
+    // Abrir archivo automáticamente
+    await OpenFilex.open(file.path);
+
+    // Mostrar mensaje de éxito
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('✅ Reporte generado correctamente')),
+    );
+  } catch (e) {
+    debugPrint('❌ Error generando el reporte: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Error al generar el reporte')),
+    );
+  }
+}
+
 
 }

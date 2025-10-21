@@ -1165,7 +1165,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                     
                                     SizedBox(width: size.width * 0.015),
                                     
-                                    if(objDatumCrmLead != null && objDatumCrmLead!.stageId.name.toLowerCase() != 'lost')
+                                    if(objDatumCrmLead != null && objDatumCrmLead!.stageId.name.toLowerCase() != 'perdido')
                                     Expanded(
                                       child: ElevatedButton(
                                         onPressed: () {
@@ -1519,7 +1519,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                       ),
                                     ),
 
-                                    if(objDatumCrmLead != null && objDatumCrmLead!.stageId.name.toLowerCase() == 'lost')
+                                    if(objDatumCrmLead != null && objDatumCrmLead!.stageId.name.toLowerCase() == 'perdido')
                                     Container(
                                       width: size.width * 0.165,
                                       height: size.height * 0.062,
@@ -1537,341 +1537,137 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                         ],
                                       ),
                                       child: GestureDetector(
-                                        onTap: () {
-                                          muestraMotivoPerdida = false;
-
-                                          motPerdSelect = lstMotivoPerdida.first;
-
+                                        onTap: () async {
                                           showDialog(
+                                            //ignore: use_build_context_synchronously
                                             context: context,
-                                            builder: (context) {
-                                              return StatefulBuilder(
-                                                builder: (context, setStateDialog) => Dialog(
-                                                  insetPadding: const EdgeInsets.all(20),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(16),
-                                                  ),
-                                                  child: SizedBox(
-                                                    width: size.width * 0.92,
-                                                    height: !muestraMotivoPerdida
-                                                        ? size.height * 0.28
-                                                        : size.height * 0.38,
+                                            barrierDismissible: false,
+                                            builder: (context) => SimpleDialog(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                SimpleDialogCargando(
+                                                  null,
+                                                  mensajeMostrar: 'Estamos registrando',
+                                                  mensajeMostrarDialogCargando: 'motivo de pérdida del prospecto.',
+                                                ),
+                                              ]
+                                            ),
+                                          );
+                          
+                                          ResponseGenericModel? objResp = await ProspectoTypeService().editaEstadoProspecto(false, 0, objDatumCrmLead?.id ?? 0);
+
+                                          if(objResp != null){
+                                            String respuestaReg = objResp.result.mensaje;
+                                            int estado = objResp.result.estado;
+                                            String gifRespuesta = '';
+    
+                                            //ignore: use_build_context_synchronously
+                                            context.pop();
+    
+                                            if(estado == 200){
+                                              gifRespuesta = 'assets/gifs/exito.gif';
+                                            } else {
+                                              gifRespuesta = 'assets/gifs/gifErrorBlanco.gif';
+                                            }
+    
+                                            //ignore:use_build_context_synchronously
+                                            context.pop();                                                      
+
+                                            showDialog(
+                                              //ignore:use_build_context_synchronously
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Container(
+                                                    color: Colors.transparent,
+                                                    height: size.height * 0.17,
                                                     child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                       children: [
                                                         
                                                         Container(
-                                                          padding: const EdgeInsets.all(12),
-                                                          decoration: const BoxDecoration(
-                                                            color: Colors.blueAccent,
-                                                            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                                                          ),
-                                                          child: const Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                            children: [
-                                                              Text(
-                                                                'Registra pérdida del prospecto',
-                                                                style: TextStyle(
-                                                                  color: Colors.white,
-                                                                  fontWeight: FontWeight.bold,
-                                                                  fontSize: 18,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-
-                                                        SizedBox(height: size.height * 0.02),
-
-                                                        Container(
                                                           color: Colors.transparent,
-                                                          width: size.width * 0.92,
-                                                          height: size.height * 0.1,
-                                                          child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.center,
-                                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                                            children: [
-                                                              Container(
-                                                                color: Colors.transparent,
-                                                                width: size.width * 0.82,
-                                                                height: size.height * 0.1,
-                                                                child: DropdownButtonFormField<String>(
-                                                                  decoration: const InputDecoration(
-                                                                    border: OutlineInputBorder(),
-                                                                    labelText: 'Seleccione motivo de pérdida...',
-                                                                  ),
-                                                                  value: motPerdSelect.isEmpty ? null : motPerdSelect,
-                                                                  items: lstMotivoPerdida
-                                                                      .map(
-                                                                        (activityPrsp) => DropdownMenuItem(
-                                                                          value: activityPrsp,
-                                                                          child: Text(
-                                                                            activityPrsp,
-                                                                            overflow: TextOverflow.ellipsis,
-                                                                            maxLines: 1,
-                                                                            style: const TextStyle(fontSize: 12),
-                                                                          ),
-                                                                        ),
-                                                                      )
-                                                                      .toList(),
-                                                                  onChanged: (String? newValue) {
-                                                                    setStateDialog(() {
-                                                                      if (newValue != null &&
-                                                                          newValue.toLowerCase() == 'otros') {
-                                                                        muestraMotivoPerdida = true;
-                                                                      } else {
-                                                                        muestraMotivoPerdida = false;
-                                                                      }
-                                                                      motPerdSelect = newValue ?? '';
-                                                                    });
-                                                                  },
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
+                                                          height: size.height * 0.09,
+                                                          child: Image.asset(gifRespuesta),
                                                         ),
-
-                                                        if (muestraMotivoPerdida)
-                                                          Container(
-                                                            color: Colors.transparent,
-                                                            width: size.width * 0.92,
-                                                            height: size.height * 0.1,
-                                                            child: Row(
-                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                                              children: [
-                                                                Container(
-                                                                  color: Colors.transparent,
-                                                                  width: size.width * 0.82,
-                                                                  height: size.height * 0.1,
-                                                                  child: TextFormField(
-                                                                    controller: motivoPerdidaTxtController,
-                                                                    maxLines: 5,
-                                                                    onTapOutside: (event) {
-                                                                      FocusScope.of(context).unfocus();
-                                                                    },
-                                                                    decoration: InputDecoration(
-                                                                      hintText: 'Escribe el motivo aquí...',
-                                                                      border: OutlineInputBorder(
-                                                                        borderRadius: BorderRadius.circular(10),
-                                                                      ),
-                                                                      filled: true,
-                                                                      fillColor: Colors.transparent,
-                                                                    ),
-                                                                    validator: (value) {
-                                                                      if (value == null || value.trim().isEmpty) {
-                                                                        return 'Por favor ingresa una observación';
-                                                                      }
-                                                                      return null;
-                                                                    },
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-
-                                                        SizedBox(height: size.height * 0.01),
-
-                                                        Container(
-                                                          color: Colors.transparent,
-                                                          width: size.width * 0.9,
-                                                          height: size.height * 0.07,
-                                                          child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.center,
-                                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                                            children: [
-                                                              Padding(
-                                                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                                                                child: ElevatedButton.icon(
-                                                                  onPressed: () {
-                                                                    FocusScope.of(context).unfocus();
-                                                                    Navigator.pop(context);
-                                                                  },
-                                                                  icon: const Icon(
-                                                                    Icons.close,
-                                                                    color: Colors.white,
-                                                                  ),
-                                                                  label: const Text(
-                                                                    'Cerrar',
-                                                                    style: TextStyle(color: Colors.white),
-                                                                  ),
-                                                                  style: ElevatedButton.styleFrom(
-                                                                    backgroundColor: Colors.grey,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Padding(
-                                                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                                                                child: ElevatedButton.icon(
-                                                                  onPressed: () async {
                             
-                                                                    showDialog(
-                                                                      //ignore: use_build_context_synchronously
-                                                                      context: context,
-                                                                      barrierDismissible: false,
-                                                                      builder: (context) => SimpleDialog(
-                                                                        alignment: Alignment.center,
-                                                                        children: [
-                                                                          SimpleDialogCargando(
-                                                                            null,
-                                                                            mensajeMostrar: 'Estamos registrando',
-                                                                            mensajeMostrarDialogCargando: 'motivo de pérdida del prospecto.',
-                                                                          ),
-                                                                        ]
-                                                                      ),
-                                                                    );
-                                                    
-                                                                    int idMotPerd = 0;
-
-                                                                    for(int i = 0; i < motivosPerdida.length; i++){
-                                                                      if(motPerdSelect == motivosPerdida[i].name){
-                                                                        idMotPerd = motivosPerdida[i].id;
-                                                                      }
-                                                                    }
-
-                                                                    ResponseGenericModel? objResp = await ProspectoTypeService().editaEstadoProspecto(false, idMotPerd, objDatumCrmLead?.id ?? 0);
-
-                                                                    if(objResp != null){
-                                                                      String respuestaReg = objResp.result.mensaje;
-                                                                      int estado = objResp.result.estado;
-                                                                      String gifRespuesta = '';
-                              
-                                                                      //ignore: use_build_context_synchronously
-                                                                      context.pop();
-                              
-                                                                      if(estado == 200){
-                                                                        gifRespuesta = 'assets/gifs/exito.gif';
-                                                                      } else {
-                                                                        gifRespuesta = 'assets/gifs/gifErrorBlanco.gif';
-                                                                      }
-                              
-                                                                      //ignore:use_build_context_synchronously
-                                                                      context.pop();                                                      
-
-                                                                      showDialog(
-                                                                        //ignore:use_build_context_synchronously
-                                                                        context: context,
-                                                                        builder: (BuildContext context) {
-                                                                          return AlertDialog(
-                                                                            title: Container(
-                                                                              color: Colors.transparent,
-                                                                              height: size.height * 0.17,
-                                                                              child: Column(
-                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                children: [
-                                                                                  
-                                                                                  Container(
-                                                                                    color: Colors.transparent,
-                                                                                    height: size.height * 0.09,
-                                                                                    child: Image.asset(gifRespuesta),
-                                                                                  ),
-                                                      
-                                                                                  Container(
-                                                                                    color: Colors.transparent,
-                                                                                    width: size.width * 0.95,
-                                                                                    height: size.height * 0.08,
-                                                                                    alignment: Alignment.center,
-                                                                                    child: AutoSizeText(
-                                                                                      respuestaReg,
-                                                                                      maxLines: 2,
-                                                                                      minFontSize: 2,
-                                                                                    ),
-                                                                                  )
-                                                                                ],
-                                                                              )
-                                                                            ),
-                                                                            actions: [
-                                                                              TextButton(
-                                                                                onPressed: () {
-                                                                                  Navigator.of(context).pop();
-                                                                                  //ignore:use_build_context_synchronously
-                                                                                  context.pop();
-                                                                                },
-                                                                                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
-                                                                              ),
-                                                                            ],
-                                                                          );
-                                                                        },
-                                                                      );                                                                    
-
-                                                                    }
-                                                                    else{
-                                                                      //ignore:use_build_context_synchronously
-                                                                      context.pop();                                                      
-
-                                                                      showDialog(
-                                                                        //ignore:use_build_context_synchronously
-                                                                        context: context,
-                                                                        builder: (BuildContext context) {
-                                                                          return AlertDialog(
-                                                                            title: Container(
-                                                                              color: Colors.transparent,
-                                                                              height: size.height * 0.17,
-                                                                              child: Column(
-                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                children: [
-                                                                                  
-                                                                                  Container(
-                                                                                    color: Colors.transparent,
-                                                                                    height: size.height * 0.09,
-                                                                                    child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
-                                                                                  ),
-                                                      
-                                                                                  Container(
-                                                                                    color: Colors.transparent,
-                                                                                    width: size.width * 0.95,
-                                                                                    height: size.height * 0.08,
-                                                                                    alignment: Alignment.center,
-                                                                                    child: const AutoSizeText(
-                                                                                      'Error al crear una nueva actividad',
-                                                                                      maxLines: 2,
-                                                                                      minFontSize: 2,
-                                                                                    ),
-                                                                                  )
-                                                                                ],
-                                                                              )
-                                                                            ),
-                                                                            actions: [
-                                                                              TextButton(
-                                                                                onPressed: () {
-                                                                                  Navigator.of(context).pop();
-                                                                                },
-                                                                                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
-                                                                              ),
-                                                                            ],
-                                                                          );
-                                                                        },
-                                                                      );
-                                                                    }
-/*
-                                                                    FocusScope.of(context).unfocus();
-                                                                    Navigator.pop(context);
-                                                                    */
-                                                                  },
-                                                                  icon: const Icon(
-                                                                    Icons.save,
-                                                                    color: Colors.white,
-                                                                  ),
-                                                                  label: const Text(
-                                                                    'Confirmar',
-                                                                    style: TextStyle(color: Colors.white),
-                                                                  ),
-                                                                  style: ElevatedButton.styleFrom(
-                                                                    backgroundColor: Colors.blueAccent,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
+                                                        Container(
+                                                          color: Colors.transparent,
+                                                          width: size.width * 0.95,
+                                                          height: size.height * 0.08,
+                                                          alignment: Alignment.center,
+                                                          child: AutoSizeText(
+                                                            respuestaReg,
+                                                            maxLines: 2,
+                                                            minFontSize: 2,
                                                           ),
-                                                        ),
+                                                        )
                                                       ],
-                                                    ),
+                                                    )
                                                   ),
-                                                ),
-                                              );
-                                            },
-                                          );
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                        //ignore:use_build_context_synchronously
+                                                        context.pop();
+                                                      },
+                                                      child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );                                                                    
 
+                                          }
+                                          else{
+                                            //ignore:use_build_context_synchronously
+                                            context.pop();                                                      
+
+                                            showDialog(
+                                              //ignore:use_build_context_synchronously
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Container(
+                                                    color: Colors.transparent,
+                                                    height: size.height * 0.17,
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        
+                                                        Container(
+                                                          color: Colors.transparent,
+                                                          height: size.height * 0.09,
+                                                          child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
+                                                        ),
+                            
+                                                        Container(
+                                                          color: Colors.transparent,
+                                                          width: size.width * 0.95,
+                                                          height: size.height * 0.08,
+                                                          alignment: Alignment.center,
+                                                          child: const AutoSizeText(
+                                                            'Error al crear una nueva actividad',
+                                                            maxLines: 2,
+                                                            minFontSize: 2,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          }
                                         },
                                         child: const Text(
                                           'Recuperar',
