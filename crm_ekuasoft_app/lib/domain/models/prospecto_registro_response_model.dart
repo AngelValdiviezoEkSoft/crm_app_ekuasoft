@@ -393,29 +393,22 @@ class StageIdProspectoRegistro {
         required this.isWon
     });
 
-    factory StageIdProspectoRegistro.fromJson(String str) => StageIdProspectoRegistro.fromMap(json.decode(str));
+    factory StageIdProspectoRegistro.fromRawJson(String str) => StageIdProspectoRegistro.fromJson(json.decode(str));
 
-    String toJson() => json.encode(toMap());
+    String toRawJson() => json.encode(toJson());
 
-    factory StageIdProspectoRegistro.fromMap(Map<String, dynamic> json) => StageIdProspectoRegistro(
+    factory StageIdProspectoRegistro.fromJson(Map<String, dynamic> json) => StageIdProspectoRegistro(
         id: json["id"] ?? 0,
         name: json["name"] ?? '',
         isWon: json["is_won"] ?? false
     );
 
-    factory StageIdProspectoRegistro.fromJson2(Map<String, dynamic> json) {
-      return StageIdProspectoRegistro(
-        id: json['id'] ?? 0,
-        name: json['name'] ?? '',
-        isWon: json['is_won'] ?? false
-      );
-    }
-
-    Map<String, dynamic> toMap() => {
-      "id": id,
-      "name": name,
-      "is_won": isWon
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "is_won": isWon
     };
+
 }
 
 

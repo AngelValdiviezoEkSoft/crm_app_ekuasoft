@@ -20,6 +20,7 @@ import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
+bool accionNav = false;
 String objRspGen = '';
 List<int> years = [];
 List<DatumCrmLead> prospectosFiltrados = [];
@@ -64,7 +65,8 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
   @override
   void initState() {
-    super.initState();    
+    super.initState(); 
+    accionNav = false;   
     estadoPrspSelect = '-- Todos --';
     lstEstadosPrsp = [
       'Ganados',
@@ -107,6 +109,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
   @override
   void dispose() {
     pagingController.dispose();
+    accionNav = false;
     super.dispose();
   }
 
@@ -114,6 +117,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
     String resInt = await ValidacionesUtils().validaInternet();
 
+    if(!accionNav)
     showDialog(
       //ignore:use_build_context_synchronously
       context: context,
@@ -304,13 +308,16 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
       objRspGen = '';
       objRspGen = jsonEncode(prospectosFiltrados);
 
-      //ignore:use_build_context_synchronously
-      context.pop();
+      try{
+        if(!accionNav){
+          //ignore:use_build_context_synchronously
+          context.pop();
+        }
 
-      // Refresca los datos llamando a la misma función de carga
-      setState(() {
-        
-      });
+        setState(() {});
+      }
+      catch(_){}
+
     } else {
 
       //ignore:use_build_context_synchronously
@@ -661,7 +668,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                     motion: const ScrollMotion(),
                                       children: [
                                         SlidableAction(
-                                          onPressed: (context) 
+                                          onPressed: (context) async 
                                           {
                                             objDatumCrmLead = prospectosFiltrados[index];
                           
@@ -679,10 +686,13 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                             selectedYear = DateTime.now().year;
                                             lstTipoActividades = [];
                                             lstMotivoPerdida = [];
+
+                                            accionNav = true;
                           
                                             //context.push(Rutas().rutaPlanificacionActividades);
                                             rutaActualGen = Rutas().rutaPlanActivConActiv;
-                                            context.push(Rutas().rutaPlanActivConActiv);
+                                            await context.push(Rutas().rutaPlanActivConActiv);
+                                            await refreshDataProsp();
                                           },
                                           backgroundColor: objColorsApp.celeste,
                                           foregroundColor: Colors.white,
@@ -894,8 +904,8 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                     height: size.height * 0.04,
                                                     child: IconButton(
                                                       icon: const Icon(Icons.edit, color: Colors.grey, size: 20,),
-                                                      onPressed: () {
-                            
+                                                      onPressed: () async {
+
                                                         objDatumCrmLead = prospectosFiltrados[index];
                             
                                                         //ignore: use_build_context_synchronously
@@ -905,8 +915,14 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                         filtroPrspTxt = TextEditingController();
 
                                                         rutaActualGen = Rutas().rutaEditProsp;
+                                                        accionNav = true;
                             
-                                                        context.push(Rutas().rutaEditProsp);
+                                                        await context.push(Rutas().rutaEditProsp);
+
+                                                        await refreshDataProsp();
+    
+                                                        // Esto es solo para asegurar que la UI se reconstruya
+                                                        //setState(() {});
                                                       },
                                                     ),
                                                   ),
@@ -970,10 +986,13 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
         }
       ),
       floatingActionButton: FloatingActionButton(                
-        onPressed: () {
+        onPressed: () async {
           terminoBusqueda = '';
           filtroPrspTxt = TextEditingController();
-          context.push(objRutasGen.rutaRegistroPrsp);
+
+          accionNav = true;
+          await context.push(objRutasGen.rutaRegistroPrsp);
+          await refreshDataProsp();
         },
         backgroundColor: const Color.fromRGBO(75, 57, 239, 1.0),
         child: const Icon(Icons.person_add_alt, color: Colors.white,),

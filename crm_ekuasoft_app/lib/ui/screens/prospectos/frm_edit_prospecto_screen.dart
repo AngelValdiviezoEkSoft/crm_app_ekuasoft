@@ -320,33 +320,37 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                     emailEditTxt.text = objDatumCrmLeadEdit!.emailFrom;
                   }
 
-                  if(!comienzaEditarNombresContacto){
+                  //if(!comienzaEditarNombresContacto){
+                  if(nombresEditTxt.text.isEmpty){
                     //nombresEditTxt.text = objDatumCrmLeadEdit!.name;
                     nombresEditTxt.text = objDatumCrmLeadEdit!.contactName ?? '';
                   }
 
-                  if(!comienzaEditarNombres){
+                  //if(!comienzaEditarNombres){
+                  if(nombresOportEditTxt.text.isEmpty){
                     //nombresOportEditTxt.text = objDatumCrmLeadEdit!.contactName ?? '';
                     nombresOportEditTxt.text = objDatumCrmLeadEdit!.name;
                   }
 
-                  if(!comienzaEditarDireccion){
+                  //if(!comienzaEditarDireccion){
+                  if(direccionEditTxt.text.isEmpty){
                     direccionEditTxt.text = objDatumCrmLeadEdit!.street ?? '';
                   }
 
-                  if(!comienzaEditarRecomendacion){
+                  //if(!comienzaEditarRecomendacion){
+                  if(recomendadoPorEditTxt.text.isEmpty){
                     recomendadoPorEditTxt.text = objDatumCrmLeadEdit!.referred ?? '';
                   }
 
-                  if(!comienzaEditarProbabilidad){
+                  if(probabilityEditTxt.text.isEmpty){
                     probabilityEditTxt.text = objDatumCrmLeadEdit!.probability?.toString() ?? "0";
                   }
 
-                  if(!comienzaEditarIngEsp){
+                  if(ingresoEsperadoEditTxt.text.isEmpty){
                     ingresoEsperadoEditTxt.text = objDatumCrmLeadEdit!.expectedRevenue.toString();
                   }
 
-                  if(!comienzaEditarObservacon){
+                  if(observacionesEditTxt.text.isEmpty){
                     observacionesEditTxt.text = objDatumCrmLeadEdit!.description ?? '';
                   }
 
@@ -1505,7 +1509,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                     description: observacionesEditTxt.text,
                                     emailFrom: emailEditTxt.text,
                                     street: direccionEditTxt.text,
-                                    phone: '593${telefonoEditTxt.text}',
+                                    phone: '+593${telefonoEditTxt.text}',
                                     partnerName: nombresEditTxt.text,
                                     mobile: '',
                                     dateOpen: DateTime.now(),

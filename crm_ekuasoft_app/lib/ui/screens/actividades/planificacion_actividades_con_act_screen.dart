@@ -996,7 +996,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
 
-                                    if(objDatumCrmLead != null && objDatumCrmLead!.stageId.name.toLowerCase() != 'ganado')
+                                    if(objDatumCrmLead != null && objDatumCrmLead!.stageId.name.toLowerCase() != 'ganado' && objDatumCrmLead!.stageId.name.toLowerCase() != 'perdido')
                                     Expanded(
                                       child: ElevatedButton(
                                         onPressed: () async {
@@ -2582,52 +2582,58 @@ class PlanActivStateTwo extends State<PlanActiv> {
                                 color: lstActividadesDiariasByProspecto[index].cerrado ? Colors.grey[300] : Colors.white,
                                 child: ListTile(
                                   leading: CircleAvatar(
+                                    maxRadius: size.width * 0.05,
                                     backgroundColor: lstActividadesDiariasByProspecto[index].cerrado ? Colors.black45 : Colors.grey[300],
-                                    child: Stack(
-                                        children: [
-                                          if(lstActividadesDiariasByProspecto[index].activityCategory != null 
-                                          && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() != 'whatsapp'
-                                          && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() != 'phonecall'
-                                          && (lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() != 'email' || lstActividadesDiariasByProspecto[index].leadEmail == null || lstActividadesDiariasByProspecto[index].leadEmail!.isEmpty))
-                                          const Icon(Icons.person, color: Colors.black,),
-
-                                          if(lstActividadesDiariasByProspecto[index].activityCategory != null && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() == 'phonecall')
-                                          GestureDetector(
-                                            onTap: () {
-                                              makePhoneCall(lstActividadesDiariasByProspecto[index].leadPhone!);                                                        
-                                            },
-                                            child: const Icon(Icons.call, size: 22, color: Colors.black,)
-                                          ),
-
-                                          if(lstActividadesDiariasByProspecto[index].activityCategory != null && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() == 'email' && lstActividadesDiariasByProspecto[index].leadEmail != null && lstActividadesDiariasByProspecto[index].leadEmail!.isNotEmpty)
-                                          GestureDetector(
-                                            onTap: () {
-                                              openEmailApp(lstActividadesDiariasByProspecto[index].leadEmail!);                                                        
-                                            },
-                                            child: const Icon(Icons.email, color: Colors.white, size: 22,)
-                                          ),
-
-                                          if(lstActividadesDiariasByProspecto[index].activityCategory != null && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() == 'whatsapp')
-                                          GestureDetector(
-                                            onTap: () {
-                                              abrirWhatsapp(lstActividadesDiariasByProspecto[index].leadPhone!, size);
-                                            },
-                                            child: const FaIcon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 22,)
-                                          ),
-
-                                          if(!lstActividadesDiariasByProspecto[index].cerrado && DateFormat('yyyy-MM-dd', 'es').format(lstActividadesDiariasByProspecto[index].dateDeadline) == DateFormat('yyyy-MM-dd', 'es').format(DateTime.now()))
-                                          Positioned(
-                                            top: size.height * 0.01,
-                                            left: size.width * 0.02,
-                                            child: Container(
-                                              color: Colors.transparent,
-                                              width: size.width * 0.05,
-                                              height: size.height * 0.02,
-                                              child: const IndicatorPointWidget(null)
+                                    child: Container(
+                                      color: Colors.transparent,
+                                      width: size.width * 0.07,
+                                      alignment: Alignment.center,
+                                      child: Stack(
+                                          children: [
+                                            if(lstActividadesDiariasByProspecto[index].activityCategory != null 
+                                            && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() != 'whatsapp'
+                                            && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() != 'phonecall'
+                                            && (lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() != 'email' || lstActividadesDiariasByProspecto[index].leadEmail == null || lstActividadesDiariasByProspecto[index].leadEmail!.isEmpty))
+                                            const Icon(Icons.person, color: Colors.black,),
+                                      
+                                            if(lstActividadesDiariasByProspecto[index].activityCategory != null && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() == 'phonecall')
+                                            GestureDetector(
+                                              onTap: () {
+                                                makePhoneCall(lstActividadesDiariasByProspecto[index].leadPhone!);                                                        
+                                              },
+                                              child: const Icon(Icons.call, size: 22, color: Colors.black,)
                                             ),
-                                          )
-                                        ]
-                                      ),
+                                      
+                                            if(lstActividadesDiariasByProspecto[index].activityCategory != null && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() == 'email' && lstActividadesDiariasByProspecto[index].leadEmail != null && lstActividadesDiariasByProspecto[index].leadEmail!.isNotEmpty)
+                                            GestureDetector(
+                                              onTap: () {
+                                                openEmailApp(lstActividadesDiariasByProspecto[index].leadEmail!);                                                        
+                                              },
+                                              child: const Icon(Icons.email, color: Colors.white, size: 22,)
+                                            ),
+                                      
+                                            if(lstActividadesDiariasByProspecto[index].activityCategory != null && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() == 'whatsapp')
+                                            GestureDetector(
+                                              onTap: () {
+                                                abrirWhatsapp(lstActividadesDiariasByProspecto[index].leadPhone!, size);
+                                              },
+                                              child: const FaIcon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 22,)
+                                            ),
+                                      
+                                            if(!lstActividadesDiariasByProspecto[index].cerrado && DateFormat('yyyy-MM-dd', 'es').format(lstActividadesDiariasByProspecto[index].dateDeadline) == DateFormat('yyyy-MM-dd', 'es').format(DateTime.now()))
+                                            Positioned(
+                                              top: size.height * 0.01,
+                                              left: size.width * 0.02,
+                                              child: Container(
+                                                color: Colors.transparent,
+                                                width: size.width * 0.04,
+                                                height: size.height * 0.02,
+                                                child: const IndicatorPointWidget(null)
+                                              ),
+                                            )
+                                          ]
+                                        ),
+                                    ),
                                   ),
                                   title: GestureDetector(
                                     onTap: () {

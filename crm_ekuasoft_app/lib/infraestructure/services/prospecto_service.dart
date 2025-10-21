@@ -324,6 +324,7 @@ class ProspectoTypeService extends ChangeNotifier{
           await registraProspecto(objProspecto);
         } 
 
+/*
         var objRspPrsp = await storageProspecto.read(key: 'RespuestaProspectos') ?? '';
 
         CrmLeadAppModel objLead = CrmLeadAppModel(
@@ -369,8 +370,10 @@ class ProspectoTypeService extends ChangeNotifier{
 
           objLead.length = objLead.data.length + 1;
         }
+        */
 
         var objRespuestaFinal = ProspectoRegistroResponseModel.fromRawJson(response.body);
+        /*
 
         for(int i = 0; i < objRespuestaFinal.result.data.length; i++)
         {
@@ -442,6 +445,7 @@ class ProspectoTypeService extends ChangeNotifier{
 
         await storageProspecto.write(key: 'RespuestaProspectos', value: '');
         await storageProspecto.write(key: 'RespuestaProspectos', value: json.encode(objLead));
+        */
 
         return objRespuestaFinal;
       } 
@@ -658,6 +662,7 @@ class ProspectoTypeService extends ChangeNotifier{
 
         var objRespuestaFinal = ProspectoRegistroResponseModel.fromRawJson(response.body);
 
+/*
         for(int i = 0; i < objLeadEdit.data.length; i++)
         {
           if(objLeadEdit.data[i].id == objProspecto.id){
@@ -789,12 +794,12 @@ class ProspectoTypeService extends ChangeNotifier{
         
         await storageProspecto.write(key: 'RespuestaProspectos', value: '');
         await storageProspecto.write(key: 'RespuestaProspectos', value: json.encode(objLeadEditMemoria));
-
+*/
         return objRespuestaFinal;
       } 
-      catch(ex){
+      catch(_){
         //ERROR al editar prospecto es de mapeo en línea 659
-        print('Error al grabar: $ex');
+        //print('Error al grabar: $ex');
       }
     } else {
       await storageProspecto.write(key: 'registraProspecto', value: jsonEncode(objProspecto.toJson()));
