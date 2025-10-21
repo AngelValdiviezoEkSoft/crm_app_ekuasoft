@@ -792,8 +792,9 @@ class ProspectoTypeService extends ChangeNotifier{
 
         return objRespuestaFinal;
       } 
-      catch(_){
-        //print('Error al grabar: $ex');
+      catch(ex){
+        //ERROR al editar prospecto es de mapeo en línea 659
+        print('Error al grabar: $ex');
       }
     } else {
       await storageProspecto.write(key: 'registraProspecto', value: jsonEncode(objProspecto.toJson()));
@@ -873,7 +874,7 @@ class ProspectoTypeService extends ChangeNotifier{
     }
   }
 
-  editaEstadoProspecto(bool estado, int? motivoPerdida, int idProsp) async {
+  editaEstadoProspecto(bool estado, bool esGanado, int? motivoPerdida, int idProsp) async {
     String internet = await ValidacionesUtils().validaInternet();
     
     //VALIDACIÓN DE INTERNET
@@ -909,6 +910,8 @@ class ProspectoTypeService extends ChangeNotifier{
           )
         );
 
+        String estadoFinal = '';
+
         String tockenValidDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(objReq.params.tockenValidDate);
 
         final requestBody = {
@@ -929,14 +932,31 @@ class ProspectoTypeService extends ChangeNotifier{
               "is_lead_lost": true
             },
             */
+            //PROSPECTO PERDIDO
+            if(!estado)
             "write": {
               "active": estado,
               "lost_reason": motivoPerdida,
               "is_lead_lost": true,
               "is_lead_won": false,
               "is_lead_restored": false
-            }
+            },
 
+            //PROSPECTO PERDIDO A NUEVO
+            if(estado)
+            "write": {
+              "is_lead_lost": false,
+              "is_lead_won": false,
+              "is_lead_restored": true
+            },
+
+            //PROSPECTO GANADO
+            if(esGanado && !estado)
+            "write": {
+              "is_lead_lost": false,
+              "is_lead_won": true,
+              "is_lead_restored": false
+            }
           }
         };
 
@@ -965,7 +985,22 @@ class ProspectoTypeService extends ChangeNotifier{
 
         if(rspValidacion['result']['mensaje'] != null && (rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenNoValido) || rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenExpirado))){
           await tokenManager.checkTokenExpiration();
-          await editaEstadoProspecto( estado, motivoPerdida, idProsp);
+          await editaEstadoProspecto( estado, esGanado, motivoPerdida, idProsp);
+        }
+
+        //PROSPECTO PERDIDO
+        if(!estado){
+          estadoFinal = 'perdido';
+        }
+        
+        //PROSPECTO NUEVO
+        if(estado){
+          estadoFinal = 'nuevo';
+        }
+
+        //PROSPECTO GANADO
+        if(esGanado && !estado){
+          estadoFinal = 'ganado';
         }
 
         return ResponseGenericModel.fromRawJson(response.body);

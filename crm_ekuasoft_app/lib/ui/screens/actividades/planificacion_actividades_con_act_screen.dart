@@ -995,6 +995,8 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
+
+                                    if(objDatumCrmLead != null && objDatumCrmLead!.stageId.name.toLowerCase() != 'ganado')
                                     Expanded(
                                       child: ElevatedButton(
                                         onPressed: () async {
@@ -1015,15 +1017,8 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                             ),
                                           );
                           
-                                          int idMotPerd = 0;
 
-                                          for(int i = 0; i < motivosPerdida.length; i++){
-                                            if(motPerdSelect == motivosPerdida[i].name){
-                                              idMotPerd = motivosPerdida[i].id;
-                                            }
-                                          }
-
-                                          ActividadRegistroResponseModel? objResp = await ProspectoTypeService().editaEstadoProspecto(true, idMotPerd, objDatumCrmLead?.id ?? 0);
+                                          ResponseGenericModel? objResp = await ProspectoTypeService().editaEstadoProspecto(false, true, 0, objDatumCrmLead?.id ?? 0);
 
                                           if(objResp != null){
                                             String respuestaReg = objResp.result.mensaje;
@@ -1090,8 +1085,11 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                             //ignore:use_build_context_synchronously
                                             context.pop();
 
-                                            //ignore:use_build_context_synchronously
+                                            try {
+                                              //ignore:use_build_context_synchronously
                                             context.pop();
+                                            }
+                                            catch(_){}
 
                                             //ignore:use_build_context_synchronously
                                             context.push(objRutasGen.rutaPlanActivConActiv);
@@ -1361,7 +1359,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                                       }
                                                                     }
 
-                                                                    ResponseGenericModel? objResp = await ProspectoTypeService().editaEstadoProspecto(false, idMotPerd, objDatumCrmLead?.id ?? 0);
+                                                                    ResponseGenericModel? objResp = await ProspectoTypeService().editaEstadoProspecto(false, false, idMotPerd, objDatumCrmLead?.id ?? 0);
 
                                                                     if(objResp != null){
                                                                       String respuestaReg = objResp.result.mensaje;
@@ -1475,10 +1473,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                                         },
                                                                       );
                                                                     }
-/*
-                                                                    FocusScope.of(context).unfocus();
-                                                                    Navigator.pop(context);
-                                                                    */
+
                                                                   },
                                                                   icon: const Icon(
                                                                     Icons.save,
@@ -1554,7 +1549,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                             ),
                                           );
                           
-                                          ResponseGenericModel? objResp = await ProspectoTypeService().editaEstadoProspecto(false, 0, objDatumCrmLead?.id ?? 0);
+                                          ResponseGenericModel? objResp = await ProspectoTypeService().editaEstadoProspecto(true, false, 0, objDatumCrmLead?.id ?? 0);
 
                                           if(objResp != null){
                                             String respuestaReg = objResp.result.mensaje;
