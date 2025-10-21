@@ -28,6 +28,7 @@ class EnvironmentsProd {
   final String modMailMessage = 'mail.message';
   final String modIrModel = 'ir.model';
   final String modCrmLead = 'crm.lead';
+  final String modCrmStage = 'crm.stage';
   
   final String modEkClasif = 'ek.classification';
   final String modEkResCountryCanton = 'ek.res.country.canton';
@@ -38,4 +39,8 @@ class EnvironmentsProd {
 
   final String baseCentroViajes = 'centroviajes';
 
+  //CONSTANTES PARA ESTADOS DE PROSPECTOS
+  final String estadoProspectoNuevo = 'new';
+  final String estadoProspectoGanado = 'won';
+  final String estadoProspectoPerdido = 'lost';
 }

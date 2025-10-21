@@ -190,7 +190,7 @@ class AgendaScreenState extends State<AgendaScreen>  {
           activityIds: [], campaignId: CampaignId(id: 0, name: ''), countryId: StructCombos(id: 0, name: ''),
           dayClose: 0, emailFrom: '', expectedRevenue: 0, id: 0, lostReasonId: CampaignId(id: 0, name: ''),
           mediumId: StructCombos(id: 0, name: ''), mobile: '', name: '', partnerId: PartnerId(id: 0, name: '', tradeName: '', cantonId: StructCombos(id: 0, name: ''), regionId: StructCombos(id: 0, name: ''), sectorId: StructCombos(id: 0, name: ''), channelId: StructCombos(id: 0, name: ''), cityId: StructCombos(id: 0, name: ''),clasificationId: StructCombos(id: 0, name: ''), email: ''),
-          priority: '', sourceId: StructCombos(id: 0, name: ''), stageId: StructCombos(id: 0, name: ''),
+          priority: '', sourceId: StructCombos(id: 0, name: ''), stageId: StageId(id: 0, name: '', isWon: false),
           stateId: StructCombos(id: 0, name: ''), tagIds: [], title: CampaignId(id: 0, name: ''),
           type: '', city: '', contactName: '', dateClose: null, dateDeadline: null, dateOpen: null, description: '',
           emailCc: '', partnerName: '', phone: '', probability: 0, referred: '', street: '',

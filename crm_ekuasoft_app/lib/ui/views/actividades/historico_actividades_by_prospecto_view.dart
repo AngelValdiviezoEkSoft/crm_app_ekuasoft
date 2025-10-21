@@ -157,7 +157,7 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
                                                   child: const Icon(Icons.email, color: Colors.white, size: 22,)
                                                 ),
 
-                                                if(lstActividadesHistoricosByProspecto[index].activityCategory != null && lstActividadesHistoricosByProspecto[index].activityCategory!.toLowerCase() == 'whatsapp' && lstActividadesHistoricosByProspecto[index].leadEmail != null && lstActividadesHistoricosByProspecto[index].leadEmail!.isNotEmpty)
+                                                if(lstActividadesHistoricosByProspecto[index].activityCategory != null && lstActividadesHistoricosByProspecto[index].activityCategory!.toLowerCase() == 'whatsapp')
                                                 GestureDetector(
                                                   onTap: () {
                                                     //abrirWhatsapp(lstActividadesDiariasByProspecto[index].leadPhone!, size);

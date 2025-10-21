@@ -382,7 +382,7 @@ class ProspectoTypeService extends ChangeNotifier{
           CombosAppModel objMediumTmp = CombosAppModel(id: objRespuestaFinal.result.data[i].mediumId?.id ?? 0, name: objRespuestaFinal.result.data[i].mediumId?.name ?? '');
           CombosAppModel objPartnerTmp = CombosAppModel(id: objRespuestaFinal.result.data[i].partnerId?.id ?? 0, name: objRespuestaFinal.result.data[i].partnerId?.name ?? '');
           CombosAppModel objSourceTmp = CombosAppModel(id: objRespuestaFinal.result.data[i].sourceId?.id ?? 0, name: objRespuestaFinal.result.data[i].sourceId?.name ?? '');
-          CombosAppModel objStageTmp = CombosAppModel(id: objRespuestaFinal.result.data[i].stageId?.id ?? 0, name: objRespuestaFinal.result.data[i].stageId?.name ?? '');
+          StageIdApp objStageTmp = StageIdApp(id: objRespuestaFinal.result.data[i].stageId?.id ?? 0, name: objRespuestaFinal.result.data[i].stageId?.name ?? '', isWon: false);
           CombosAppModel objStateTmp = CombosAppModel(id: objRespuestaFinal.result.data[i].stateId?.id ?? 0, name: objRespuestaFinal.result.data[i].stateId?.name ?? '');
           CombosAppModel objTittleTmp = CombosAppModel(id: objRespuestaFinal.result.data[i].title?.id ?? 0, name: objRespuestaFinal.result.data[i].title?.name ?? '');
           CombosAppModel objUserTmp = CombosAppModel(id: objRespuestaFinal.result.data[i].userId?.id ?? 0, name: objRespuestaFinal.result.data[i].userId?.name ?? '');
@@ -669,7 +669,7 @@ class ProspectoTypeService extends ChangeNotifier{
             CombosAppModel objMediumTmp = CombosAppModel(id: objProspecto.mediumId.id, name: objProspecto.mediumId.name);
             CombosAppModel objPartnerTmp = CombosAppModel(id: objProspecto.partnerId.id, name: objProspecto.partnerId.name);
             CombosAppModel objSourceTmp = CombosAppModel(id: objProspecto.sourceId.id, name: objProspecto.sourceId.name);
-            CombosAppModel objStageTmp = CombosAppModel(id: objProspecto.stageId.id, name: objProspecto.stageId.name);
+            StageIdApp objStageTmp = StageIdApp(id: objProspecto.stageId.id, name: objProspecto.stageId.name, isWon: objProspecto.stageId.isWon);
             CombosAppModel objStateTmp = CombosAppModel(id: objProspecto.stateId.id, name: objProspecto.stateId.name);
             CombosAppModel objTittleTmp = CombosAppModel(id: objProspecto.title.id, name: objProspecto.title.name);
             CombosAppModel objUserTmp = CombosAppModel(id: objProspecto.userId?.id ?? 0, name: objProspecto.userId?.name ?? '');
@@ -729,7 +729,7 @@ class ProspectoTypeService extends ChangeNotifier{
             CombosAppModel objMediumTmp = CombosAppModel(id: objLeadEdit.data[i].mediumId.id, name: objLeadEdit.data[i].mediumId.name);
             CombosAppModel objPartnerTmp = CombosAppModel(id: objLeadEdit.data[i].partnerId.id, name: objLeadEdit.data[i].partnerId.name);
             CombosAppModel objSourceTmp = CombosAppModel(id: objLeadEdit.data[i].sourceId.id, name: objLeadEdit.data[i].sourceId.name);
-            CombosAppModel objStageTmp = CombosAppModel(id: objLeadEdit.data[i].stageId.id, name: objLeadEdit.data[i].stageId.name);
+            StageIdApp objStageTmp = StageIdApp (id: objLeadEdit.data[i].stageId.id, name: objLeadEdit.data[i].stageId.name, isWon: objLeadEdit.data[i].stageId.isWon);
             CombosAppModel objStateTmp = CombosAppModel(id: objLeadEdit.data[i].stateId.id, name: objLeadEdit.data[i].stateId.name);
             CombosAppModel objTittleTmp = CombosAppModel(id: objLeadEdit.data[i].title.id, name: objLeadEdit.data[i].title.name);
             CombosAppModel objUserTmp = CombosAppModel(id: objLeadEdit.data[i].userId.id ?? 0, name: objLeadEdit.data[i].userId.name ?? '');
@@ -922,10 +922,21 @@ class ProspectoTypeService extends ChangeNotifier{
             "bearer": objReq.params.bearer,
             "tocken_valid_date": tockenValidDate,
             "id": idProsp,
+            /*
             "write": {
               "active": estado,
-              "lost_reason": motivoPerdida
+              "lost_reason": motivoPerdida,
+              "is_lead_lost": true
+            },
+            */
+            "write": {
+              "active": estado,
+              "lost_reason": motivoPerdida,
+              "is_lead_lost": true,
+              "is_lead_won": false,
+              "is_lead_restored": false
             }
+
           }
         };
 
@@ -1061,6 +1072,166 @@ class ProspectoTypeService extends ChangeNotifier{
           await tokenManager.checkTokenExpiration();
           await editaPrioridadProspecto( calificacion, idProsp);
         }
+/*
+        var objRspPrsp = await storageProspecto.read(key: 'RespuestaProspectos') ?? '';
+
+        CrmLeadAppModel objLeadEdit = CrmLeadAppModel(
+          data: [],
+          fields: CrmLeadFieldsAppModel(
+            activityIds: '',
+            campaignId: '',
+            city: '',
+            contactName: '',
+            countryId: '',
+            dateClosed: '',
+            dateDeadline: '',
+            dateOpen: '',
+            dayClose: '',
+            description: '',
+            emailCc: '',
+            emailFrom: '',
+            expectedRevenue: '',
+            function: '',
+            lostReasonId: '',
+            mediumId: '',
+            mobile: '',
+            name: '',
+            partnerId: '',
+            partnerName: '',
+            phone: '',
+            priority: '',
+            referred: '',
+            sourceId: '',
+            stageId: '',
+            stateId: '',
+            street: '',
+            tagIds: '',
+            title: '',
+            type: '',
+            userId: ''
+          ),
+          length: 0
+        );        
+
+        CrmLeadAppModel objLeadEditMemoria = CrmLeadAppModel(
+          data: [],
+          fields: CrmLeadFieldsAppModel(
+            activityIds: '',
+            campaignId: '',
+            city: '',
+            contactName: '',
+            countryId: '',
+            dateClosed: '',
+            dateDeadline: '',
+            dateOpen: '',
+            dayClose: '',
+            description: '',
+            emailCc: '',
+            emailFrom: '',
+            expectedRevenue: '',
+            function: '',
+            lostReasonId: '',
+            mediumId: '',
+            mobile: '',
+            name: '',
+            partnerId: '',
+            partnerName: '',
+            phone: '',
+            priority: '',
+            referred: '',
+            sourceId: '',
+            stageId: '',
+            stateId: '',
+            street: '',
+            tagIds: '',
+            title: '',
+            type: '',
+            userId: ''
+          ),
+          length: 0
+        );
+
+        if(objRspPrsp.isNotEmpty){
+          objLeadEdit = CrmLeadAppModel.fromRawJson(objRspPrsp);
+
+          objLeadEdit.length = objLeadEdit.data.length + 1;
+          objLeadEditMemoria.length = objLeadEdit.data.length;
+        }
+
+        for(int i = 0; i < objLeadEdit.data.length; i++)
+        {
+          if(objLeadEdit.data[i].id == idProsp){
+            List<CombosAppModel> lstActivTmp = [];
+            List<CombosAppModel> lstTagsTmp = [];
+            CombosAppModel objCampaTmp = CombosAppModel (id: objProspecto.campaignId?.id ?? 0, name: objProspecto.campaignId?.name ?? '');
+            CombosAppModel objPaisTmp = CombosAppModel (id: objProspecto.countryId.id, name: objProspecto.countryId.name);
+            CombosAppModel objReasonTmp = CombosAppModel(id: objProspecto.lostReasonId.id, name: objProspecto.lostReasonId.name);
+            CombosAppModel objMediumTmp = CombosAppModel(id: objProspecto.mediumId.id, name: objProspecto.mediumId.name);
+            CombosAppModel objPartnerTmp = CombosAppModel(id: objProspecto.partnerId.id, name: objProspecto.partnerId.name);
+            CombosAppModel objSourceTmp = CombosAppModel(id: objProspecto.sourceId.id, name: objProspecto.sourceId.name);
+            CombosAppModel objStageTmp = CombosAppModel(id: objProspecto.stageId.id, name: objProspecto.stageId.name);
+            CombosAppModel objStateTmp = CombosAppModel(id: objProspecto.stateId.id, name: objProspecto.stateId.name);
+            CombosAppModel objTittleTmp = CombosAppModel(id: objProspecto.title.id, name: objProspecto.title.name);
+            CombosAppModel objUserTmp = CombosAppModel(id: objProspecto.userId?.id ?? 0, name: objProspecto.userId?.name ?? '');
+
+            for(int j = 0; j < objProspecto.activityIds.length; j++){
+              lstActivTmp.add(
+                CombosAppModel(id: objProspecto.activityIds[j].id, name: objProspecto.activityIds[j].name)
+              );
+            }
+
+            for(int j = 0; j < objProspecto.tagIds.length; j++){
+              lstTagsTmp.add(
+                CombosAppModel(id: objProspecto.activityIds[j].id, name: objProspecto.activityIds[j].name)
+              );
+            }
+            
+            CrmLeadDatumAppModel objCrmLeadDatumAppModel = CrmLeadDatumAppModel(
+              dateDeadline:  DateTime.now(),
+              dateClose: DateTime.now(),
+              probability: objProspecto.probability ?? 0,
+              street: objProspecto.street,
+              referred: objProspecto.referred,
+              activityIds: lstActivTmp,
+              campaignId: objCampaTmp,
+              contactName: objProspecto.contactName,
+              countryId: objPaisTmp,
+              dateOpen: objProspecto.dateOpen ?? DateTime.now(),
+              dayClose: objProspecto.dayClose,
+              emailFrom: objProspecto.emailFrom,
+              expectedRevenue: objProspecto.expectedRevenue,
+              id: objProspecto.id,
+              lostReasonId: objReasonTmp,
+              mediumId: objMediumTmp,
+              name: objProspecto.name,
+              partnerId: objPartnerTmp,
+              phone: objProspecto.phone,
+              priority: objProspecto.priority,
+              sourceId: objSourceTmp,
+              stageId: objStageTmp,
+              stateId: objStateTmp,
+              type: objProspecto.type,
+              title: objTittleTmp,
+              userId: objUserTmp,
+              tagIds: lstTagsTmp,
+              description: objProspecto.description,
+              active: objProspecto.active,
+              
+            );
+
+            objLeadEditMemoria.data.add(objCrmLeadDatumAppModel);
+          }
+          
+        }
+
+        List<CrmLeadDatumAppModel> listaDescendente = List.of(objLeadEditMemoria.data)
+        ..sort((a, b) => b.priority!.compareTo(a.priority!));
+
+        objLeadEditMemoria.data = listaDescendente;
+        
+        await storageProspecto.write(key: 'RespuestaProspectos', value: '');
+        await storageProspecto.write(key: 'RespuestaProspectos', value: json.encode(objLeadEditMemoria));
+*/
 
         return ResponseGenericModel.fromRawJson(response.body);
 

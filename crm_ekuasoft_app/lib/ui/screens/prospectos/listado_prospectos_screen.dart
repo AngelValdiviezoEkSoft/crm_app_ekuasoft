@@ -213,9 +213,10 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
             name: apiResponse.data[i].sourceId.name ?? ''
           );
 
-          StructCombos objStage = StructCombos(
-            id: apiResponse.data[i].stageId.id ?? 0,
-            name: apiResponse.data[i].stageId.name ?? ''
+          StageId objStage = StageId(
+            id: apiResponse.data[i].stageId.id,
+            name: apiResponse.data[i].stageId.name,
+            isWon: apiResponse.data[i].stageId.isWon
           );
 
           StructCombos objState = StructCombos(
@@ -432,9 +433,8 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
               }
 
               if (snapshot.hasData) {
-
                 String objRsp = snapshot.data as String;
-
+                
                 objRspGen = objRsp;
 
                 if(objRsp.isNotEmpty){
@@ -451,7 +451,6 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
                   if(ingresaUnaVez){
                     refreshDataByFiltro(objRsp);
-                    //refreshDataByMes(_mesSeleccionado ?? 0, objRsp, _mesSeleccionado == 13);
                   }
                   
                   listaVaciaPrp = false;
@@ -460,8 +459,8 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                   listaVaciaPrp = true;
                 }
 
-
                 ingresaUnaVez = false;
+              
 
                 return SingleChildScrollView(
                   child: Column(
@@ -732,18 +731,13 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                         height: size.height * 0.04,
                                                         child: SelectableText.rich(
                                                           TextSpan(
-                                                          children: [
+                                                          children: [                                                            
                                                             TextSpan(
                                                               text: prospectosFiltrados[index].name,
                                                               style: const TextStyle(
-                                                                fontWeight: FontWeight.bold,                                                                
-                                                                //color: Colors.black
-                                                              ),
-                                                              /*
-                                                              maxLines: 1,
-                                                              overflow: TextOverflow.ellipsis,
-                                                              textAlign: TextAlign.left,
-                                                              */
+                                                                fontWeight: FontWeight.bold,
+                                                                overflow: TextOverflow.ellipsis,                                                                
+                                                              ),                                                              
                                                             ),
                                                           ],
                                                         ),
@@ -1063,6 +1057,14 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                   prospectosFiltrados = apiResponse.result.data.crmLead.data;
                 }
 
+                if(prospectosFiltrados.isNotEmpty){
+                  List<DatumCrmLead> listaDescendente = List.of(prospectosFiltrados)
+                  ..sort((a, b) => b.priority.compareTo(a.priority));
+                  prospectosFiltrados = [];
+                  prospectosFiltrados = listaDescendente;
+
+                }
+
                 return SingleChildScrollView(
                   child: Column(
                     //mainAxisAlignment: MainAxisAlignment.center,
@@ -1133,11 +1135,12 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                 width: size.width * 0.98,
                                 child: Container(
                                   decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      border: Border.all(
-                                          color: const Color.fromARGB(255, 217, 217, 217)),
-                                      borderRadius: const BorderRadius.all(Radius.circular(10))
+                                    color: Colors.transparent,
+                                    border: Border.all(
+                                      color: const Color.fromARGB(255, 217, 217, 217)
                                     ),
+                                    borderRadius: const BorderRadius.all(Radius.circular(10))
+                                  ),
                                   width: size.width * 0.98,
                                   height: size.height * 0.195,
                                   child: Row(
@@ -1415,6 +1418,13 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
       prospectosFiltrados = apiResponse.data;
     }
 
+    if(prospectosFiltrados.isNotEmpty){
+      List<DatumCrmLead> listaDescendente = List.of(prospectosFiltrados)
+      ..sort((a, b) => b.priority.compareTo(a.priority));
+      prospectosFiltrados = [];
+      prospectosFiltrados = listaDescendente;
+    }
+
     return;
 
   }
@@ -1484,6 +1494,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
         if(
           state.toLowerCase() == 'ganados' &&
           apiResponse.data[i].active != null && apiResponse.data[i].active == true
+          && apiResponse.data[i].stageId.isWon == true
         ){
           prospectosFiltrados.add(apiResponse.data[i]);
         }
@@ -1504,5 +1515,3 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
   }
 
 }
-
-//void doNothing(BuildContext context) {}

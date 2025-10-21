@@ -1165,9 +1165,379 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                     
                                     SizedBox(width: size.width * 0.015),
                                     
+                                    if(objDatumCrmLead != null && objDatumCrmLead!.stageId.name.toLowerCase() != 'lost')
                                     Expanded(
                                       child: ElevatedButton(
                                         onPressed: () {
+                                          muestraMotivoPerdida = false;
+
+                                          motPerdSelect = lstMotivoPerdida.first;
+
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return StatefulBuilder(
+                                                builder: (context, setStateDialog) => Dialog(
+                                                  insetPadding: const EdgeInsets.all(20),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(16),
+                                                  ),
+                                                  child: SizedBox(
+                                                    width: size.width * 0.92,
+                                                    height: !muestraMotivoPerdida
+                                                        ? size.height * 0.28
+                                                        : size.height * 0.38,
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                      children: [
+                                                        
+                                                        Container(
+                                                          padding: const EdgeInsets.all(12),
+                                                          decoration: const BoxDecoration(
+                                                            color: Colors.blueAccent,
+                                                            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                                                          ),
+                                                          child: const Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                'Registra pérdida del prospecto',
+                                                                style: TextStyle(
+                                                                  color: Colors.white,
+                                                                  fontWeight: FontWeight.bold,
+                                                                  fontSize: 18,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+
+                                                        SizedBox(height: size.height * 0.02),
+
+                                                        Container(
+                                                          color: Colors.transparent,
+                                                          width: size.width * 0.92,
+                                                          height: size.height * 0.1,
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            children: [
+                                                              Container(
+                                                                color: Colors.transparent,
+                                                                width: size.width * 0.82,
+                                                                height: size.height * 0.1,
+                                                                child: DropdownButtonFormField<String>(
+                                                                  decoration: const InputDecoration(
+                                                                    border: OutlineInputBorder(),
+                                                                    labelText: 'Seleccione motivo de pérdida...',
+                                                                  ),
+                                                                  value: motPerdSelect.isEmpty ? null : motPerdSelect,
+                                                                  items: lstMotivoPerdida
+                                                                      .map(
+                                                                        (activityPrsp) => DropdownMenuItem(
+                                                                          value: activityPrsp,
+                                                                          child: Text(
+                                                                            activityPrsp,
+                                                                            overflow: TextOverflow.ellipsis,
+                                                                            maxLines: 1,
+                                                                            style: const TextStyle(fontSize: 12),
+                                                                          ),
+                                                                        ),
+                                                                      )
+                                                                      .toList(),
+                                                                  onChanged: (String? newValue) {
+                                                                    setStateDialog(() {
+                                                                      if (newValue != null &&
+                                                                          newValue.toLowerCase() == 'otros') {
+                                                                        muestraMotivoPerdida = true;
+                                                                      } else {
+                                                                        muestraMotivoPerdida = false;
+                                                                      }
+                                                                      motPerdSelect = newValue ?? '';
+                                                                    });
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+
+                                                        if (muestraMotivoPerdida)
+                                                          Container(
+                                                            color: Colors.transparent,
+                                                            width: size.width * 0.92,
+                                                            height: size.height * 0.1,
+                                                            child: Row(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                                              children: [
+                                                                Container(
+                                                                  color: Colors.transparent,
+                                                                  width: size.width * 0.82,
+                                                                  height: size.height * 0.1,
+                                                                  child: TextFormField(
+                                                                    controller: motivoPerdidaTxtController,
+                                                                    maxLines: 5,
+                                                                    onTapOutside: (event) {
+                                                                      FocusScope.of(context).unfocus();
+                                                                    },
+                                                                    decoration: InputDecoration(
+                                                                      hintText: 'Escribe el motivo aquí...',
+                                                                      border: OutlineInputBorder(
+                                                                        borderRadius: BorderRadius.circular(10),
+                                                                      ),
+                                                                      filled: true,
+                                                                      fillColor: Colors.transparent,
+                                                                    ),
+                                                                    validator: (value) {
+                                                                      if (value == null || value.trim().isEmpty) {
+                                                                        return 'Por favor ingresa una observación';
+                                                                      }
+                                                                      return null;
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+
+                                                        SizedBox(height: size.height * 0.01),
+
+                                                        Container(
+                                                          color: Colors.transparent,
+                                                          width: size.width * 0.9,
+                                                          height: size.height * 0.07,
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                                                                child: ElevatedButton.icon(
+                                                                  onPressed: () {
+                                                                    FocusScope.of(context).unfocus();
+                                                                    Navigator.pop(context);
+                                                                  },
+                                                                  icon: const Icon(
+                                                                    Icons.close,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                  label: const Text(
+                                                                    'Cerrar',
+                                                                    style: TextStyle(color: Colors.white),
+                                                                  ),
+                                                                  style: ElevatedButton.styleFrom(
+                                                                    backgroundColor: Colors.grey,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                                                                child: ElevatedButton.icon(
+                                                                  onPressed: () async {
+                            
+                                                                    showDialog(
+                                                                      //ignore: use_build_context_synchronously
+                                                                      context: context,
+                                                                      barrierDismissible: false,
+                                                                      builder: (context) => SimpleDialog(
+                                                                        alignment: Alignment.center,
+                                                                        children: [
+                                                                          SimpleDialogCargando(
+                                                                            null,
+                                                                            mensajeMostrar: 'Estamos registrando',
+                                                                            mensajeMostrarDialogCargando: 'motivo de pérdida del prospecto.',
+                                                                          ),
+                                                                        ]
+                                                                      ),
+                                                                    );
+                                                    
+                                                                    int idMotPerd = 0;
+
+                                                                    for(int i = 0; i < motivosPerdida.length; i++){
+                                                                      if(motPerdSelect == motivosPerdida[i].name){
+                                                                        idMotPerd = motivosPerdida[i].id;
+                                                                        break;
+                                                                      }
+                                                                    }
+
+                                                                    ResponseGenericModel? objResp = await ProspectoTypeService().editaEstadoProspecto(false, idMotPerd, objDatumCrmLead?.id ?? 0);
+
+                                                                    if(objResp != null){
+                                                                      String respuestaReg = objResp.result.mensaje;
+                                                                      int estado = objResp.result.estado;
+                                                                      String gifRespuesta = '';
+                              
+                                                                      //ignore: use_build_context_synchronously
+                                                                      context.pop();
+                              
+                                                                      if(estado == 200){
+                                                                        gifRespuesta = 'assets/gifs/exito.gif';
+                                                                      } else {
+                                                                        gifRespuesta = 'assets/gifs/gifErrorBlanco.gif';
+                                                                      }
+                              
+                                                                      //ignore:use_build_context_synchronously
+                                                                      context.pop();                                                      
+
+                                                                      showDialog(
+                                                                        //ignore:use_build_context_synchronously
+                                                                        context: context,
+                                                                        builder: (BuildContext context) {
+                                                                          return AlertDialog(
+                                                                            title: Container(
+                                                                              color: Colors.transparent,
+                                                                              height: size.height * 0.17,
+                                                                              child: Column(
+                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                children: [
+                                                                                  
+                                                                                  Container(
+                                                                                    color: Colors.transparent,
+                                                                                    height: size.height * 0.09,
+                                                                                    child: Image.asset(gifRespuesta),
+                                                                                  ),
+                                                      
+                                                                                  Container(
+                                                                                    color: Colors.transparent,
+                                                                                    width: size.width * 0.95,
+                                                                                    height: size.height * 0.08,
+                                                                                    alignment: Alignment.center,
+                                                                                    child: AutoSizeText(
+                                                                                      respuestaReg,
+                                                                                      maxLines: 2,
+                                                                                      minFontSize: 2,
+                                                                                    ),
+                                                                                  )
+                                                                                ],
+                                                                              )
+                                                                            ),
+                                                                            actions: [
+                                                                              TextButton(
+                                                                                onPressed: () {
+                                                                                  Navigator.of(context).pop();
+                                                                                  //ignore:use_build_context_synchronously
+                                                                                  context.pop();
+                                                                                },
+                                                                                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                                                              ),
+                                                                            ],
+                                                                          );
+                                                                        },
+                                                                      );                                                                    
+
+                                                                    }
+                                                                    else{
+                                                                      //ignore:use_build_context_synchronously
+                                                                      context.pop();                                                      
+
+                                                                      showDialog(
+                                                                        //ignore:use_build_context_synchronously
+                                                                        context: context,
+                                                                        builder: (BuildContext context) {
+                                                                          return AlertDialog(
+                                                                            title: Container(
+                                                                              color: Colors.transparent,
+                                                                              height: size.height * 0.17,
+                                                                              child: Column(
+                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                children: [
+                                                                                  
+                                                                                  Container(
+                                                                                    color: Colors.transparent,
+                                                                                    height: size.height * 0.09,
+                                                                                    child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
+                                                                                  ),
+                                                      
+                                                                                  Container(
+                                                                                    color: Colors.transparent,
+                                                                                    width: size.width * 0.95,
+                                                                                    height: size.height * 0.08,
+                                                                                    alignment: Alignment.center,
+                                                                                    child: const AutoSizeText(
+                                                                                      'Error al crear una nueva actividad',
+                                                                                      maxLines: 2,
+                                                                                      minFontSize: 2,
+                                                                                    ),
+                                                                                  )
+                                                                                ],
+                                                                              )
+                                                                            ),
+                                                                            actions: [
+                                                                              TextButton(
+                                                                                onPressed: () {
+                                                                                  Navigator.of(context).pop();
+                                                                                },
+                                                                                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                                                                              ),
+                                                                            ],
+                                                                          );
+                                                                        },
+                                                                      );
+                                                                    }
+/*
+                                                                    FocusScope.of(context).unfocus();
+                                                                    Navigator.pop(context);
+                                                                    */
+                                                                  },
+                                                                  icon: const Icon(
+                                                                    Icons.save,
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                  label: const Text(
+                                                                    'Confirmar',
+                                                                    style: TextStyle(color: Colors.white),
+                                                                  ),
+                                                                  style: ElevatedButton.styleFrom(
+                                                                    backgroundColor: Colors.blueAccent,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          );
+
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.redAccent,
+                                          padding: const EdgeInsets.symmetric(vertical: 14),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          'Perdido',
+                                          style: TextStyle(fontSize: 16, color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+
+                                    if(objDatumCrmLead != null && objDatumCrmLead!.stageId.name.toLowerCase() == 'lost')
+                                    Container(
+                                      width: size.width * 0.165,
+                                      height: size.height * 0.062,
+                                      padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 15),
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        color: Colors.blueAccent, // Background color
+                                        borderRadius: BorderRadius.circular(10.0), // Rounded corners
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color: Colors.black26,
+                                            blurRadius: 4,
+                                            offset: Offset(2, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: GestureDetector(
+                                        onTap: () {
                                           muestraMotivoPerdida = false;
 
                                           motPerdSelect = lstMotivoPerdida.first;
@@ -1503,16 +1873,9 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                           );
 
                                         },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.redAccent,
-                                          padding: const EdgeInsets.symmetric(vertical: 14),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10),
-                                          ),
-                                        ),
                                         child: const Text(
-                                          'Perdido',
-                                          style: TextStyle(fontSize: 16, color: Colors.white),
+                                          'Recuperar',
+                                          style: TextStyle(fontSize: 12, color: Colors.white),
                                         ),
                                       ),
                                     ),
@@ -2090,6 +2453,7 @@ class PlanActivStateTwo extends State<PlanActiv> {
     }    
   }
 
+/*
   Future<void> abrirWhatsapp(String numeroCelular, Size size, {String? mensaje}) async {
     final String url = mensaje != null
         ? 'https://wa.me/$numeroCelular?text=${Uri.encodeComponent(mensaje)}'
@@ -2147,8 +2511,140 @@ class PlanActivStateTwo extends State<PlanActiv> {
       );
     }
   }
+*/
 
+  Future<void> abrirWhatsapp(String phoneNumber, Size size,{
+    String message = ''
+    //required String phoneNumber, // Ejemplo: '5215512345678' (con código de país, sin '+' ni espacios)
+    //String message = '',
+    //bool isBusiness = false, // Puedes usar esto si quieres una lógica más específica
+  }) async {
+    // Asegúrate de que el número no tenga el signo '+' inicial
+    final String cleanedNumber = phoneNumber.replaceAll('+', '').replaceAll(' ', '');
 
+    // Usamos el enlace universal (wa.me) que es el más compatible
+    final String urlString = 'https://wa.me/$cleanedNumber?text=${Uri.encodeComponent(message)}';
+    final Uri url = Uri.parse(urlString);
+
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } else {
+      launchWhatsAppBusinessOnly(size, phoneNumber: phoneNumber, message: message);
+/*
+      //throw 'No se pudo abrir WhatsApp. Asegúrate de que la URL: $urlString sea correcta y que la app esté instalada.';
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Container(
+              color: Colors.transparent,
+              height: size.height * 0.17,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  
+                  Container(
+                    color: Colors.transparent,
+                    height: size.height * 0.09,
+                    child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
+                  ),
+
+                  Container(
+                    color: Colors.transparent,
+                    width: size.width * 0.95,
+                    height: size.height * 0.08,
+                    alignment: Alignment.center,
+                    child: const AutoSizeText(
+                      'No se pudo abrir WhatsApp. Asegúrese de tenerlo instalado.',
+                      maxLines: 2,
+                      minFontSize: 2,
+                    ),
+                  )
+                ],
+              )
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+              ),
+            ],
+          );
+        },
+      );
+    */
+    }
+  }
+
+  Future<void> launchWhatsAppBusinessOnly(Size size,{
+    required String phoneNumber,
+    String message = '',
+  }) async {
+    // Para Business en Android, usa el paquete específico
+    // 'com.whatsapp.w4b' en el Intent (aunque url_launcher lo hace más fácil).
+    // La mejor práctica es usar wa.me. Si necesitas el URI scheme directo (solo Android):
+    final String androidBusinessUrl = 'whatsapp://send?phone=$phoneNumber&text=${Uri.encodeComponent(message)}';
+    final Uri url = Uri.parse(androidBusinessUrl);
+
+    // NOTA: En la práctica, el enlace wa.me es el que mejor funciona y deja que el sistema operativo
+    // decida si abrirlo con la versión normal o Business si ambas están instaladas.
+    if (await canLaunchUrl(url)) {
+        await launchUrl(url, mode: LaunchMode.externalApplication);
+    } else {
+      // Fallback a wa.me o a un mensaje de error
+      final Uri fallbackUrl = Uri.parse('https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}');
+      if (await canLaunchUrl(fallbackUrl)) {
+          await launchUrl(fallbackUrl, mode: LaunchMode.externalApplication);
+      } else {
+        //throw 'No se pudo abrir WhatsApp Business ni el enlace universal.';
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Container(
+                color: Colors.transparent,
+                height: size.height * 0.17,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    
+                    Container(
+                      color: Colors.transparent,
+                      height: size.height * 0.09,
+                      child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
+                    ),
+
+                    Container(
+                      color: Colors.transparent,
+                      width: size.width * 0.95,
+                      height: size.height * 0.08,
+                      alignment: Alignment.center,
+                      child: const AutoSizeText(
+                        'No se pudo abrir WhatsApp. Asegúrese de tenerlo instalado.',
+                        maxLines: 2,
+                        minFontSize: 2,
+                      ),
+                    )
+                  ],
+                )
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                ),
+              ],
+            );
+          },
+        );
+      
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -2320,7 +2816,7 @@ class PlanActivStateTwo extends State<PlanActiv> {
                                             child: const Icon(Icons.email, color: Colors.white, size: 22,)
                                           ),
 
-                                          if(lstActividadesDiariasByProspecto[index].activityCategory != null && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() == 'whatsapp' && lstActividadesDiariasByProspecto[index].leadEmail != null && lstActividadesDiariasByProspecto[index].leadEmail!.isNotEmpty)
+                                          if(lstActividadesDiariasByProspecto[index].activityCategory != null && lstActividadesDiariasByProspecto[index].activityCategory!.toLowerCase() == 'whatsapp')
                                           GestureDetector(
                                             onTap: () {
                                               abrirWhatsapp(lstActividadesDiariasByProspecto[index].leadPhone!, size);

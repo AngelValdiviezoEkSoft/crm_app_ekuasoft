@@ -121,7 +121,7 @@ class DatumCrmLead {
     String? phone;
     String priority;
     StructCombos sourceId;
-    StructCombos stageId;
+    StageId stageId;
     StructCombos stateId;    
     List<dynamic> tagIds;    
     String type;
@@ -196,7 +196,7 @@ class DatumCrmLead {
         phone: json["phone"],
         priority: json["priority"],
         sourceId: json["source_id"] != null ? StructCombos.fromMap(json["source_id"]) : StructCombos(id: 0, name: ''),
-        stageId: json["stage_id"] != null ? StructCombos.fromMap(json["stage_id"]) : StructCombos(id: 0, name: ''),
+        stageId: json["stage_id"] != null ? StageId.fromMap(json["stage_id"]) : StageId(id: 0, name: '', isWon: false),
         stateId: json["state_id"] != null ? StructCombos.fromMap(json["state_id"]) : StructCombos(id: 0, name: ''),
         tagIds: List<dynamic>.from(json["tag_ids"].map((x) => x)),
         title: json["title"] != null ? CampaignId.fromMap(json["title"]) : CampaignId(id: 0, name: ''),
@@ -237,7 +237,7 @@ class DatumCrmLead {
         phone: json['phone'],
         priority: json['priority'],
         sourceId: json['source_id'].toString() == "{}" ? StructCombos(id: 0, name: '') : StructCombos.fromJson2(jsonDecode(json['source_id'])),
-        stageId: json['stage_id'].toString() == "{}" ? StructCombos(id: 0, name: '') : StructCombos.fromJson2(jsonDecode(json['stage_id'])),
+        stageId: json['stage_id'].toString() == "{}" ? StageId(id: 0, name: '', isWon: false) : StageId.fromJson2(jsonDecode(json['stage_id'])),
         stateId: json['state_id'].toString() == "{}" ? StructCombos(id: 0, name: '') : StructCombos.fromJson2(jsonDecode(json['state_id'])),
         tagIds: json['tag_ids'] as List<dynamic>,
         title: json['title'].toString() == "{}" ? CampaignId(id: 0, name: '') : CampaignId.fromJson2(jsonDecode(json['title'])),
@@ -531,6 +531,42 @@ class StructCombos {
     Map<String, dynamic> toMap() => {
         "id": id,
         "name": name
+    };
+}
+
+class StageId {
+    int id;
+    String name;
+    bool isWon;
+
+    StageId({
+        required this.id,
+        required this.name,
+        required this.isWon
+    });
+
+    factory StageId.fromJson(String str) => StageId.fromMap(json.decode(str));
+
+    String toJson() => json.encode(toMap());
+
+    factory StageId.fromMap(Map<String, dynamic> json) => StageId(
+        id: json["id"] ?? 0,
+        name: json["name"] ?? '',
+        isWon: json["is_won"] ?? false
+    );
+
+    factory StageId.fromJson2(Map<String, dynamic> json) {
+      return StageId(
+        id: json['id'] ?? 0,
+        name: json['name'] ?? '',
+        isWon: json['is_won'] ?? false
+      );
+    }
+
+    Map<String, dynamic> toMap() => {
+      "id": id,
+      "name": name,
+      "is_won": isWon
     };
 }
 

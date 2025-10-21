@@ -1547,9 +1547,10 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                         id: idOrigen,
                                         name: originEditSelect
                                       ),
-                                      stageId: StructCombos (
+                                      stageId: StageId (
                                         id: 2,
-                                        name: ''
+                                        name: '',
+                                        isWon: false
                                       ),
                                       stateId: StructCombos (
                                         id: 2,

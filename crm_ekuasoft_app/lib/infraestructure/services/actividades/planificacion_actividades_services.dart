@@ -139,7 +139,7 @@ class PlanificacionActividadesService extends ChangeNotifier{
           CombosAppModel objMediumTmp = CombosAppModel(id: objRespuestaFinal.result.data[i].mediumId?.id ?? 0, name: objRespuestaFinal.result.data[i].mediumId?.name ?? '');
           CombosAppModel objPartnerTmp = CombosAppModel(id: objRespuestaFinal.result.data[i].partnerId?.id ?? 0, name: objRespuestaFinal.result.data[i].partnerId?.name ?? '');
           CombosAppModel objSourceTmp = CombosAppModel(id: objRespuestaFinal.result.data[i].sourceId?.id ?? 0, name: objRespuestaFinal.result.data[i].sourceId?.name ?? '');
-          CombosAppModel objStageTmp = CombosAppModel(id: objRespuestaFinal.result.data[i].stageId?.id ?? 0, name: objRespuestaFinal.result.data[i].stageId?.name ?? '');
+          StageIdApp objStageTmp = StageIdApp(id: objRespuestaFinal.result.data[i].stageId?.id ?? 0, name: objRespuestaFinal.result.data[i].stageId?.name ?? '', isWon: objRespuestaFinal.result.data[i].stageId?.isWon ?? false);
           CombosAppModel objStateTmp = CombosAppModel(id: objRespuestaFinal.result.data[i].stateId?.id ?? 0, name: objRespuestaFinal.result.data[i].stateId?.name ?? '');
           CombosAppModel objTittleTmp = CombosAppModel(id: objRespuestaFinal.result.data[i].title?.id ?? 0, name: objRespuestaFinal.result.data[i].title?.name ?? '');
           CombosAppModel objUserTmp = CombosAppModel(id: objRespuestaFinal.result.data[i].userId?.id ?? 0, name: objRespuestaFinal.result.data[i].userId?.name ?? '');

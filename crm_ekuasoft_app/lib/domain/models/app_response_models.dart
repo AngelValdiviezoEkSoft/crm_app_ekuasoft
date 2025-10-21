@@ -37,8 +37,10 @@ class AppResponseModel {
             ekResCountryCanton: CantonModel(data: [],fields: Map<String, String>(), length: 0),
             ekResCountryCity: CountryCity(data: [],fields: Map<String, String>(), length: 0),
             ekResRegion: RegionModel(data: [],fields: Map<String, String>(), length: 0),
-            ekResSector: SectorModel(data: [],fields: Map<String, String>(), length: 0))
-          ),
+            ekResSector: SectorModel(data: [],fields: Map<String, String>(), length: 0),
+            crmStageResponse: CrmStageResponse(data: [], length: 0, fields: Map<String, String>(),),
+          )
+        ),
     );
 
     Map<String, dynamic> toJson() => {
@@ -78,7 +80,9 @@ class AppModel {
           ekResCountryCanton: CantonModel(data: [],fields: Map<String, String>(), length: 0),
           ekResCountryCity: CountryCity(data: [],fields: Map<String, String>(), length: 0),
           ekResRegion: RegionModel(data: [],fields: Map<String, String>(), length: 0),
-          ekResSector: SectorModel(data: [],fields: Map<String, String>(), length: 0)),            
+          ekResSector: SectorModel(data: [],fields: Map<String, String>(), length: 0),
+          crmStageResponse: CrmStageResponse(data: [], length: 0, fields: Map<String, String>(),),
+        ),            
     );
 
     Map<String, dynamic> toJson() => {
@@ -104,6 +108,7 @@ class DataAppModel {
     SectorModel ekResSector;
     CountryCity ekResCountryCity;
     CrmLostReasonResponse lostReason;
+    CrmStageResponse crmStageResponse;
 
     DataAppModel({
         required this.crmLead,
@@ -120,7 +125,8 @@ class DataAppModel {
         required this.ekResRegion,
         required this.ekResSector,
         required this.ekResCountryCity,
-        required this.lostReason
+        required this.lostReason,
+        required this.crmStageResponse
     });
 
     factory DataAppModel.fromRawJson(String str) => DataAppModel.fromJson(json.decode(str));
@@ -171,7 +177,6 @@ class DataAppModel {
           IrModel.fromJson(json[EnvironmentsProd().modIrModel])
           :
           IrModel(data: [], length: 0, fields: FieldsIr(id: '', model: '')),
-
         ekClasification: 
             json[EnvironmentsProd().modEkClasif] != null ? 
                 EkClassification.fromJson(json[EnvironmentsProd().modEkClasif])
@@ -193,8 +198,11 @@ class DataAppModel {
                 CountryCity.fromJson(json[EnvironmentsProd().modEkResCountryCity])
             : CountryCity(data: [], length: 0, fields: Map<String, String>()),
         lostReason: json[EnvironmentsProd().modCrmLostReason] != null ? 
-                CrmLostReasonResponse.fromJson(json[EnvironmentsProd().modCrmLostReason])
-            : CrmLostReasonResponse(data: [], length: 0, fields: Map<String, String>()),
+          CrmLostReasonResponse.fromJson(json[EnvironmentsProd().modCrmLostReason])
+          : CrmLostReasonResponse(data: [], length: 0, fields: Map<String, String>()),
+        crmStageResponse: json[EnvironmentsProd().modCrmLostReason] != null ? 
+          CrmStageResponse.fromJson(json[EnvironmentsProd().modCrmStage])
+          : CrmStageResponse(data: [], fields: Map<String, String>(), length: 0)
 
     );
 
@@ -213,6 +221,7 @@ class DataAppModel {
       EnvironmentsProd().modEkResSector: ekResSector.toJson(),
       EnvironmentsProd().modEkResCountryCity: ekResCountryCity.toJson(),
       EnvironmentsProd().modCrmLostReason: lostReason.toJson(),
+      EnvironmentsProd().modCrmStage: crmStageResponse.toJson()
     };
 }
 
@@ -264,7 +273,7 @@ class CrmLeadDatumAppModel {
   String? phone;
   String? priority;
   CombosAppModel sourceId;
-  CombosAppModel stageId;
+  StageIdApp stageId;
   CombosAppModel stateId;
   List<CombosAppModel> tagIds;
   CombosAppModel title;
@@ -341,8 +350,8 @@ class CrmLeadDatumAppModel {
     priority: json["priority"] ?? '',
     sourceId: json["source_id"] != null ? CombosAppModel.fromJson(json["source_id"])
     : CombosAppModel(id: 0, name: ''),
-    stageId: json["stage_id"] != null ? CombosAppModel.fromJson(json["stage_id"])
-    : CombosAppModel(id: 0, name: ''),
+    stageId: json["stage_id"] != null ? StageIdApp.fromJson(json["stage_id"])
+    : StageIdApp(id: 0, name: '', isWon: false),
     stateId: json["state_id"] != null ? CombosAppModel.fromJson(json["state_id"])
     : CombosAppModel(id: 0, name: ''),
     tagIds: json["tag_ids"] != null ? List<CombosAppModel>.from(json["tag_ids"].map((x) => CombosAppModel.fromJson(x))) : [],
@@ -391,6 +400,35 @@ class CrmLeadDatumAppModel {
     'description': description,
     'active': active
   };
+
+}
+
+class StageIdApp {
+    int id;
+    String name;
+    bool isWon;
+
+    StageIdApp({
+        required this.id,
+        required this.name,
+        required this.isWon
+    });
+
+    factory StageIdApp.fromRawJson(String str) => StageIdApp.fromJson(json.decode(str));
+
+    String toRawJson() => json.encode(toJson());
+
+    factory StageIdApp.fromJson(Map<String, dynamic> json) => StageIdApp(
+        id: json["id"] ?? 0,
+        name: json["name"] ?? '',
+        isWon: json["is_won"] ?? false
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "is_won": isWon
+    };
 
 }
 
@@ -1460,6 +1498,126 @@ class CrmLostReasonResponse {
         'fields': fields,
         'data': data.map((e) => e.toJson()).toList(),
       };
+}
+
+class CrmStageResponse {
+  int? length;
+  Map<String, String>? fields;
+  List<CrmStage>? data;
+
+  CrmStageResponse({
+    this.length,
+    this.fields,
+    this.data,
+  });
+
+  factory CrmStageResponse.fromJson(Map<String, dynamic> json) {
+    return CrmStageResponse(
+      length: json['length'] ?? 0,
+      fields: (json['fields'] as Map?)?.map((key, value) => MapEntry(key.toString(), value.toString())),
+      data: (json['data'] as List?)
+          ?.map((item) => CrmStage.fromJson(item as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'length': length,
+      'fields': fields,
+      'data': data?.map((e) => e.toJson()).toList(),
+    };
+  }
+}
+
+class CrmStage {
+  int? id;
+  String? lastUpdate;
+  bool? active;
+  String? createDate;
+  Many2One? createUid;
+  String? displayName;
+  bool? fold;
+  bool? isLost;
+  bool? isWon;
+  String? name;
+  String? requirements;
+  int? sequence;
+  String? stageUsage;
+  int? teamCount;
+  Many2One? teamId;
+  String? writeDate;
+  Many2One? writeUid;
+
+  CrmStage({
+    this.id,
+    this.lastUpdate,
+    this.active,
+    this.createDate,
+    this.createUid,
+    this.displayName,
+    this.fold,
+    this.isLost,
+    this.isWon,
+    this.name,
+    this.requirements,
+    this.sequence,
+    this.stageUsage,
+    this.teamCount,
+    this.teamId,
+    this.writeDate,
+    this.writeUid,
+  });
+
+  factory CrmStage.fromJson(Map<String, dynamic> json) {
+    return CrmStage(
+      id: json['id'],
+      lastUpdate: json['__last_update'],
+      active: json['active'],
+      createDate: json['create_date'],
+      createUid: json['create_uid'] != null && json['create_uid'] is Map
+          ? Many2One.fromJson(json['create_uid'])
+          : null,
+      displayName: json['display_name'],
+      fold: json['fold'],
+      isLost: json['is_lost'],
+      isWon: json['is_won'],
+      name: json['name'],
+      requirements: json['requirements'],
+      sequence: json['sequence'],
+      stageUsage: json['stage_usage'],
+      teamCount: json['team_count'],
+      teamId: json['team_id'] != null && json['team_id'] is Map
+          ? Many2One.fromJson(json['team_id'])
+          : null,
+      writeDate: json['write_date'],
+      writeUid: json['write_uid'] != null && json['write_uid'] is Map
+          ? Many2One.fromJson(json['write_uid'])
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      '__last_update': lastUpdate,
+      'active': active,
+      'create_date': createDate,
+      'create_uid': createUid?.toJson(),
+      'display_name': displayName,
+      'fold': fold,
+      'is_lost': isLost,
+      'is_won': isWon,
+      'name': name,
+      'requirements': requirements,
+      'sequence': sequence,
+      'stage_usage': stageUsage,
+      'team_count': teamCount,
+      'team_id': teamId?.toJson(),
+      'write_date': writeDate,
+      'write_uid': writeUid?.toJson(),
+    };
+  }
 }
 
 // Datos individuales dentro de "data"

@@ -280,7 +280,7 @@ class DatumProspectoRegistro {
     String? phone;
     String? priority;
     DataCombos? sourceId;
-    DataCombos? stageId;
+    StageIdProspectoRegistro? stageId;
     DataCombos? stateId;
     String? street;
     List<dynamic> tagIds;
@@ -341,7 +341,7 @@ class DatumProspectoRegistro {
         phone: json["phone"] ?? '',
         priority: json["priority"] ?? '',
         sourceId: json["source_id"] != null ? DataCombos.fromJson(json["source_id"]) : DataCombos(id: 0, name: ''),
-        stageId: json["stage_id"] != null ? DataCombos.fromJson(json["stage_id"]) : DataCombos(id: 0, name: ''),
+        stageId: json["stage_id"] != null ? StageIdProspectoRegistro.fromJson(json["stage_id"]) : StageIdProspectoRegistro(id: 0, name: '', isWon: false),
         stateId: json["state_id"] != null ? DataCombos.fromJson(json["state_id"]) : DataCombos(id: 0, name: ''),
         street: json["street"] ?? '',
         tagIds: json["tag_ids"] != null ? List<dynamic>.from(json["tag_ids"].map((x) => x)) : [],
@@ -380,6 +380,44 @@ class DatumProspectoRegistro {
         "active": active
     };
 }
+
+
+class StageIdProspectoRegistro {
+    int id;
+    String name;
+    bool isWon;
+
+    StageIdProspectoRegistro({
+        required this.id,
+        required this.name,
+        required this.isWon
+    });
+
+    factory StageIdProspectoRegistro.fromJson(String str) => StageIdProspectoRegistro.fromMap(json.decode(str));
+
+    String toJson() => json.encode(toMap());
+
+    factory StageIdProspectoRegistro.fromMap(Map<String, dynamic> json) => StageIdProspectoRegistro(
+        id: json["id"] ?? 0,
+        name: json["name"] ?? '',
+        isWon: json["is_won"] ?? false
+    );
+
+    factory StageIdProspectoRegistro.fromJson2(Map<String, dynamic> json) {
+      return StageIdProspectoRegistro(
+        id: json['id'] ?? 0,
+        name: json['name'] ?? '',
+        isWon: json['is_won'] ?? false
+      );
+    }
+
+    Map<String, dynamic> toMap() => {
+      "id": id,
+      "name": name,
+      "is_won": isWon
+    };
+}
+
 
 class DataCombos {
     int? id;

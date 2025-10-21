@@ -1833,9 +1833,10 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                         id: idOrigen,
                                         name: originSelect
                                       ),
-                                      stageId: StructCombos (
+                                      stageId: StageId (
                                         id: 2,
-                                        name: ''
+                                        name: '',
+                                        isWon: false
                                       ),
                                       stateId: StructCombos (
                                         id: 2,
