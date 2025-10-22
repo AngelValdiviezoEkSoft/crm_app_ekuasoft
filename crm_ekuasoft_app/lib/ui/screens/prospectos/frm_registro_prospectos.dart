@@ -393,6 +393,30 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                           codIsoPhone = phoneNumber.isoCode ?? '';
                                           dialCodePhone = phoneNumber.dialCode ?? '';
 
+                                          if(telefonoPrsp.contains('+593')){
+                                            String numeroSinPrefijo1 = phoneNumber.phoneNumber!.replaceFirst('+593', '').trim();
+  
+                                            //String numeroSinPrefijo2 = phoneNumber.phoneNumber!.replaceFirst('+593', '');
+                                            
+                                            String numeroLimpio = numeroSinPrefijo1.replaceAll(' ', '');
+
+                                            telefonoPrsp = '';
+                                            telefonoPrsp = numeroLimpio;
+                                          }
+
+                                          if(telefonoPrsp.startsWith('593')){
+                                            String numeroSinPrefijo1 = phoneNumber.phoneNumber!.replaceFirst('593', '').trim();
+  
+                                            //String numeroSinPrefijo2 = phoneNumber.phoneNumber!.replaceFirst('+593', '');
+                                            
+                                            String numeroLimpio = numeroSinPrefijo1.replaceAll(' ', '');
+
+                                            telefonoPrsp = '';
+                                            telefonoPrsp = numeroLimpio;
+                                          }
+
+                                          telefonoTxt.text = telefonoPrsp;
+
                                           setState(() {});
                                         },
                                         onInputValidated: (bool isValid) async {
@@ -506,32 +530,6 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                               }
                         
                                             } 
-                                            /*
-                                            else {
-                                              showDialog(
-                                                barrierDismissible: false,
-                                                //ignore: use_build_context_synchronously
-                                                context: context,
-                                                builder: (BuildContext context) {
-                                                  return ContentAlertDialog(
-                                                    onPressed: () {
-                                                      Navigator.of(context).pop();
-                                                    },
-                                                    onPressedCont: () {
-                                                      Navigator.of(context).pop();
-                                                    },
-                                                    tipoAlerta: TipoAlerta().alertAccion,
-                                                    numLineasTitulo: 2,
-                                                    numLineasMensaje: 3,
-                                                    titulo: 'Información',
-                                                    mensajeAlerta: 'Aunque no tiene internet, sus datos se registrarán en memoria.'
-                                                  );
-                                                },
-                                              );
-                                              //habilitaGuardar = false;
-                                              habilitaGuardar = true;
-                                            }
-                                            */
                       
                                           }
 

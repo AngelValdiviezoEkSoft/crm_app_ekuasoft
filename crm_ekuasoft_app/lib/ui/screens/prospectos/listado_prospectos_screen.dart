@@ -9,6 +9,7 @@ import 'package:crm_ekuasoft_app/main.dart';
 import 'package:excel/excel.dart' as Exc;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:local_auth/local_auth.dart';
@@ -24,12 +25,14 @@ bool accionNav = false;
 String objRspGen = '';
 List<int> years = [];
 List<DatumCrmLead> prospectosFiltrados = [];
+List<CrmStage> lstEstadoProspectos = [];
 String terminoBusqueda = '';
 DatumCrmLead? objDatumCrmLead;
 late TextEditingController filtroPrspTxt;
 bool listaVaciaPrp = false;
 bool actualizaListaPrp= false;
 bool ingresaUnaVez = true;
+CrmStage? selectCrmStage;
 
 class ListaProspectosScreen extends StatefulWidget {
   const ListaProspectosScreen({super.key});
@@ -63,16 +66,35 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
     );
   }
 
+  List<MenuGridWidgetModel> lstMenuGrid = [];
+
+
   @override
   void initState() {
     super.initState(); 
     accionNav = false;   
     estadoPrspSelect = '-- Todos --';
-    lstEstadosPrsp = [
-      'Ganados',
-      'Perdidos',
-      '-- Todos --'
+    lstEstadosPrsp = [];
+    lstEstadoProspectos = [];
+    lstMenuGrid = [
+      MenuGridWidgetModel(
+        icon: Icons.download, 
+        title: 'Reporte',
+        onTap: () {
+          contextPrincipalGen!.pop();
+          generarReporte(contextPrincipalGen!);          
+        },
+      ),
+      MenuGridWidgetModel(
+        icon: Icons.calendar_month, 
+        title: 'Calendario de actividades',
+        onTap: () {
+          contextPrincipalGen!.pop();
+          contextPrincipalGen!.push(objRutasGen.rutaConsultaActividades);
+        },
+      ),
     ];
+
     objRspGen = '';
     ingresaUnaVez = true;
     objActividadEscogida = null;
@@ -81,7 +103,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
     contLst = 0;
     terminoBusqueda = '';
     filtroPrspTxt = TextEditingController();
-    prospectosFiltrados = [];
+    prospectosFiltrados = [];    
     pagingController.addPageRequestListener((pageKey) {
       //fetchPage(pageKey);
     });
@@ -360,6 +382,10 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
     final size = MediaQuery.of(context).size;
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      cargaComboEstadosProspectos();
+    });
+
     return 
     objPermisosGen != null && objPermisosGen!.buttons.btnCreateLead ?
     Scaffold(
@@ -382,9 +408,28 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
           actions: [
             Container(
               color: Colors.transparent,
-              width: size.width * 0.22,
-              height: size.height * 0.055,
-              child: DropdownButton<String>(
+              width: size.width * 0.3,
+              height: size.height * 0.06,
+              child: DropdownButtonFormField<CrmStage>(
+                value: selectCrmStage,
+                hint: const Text('Seleccione'),
+                onChanged: (CrmStage? newValue) {
+                  selectCrmStage = newValue;
+                  refreshDataByEstado(objRspGen, selectCrmStage?.name ?? '');
+                  setState(() {});
+                },
+                items: lstEstadoProspectos.map((CrmStage item) {
+                  return DropdownMenuItem<CrmStage>(
+                    value: item, 
+                    child: Text(
+                      item.name ?? '',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  );
+                }).toList(),
+              ),
+              /*
+              DropdownButton<String>(
                   value: estadoPrspSelect,
                   onChanged: (String? newValue) {
                     estadoPrspSelect = newValue ?? '';
@@ -403,6 +448,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                     ))
                   .toList(),
                 ),
+                */
             ),
 
             IconButton(
@@ -418,6 +464,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
               },
             ),
             
+            /*
             IconButton(
               icon: const Icon(Icons.calendar_month),
               onPressed: () {
@@ -425,13 +472,60 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                 context.push(objRutasGen.rutaConsultaActividades);
               },
             ),
+            */
 
+            IconButton(
+              icon: const Icon(Icons.grid_on_outlined),
+              onPressed: () {
+                //
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    // Usamos un `AlertDialog` para la estructura del modal
+                    return AlertDialog(
+                      title: const Text('Opciones'),
+                      content: Container(
+                        color: Colors.transparent,
+                        // El `Container` limita el tamaño del modal/GridView
+                        width: double.maxFinite, 
+                        height: size.height * 0.47, // 40% de la altura de la pantalla
+                        child: GridView.builder(
+                          itemCount: lstMenuGrid.length,
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2, // 2 columnas
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                            childAspectRatio: 1,
+                          ),
+                          itemBuilder: (context, index) {
+                            final item = lstMenuGrid[index];
+                            return _MenuCard(item: item);
+                          },
+                        ),
+                      ),
+                      // 5. Botón opcional de cerrar en el diálogo
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Cerrar'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
+
+/*
             IconButton(
               icon: const Icon(Icons.download),
               onPressed: () {
                 generarReporte(context);
               },
             ),
+            */
           ],
         ),
       body: BlocBuilder<GenericBloc, GenericState>(
@@ -1512,24 +1606,36 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
   }
 
-  Future<void> refreshDataByEstado(String objMemoria, String state) async { 
-               
+  Future<void> refreshDataByEstado(String objMemoria, String state) async {               
     prospectosFiltrados = [];
 
     CrmLead apiResponse = CrmLead.fromJson(objMemoria);
 
-    if(state != '-- Todos --'){
+    if(state != EnvironmentsProd().estadoProspectoTodos){
       for(int i = 0; i < apiResponse.data.length; i++){
+
+        //GANADO
         if(
-          state.toLowerCase() == 'ganados' &&
-          apiResponse.data[i].active != null && apiResponse.data[i].active == true
-          && apiResponse.data[i].stageId.isWon == true
+          state.toLowerCase() == EnvironmentsProd().estadoProspectoGanado &&
+          apiResponse.data[i].active != null && apiResponse.data[i].active == true          
+          && apiResponse.data[i].stageId.id == lstEstadoProspectos.firstWhere(((element) => element.stageUsage!.toLowerCase() == 'won')).id
         ){
           prospectosFiltrados.add(apiResponse.data[i]);
         }
+
+        //PERDIDO 
         if(
-          state.toLowerCase() == 'perdidos' &&
+          state.toLowerCase() == EnvironmentsProd().estadoProspectoPerdido &&
           apiResponse.data[i].active != null && apiResponse.data[i].active == false
+        ){
+          prospectosFiltrados.add(apiResponse.data[i]);
+        }
+
+        //NUEVO
+        if(
+          state.toLowerCase() == EnvironmentsProd().estadoProspectoNuevo &&
+          apiResponse.data[i].active != null && apiResponse.data[i].active == true
+          && apiResponse.data[i].stageId.id == lstEstadoProspectos.firstWhere(((element) => element.stageUsage!.toLowerCase() == 'new')).id
         ){
           prospectosFiltrados.add(apiResponse.data[i]);
         }
@@ -1610,5 +1716,74 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
   }
 }
 
+  Future<void> cargaComboEstadosProspectos() async {
+    if(lstEstadoProspectos.isNotEmpty) return;
 
+    const storage = FlutterSecureStorage();
+    String cmbCamp = await storage.read(key: 'cmbLstEstadosProspecto') ?? '';
+
+    var objCamp = json.decode(cmbCamp);
+    
+    var rsp = CrmStageResponse.fromJson(objCamp);
+
+    lstEstadoProspectos = rsp.data ?? [];
+
+    lstEstadoProspectos.add(
+      CrmStage(
+        active: false,
+        createDate: '',
+        createUid: null,
+        displayName: '-- Todos --',
+        name: '-- Todos --',
+      )
+    );
+
+    setState(() {
+      
+    });
+  }
+
+}
+
+class _MenuCard extends StatelessWidget {
+  final MenuGridWidgetModel item;
+  const _MenuCard({required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        item.onTap!();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 6,
+              offset: Offset(2, 2),
+            )
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(item.icon, size: 40, color: Colors.grey.shade500),
+            const SizedBox(height: 10),
+            Text(
+              item.title,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey.shade700,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

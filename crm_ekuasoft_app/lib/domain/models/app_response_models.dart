@@ -1547,7 +1547,7 @@ class CrmStage {
   int? teamCount;
   Many2One? teamId;
   String? writeDate;
-  Many2One? writeUid;
+  Many2One? writeUid;  
 
   CrmStage({
     this.id,
@@ -1566,7 +1566,7 @@ class CrmStage {
     this.teamCount,
     this.teamId,
     this.writeDate,
-    this.writeUid,
+    this.writeUid
   });
 
   factory CrmStage.fromJson(Map<String, dynamic> json) {
@@ -1632,6 +1632,7 @@ class CrmLostReasonData {
   final String name;
   final String writeDate;
   final Many2One writeUid;
+  final bool isCustomReason;
 
   CrmLostReasonData({
     required this.id,
@@ -1644,6 +1645,7 @@ class CrmLostReasonData {
     required this.name,
     required this.writeDate,
     required this.writeUid,
+    required this.isCustomReason
   });
 
   factory CrmLostReasonData.fromJson(Map<String, dynamic> json) {
@@ -1657,6 +1659,7 @@ class CrmLostReasonData {
       leadsCount: json['leads_count'] ?? 0,
       name: json['name'] ?? '',
       writeDate: json['write_date'] ?? '',
+      isCustomReason: json['is_custom_reason'] ?? false,
       writeUid: Many2One.fromJson(json['write_uid'] ?? {}),
     );
   }
@@ -1672,6 +1675,7 @@ class CrmLostReasonData {
         'name': name,
         'write_date': writeDate,
         'write_uid': writeUid.toJson(),
+        'is_custom_reason': isCustomReason
       };
 }
 

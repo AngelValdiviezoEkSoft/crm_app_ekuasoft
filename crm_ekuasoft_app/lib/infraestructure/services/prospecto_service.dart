@@ -879,7 +879,7 @@ class ProspectoTypeService extends ChangeNotifier{
     }
   }
 
-  editaEstadoProspecto(bool estado, bool esGanado, int? motivoPerdida, int idProsp) async {
+  editaEstadoProspecto(bool estado, bool esGanado, int? motivoPerdida, int idProsp, String motivoPerdidaStr) async {
     String internet = await ValidacionesUtils().validaInternet();
     
     //VALIDACIÓN DE INTERNET
@@ -915,7 +915,7 @@ class ProspectoTypeService extends ChangeNotifier{
           )
         );
 
-        String estadoFinal = '';
+        //String estadoFinal = '';
 
         String tockenValidDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(objReq.params.tockenValidDate);
 
@@ -943,8 +943,9 @@ class ProspectoTypeService extends ChangeNotifier{
               "active": estado,
               "lost_reason": motivoPerdida,
               "is_lead_lost": true,
-              "is_lead_won": false,
-              "is_lead_restored": false
+              "is_lead_won": false,              
+              "is_lead_restored": false,
+              "lost_lead_comment": motivoPerdidaStr
             },
 
             //PROSPECTO PERDIDO A NUEVO
@@ -990,22 +991,7 @@ class ProspectoTypeService extends ChangeNotifier{
 
         if(rspValidacion['result']['mensaje'] != null && (rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenNoValido) || rspValidacion['result']['mensaje'].toString().toLowerCase().contains(MensajeValidacion().tockenExpirado))){
           await tokenManager.checkTokenExpiration();
-          await editaEstadoProspecto( estado, esGanado, motivoPerdida, idProsp);
-        }
-
-        //PROSPECTO PERDIDO
-        if(!estado){
-          estadoFinal = 'perdido';
-        }
-        
-        //PROSPECTO NUEVO
-        if(estado){
-          estadoFinal = 'nuevo';
-        }
-
-        //PROSPECTO GANADO
-        if(esGanado && !estado){
-          estadoFinal = 'ganado';
+          await editaEstadoProspecto( estado, esGanado, motivoPerdida, idProsp, motivoPerdidaStr);
         }
 
         return ResponseGenericModel.fromRawJson(response.body);

@@ -40,7 +40,8 @@ class EnvironmentsProd {
   final String baseCentroViajes = 'centroviajes';
 
   //CONSTANTES PARA ESTADOS DE PROSPECTOS
-  final String estadoProspectoNuevo = 'new';
-  final String estadoProspectoGanado = 'won';
-  final String estadoProspectoPerdido = 'lost';
+  final String estadoProspectoTodos = '-- Todos --';
+  final String estadoProspectoNuevo = 'nuevo';
+  final String estadoProspectoGanado = 'ganado';
+  final String estadoProspectoPerdido = 'perdido';
 }

@@ -41,6 +41,11 @@ int contLstActiv = 0;
 String actPlanSelectAct = '';
 String tipoActividadEscogida = '';
 
+CrmLostReasonData objCrmLostReasonData = CrmLostReasonData(
+  active: false, createDate: '', displayName: '', id: 0, isCustomReason: false, lastUpdate: '', 
+  leadsCount: 0, name: '', writeDate: '', createUid: Many2One(id: 0, name: ''), writeUid: Many2One(id: 0, name: '')
+);
+
 late TextEditingController fechaActividadContTxtAct;
 late TextEditingController horaActividadContTxtAct;
 late TextEditingController descripcionActTxtAct;
@@ -74,7 +79,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
   @override
   void initState() {
     super.initState();
-    motivosPerdida = [];
+    //motivosPerdida = [];
     
     if(objDatumCrmLead != null && objDatumCrmLead!.priority.isNotEmpty){
       prioridadPrsp = int.parse(objDatumCrmLead!.priority);
@@ -1017,8 +1022,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                             ),
                                           );
                           
-
-                                          ResponseGenericModel? objResp = await ProspectoTypeService().editaEstadoProspecto(false, true, 0, objDatumCrmLead?.id ?? 0);
+                                          ResponseGenericModel? objResp = await ProspectoTypeService().editaEstadoProspecto(false, true, 0, objDatumCrmLead?.id ?? 0, '');
 
                                           if(objResp != null){
                                             String respuestaReg = objResp.result.mensaje;
@@ -1167,9 +1171,9 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                     Expanded(
                                       child: ElevatedButton(
                                         onPressed: () {
-                                          muestraMotivoPerdida = false;
 
-                                          motPerdSelect = lstMotivoPerdida.first;
+                                          muestraMotivoPerdida = false;
+                                          objCrmLostReasonData = motivosPerdida.first;
 
                                           showDialog(
                                             context: context,
@@ -1224,18 +1228,18 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                                 color: Colors.transparent,
                                                                 width: size.width * 0.82,
                                                                 height: size.height * 0.1,
-                                                                child: DropdownButtonFormField<String>(
+                                                                child: DropdownButtonFormField<CrmLostReasonData>(
                                                                   decoration: const InputDecoration(
                                                                     border: OutlineInputBorder(),
                                                                     labelText: 'Seleccione motivo de pérdida...',
                                                                   ),
-                                                                  value: motPerdSelect.isEmpty ? null : motPerdSelect,
-                                                                  items: lstMotivoPerdida
+                                                                  value: objCrmLostReasonData,//motPerdSelect.isEmpty ? null : motPerdSelect,
+                                                                  items: motivosPerdida
                                                                       .map(
                                                                         (activityPrsp) => DropdownMenuItem(
                                                                           value: activityPrsp,
                                                                           child: Text(
-                                                                            activityPrsp,
+                                                                            activityPrsp.name,
                                                                             overflow: TextOverflow.ellipsis,
                                                                             maxLines: 1,
                                                                             style: const TextStyle(fontSize: 12),
@@ -1243,15 +1247,20 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                                         ),
                                                                       )
                                                                       .toList(),
-                                                                  onChanged: (String? newValue) {
+                                                                  onChanged: (CrmLostReasonData? newValue) {
                                                                     setStateDialog(() {
                                                                       if (newValue != null &&
-                                                                          newValue.toLowerCase() == 'otros') {
+                                                                          newValue.isCustomReason) {
                                                                         muestraMotivoPerdida = true;
                                                                       } else {
                                                                         muestraMotivoPerdida = false;
                                                                       }
-                                                                      motPerdSelect = newValue ?? '';
+                                                                      motPerdSelect = newValue?.name ?? '';
+
+                                                                      if(newValue != null){
+                                                                        objCrmLostReasonData = newValue;
+                                                                      }
+                                                                      
                                                                     });
                                                                   },
                                                                 ),
@@ -1289,7 +1298,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                                     ),
                                                                     validator: (value) {
                                                                       if (value == null || value.trim().isEmpty) {
-                                                                        return 'Por favor ingresa una observación';
+                                                                        return 'Por favor ingresa el motivo de pérdida';
                                                                       }
                                                                       return null;
                                                                     },
@@ -1333,6 +1342,10 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                                                                 child: ElevatedButton.icon(
                                                                   onPressed: () async {
+
+                                                                    if(motivoPerdidaTxtController.text.isEmpty && muestraMotivoPerdida){
+                                                                      return;
+                                                                    }
                             
                                                                     showDialog(
                                                                       //ignore: use_build_context_synchronously
@@ -1350,16 +1363,18 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                                       ),
                                                                     );
                                                     
-                                                                    int idMotPerd = 0;
+                                                                    int idMotPerd = objCrmLostReasonData.id;
 
+/*
                                                                     for(int i = 0; i < motivosPerdida.length; i++){
                                                                       if(motPerdSelect == motivosPerdida[i].name){
                                                                         idMotPerd = motivosPerdida[i].id;
                                                                         break;
                                                                       }
                                                                     }
+                                                                    */
 
-                                                                    ResponseGenericModel? objResp = await ProspectoTypeService().editaEstadoProspecto(false, false, idMotPerd, objDatumCrmLead?.id ?? 0);
+                                                                    ResponseGenericModel? objResp = await ProspectoTypeService().editaEstadoProspecto(false, false, idMotPerd, objDatumCrmLead?.id ?? 0, motivoPerdidaTxtController.text);
 
                                                                     if(objResp != null){
                                                                       String respuestaReg = objResp.result.mensaje;
@@ -1453,7 +1468,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                                                     height: size.height * 0.08,
                                                                                     alignment: Alignment.center,
                                                                                     child: const AutoSizeText(
-                                                                                      'Error al crear una nueva actividad',
+                                                                                      'Error al marcar como perdido al prospecto.',
                                                                                       maxLines: 2,
                                                                                       minFontSize: 2,
                                                                                     ),
@@ -1549,7 +1564,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                             ),
                                           );
                           
-                                          ResponseGenericModel? objResp = await ProspectoTypeService().editaEstadoProspecto(true, false, 0, objDatumCrmLead?.id ?? 0);
+                                          ResponseGenericModel? objResp = await ProspectoTypeService().editaEstadoProspecto(true, false, 0, objDatumCrmLead?.id ?? 0, '');
 
                                           if(objResp != null){
                                             String respuestaReg = objResp.result.mensaje;
@@ -2192,28 +2207,16 @@ class PlanActivStateTwo extends State<PlanActiv> {
       CrmLostReasonResponse? objRspFinalTpAct;
       //lstMotivoPerdida = [];
 
-      if(lstMotivoPerdida.isEmpty){
+      if(motivosPerdida.isEmpty){
         objRspFinalTpAct = await ProspectoTypeService().getMotivoPerdidaProspectoMemoria();
       }
       else {
-        lstMotivoPerdida = [];
-
         objRspFinalTpAct = await ProspectoTypeService().getMotivoPerdidaProspecto();
       }
 
       if(objRspFinalTpAct != null){
         motivosPerdida = objRspFinalTpAct.data;
-
-        for(int i = 0; i < objRspFinalTpAct.data.length; i++){
-          lstMotivoPerdida.add(objRspFinalTpAct.data[i].name);
-        }
-
-        if(motPerdSelect.isEmpty && lstMotivoPerdida.isNotEmpty){
-          motPerdSelect = lstMotivoPerdida.first;
-        }
       }
-
-      //lstMotivoPerdida.add('Otros');
       
       gnrBloc.setIniciaCarga(false);
       
@@ -2244,76 +2247,11 @@ class PlanActivStateTwo extends State<PlanActiv> {
     }    
   }
 
-/*
-  Future<void> abrirWhatsapp(String numeroCelular, Size size, {String? mensaje}) async {
-    final String url = mensaje != null
-        ? 'https://wa.me/$numeroCelular?text=${Uri.encodeComponent(mensaje)}'
-        : 'https://wa.me/$numeroCelular';
-
-    final Uri uri = Uri.parse(url);
-
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(
-        uri,
-        mode: LaunchMode.externalApplication,
-      );
-    } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Container(
-              color: Colors.transparent,
-              height: size.height * 0.17,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  
-                  Container(
-                    color: Colors.transparent,
-                    height: size.height * 0.09,
-                    child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
-                  ),
-
-                  Container(
-                    color: Colors.transparent,
-                    width: size.width * 0.95,
-                    height: size.height * 0.08,
-                    alignment: Alignment.center,
-                    child: const AutoSizeText(
-                      'No se pudo abrir WhatsApp. Asegúrese de tenerlo instalado.',
-                      maxLines: 2,
-                      minFontSize: 2,
-                    ),
-                  )
-                ],
-              )
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-*/
-
   Future<void> abrirWhatsapp(String phoneNumber, Size size,{
     String message = ''
-    //required String phoneNumber, // Ejemplo: '5215512345678' (con código de país, sin '+' ni espacios)
-    //String message = '',
-    //bool isBusiness = false, // Puedes usar esto si quieres una lógica más específica
   }) async {
-    // Asegúrate de que el número no tenga el signo '+' inicial
     final String cleanedNumber = phoneNumber.replaceAll('+', '').replaceAll(' ', '');
 
-    // Usamos el enlace universal (wa.me) que es el más compatible
     final String urlString = 'https://wa.me/$cleanedNumber?text=${Uri.encodeComponent(message)}';
     final Uri url = Uri.parse(urlString);
 
@@ -2321,51 +2259,6 @@ class PlanActivStateTwo extends State<PlanActiv> {
       await launchUrl(url, mode: LaunchMode.externalApplication);
     } else {
       launchWhatsAppBusinessOnly(size, phoneNumber: phoneNumber, message: message);
-/*
-      //throw 'No se pudo abrir WhatsApp. Asegúrate de que la URL: $urlString sea correcta y que la app esté instalada.';
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Container(
-              color: Colors.transparent,
-              height: size.height * 0.17,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  
-                  Container(
-                    color: Colors.transparent,
-                    height: size.height * 0.09,
-                    child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
-                  ),
-
-                  Container(
-                    color: Colors.transparent,
-                    width: size.width * 0.95,
-                    height: size.height * 0.08,
-                    alignment: Alignment.center,
-                    child: const AutoSizeText(
-                      'No se pudo abrir WhatsApp. Asegúrese de tenerlo instalado.',
-                      maxLines: 2,
-                      minFontSize: 2,
-                    ),
-                  )
-                ],
-              )
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
-              ),
-            ],
-          );
-        },
-      );
-    */
     }
   }
 
@@ -2373,24 +2266,18 @@ class PlanActivStateTwo extends State<PlanActiv> {
     required String phoneNumber,
     String message = '',
   }) async {
-    // Para Business en Android, usa el paquete específico
-    // 'com.whatsapp.w4b' en el Intent (aunque url_launcher lo hace más fácil).
-    // La mejor práctica es usar wa.me. Si necesitas el URI scheme directo (solo Android):
     final String androidBusinessUrl = 'whatsapp://send?phone=$phoneNumber&text=${Uri.encodeComponent(message)}';
     final Uri url = Uri.parse(androidBusinessUrl);
 
-    // NOTA: En la práctica, el enlace wa.me es el que mejor funciona y deja que el sistema operativo
-    // decida si abrirlo con la versión normal o Business si ambas están instaladas.
     if (await canLaunchUrl(url)) {
         await launchUrl(url, mode: LaunchMode.externalApplication);
     } else {
-      // Fallback a wa.me o a un mensaje de error
       final Uri fallbackUrl = Uri.parse('https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}');
       if (await canLaunchUrl(fallbackUrl)) {
           await launchUrl(fallbackUrl, mode: LaunchMode.externalApplication);
       } else {
-        //throw 'No se pudo abrir WhatsApp Business ni el enlace universal.';
         showDialog(
+          //ignore: use_build_context_synchronously
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
