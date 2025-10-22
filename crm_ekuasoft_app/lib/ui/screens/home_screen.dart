@@ -358,6 +358,8 @@ class HomeScreenState extends State<HomeScreen> {
                               body: SingleChildScrollView(
                                 child: Column(
                                   children: [
+                                    //NO ELIMINAR EL BLOQUE DE CÓDIGO COMENTADO PORQUE SE DEBE BUSCAR COMO DARLE FUNCIONALIDAD
+                                    /*
 
                                     if(cardSales)
                                     Container(
@@ -397,6 +399,7 @@ class HomeScreenState extends State<HomeScreen> {
                                     ),
                     
                                     const SizedBox(height: 16.0),
+                                    */
                                           
                                     Container(
                                       color: Colors.transparent,
@@ -416,6 +419,8 @@ class HomeScreenState extends State<HomeScreen> {
                                                   width: size.width * 0.35,
                                                   child: const Text('Operaciones', style: TextStyle(fontSize: 12),)
                                                 ),
+                                                //NO ELIMINAR EL BLOQUE DE CÓDIGO COMENTADO PORQUE SE DEBE BUSCAR COMO DARLE FUNCIONALIDAD
+                                                /*
                                                 Container(
                                                   width: size.width * 0.35,
                                                   decoration: BoxDecoration(
@@ -442,6 +447,7 @@ class HomeScreenState extends State<HomeScreen> {
                                                     ],
                                                   )
                                                 ),
+                                              */
                                               ],
                                             ),
                                           ),

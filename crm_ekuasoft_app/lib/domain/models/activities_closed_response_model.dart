@@ -128,6 +128,7 @@ class MailMessageClosed {
   final String? activityCategory;
   final String? activityTypeCategory;
   final String? activityNote;
+  final String? leadContactName;
 
   MailMessageClosed({
     required this.id,
@@ -175,7 +176,8 @@ class MailMessageClosed {
     required this.activityCreateDate,
     required this.activityCategory,
     required this.activityNote,
-    required this.activityTypeCategory
+    required this.activityTypeCategory,
+    this.leadContactName
   });
 
   factory MailMessageClosed.fromJson(Map<String, dynamic> json) {
@@ -198,6 +200,7 @@ class MailMessageClosed {
           ? Many2OneClosed.fromJson(json['author_id'])
           : null,
       body: json['body'],
+      leadContactName: json['lead_contact_name'] ?? '',
       createDate: json['create_date'],
       createUid: json['create_uid'] != null
           ? Many2OneClosed.fromJson(json['create_uid'])
@@ -291,7 +294,8 @@ class MailMessageClosed {
         'working_time': workingTime,
         'write_date': writeDate,
         'write_uid': writeUid?.toJson(),
-        "activity_note": activityNote
+        "activity_note": activityNote,
+        'lead_contact_name': leadContactName
       };
 }
 

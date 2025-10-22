@@ -502,6 +502,32 @@ class ActividadesByFiltroScreenState extends State<ActividadesByFiltroScreen>  {
                           child: ElevatedButton(
                             onPressed: () async {
 
+                              if(activityTypeId == 0 
+                              && nombreProbFiltroTxt.text.isEmpty
+                              && cellFiltroTxt.text.isEmpty){
+                                showDialog(
+                                  barrierDismissible: false,
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return ContentAlertDialog(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      onPressedCont: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      tipoAlerta: TipoAlerta().alertAccion,
+                                      numLineasTitulo: 2,
+                                      numLineasMensaje: 2,
+                                      titulo: 'Error',
+                                      mensajeAlerta: 'Ingrese campos de búsqueda.'
+                                    );
+                                  },
+                                );
+                                
+                                return;
+                              }
+
                               gnrBloc.setMuestraCarga(true);
 
                               lstActividadesByFiltros = [];
@@ -660,13 +686,13 @@ class ActividadesByFiltroScreenState extends State<ActividadesByFiltroScreen>  {
                                               backgroundColor: lstActividadesByFiltros[index].cerrado ? Colors.black45 : Colors.grey[300],
                                               child: Stack(
                                                   children: [
-                                                    if(lstActividadesByFiltros[index].activityCategory != null 
+                                                    if(!lstActividadesByFiltros[index].cerrado && lstActividadesByFiltros[index].activityCategory != null 
                                                         && lstActividadesByFiltros[index].activityCategory!.toLowerCase() != 'whatsapp'
                                                         && lstActividadesByFiltros[index].activityCategory!.toLowerCase() != 'phonecall'
                                                         && (lstActividadesByFiltros[index].activityCategory!.toLowerCase() != 'email' || lstActividadesByFiltros[index].leadEmail == null || lstActividadesByFiltros[index].leadEmail!.isEmpty))
                                                     const Icon(Icons.person),
                                                     
-                                                    if(lstActividadesByFiltros[index].activityCategory != null && lstActividadesByFiltros[index].activityCategory!.toLowerCase() == 'phonecall')
+                                                    if(!lstActividadesByFiltros[index].cerrado && lstActividadesByFiltros[index].activityCategory != null && lstActividadesByFiltros[index].activityCategory!.toLowerCase() == 'phonecall')
                                                     GestureDetector(
                                                       onTap: () {
                                                         makePhoneCall(lstActividadesByFiltros[index].leadPhone!);                                                        
@@ -674,7 +700,7 @@ class ActividadesByFiltroScreenState extends State<ActividadesByFiltroScreen>  {
                                                       child: const Icon(Icons.call, size: 22,)
                                                     ),
 
-                                                    if(lstActividadesByFiltros[index].activityCategory != null && lstActividadesByFiltros[index].activityCategory!.toLowerCase() == 'email' && lstActividadesByFiltros[index].leadEmail != null && lstActividadesByFiltros[index].leadEmail!.isNotEmpty)
+                                                    if(!lstActividadesByFiltros[index].cerrado && lstActividadesByFiltros[index].activityCategory != null && lstActividadesByFiltros[index].activityCategory!.toLowerCase() == 'email' && lstActividadesByFiltros[index].leadEmail != null && lstActividadesByFiltros[index].leadEmail!.isNotEmpty)
                                                     GestureDetector(
                                                       onTap: () {
                                                         openEmailApp(lstActividadesByFiltros[index].leadEmail!);                                                        
@@ -682,7 +708,7 @@ class ActividadesByFiltroScreenState extends State<ActividadesByFiltroScreen>  {
                                                       child: const Icon(Icons.email, size: 22, color: Colors.white,)
                                                     ),
 
-                                                    if(lstActividadesByFiltros[index].activityCategory != null && lstActividadesByFiltros[index].activityCategory!.toLowerCase() == 'whatsapp')
+                                                    if(!lstActividadesByFiltros[index].cerrado && lstActividadesByFiltros[index].activityCategory != null && lstActividadesByFiltros[index].activityCategory!.toLowerCase() == 'whatsapp')
                                                     GestureDetector(
                                                       onTap: () {
                                                         abrirWhatsapp(lstActividadesByFiltros[index].leadPhone!, size);
@@ -700,7 +726,38 @@ class ActividadesByFiltroScreenState extends State<ActividadesByFiltroScreen>  {
                                                         height: size.height * 0.02,
                                                         child: const IndicatorPointWidget(null)
                                                       ),
-                                                    )
+                                                    ),
+
+                                                    if(lstActividadesByFiltros[index].cerrado && lstActividadesByFiltros[index].activityTypeCategory != null 
+                                                        && lstActividadesByFiltros[index].activityTypeCategory!.toLowerCase() != 'whatsapp'
+                                                        && lstActividadesByFiltros[index].activityTypeCategory!.toLowerCase() != 'phonecall'
+                                                        && (lstActividadesByFiltros[index].activityTypeCategory!.toLowerCase() != 'email' || lstActividadesByFiltros[index].leadEmail == null || lstActividadesByFiltros[index].leadEmail!.isEmpty))
+                                                    const Icon(Icons.person),
+                                                    
+                                                    if(lstActividadesByFiltros[index].cerrado && lstActividadesByFiltros[index].activityTypeCategory != null && lstActividadesByFiltros[index].activityTypeCategory!.toLowerCase() == 'phonecall')
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        makePhoneCall(lstActividadesByFiltros[index].leadPhone!);                                                        
+                                                      },
+                                                      child: const Icon(Icons.call, size: 22, color: Colors.white,)
+                                                    ),
+
+                                                    if(lstActividadesByFiltros[index].cerrado && lstActividadesByFiltros[index].activityTypeCategory != null && lstActividadesByFiltros[index].activityTypeCategory!.toLowerCase() == 'email' && lstActividadesByFiltros[index].leadEmail != null && lstActividadesByFiltros[index].leadEmail!.isNotEmpty)
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        openEmailApp(lstActividadesByFiltros[index].leadEmail!);                                                        
+                                                      },
+                                                      child: const Icon(Icons.email, size: 22, color: Colors.white,)
+                                                    ),
+
+                                                    if(lstActividadesByFiltros[index].cerrado && lstActividadesByFiltros[index].activityTypeCategory != null && lstActividadesByFiltros[index].activityTypeCategory!.toLowerCase() == 'whatsapp')
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        abrirWhatsapp(lstActividadesByFiltros[index].leadPhone!, size);
+                                                      },
+                                                      child: const FaIcon(FontAwesomeIcons.whatsapp, size: 22, color: Colors.white,)
+                                                    ),
+                                                  
                                                   ]
                                                 ),
                                             ),

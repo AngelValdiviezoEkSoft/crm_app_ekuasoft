@@ -376,7 +376,7 @@ class _CalendarioActividadesByFiltroViewState extends State<CalendarioActividade
           backgroundColor: act.cerrado ? Colors.black26 : Colors.grey[200],
           child: //const Icon(Icons.person),
           Stack(children: [
-            if(act.activityCategory != null 
+            if(!act.cerrado && act.activityCategory != null 
               && act.activityCategory!.toLowerCase() != 'whatsapp'
               && act.activityCategory!.toLowerCase() != 'phonecall'
               && (act.activityCategory!.toLowerCase() != 'email' || act.leadEmail == null || act.leadEmail!.isEmpty))
@@ -407,8 +407,6 @@ class _CalendarioActividadesByFiltroViewState extends State<CalendarioActividade
                 child: const FaIcon(FontAwesomeIcons.whatsapp, size: 22, color: Colors.green,)
               ),
             
-
-            //if (!calendarioActividadesFilAgendaByFiltroCall[index].cerrado && DateFormat('yyyy-MM-dd','es').format(calendarioActividadesFilAgendaByFiltroCall[index].dateDeadline) == DateFormat('yyyy-MM-dd','es').format(DateTime.now()))
             if (!act.cerrado && DateFormat('yyyy-MM-dd','es').format(act.dateDeadline) == DateFormat('yyyy-MM-dd','es').format(DateTime.now()))
               Positioned(
                 top: size.height * 0.01,
@@ -419,7 +417,38 @@ class _CalendarioActividadesByFiltroViewState extends State<CalendarioActividade
                   height: size.height * 0.02,
                   child: const IndicatorPointWidget(null)
                 ),
-              )
+              ),
+          
+            if(act.cerrado && act.activityTypeCategory != null 
+              && act.activityTypeCategory!.toLowerCase() != 'whatsapp'
+              && act.activityTypeCategory!.toLowerCase() != 'phonecall'
+              && (act.activityTypeCategory!.toLowerCase() != 'email' || act.leadEmail == null || act.leadEmail!.isEmpty))
+            Icon(Icons.person, color: themeProvider.themeMode.index == 2 ? Colors.black : Colors.white,),
+
+             if (act.cerrado && act.activityTypeCategory != null && act.activityTypeCategory!.toLowerCase() == 'phonecall')
+              GestureDetector(
+                onTap: () {
+                  makePhoneCall(act.leadPhone!);
+                  //makePhoneCall('0988665834');
+                },
+                child: const Icon(Icons.call, size: 22, color: Colors.white,)
+              ),
+
+              if (act.cerrado && act.activityTypeCategory != null && act.activityTypeCategory!.toLowerCase() == 'email' && act.leadEmail != null && act.leadEmail!.isNotEmpty)
+              GestureDetector(
+                onTap: () {
+                  openEmailApp(act.leadEmail!);
+                },
+                child: const Icon(Icons.email, size: 22, color: Colors.white,)
+              ),
+
+              if (act.cerrado && act.activityTypeCategory != null && act.activityTypeCategory!.toLowerCase() == 'whatsapp')
+              GestureDetector(
+                onTap: () {
+                  abrirWhatsapp( act.leadPhone!, size,  message:'Saludos');
+                },
+                child: const FaIcon(FontAwesomeIcons.whatsapp, size: 22, color: Colors.white,)
+              ),
           ]),
         ),
         title: Text(act.summary ?? '', maxLines: 2, overflow: TextOverflow.ellipsis),
@@ -430,8 +459,6 @@ class _CalendarioActividadesByFiltroViewState extends State<CalendarioActividade
             Row(children: [
               Text("Tipo de actividad: ${act.activityTypeId.name}", style: const TextStyle(fontSize: 12)),
               SizedBox(width: size.width * 0.04,),
-                                                    
-             
             ],
             
             ),
