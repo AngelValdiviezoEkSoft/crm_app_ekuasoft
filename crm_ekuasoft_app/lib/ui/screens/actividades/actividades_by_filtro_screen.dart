@@ -168,154 +168,42 @@ class ActividadesByFiltroScreenState extends State<ActividadesByFiltroScreen>  {
       //print("Error al abrir la app de correos: ${e.message}");
     }    
   }
-/*
-  Future<void> abrirWhatsapp(String numeroCelular, Size size, {String? mensaje}) async {
-    final String url = mensaje != null
-        ? 'https://wa.me/$numeroCelular?text=${Uri.encodeComponent(mensaje)}'
-        : 'https://wa.me/$numeroCelular';
 
-    final Uri uri = Uri.parse(url);
-
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(
-        uri,
-        mode: LaunchMode.externalApplication,
-      );
-    } else {
-        showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Container(
-              color: Colors.transparent,
-              height: size.height * 0.17,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  
-                  Container(
-                    color: Colors.transparent,
-                    height: size.height * 0.09,
-                    child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
-                  ),
-
-                  Container(
-                    color: Colors.transparent,
-                    width: size.width * 0.95,
-                    height: size.height * 0.08,
-                    alignment: Alignment.center,
-                    child: const AutoSizeText(
-                      'No se pudo abrir WhatsApp. Asegúrese de tenerlo instalado.',
-                      maxLines: 2,
-                      minFontSize: 2,
-                    ),
-                  )
-                ],
-              )
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
-              ),
-            ],
-          );
-        },
-      );
-    
-    }
-  }
-*/
-
-Future<void> abrirWhatsapp(String phoneNumber, Size size,{
+  Future<void> abrirWhatsapp(String phoneNumber, Size size,{
     String message = ''
-    //required String phoneNumber, // Ejemplo: '5215512345678' (con código de país, sin '+' ni espacios)
-    //String message = '',
-    //bool isBusiness = false, // Puedes usar esto si quieres una lógica más específica
   }) async {
-    // Asegúrate de que el número no tenga el signo '+' inicial
-    final String cleanedNumber = phoneNumber.replaceAll('+', '').replaceAll(' ', '');
+    //final String cleanedNumber = phoneNumber.replaceAll('+', '').replaceAll(' ', '');
 
-    // Usamos el enlace universal (wa.me) que es el más compatible
-    final String urlString = 'https://wa.me/$cleanedNumber?text=${Uri.encodeComponent(message)}';
-    final Uri url = Uri.parse(urlString);
+    //final String urlString = 'https://wa.me/$cleanedNumber?text=${Uri.encodeComponent(message)}';
+    //final Uri url = Uri.parse(urlString);
 
+    launchWhatsAppBusinessOnly(size, phoneNumber: phoneNumber, message: message);
+    /*
     if (await canLaunchUrl(url)) {
       await launchUrl(url, mode: LaunchMode.externalApplication);
     } else {
       launchWhatsAppBusinessOnly(size, phoneNumber: phoneNumber, message: message);
-/*
-      //throw 'No se pudo abrir WhatsApp. Asegúrate de que la URL: $urlString sea correcta y que la app esté instalada.';
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Container(
-              color: Colors.transparent,
-              height: size.height * 0.17,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  
-                  Container(
-                    color: Colors.transparent,
-                    height: size.height * 0.09,
-                    child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
-                  ),
-
-                  Container(
-                    color: Colors.transparent,
-                    width: size.width * 0.95,
-                    height: size.height * 0.08,
-                    alignment: Alignment.center,
-                    child: const AutoSizeText(
-                      'No se pudo abrir WhatsApp. Asegúrese de tenerlo instalado.',
-                      maxLines: 2,
-                      minFontSize: 2,
-                    ),
-                  )
-                ],
-              )
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
-              ),
-            ],
-          );
-        },
-      );
-    */
     }
+    */
   }
 
   Future<void> launchWhatsAppBusinessOnly(Size size,{
     required String phoneNumber,
     String message = '',
   }) async {
-    // Para Business en Android, usa el paquete específico
-    // 'com.whatsapp.w4b' en el Intent (aunque url_launcher lo hace más fácil).
-    // La mejor práctica es usar wa.me. Si necesitas el URI scheme directo (solo Android):
+    
     final String androidBusinessUrl = 'whatsapp://send?phone=$phoneNumber&text=${Uri.encodeComponent(message)}';
     final Uri url = Uri.parse(androidBusinessUrl);
 
-    // NOTA: En la práctica, el enlace wa.me es el que mejor funciona y deja que el sistema operativo
-    // decida si abrirlo con la versión normal o Business si ambas están instaladas.
     if (await canLaunchUrl(url)) {
         await launchUrl(url, mode: LaunchMode.externalApplication);
     } else {
-      // Fallback a wa.me o a un mensaje de error
       final Uri fallbackUrl = Uri.parse('https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}');
       if (await canLaunchUrl(fallbackUrl)) {
           await launchUrl(fallbackUrl, mode: LaunchMode.externalApplication);
       } else {
-        //throw 'No se pudo abrir WhatsApp Business ni el enlace universal.';
         showDialog(
+          //ignore: use_build_context_synchronously
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
