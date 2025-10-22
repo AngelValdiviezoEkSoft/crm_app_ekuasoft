@@ -814,6 +814,7 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                             if(tabAccEdit == 1){
                                               if(passwordAntTxt.text.isEmpty){
                                                 showDialog(
+                                                  //ignore: use_build_context_synchronously
                                                   context: context,
                                                   builder: (BuildContext context) {
                                                     return AlertDialog(
@@ -838,6 +839,7 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                       
                                               if(passwordTxt.text != passwordConfTxt.text){
                                                 showDialog(
+                                                  //ignore: use_build_context_synchronously
                                                   context: context,
                                                   builder: (BuildContext context) {
                                                     return AlertDialog(
@@ -1533,6 +1535,7 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                             if(tabAccEdit == 1){
                                               if(passwordAntTxt.text.isEmpty){
                                                 showDialog(
+                                                  //ignore: use_build_context_synchronously
                                                   context: context,
                                                   builder: (BuildContext context) {
                                                     return AlertDialog(
@@ -1557,6 +1560,7 @@ class _FrmEditPerfilScreenState extends State<FrmEditPerfilScreen> {
                                       
                                               if(passwordTxt.text != passwordConfTxt.text){
                                                 showDialog(
+                                                  //ignore: use_build_context_synchronously
                                                   context: context,
                                                   builder: (BuildContext context) {
                                                     return AlertDialog(

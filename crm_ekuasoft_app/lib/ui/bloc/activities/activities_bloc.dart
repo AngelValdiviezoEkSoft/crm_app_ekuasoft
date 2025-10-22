@@ -10,7 +10,7 @@ class ActivitiesBloc extends Bloc<ActivitiesEvent, ActivitiesState> {
   List<DatumActivitiesResponse> lstActivities = [];
   List<DatumActivitiesResponse> lstActivitiesResp = [];
 
-  ActivitiesBloc() : super(ActivitiesState(lstActivities: [], lstActivitiesResp: [])) {
+  ActivitiesBloc() : super(const ActivitiesState(lstActivities: [], lstActivitiesResp: [])) {
     on<OnLstActivities>(_onInitLst);
     on<OnLstActivitiesRespaldo>(_onInitLstResp);
   }

@@ -6,7 +6,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:crm_ekuasoft_app/domain/domain.dart';
 import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
 import 'package:crm_ekuasoft_app/main.dart';
-import 'package:excel/excel.dart' as Exc;
+import 'package:excel/excel.dart' as exc;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -1648,29 +1648,29 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
   Future<void> generarReporte(BuildContext context) async {
   try {
     // Crear libro Excel y hoja
-    final excel = Exc.Excel.createExcel();
+    final excel = exc.Excel.createExcel();
     final sheet = excel['Reporte'];
 
-    final headerStyle = Exc.CellStyle(
+    final headerStyle = exc.CellStyle(
       bold: true,
-      horizontalAlign: Exc.HorizontalAlign.Center,
-      backgroundColorHex: Exc.ExcelColor.grey300//"#DDDDDD", // gris suave
+      horizontalAlign: exc.HorizontalAlign.Center,
+      backgroundColorHex: exc.ExcelColor.grey300//"#DDDDDD", // gris suave
     );
 
     final headers = [
-      Exc.TextCellValue('Fecha de creación'),
-      Exc.TextCellValue('Nombre'),
-      Exc.TextCellValue('Celular'),      
-      Exc.TextCellValue('Oportunidad'),
-      Exc.TextCellValue('Correo'),
-      Exc.TextCellValue('Estado'),
+      exc.TextCellValue('Fecha de creación'),
+      exc.TextCellValue('Nombre'),
+      exc.TextCellValue('Celular'),      
+      exc.TextCellValue('Oportunidad'),
+      exc.TextCellValue('Correo'),
+      exc.TextCellValue('Estado'),
     ];
 
     sheet.appendRow(headers);
 
     // Aplicar estilo a la primera fila (índice 0)
     for (int i = 0; i < headers.length; i++) {
-      final cell = sheet.cell(Exc.CellIndex.indexByColumnRow(columnIndex: i, rowIndex: 0));
+      final cell = sheet.cell(exc.CellIndex.indexByColumnRow(columnIndex: i, rowIndex: 0));
       cell.cellStyle = headerStyle;
     }
 
@@ -1687,16 +1687,16 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
     // Llenar datos dinámicamente
     for (var d in prospectosFiltrados) {
       sheet.appendRow([
-        Exc.TextCellValue(
+        exc.TextCellValue(
           d.dateOpen != null
               ? DateFormat('dd/MM/yyyy', 'es').format(d.dateOpen!)
               : '',
         ),
-        Exc.TextCellValue(d.contactName ?? ''),
-        Exc.TextCellValue(d.phone ?? ''),        
-        Exc.TextCellValue(d.name),
-        Exc.TextCellValue(d.emailFrom),
-        Exc.TextCellValue(d.stageId.name),
+        exc.TextCellValue(d.contactName ?? ''),
+        exc.TextCellValue(d.phone ?? ''),        
+        exc.TextCellValue(d.name),
+        exc.TextCellValue(d.emailFrom),
+        exc.TextCellValue(d.stageId.name),
       ]);
     }
 

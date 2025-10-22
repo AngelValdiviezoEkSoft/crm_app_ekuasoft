@@ -126,6 +126,7 @@ class MailMessageClosed {
   final Many2OneClosed? writeUid;
   final DateTime? activityCreateDate;
   final String? activityCategory;
+  final String? activityTypeCategory;
   final String? activityNote;
 
   MailMessageClosed({
@@ -173,7 +174,8 @@ class MailMessageClosed {
     required this.activityDateDeadLine,
     required this.activityCreateDate,
     required this.activityCategory,
-    required this.activityNote
+    required this.activityNote,
+    required this.activityTypeCategory
   });
 
   factory MailMessageClosed.fromJson(Map<String, dynamic> json) {
@@ -181,6 +183,7 @@ class MailMessageClosed {
       id: json['id'] ?? 0,
       lastUpdate: json['__last_update'] ?? '',
       activityCategory: json['activity_category'] ?? '',
+      activityTypeCategory: json['activity_type_category'] ?? '',
       activityDateDeadLine: json['activity_date_deadline'] ?? '',
       summary: json['activity_summary'] ?? '',
       activityDueDate: json['activity_due_date'],
@@ -246,6 +249,7 @@ class MailMessageClosed {
   Map<String, dynamic> toJson() => {
         'id': id,
         'activity_category': activityCategory,
+        'activity_type_category': activityTypeCategory,
         'activity_summary': summary,
         'activity_date_deadline': activityDateDeadLine,
         '__last_update': lastUpdate,

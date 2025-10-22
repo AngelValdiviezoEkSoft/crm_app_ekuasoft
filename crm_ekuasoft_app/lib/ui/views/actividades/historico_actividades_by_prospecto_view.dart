@@ -228,13 +228,14 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
                                           backgroundColor: lstActividadesHistoricosByProspecto[index].cerrado ? Colors.black45 : Colors.grey[300],
                                           child: Stack(
                                             children: [
-                                              if(lstActividadesHistoricosByProspecto[index].activityCategory != null 
+                                              //ACTIVIDADES ABIERTAS
+                                              if(!lstActividadesHistoricosByProspecto[index].cerrado && lstActividadesHistoricosByProspecto[index].activityCategory != null 
                                                 && lstActividadesHistoricosByProspecto[index].activityCategory!.toLowerCase() != 'whatsapp'
                                                 && lstActividadesHistoricosByProspecto[index].activityCategory!.toLowerCase() != 'phonecall'
                                                 && (lstActividadesHistoricosByProspecto[index].activityCategory!.toLowerCase() != 'email' || lstActividadesHistoricosByProspecto[index].leadEmail == null || lstActividadesHistoricosByProspecto[index].leadEmail!.isEmpty))
                                               const Icon(Icons.person),
 
-                                              if(lstActividadesHistoricosByProspecto[index].activityCategory != null && lstActividadesHistoricosByProspecto[index].activityCategory!.toLowerCase() == 'phonecall')
+                                              if(!lstActividadesHistoricosByProspecto[index].cerrado && lstActividadesHistoricosByProspecto[index].activityCategory != null && lstActividadesHistoricosByProspecto[index].activityCategory!.toLowerCase() == 'phonecall')
                                               GestureDetector(
                                                 onTap: () {
                                                   makePhoneCall(lstActividadesDiariasByProspecto[index].leadPhone!);                                                        
@@ -242,7 +243,7 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
                                                 child: const Icon(Icons.call, size: 22,)
                                               ),
 
-                                              if(lstActividadesHistoricosByProspecto[index].activityCategory != null && lstActividadesHistoricosByProspecto[index].activityCategory!.toLowerCase() == 'email' && lstActividadesHistoricosByProspecto[index].leadEmail != null && lstActividadesHistoricosByProspecto[index].leadEmail!.isNotEmpty)
+                                              if( !lstActividadesHistoricosByProspecto[index].cerrado && lstActividadesHistoricosByProspecto[index].activityCategory != null && lstActividadesHistoricosByProspecto[index].activityCategory!.toLowerCase() == 'email' && lstActividadesHistoricosByProspecto[index].leadEmail != null && lstActividadesHistoricosByProspecto[index].leadEmail!.isNotEmpty)
                                               GestureDetector(
                                                 onTap: () {
                                                   openEmailApp(lstActividadesDiariasByProspecto[index].leadEmail!);                                                        
@@ -250,7 +251,7 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
                                                 child: const Icon(Icons.email, color: Colors.white, size: 22,)
                                               ),
 
-                                              if(lstActividadesHistoricosByProspecto[index].activityCategory != null && lstActividadesHistoricosByProspecto[index].activityCategory!.toLowerCase() == 'whatsapp')
+                                              if(!lstActividadesHistoricosByProspecto[index].cerrado && lstActividadesHistoricosByProspecto[index].activityCategory != null && lstActividadesHistoricosByProspecto[index].activityCategory!.toLowerCase() == 'whatsapp')
                                               GestureDetector(
                                                 onTap: () {
                                                   abrirWhatsapp(lstActividadesDiariasByProspecto[index].leadPhone!, size);
@@ -258,6 +259,36 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
                                                 child: const FaIcon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 22,)
                                               ),
 
+                                              //ACTIVIDADES CERRADAS
+                                              if(lstActividadesHistoricosByProspecto[index].cerrado && lstActividadesHistoricosByProspecto[index].activityTypeCategory != null 
+                                                && lstActividadesHistoricosByProspecto[index].activityTypeCategory!.toLowerCase() != 'whatsapp'
+                                                && lstActividadesHistoricosByProspecto[index].activityTypeCategory!.toLowerCase() != 'phonecall'
+                                                && (lstActividadesHistoricosByProspecto[index].activityTypeCategory!.toLowerCase() != 'email' || lstActividadesHistoricosByProspecto[index].leadEmail == null || lstActividadesHistoricosByProspecto[index].leadEmail!.isEmpty))
+                                              const Icon(Icons.person),
+
+                                              if(lstActividadesHistoricosByProspecto[index].cerrado && lstActividadesHistoricosByProspecto[index].activityCategory != null && lstActividadesHistoricosByProspecto[index].activityTypeCategory!.toLowerCase() == 'phonecall')
+                                              GestureDetector(
+                                                onTap: () {
+                                                  makePhoneCall(lstActividadesDiariasByProspecto[index].leadPhone!);                                                        
+                                                },
+                                                child: const Icon(Icons.call, size: 22, color: Colors.white,)
+                                              ),
+
+                                              if(lstActividadesHistoricosByProspecto[index].cerrado && lstActividadesHistoricosByProspecto[index].activityCategory != null && lstActividadesHistoricosByProspecto[index].activityTypeCategory!.toLowerCase() == 'email' && lstActividadesHistoricosByProspecto[index].leadEmail != null && lstActividadesHistoricosByProspecto[index].leadEmail!.isNotEmpty)
+                                              GestureDetector(
+                                                onTap: () {
+                                                  openEmailApp(lstActividadesDiariasByProspecto[index].leadEmail!);                                                        
+                                                },
+                                                child: const Icon(Icons.email, color: Colors.white, size: 22,)
+                                              ),
+
+                                              if(lstActividadesHistoricosByProspecto[index].cerrado && lstActividadesHistoricosByProspecto[index].activityCategory != null && lstActividadesHistoricosByProspecto[index].activityTypeCategory!.toLowerCase() == 'whatsapp')
+                                              GestureDetector(
+                                                onTap: () {
+                                                  abrirWhatsapp(lstActividadesDiariasByProspecto[index].leadPhone!, size);
+                                                },
+                                                child: const FaIcon(FontAwesomeIcons.whatsapp, color: Colors.white, size: 22,)
+                                              ),
 
                                               if(!lstActividadesHistoricosByProspecto[index].cerrado && DateFormat('yyyy-MM-dd', 'es').format(lstActividadesHistoricosByProspecto[index].dateDeadline) == DateFormat('yyyy-MM-dd', 'es').format(DateTime.now()))
                                               Positioned(

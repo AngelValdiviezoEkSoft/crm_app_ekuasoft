@@ -21,7 +21,7 @@ MensajesAlertas objMsmsAlert = MensajesAlertas();
 late TextEditingController filtroAgendaTxtByFiltroCal;
 DatumActivitiesResponse? objCalendarioActividadescogidaByFiltroCal;
 int idActividadSeleccionadaByFiltroCal = 0;
-List<DateTime> _datesByFiltroCal = [];
+
 String terminoBusquedaActAgendaByFiltroCal = '';
 DateTime selectedDayGenByFiltroCal = DateTime.now();
 DateTime focusedDayGenByFiltroCal = DateTime.now();
