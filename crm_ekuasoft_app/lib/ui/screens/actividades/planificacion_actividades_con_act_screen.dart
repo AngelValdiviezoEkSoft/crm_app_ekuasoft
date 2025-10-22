@@ -2250,25 +2250,72 @@ class PlanActivStateTwo extends State<PlanActiv> {
   Future<void> abrirWhatsapp(String phoneNumber, Size size,{
     String message = ''
   }) async {
-    final String cleanedNumber = phoneNumber.replaceAll('+', '').replaceAll(' ', '');
+    //final String cleanedNumber = phoneNumber.replaceAll('+', '').replaceAll(' ', '');
 
-    final String urlString = 'https://wa.me/$cleanedNumber?text=${Uri.encodeComponent(message)}';
-    final Uri url = Uri.parse(urlString);
-
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
-    } else {
-      launchWhatsAppBusinessOnly(size, phoneNumber: phoneNumber, message: message);
-    }
+    //final String urlString = 'https://wa.me/$cleanedNumber?text=${Uri.encodeComponent(message)}';
+    //final String urlString = "https://wa.me/$cleanedNumber?text=$message";    
+      
+    launchWhatsAppBusinessOnly(size, phoneNumber: phoneNumber, message: message);
   }
 
   Future<void> launchWhatsAppBusinessOnly(Size size,{
     required String phoneNumber,
     String message = '',
   }) async {
-    final String androidBusinessUrl = 'whatsapp://send?phone=$phoneNumber&text=${Uri.encodeComponent(message)}';
-    final Uri url = Uri.parse(androidBusinessUrl);
+    //final String androidBusinessUrl = 'whatsapp://send?phone=$phoneNumber&text=${Uri.encodeComponent(message)}';
+    //final Uri url = Uri.parse(androidBusinessUrl);
 
+    final Uri fallbackUrl = Uri.parse('https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}');
+      if (await canLaunchUrl(fallbackUrl)) {
+          await launchUrl(fallbackUrl, mode: LaunchMode.externalApplication);
+      } else {
+        showDialog(
+          //ignore: use_build_context_synchronously
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Container(
+                color: Colors.transparent,
+                height: size.height * 0.17,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    
+                    Container(
+                      color: Colors.transparent,
+                      height: size.height * 0.09,
+                      child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
+                    ),
+
+                    Container(
+                      color: Colors.transparent,
+                      width: size.width * 0.95,
+                      height: size.height * 0.08,
+                      alignment: Alignment.center,
+                      child: const AutoSizeText(
+                        'No se pudo abrir WhatsApp. Asegúrese de tenerlo instalado.',
+                        maxLines: 2,
+                        minFontSize: 2,
+                      ),
+                    )
+                  ],
+                )
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                ),
+              ],
+            );
+          },
+        );
+      
+      }
+
+/*
     if (await canLaunchUrl(url)) {
         await launchUrl(url, mode: LaunchMode.externalApplication);
     } else {
@@ -2322,6 +2369,7 @@ class PlanActivStateTwo extends State<PlanActiv> {
       
       }
     }
+    */
   }
 
   @override

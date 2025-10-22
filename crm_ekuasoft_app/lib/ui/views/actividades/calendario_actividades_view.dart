@@ -481,6 +481,58 @@ class _CalendarioActividadesByFiltroViewState extends State<CalendarioActividade
     required String phoneNumber,
     String message = '',
   }) async {
+
+     final Uri fallbackUrl = Uri.parse('https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}');
+      if (await canLaunchUrl(fallbackUrl)) {
+          await launchUrl(fallbackUrl, mode: LaunchMode.externalApplication);
+      } else {
+        showDialog(
+          //ignore: use_build_context_synchronously
+          context: contextPrincipalGen!,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Container(
+                color: Colors.transparent,
+                height: size.height * 0.17,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    
+                    Container(
+                      color: Colors.transparent,
+                      height: size.height * 0.09,
+                      child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
+                    ),
+
+                    Container(
+                      color: Colors.transparent,
+                      width: size.width * 0.95,
+                      height: size.height * 0.08,
+                      alignment: Alignment.center,
+                      child: const AutoSizeText(
+                        'No se pudo abrir WhatsApp. Asegúrese de tenerlo instalado.',
+                        maxLines: 2,
+                        minFontSize: 2,
+                      ),
+                    )
+                  ],
+                )
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                ),
+              ],
+            );
+          },
+        );
+      
+      }
+
+    /*
     final String androidBusinessUrl = 'whatsapp://send?phone=$phoneNumber&text=${Uri.encodeComponent(message)}';
     final Uri url = Uri.parse(androidBusinessUrl);
 
@@ -536,5 +588,6 @@ class _CalendarioActividadesByFiltroViewState extends State<CalendarioActividade
       
       }
     }
+    */
   }
 

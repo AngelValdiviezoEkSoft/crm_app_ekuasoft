@@ -393,6 +393,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                           codIsoPhone = phoneNumber.isoCode ?? '';
                                           dialCodePhone = phoneNumber.dialCode ?? '';
 
+/*
                                           if(telefonoPrsp.contains('+593')){
                                             String numeroSinPrefijo1 = phoneNumber.phoneNumber!.replaceFirst('+593', '').trim();
   
@@ -414,8 +415,9 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                             telefonoPrsp = '';
                                             telefonoPrsp = numeroLimpio;
                                           }
+                                          */
 
-                                          telefonoTxt.text = telefonoPrsp;
+                                          //telefonoTxt.text = telefonoPrsp;
 
                                           setState(() {});
                                         },

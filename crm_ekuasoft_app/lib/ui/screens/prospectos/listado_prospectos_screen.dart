@@ -126,6 +126,10 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
     years = List.generate(currentYear - 2000 + 1, (index) => 2000 + index);
     
     _futureProspectos = getProspectos();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      cargaComboEstadosProspectos();
+    });
   }
 
   @override
@@ -381,10 +385,6 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
     ColorsApp objColorsApp = ColorsApp();
 
     final size = MediaQuery.of(context).size;
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      cargaComboEstadosProspectos();
-    });
 
     return 
     objPermisosGen != null && objPermisosGen!.buttons.btnCreateLead ?
@@ -1302,8 +1302,6 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                   width: size.width * 0.54,
                                                   height: size.height * 0.04,
                                                   child: Text(
-                                                    //
-                                                    //'${objLogDecode2["result"]["data"]["crm.lead"]["data"][index]["name"]}',
                                                     prospectosFiltrados[index].name,
                                                     style: const TextStyle(
                                                       fontWeight: FontWeight.bold,
@@ -1320,8 +1318,6 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                   width: size.width * 0.54,
                                                   height: size.height * 0.04,
                                                   child: AutoSizeText(
-                                                    //prospectosFiltrados[index]
-                                                    //'${objLogDecode2["result"]["data"]["crm.lead"]["data"][index]["contact_name"]}',
                                                     prospectosFiltrados[index].contactName ?? '',
                                                     style: const TextStyle(
                                                       fontWeight: FontWeight.bold,
@@ -1662,11 +1658,12 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
     );
 
     final headers = [
-      Exc.TextCellValue('Nombre'),
-      Exc.TextCellValue('Celular'),
       Exc.TextCellValue('Fecha de creación'),
+      Exc.TextCellValue('Nombre'),
+      Exc.TextCellValue('Celular'),      
       Exc.TextCellValue('Oportunidad'),
       Exc.TextCellValue('Correo'),
+      Exc.TextCellValue('Estado'),
     ];
 
     sheet.appendRow(headers);
@@ -1677,24 +1674,35 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
       cell.cellStyle = headerStyle;
     }
 
+    sheet.setColumnWidth(0, 20); // Fecha de creación
+    sheet.setColumnWidth(1, 40); // Nombre
+    sheet.setColumnWidth(2, 19); // Celular
+    sheet.setColumnWidth(3, 30); // Oportunidad
+    sheet.setColumnWidth(4, 40); // Correo
+    sheet.setColumnWidth(5, 15); // Estado
+
+    // (Opcional) Altura de la primera fila (encabezado)
+    sheet.setRowHeight(0, 25);
+
     // Llenar datos dinámicamente
     for (var d in prospectosFiltrados) {
       sheet.appendRow([
-        Exc.TextCellValue(d.contactName ?? ''),
-        Exc.TextCellValue(d.phone ?? ''),
         Exc.TextCellValue(
           d.dateOpen != null
               ? DateFormat('dd/MM/yyyy', 'es').format(d.dateOpen!)
               : '',
         ),
-        Exc.TextCellValue(d.partnerName ?? ''),
+        Exc.TextCellValue(d.contactName ?? ''),
+        Exc.TextCellValue(d.phone ?? ''),        
+        Exc.TextCellValue(d.name),
         Exc.TextCellValue(d.emailFrom),
+        Exc.TextCellValue(d.stageId.name),
       ]);
     }
 
     // Obtener directorio temporal
     final dir = await getTemporaryDirectory();
-    final filePath = '${dir.path}/ReporteProspectos2.xlsx';
+    final filePath = '${dir.path}/ReporteProspectos.xlsx';
 
     // Guardar archivo
     final file = File(filePath)
@@ -1709,7 +1717,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
       const SnackBar(content: Text('✅ Reporte generado correctamente')),
     );
   } catch (e) {
-    debugPrint('❌ Error generando el reporte: $e');
+    //debugPrint('❌ Error generando el reporte: $e');
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Error al generar el reporte')),
     );
@@ -1737,6 +1745,8 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
         name: '-- Todos --',
       )
     );
+
+    selectCrmStage = lstEstadoProspectos.last;
 
     setState(() {
       
