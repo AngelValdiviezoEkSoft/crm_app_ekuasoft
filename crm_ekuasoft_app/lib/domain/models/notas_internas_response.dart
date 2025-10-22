@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:crm_ekuasoft_app/common/common.dart';
+import 'package:intl/intl.dart';
+
 class NotasInternasResponse {
   final String jsonrpc;
   final dynamic id;
@@ -165,7 +168,7 @@ class MessageData {
             ? RelatedField.fromJson(json['create_uid'])
             : null,
         body: json['body'],
-        createDate: json['create_date'],
+        createDate: DateFormat('dd/MM/yyyy HH:mm:ss').format(UtilitiesCommon().parseToLocal(json['create_date'])),
         date: json['date'],
         description: json['description'],
         displayName: json['display_name'],

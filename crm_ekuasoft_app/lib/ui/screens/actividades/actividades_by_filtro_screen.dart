@@ -732,7 +732,7 @@ class ActividadesByFiltroScreenState extends State<ActividadesByFiltroScreen>  {
                                                         && lstActividadesByFiltros[index].activityTypeCategory!.toLowerCase() != 'whatsapp'
                                                         && lstActividadesByFiltros[index].activityTypeCategory!.toLowerCase() != 'phonecall'
                                                         && (lstActividadesByFiltros[index].activityTypeCategory!.toLowerCase() != 'email' || lstActividadesByFiltros[index].leadEmail == null || lstActividadesByFiltros[index].leadEmail!.isEmpty))
-                                                    const Icon(Icons.person),
+                                                    const Icon(Icons.person, color: Colors.white,),
                                                     
                                                     if(lstActividadesByFiltros[index].cerrado && lstActividadesByFiltros[index].activityTypeCategory != null && lstActividadesByFiltros[index].activityTypeCategory!.toLowerCase() == 'phonecall')
                                                     GestureDetector(
@@ -874,7 +874,7 @@ class ActividadesByFiltroScreenState extends State<ActividadesByFiltroScreen>  {
                                                         ),
                                                       ),
                                                       TextSpan(
-                                                        text: lstActividadesByFiltros[index].dateCreate != null ? DateFormat('dd/MM/yyyy HH:MM:SS', 'es').format(lstActividadesByFiltros[index].dateCreate!) : "",
+                                                        text: lstActividadesByFiltros[index].dateCreate != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(lstActividadesByFiltros[index].dateCreate!) : "",
                                                         style: const TextStyle(
                                                           color: Colors.blueGrey,
                                                           fontSize: 12,

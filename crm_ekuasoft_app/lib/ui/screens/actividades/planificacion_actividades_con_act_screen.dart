@@ -2670,7 +2670,7 @@ class PlanActivStateTwo extends State<PlanActiv> {
                                               ),
                                             ),
                                             TextSpan(
-                                              text: lstActividadesDiariasByProspecto[index].dateCreate != null ? DateFormat('dd/MM/yyyy HH:MM:SS', 'es').format(lstActividadesDiariasByProspecto[index].dateCreate!) : "",
+                                              text: lstActividadesDiariasByProspecto[index].dateCreate != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(lstActividadesDiariasByProspecto[index].dateCreate!) : "",
                                               style: const TextStyle(
                                                 color: Colors.blueGrey,
                                                 fontSize: 12,

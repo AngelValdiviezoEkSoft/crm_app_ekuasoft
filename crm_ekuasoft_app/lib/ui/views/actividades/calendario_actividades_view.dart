@@ -464,7 +464,7 @@ class _CalendarioActividadesByFiltroViewState extends State<CalendarioActividade
             ),
             Text("Fecha planificada: ${DateFormat('dd/MM/yyyy').format(act.dateDeadline)}",style: const TextStyle(fontSize: 12)),
             Text("Hora planificada: ${act.scheduledTimeFormula}",style: const TextStyle(fontSize: 12)),
-            Text("Creado en: ${DateFormat('dd/MM/yyyy HH:MM:SS').format(act.dateCreate!)}",style: const TextStyle(fontSize: 12)),
+            Text("Creado en: ${DateFormat('dd/MM/yyyy HH:mm:ss').format(act.dateCreate!)}",style: const TextStyle(fontSize: 12)),
           ],
         ),
       ),

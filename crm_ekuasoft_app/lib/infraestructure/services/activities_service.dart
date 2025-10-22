@@ -1,3 +1,4 @@
+import 'package:crm_ekuasoft_app/common/common.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
@@ -1220,7 +1221,8 @@ class ActivitiesService extends ChangeNotifier{
             cerrado: true,
             //contactName: '',
             contactName: actividadesCerradasResult.result.data.data[i].leadContactName,
-            dateCreate: actividadesCerradasResult.result.data.data[i].createDate != null ? DateTime.parse(actividadesCerradasResult.result.data.data[i].createDate!) : DateTime.now(),
+            //dateCreate: actividadesCerradasResult.result.data.data[i].createDate != null ? DateTime.parse(actividadesCerradasResult.result.data.data[i].createDate!) : DateTime.now(),
+            dateCreate: actividadesCerradasResult.result.data.data[i].activityCreateDate ?? DateTime.now(),
             dateDeadline: fechaDeadLine,
             id: actividadesCerradasResult.result.data.data[i].id,
             leadEmail: '',
@@ -1976,8 +1978,8 @@ class ActivitiesService extends ChangeNotifier{
               name: actividadesCerradasResult.result.data.data[i].activityTypeId?.name ?? ''
             ),
             cerrado: true,
-            contactName: actividadesCerradasResult.result.data.data[i].leadContactName,
-            dateCreate: actividadesCerradasResult.result.data.data[i].createDate != null ? DateTime.parse(actividadesCerradasResult.result.data.data[i].createDate!) : DateTime.now(),
+            contactName: actividadesCerradasResult.result.data.data[i].leadContactName,              
+            dateCreate: actividadesCerradasResult.result.data.data[i].activityCreateDate ?? DateTime.now(),            
             dateDeadline: fechaDeadLine,
             id: actividadesCerradasResult.result.data.data[i].id,
             leadEmail: '',
@@ -2353,7 +2355,7 @@ class ActivitiesService extends ChangeNotifier{
               int.parse(partes[2]),
             );
             
-            DatumActivitiesResponse objDatumActivitiesResponse = DatumActivitiesResponse(
+            DatumActivitiesResponse objDatumActivitiesResponse = DatumActivitiesResponse(              
               activityTypeCategory: actividadesCerradasResult.result.data.data[i].activityTypeCategory,
               activityCategory: actividadesCerradasResult.result.data.data[i].activityCategory,
               activityTypeId: IdActivities(
@@ -2361,8 +2363,8 @@ class ActivitiesService extends ChangeNotifier{
                 name: actividadesCerradasResult.result.data.data[i].activityTypeId?.name ?? ''
               ),
               cerrado: true,
-              contactName: '',
-              dateCreate: actividadesCerradasResult.result.data.data[i].createDate != null ? DateTime.parse(actividadesCerradasResult.result.data.data[i].createDate!) : DateTime.now(),
+              contactName: '',              
+              dateCreate: actividadesCerradasResult.result.data.data[i].activityCreateDate ?? DateTime.now(),
               dateDeadline: fechaDeadLine,
               id: actividadesCerradasResult.result.data.data[i].id,
               leadEmail: '',

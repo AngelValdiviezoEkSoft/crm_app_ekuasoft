@@ -396,7 +396,7 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
                                                         ),
                                                       ),
                                                       TextSpan(
-                                                        text: lstActividadesHistoricosByProspecto[index].dateCreate != null ? DateFormat('dd/MM/yyyy HH:MM:SS', 'es').format(lstActividadesHistoricosByProspecto[index].dateCreate!) : "",
+                                                        text: lstActividadesHistoricosByProspecto[index].dateCreate != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(lstActividadesHistoricosByProspecto[index].dateCreate!) : "",
                                                         style: const TextStyle(
                                                           color: Colors.blueGrey,
                                                           fontSize: 12,
@@ -420,7 +420,116 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
                                               width: size.width * 0.11,
                                               height: size.height * 0.1,
                                               alignment: Alignment.center,
-                                              child: ElevatedButton(
+                                              child: IconButton(
+                                                icon: const Icon(Icons.remove_red_eye, color: Colors.blue),
+                                                onPressed: () {
+                                                  
+                                                  var msmFinal = lstActividadesHistoricosByProspecto[index].activityNote!.split('<p>');
+                                                  var msmFinal2 = msmFinal[1].split('</p>');
+                                                  var msmFinal3 = msmFinal2[0];
+                                              
+                                                  final htmlConEstilo = '''
+                                                <html>
+                                                  <head>
+                                                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                                    <style>
+                                                      body {
+                                                        font-size: 18px;
+                                                        font-family: Arial, Helvetica, sans-serif;
+                                                        color: #333;
+                                                        padding: 16px;
+                                                        line-height: 1.6;
+                                                        background-color: #fafafa;
+                                                      }
+                                                      p {
+                                                        margin-bottom: 12px;
+                                                      }
+                                                      h1, h2, h3 {
+                                                        color: #1e88e5;
+                                                      }
+                                                      a {
+                                                        color: #1976d2;
+                                                        text-decoration: none;
+                                                      }
+                                                    </style>
+                                                  </head>
+                                                  <body>
+                                                    $msmFinal3
+                                                  </body>
+                                                </html>
+                                                ''';
+                                              
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) => Dialog(
+                                                      insetPadding: const EdgeInsets.all(20),
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(16),
+                                                      ),
+                                                      child: SizedBox(
+                                                        height: 500,
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                          children: [
+                                                            Container(
+                                                              padding: const EdgeInsets.all(12),
+                                                              decoration: const BoxDecoration(
+                                                                color: Colors.blueAccent,
+                                                                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                                                              ),
+                                                              child: const Row(
+                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                children: [
+                                                                  Text(
+                                                                    'Detalle de la actividad',
+                                                                    style: TextStyle(
+                                                                      color: Colors.white,
+                                                                      fontWeight: FontWeight.bold,
+                                                                      fontSize: 18,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                              
+                                                            Expanded(
+                                                              child: ClipRRect(
+                                                                borderRadius: const BorderRadius.vertical(
+                                                                  bottom: Radius.circular(16),
+                                                                ),
+                                                                child: WebViewWidget(
+                                                                  controller: WebViewController()
+                                                                    ..setJavaScriptMode(JavaScriptMode.unrestricted)
+                                                                    ..loadHtmlString(htmlConEstilo),
+                                                                ),
+                                                              ),
+                                                            ),
+                                              
+                                                            Padding(
+                                                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                                                              child: ElevatedButton.icon(
+                                                                onPressed: () { 
+                                                                  FocusScope.of(context).unfocus();
+                                                                  Navigator.pop(context);
+                                                                },
+                                                                icon: const Icon(Icons.close, color: Colors.white,),
+                                                                label: const Text('Cerrar', style: TextStyle(color: Colors.white),),
+                                                                style: ElevatedButton.styleFrom(
+                                                                  backgroundColor: Colors.blueAccent,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                
+                                                },
+                                                
+                                              ),
+                                              /*
+                                              ElevatedButton(
                                                 onPressed: () {
                                                   
                                                   var msmFinal = lstActividadesHistoricosByProspecto[index].activityNote!.split('<p>');
@@ -534,6 +643,7 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
                                                 ),
                                                 child: const Icon(Icons.remove_red_eye, color: Colors.white,)
                                               ),
+                                              */
                                             ),
                                           
                                           ],

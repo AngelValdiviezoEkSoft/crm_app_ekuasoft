@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:crm_ekuasoft_app/common/common.dart';
+
 //import 'package:cvs_ec_app/domain/domain.dart';
 
 class ActivitiesResponseModel {
@@ -97,7 +99,7 @@ class DatumActivitiesResponse {
     factory DatumActivitiesResponse.fromJson(Map<String, dynamic> json) => DatumActivitiesResponse(
         id: json["id"] ?? 0,
         dateDeadline: DateTime.parse(json["date_deadline"]),
-        dateCreate: json["create_date"] != null ? DateTime.parse(json["create_date"]) : null,
+        dateCreate: json["create_date"] != null ? UtilitiesCommon().parseToLocal(json["create_date"]) : null,
         resId: json["res_id"],
         resModel: json["res_model"],
         activityTypeId: IdActivities.fromJson(json["activity_type_id"]),

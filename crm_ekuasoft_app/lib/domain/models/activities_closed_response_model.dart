@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:crm_ekuasoft_app/common/common.dart';
+
 class ActivitiesClosedResponseModel {
   final String jsonrpc;
   final dynamic id;
@@ -189,7 +191,7 @@ class MailMessageClosed {
       activityDateDeadLine: json['activity_date_deadline'] ?? '',
       summary: json['activity_summary'] ?? '',
       activityDueDate: json['activity_due_date'],
-      activityCreateDate: json['activity_create_date'] != null ? DateTime.parse(json['activity_create_date']) : null,
+      activityCreateDate: json["activity_create_date"] != null ? UtilitiesCommon().parseToLocal(json["activity_create_date"]) : null,
       activityTypeId: json['activity_type_id'] != null
           ? Many2OneClosed.fromJson(json['activity_type_id'])
           : null,
