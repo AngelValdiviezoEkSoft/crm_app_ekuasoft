@@ -2231,7 +2231,7 @@ class PlanActivStateTwo extends State<PlanActiv> {
     super.dispose();
   }
 
-    void makePhoneCall(String cell) async {    
+  void makePhoneCall(String cell) async {    
     try {
       await platformPhone.invokeMethod('makePhoneCall', {'phone': cell});
     } on PlatformException catch (_) {

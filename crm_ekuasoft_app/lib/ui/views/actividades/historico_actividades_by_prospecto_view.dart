@@ -4,11 +4,13 @@ import 'package:crm_ekuasoft_app/domain/domain.dart';
 import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class HistoricoActByProspView extends StatefulWidget {
@@ -22,6 +24,11 @@ class HistoricoActByProspView extends StatefulWidget {
 class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
 
   ColorsApp objColorsApp = ColorsApp();
+  
+  static const platformPhone = MethodChannel('call_channel');
+
+  static const platformEmail = MethodChannel('email_channel');
+
   List<DatumActivitiesResponse> lstActividadesHistoricosByProspecto = [];
 
   @override
@@ -37,8 +44,93 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
 
   }
 
+  void makePhoneCall(String cell) async {    
+    try {
+      await platformPhone.invokeMethod('makePhoneCall', {'phone': cell});
+    } on PlatformException catch (_) {
+      //print("Error al abrir la app de llamada: ${e.message}");      
+    }        
+  }
+
+  void openEmailApp(String email) async {   
+    try {
+      await platformEmail.invokeMethod('openEmailApp', {'email': email});
+    } on PlatformException catch (_) {
+      //print("Error al abrir la app de correos: ${e.message}");
+    }    
+  }
   
-   Future<void> cargaActividadesByCliente() async {
+  Future<void> abrirWhatsapp(String phoneNumber, Size size,{
+    String message = ''
+  }) async {
+    //final String cleanedNumber = phoneNumber.replaceAll('+', '').replaceAll(' ', '');
+
+    //final String urlString = 'https://wa.me/$cleanedNumber?text=${Uri.encodeComponent(message)}';
+    //final String urlString = "https://wa.me/$cleanedNumber?text=$message";    
+      
+    launchWhatsAppBusinessOnly(size, phoneNumber: phoneNumber, message: message);
+  }
+
+  Future<void> launchWhatsAppBusinessOnly(Size size,{
+    required String phoneNumber,
+    String message = '',
+  }) async {
+    //final String androidBusinessUrl = 'whatsapp://send?phone=$phoneNumber&text=${Uri.encodeComponent(message)}';
+    //final Uri url = Uri.parse(androidBusinessUrl);
+
+    final Uri fallbackUrl = Uri.parse('https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}');
+      if (await canLaunchUrl(fallbackUrl)) {
+        await launchUrl(fallbackUrl, mode: LaunchMode.externalApplication);
+      } else {
+        showDialog(
+          //ignore: use_build_context_synchronously
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Container(
+                color: Colors.transparent,
+                height: size.height * 0.17,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    
+                    Container(
+                      color: Colors.transparent,
+                      height: size.height * 0.09,
+                      child: Image.asset('assets/gifs/gifErrorBlanco.gif'),
+                    ),
+
+                    Container(
+                      color: Colors.transparent,
+                      width: size.width * 0.95,
+                      height: size.height * 0.08,
+                      alignment: Alignment.center,
+                      child: const AutoSizeText(
+                        'No se pudo abrir WhatsApp. Asegúrese de tenerlo instalado.',
+                        maxLines: 2,
+                        minFontSize: 2,
+                      ),
+                    )
+                  ],
+                )
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Aceptar', style: TextStyle(color: Colors.blue[200]),),
+                ),
+              ],
+            );
+          },
+        );
+      
+      }
+
+  }
+  
+  Future<void> cargaActividadesByCliente() async {
     try {
       final gnrBloc = Provider.of<GenericBloc>(context, listen: false);
       gnrBloc.setIniciaCarga(true);
@@ -145,7 +237,7 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
                                               if(lstActividadesHistoricosByProspecto[index].activityCategory != null && lstActividadesHistoricosByProspecto[index].activityCategory!.toLowerCase() == 'phonecall')
                                               GestureDetector(
                                                 onTap: () {
-                                                  //makePhoneCall(lstActividadesDiariasByProspecto[index].leadPhone!);                                                        
+                                                  makePhoneCall(lstActividadesDiariasByProspecto[index].leadPhone!);                                                        
                                                 },
                                                 child: const Icon(Icons.call, size: 22,)
                                               ),
@@ -153,7 +245,7 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
                                               if(lstActividadesHistoricosByProspecto[index].activityCategory != null && lstActividadesHistoricosByProspecto[index].activityCategory!.toLowerCase() == 'email' && lstActividadesHistoricosByProspecto[index].leadEmail != null && lstActividadesHistoricosByProspecto[index].leadEmail!.isNotEmpty)
                                               GestureDetector(
                                                 onTap: () {
-                                                  //openEmailApp(lstActividadesDiariasByProspecto[index].leadEmail!);                                                        
+                                                  openEmailApp(lstActividadesDiariasByProspecto[index].leadEmail!);                                                        
                                                 },
                                                 child: const Icon(Icons.email, color: Colors.white, size: 22,)
                                               ),
@@ -161,7 +253,7 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
                                               if(lstActividadesHistoricosByProspecto[index].activityCategory != null && lstActividadesHistoricosByProspecto[index].activityCategory!.toLowerCase() == 'whatsapp')
                                               GestureDetector(
                                                 onTap: () {
-                                                  //abrirWhatsapp(lstActividadesDiariasByProspecto[index].leadPhone!, size);
+                                                  abrirWhatsapp(lstActividadesDiariasByProspecto[index].leadPhone!, size);
                                                 },
                                                 child: const FaIcon(FontAwesomeIcons.whatsapp, color: Colors.green, size: 22,)
                                               ),
@@ -453,4 +545,5 @@ class HistoricoActByProspViewState extends State<HistoricoActByProspView> {
       }
     );
   }
+
 }
