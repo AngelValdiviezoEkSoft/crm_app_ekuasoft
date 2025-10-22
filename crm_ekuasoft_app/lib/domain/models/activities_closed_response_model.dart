@@ -126,6 +126,7 @@ class MailMessageClosed {
   final Many2OneClosed? writeUid;
   final DateTime? activityCreateDate;
   final String? activityCategory;
+  final String? activityNote;
 
   MailMessageClosed({
     required this.id,
@@ -171,7 +172,8 @@ class MailMessageClosed {
     this.writeUid,
     required this.activityDateDeadLine,
     required this.activityCreateDate,
-    required this.activityCategory
+    required this.activityCategory,
+    required this.activityNote
   });
 
   factory MailMessageClosed.fromJson(Map<String, dynamic> json) {
@@ -221,6 +223,7 @@ class MailMessageClosed {
       ratingValue: (json['rating_value'] ?? 0).toDouble(),
       recordName: json['record_name'],
       replyTo: json['reply_to'],
+      activityNote: json['activity_note'],
       replyToForceNew: json['reply_to_force_new'] ?? false,
       resId: json['res_id'],
       scheduledTime: (json['scheduled_time'] ?? 0).toDouble(),
@@ -284,6 +287,7 @@ class MailMessageClosed {
         'working_time': workingTime,
         'write_date': writeDate,
         'write_uid': writeUid?.toJson(),
+        "activity_note": activityNote
       };
 }
 

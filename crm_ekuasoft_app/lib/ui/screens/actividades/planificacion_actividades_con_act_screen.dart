@@ -2950,7 +2950,7 @@ class PlanActivStateTwo extends State<PlanActiv> {
                                                   createUid: 0,
                                                   displayName: objDatumCrmLead?.contactName ?? '',
                                                   previousActivityTypeId: 0,
-                                                  note: descripcionActTxtAct.text,
+                                                  note: notasActTxtAct.text,
                                                   activityTypeId: idACt,
                                                   dateDeadline: DateTime.now(),
                                                   userId: objDatumCrmLead?.userId!.id ?? 0,

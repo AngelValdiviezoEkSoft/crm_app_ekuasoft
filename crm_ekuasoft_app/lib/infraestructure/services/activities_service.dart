@@ -1243,11 +1243,12 @@ class ActivitiesService extends ChangeNotifier{
                   activityCategory: '',
                   leadPhone: '',
                   leadEmail: '',
-                  scheduleTime: 0
+                  scheduleTime: 0,
+                  activityNote: ''
                 )
               );
           }
-        }        
+        }
 
       }
       
@@ -2146,7 +2147,8 @@ class ActivitiesService extends ChangeNotifier{
               userId: IdActivities (
                 id: actividadesCerradasResult.result.data.data[i].userId?.id ?? 0,
                 name: actividadesCerradasResult.result.data.data[i].userId?.name ?? ''
-              )
+              ),
+              activityNote: actividadesCerradasResult.result.data.data[i].activityNote,
             );
 
             objActividades.data.add(
@@ -2562,7 +2564,8 @@ class ActivitiesService extends ChangeNotifier{
               activityCategory: '',
               leadPhone: '',
               leadEmail: '',
-              scheduleTime: 0
+              scheduleTime: 0,
+              activityNote: ''
             )
           );
 
@@ -2587,7 +2590,8 @@ class ActivitiesService extends ChangeNotifier{
                 activityCategory: '',
                 leadPhone: '',
                 leadEmail: '',
-                scheduleTime: 0
+                scheduleTime: 0,
+                activityNote: ''
               )
             ],
             length: 0,

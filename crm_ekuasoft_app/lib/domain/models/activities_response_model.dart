@@ -50,6 +50,7 @@ class DatumActivitiesResponse {
     String? leadPhone;
     String? leadEmail;
     double? scheduleTime;
+    String? activityNote;
 
     DatumActivitiesResponse({
         required this.id,
@@ -66,7 +67,8 @@ class DatumActivitiesResponse {
         required this.activityCategory,
         required this.leadPhone,
         required this.leadEmail,
-        required this.scheduleTime
+        required this.scheduleTime,
+        required this.activityNote
     });
 
     String? get scheduledTimeFormula {
@@ -105,6 +107,7 @@ class DatumActivitiesResponse {
         activityCategory: json["activity_category"] ?? '',
         leadPhone: json["lead_phone"] ?? '',
         leadEmail: json["lead_email"] ?? '',
+        activityNote: json["activity_note"] ?? '',
         scheduleTime: json["schedule_time"] ?? 0
     );
 
