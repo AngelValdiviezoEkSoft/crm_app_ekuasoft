@@ -386,6 +386,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                     Container(
                                       color: Colors.transparent,
                                       width: size.width * 0.92,
+                                      height: size.height * 0.07,
                                       child: InternationalPhoneNumberInput(
                                         isEnabled: !validandoCell,
                                         onInputChanged: (PhoneNumber phoneNumber) async {
@@ -550,11 +551,11 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                         formatInput: true,
                                         keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
                                         inputDecoration: InputDecoration(
-                                          hintText: "Ingrese su número",
+                                          hintText: "Ingrese número",
                                           border: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(8),
                                           ),
-                                          suffixIcon: IconButton(
+                                          suffix: IconButton(
                                             onPressed: () {
                                               telefonoTxt.text = '';
                                             },
@@ -568,7 +569,6 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                         onSaved: (PhoneNumber phoneNumber) {
                                           //print('Número guardado: ${phoneNumber.phoneNumber}');
                                         },
-                                        //maxLength: 11,
                                         errorMessage: 'Teléfono no válido',
                                         
                                       ),
@@ -581,7 +581,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                     if(tabAccionesRegPrsp == 0)
                                     Container(
                                       color: Colors.transparent,
-                                      height: size.height * 0.55,
+                                      height: size.height * 0.55,                                      
                                       child: SingleChildScrollView(
                                         child: Column(
                                           children: [
@@ -589,7 +589,9 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                             Container(
                                               color: Colors.transparent,
                                               width: size.width * 0.92,
+                                              height: size.height * 0.07,
                                               child: TextFormField(
+                                                
                                                 textCapitalization: TextCapitalization.sentences,
                                                 cursorColor: AppLightColors().primary,                                        
                                                 inputFormatters: [
@@ -604,7 +606,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                   hintTetx: '* Empresa o Contacto *',
                                                   size: size,
                                                   colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
-                                                  suffixIcon: IconButton(
+                                                  suffix: IconButton(
                                                     onPressed: () {
                                                       nombresTxt.text = '';
                                                     },
@@ -644,6 +646,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                             Container(
                                               color: Colors.transparent,
                                               width: size.width * 0.92,
+                                              height: size.height * 0.07,
                                               child: TextFormField(
                                                 textCapitalization: TextCapitalization.sentences,
                                                 cursorColor: AppLightColors().primary,                                        
@@ -659,7 +662,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                   hintTetx: 'Ej: Nomb. producto + Nomb. prospecto',
                                                   size: size,
                                                   colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
-                                                  suffixIcon: IconButton(
+                                                  suffix: IconButton(
                                                     onPressed: () {
                                                       nombresOportTxt.text = '';
                                                     },
@@ -918,7 +921,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                             hintTetx: 'Ej: Majo Piguave',
                                             size: size,
                                             colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
-                                            suffixIcon: IconButton(
+                                            suffix: IconButton(
                                               onPressed: () {
                                                 recomendadoPorTxt.text = '';
                                               },
@@ -969,6 +972,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                             Container(
                                               color: Colors.transparent,
                                               width: size.width * 0.92,
+                                              height: size.height * 0.07,
                                               child: TextFormField(            
                                                 enabled: habilitaGuardar,                        
                                                 cursorColor: AppLightColors().primary,
@@ -988,8 +992,8 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                       letterSpacing: 0),
                                                       
                                                   hintText: "100%",
-                                                  suffixText: '%',
-                                                  suffixIcon: IconButton(
+                                                  //suffixText: '%',
+                                                  suffix: IconButton(
                                                     onPressed: () {
                                                       probabilityTxt.text = '';
                                                     },
@@ -1036,6 +1040,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                             Container(
                                               color: Colors.transparent,
                                               width: size.width * 0.92,
+                                              height: size.height * 0.07,
                                               child: TextFormField(
                                                 enabled: habilitaGuardar,
                                                 cursorColor: AppLightColors().primary,
@@ -1056,7 +1061,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                   hintText: "0.00",
                                                   prefixText: '\$',
                                                   //suffixText: '\$',
-                                                  suffixIcon: IconButton(
+                                                  suffix: IconButton(
                                                     onPressed: () {
                                                       ingresoEsperadoTxt.text = '';
                                                     },
@@ -1103,6 +1108,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                             Container(
                                               color: Colors.transparent,
                                               width: size.width * 0.92,
+                                              height: size.height * 0.07,
                                               child: TextFormField(
                                               inputFormatters: [
                                                 EmojiInputFormatter()
@@ -1120,7 +1126,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 hintTetx: 'Ej: correo@ejemplo.com',
                                                 size: size,
                                                 colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
-                                                suffixIcon: IconButton(
+                                                suffix: IconButton(
                                                   onPressed: () {
                                                     emailTxt.text = '';
                                                   },
@@ -1238,7 +1244,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 hintTetx: '',
                                                 size: size,
                                                 colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
-                                                suffixIcon: IconButton(
+                                                suffix: IconButton(
                                                   onPressed: () {
                                                     direccionTxt.text = '';
                                                   },
@@ -1311,7 +1317,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                   hintTetx: 'Ej: Interesado en casa pero no tiene trabajo estable',
                                                   size: size,
                                                   colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
-                                                  suffixIcon: IconButton(
+                                                  suffix: IconButton(
                                                   onPressed: () {
                                                     observacionesTxt.text = '';
                                                   },
@@ -1921,7 +1927,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                     }
                     
                                     //ignore:use_build_context_synchronously
-                                    context.pop();
+                                    //context.pop();
                                     //ignore:use_build_context_synchronously
                                     context.pop();
                     

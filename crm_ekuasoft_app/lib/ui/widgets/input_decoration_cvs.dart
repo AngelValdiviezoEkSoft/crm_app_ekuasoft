@@ -121,7 +121,8 @@ class InputDecorationCvs {
     String? counterTex,
     Icon? prefixIcon,
     Color? colorTheme,
-    Widget? suffixIcon
+    Widget? suffixIcon,
+    Widget? suffix
   }) {
     return InputDecoration(      
       enabledBorder: UnderlineInputBorder(
@@ -145,6 +146,7 @@ class InputDecorationCvs {
       floatingLabelBehavior: FloatingLabelBehavior.auto,
       prefixText: prefixText ?? '',
       suffixIcon: suffixIcon,
+      suffix: suffix,
       errorBorder: const OutlineInputBorder(
         borderSide: BorderSide(
           color: Colors.red,

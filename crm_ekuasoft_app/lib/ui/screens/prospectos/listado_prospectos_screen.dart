@@ -77,6 +77,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
     lstEstadosPrsp = [];
     lstEstadoProspectos = [];
     lstMenuGrid = [
+      /*
       MenuGridWidgetModel(
         icon: Icons.download, 
         title: 'Reporte',
@@ -85,6 +86,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
           generarReporte(contextPrincipalGen!);          
         },
       ),
+      */
       MenuGridWidgetModel(
         icon: Icons.calendar_month, 
         title: 'Calendario de actividades',

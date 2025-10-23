@@ -15,6 +15,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+bool editaDescripcion = false;
 bool _isButtonPressed = false;
 String tradeNameProsp = '';
 String channelProsp = '';
@@ -80,7 +81,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
   void initState() {
     super.initState();
     //motivosPerdida = [];
-    
+    editaDescripcion = false;
     if(objDatumCrmLead != null && objDatumCrmLead!.priority.isNotEmpty){
       prioridadPrsp = int.parse(objDatumCrmLead!.priority);
     }
@@ -2774,7 +2775,8 @@ class PlanActivStateTwo extends State<PlanActiv> {
                           label: Text('Notas'),
                           border: OutlineInputBorder(),
                           hintText: 'Notas de la visita o llamada para registrar la acción realizada.',
-                        ),                                              
+                        ),
+                        enabled: editaDescripcion,
                         controller: notasActTxtAct,
                         autocorrect: false,
                         keyboardType: TextInputType.multiline,
@@ -2808,6 +2810,7 @@ class PlanActivStateTwo extends State<PlanActiv> {
                         children: [
                           GestureDetector(
                             onTap: () {
+                              editaDescripcion = true;
                               iniciarCronometro();
                             },
                             child: Container(
@@ -3313,7 +3316,7 @@ class BtnSlidableActionActivState extends State<BtnSlidableActionActiv> {
                             border: OutlineInputBorder(),
                             hintText: 'Notas de la visita o llamada para registrar la acción realizada.',
                           ),
-                  
+                          enabled: editaDescripcion,
                           controller: notasActTxtAct,
                           autocorrect: false,
                           keyboardType: TextInputType.text,
@@ -3446,6 +3449,7 @@ class BtnSlidableActionActivState extends State<BtnSlidableActionActiv> {
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    editaDescripcion = true;
                     iniciarCronometro();
                   },
                   child: const Text("Llegada"),
