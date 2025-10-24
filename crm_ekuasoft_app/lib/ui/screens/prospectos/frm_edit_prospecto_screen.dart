@@ -12,21 +12,6 @@ import 'package:local_auth/local_auth.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-bool comienzaEditarFechaCierre = false;
-bool comienzaEditarCorreo = false;
-bool comienzaEditarDireccion = false;
-bool comienzaEditarNombres = false;
-bool comienzaEditarNombresContacto = false;
-bool comienzaEditarRecomendacion = false;
-bool comienzaEditarProbabilidad = false;
-bool comienzaEditarIngEsp = false;
-bool comienzaEditarObservacon = false;
-bool comienzaEditarPais = false;
-bool comienzaEditarCampania= false;
-bool comienzaEditarOrigen = false;
-bool comienzaEditarMedio = false;
-
-//DatumCrmLead? objDatumCrmLeadEdit;
 int idProsp = 0;
 int tabAccionesEditPrsp = 0;
 
@@ -58,13 +43,8 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
   
   bool prspAsignado = false;
   
-  // CONTROLADORES Y OBJETOS GLOBALES (Mover o declarar aquí si pertenecen al State)
-  // NOTA: Si estas variables son realmente globales fuera del State, mantén su declaración original
-  // pero la inicialización de los controladores DEBE hacerse en initState.
-
-  // Asumiendo que DatumCrmLead, objRutasGen, objDatumCrmLead, etc., están definidos globalmente o pasados
   DatumCrmLead? objDatumCrmLeadEdit;
-  int idProsp = 0; // Si es un ID de prospecto, debería ser inmutable o cargado
+  int idProsp = 0;
   int tabAccionesEditPrsp = 0;
 
   late TextEditingController nombresEditTxt;
@@ -88,21 +68,19 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
     emailEditTxt = TextEditingController(text: objDatumCrmLeadEdit?.emailFrom ?? '');
     direccionEditTxt = TextEditingController(text: objDatumCrmLeadEdit?.street ?? '');
     observacionesEditTxt = TextEditingController(text: objDatumCrmLeadEdit?.description ?? '');
-    paisEditTxt = TextEditingController(); // Se puede mantener si no se usa un Dropdown para el país
+    paisEditTxt = TextEditingController();
     probabilityEditTxt = TextEditingController(text: objDatumCrmLeadEdit?.probability?.toString() ?? "0");
     ingresoEsperadoEditTxt = TextEditingController(text: objDatumCrmLeadEdit?.expectedRevenue.toString() ?? '');
     recomendadoPorEditTxt = TextEditingController(text: objDatumCrmLeadEdit?.referred ?? '');
     
-    // Formato de fecha para el controlador
     String initialDateText = objDatumCrmLeadEdit?.dateDeadline != null 
         ? DateFormat('yyyy-MM-dd', 'es').format(objDatumCrmLeadEdit!.dateDeadline!) 
         : '-- No tiene fecha de cierre --';
     fechaCierreEditxt = TextEditingController(text: initialDateText);
     
-    // Inicializar valores de selección y otros controladores
     String cell = separatePhoneNumber(objDatumCrmLeadEdit?.phone ?? '');
     telefonoEditTxt = TextEditingController(text: cell);
-    sectorEditTxt = TextEditingController(text: 'Norte'); // Valor fijo
+    sectorEditTxt = TextEditingController(text: 'Norte');
 
     rutaFinal = objDatumCrmLeadEdit?.description ?? '';
 
@@ -114,46 +92,31 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
     prspAsignado = objDatumCrmLeadEdit?.userId != null && objDatumCrmLeadEdit!.userId!.name.isNotEmpty;
     tabAccionesEditPrsp = 0;
 
-    // Inicializar las variables de selección aquí con sus valores por defecto/cargados
-    // Asumiendo que objDatumCrmLeadEdit y sus propiedades son accesibles
     campEditSelect = objDatumCrmLeadEdit?.campaignId?.name.isNotEmpty == true 
         ? objDatumCrmLeadEdit!.campaignId!.name 
-        : ''; // Se completará con lstCampanias.first en build() si está vacío.
+        : '';
         
-    originEditSelect = objDatumCrmLeadEdit?.sourceId?.name.isNotEmpty == true 
-        ? objDatumCrmLeadEdit!.sourceId!.name 
-        : ''; // Se completará con lstOrigenes.first en build() si está vacío.
+    originEditSelect = objDatumCrmLeadEdit?.sourceId.name.isNotEmpty == true 
+        ? objDatumCrmLeadEdit!.sourceId.name 
+        : '';
 
-    mediaEditSelect = objDatumCrmLeadEdit?.mediumId?.name.isNotEmpty == true 
-        ? objDatumCrmLeadEdit!.mediumId!.name 
-        : ''; // Se completará con lstMedias.first en build() si está vacío.
+    mediaEditSelect = objDatumCrmLeadEdit?.mediumId.name.isNotEmpty == true 
+        ? objDatumCrmLeadEdit!.mediumId.name 
+        : '';
 
-    paisEditSelect = objDatumCrmLeadEdit?.countryId?.name.isNotEmpty == true 
-        ? objDatumCrmLeadEdit!.countryId!.name 
-        : ''; // Se completará con lstPaises.first en build() si está vacío.
+    paisEditSelect = objDatumCrmLeadEdit?.countryId.name.isNotEmpty == true 
+        ? objDatumCrmLeadEdit!.countryId.name 
+        : '';
         
     actEditSelect = objDatumCrmLeadEdit?.activityIds.isNotEmpty == true 
         ? objDatumCrmLeadEdit!.activityIds.first.name 
-        : ''; // Se completará con lstActividades.first en build() si está vacío.
+        : '';
 
   }
   
   @override
   void initState() {
-    super.initState();    
-    comienzaEditarFechaCierre = false;
-    comienzaEditarCorreo = false;
-    comienzaEditarDireccion = false;
-    comienzaEditarNombres = false;
-    comienzaEditarNombresContacto = false;
-    comienzaEditarRecomendacion = false;
-    comienzaEditarProbabilidad = false;
-    comienzaEditarIngEsp = false;
-    comienzaEditarObservacon = false;
-    comienzaEditarPais = false;
-    comienzaEditarCampania = false;
-    comienzaEditarOrigen = false;
-    comienzaEditarMedio = false;
+    super.initState();
     objActividadEscogida = null;
     objCalendarioActividadescogidaByFiltroCal = null;
 
@@ -721,7 +684,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                   FocusScope.of(context).unfocus();
                                                   
                                                   setState(() {
-                                                    comienzaEditarNombresContacto = true;
+                                                    
                                                   });
                                                 },
                                                 onChanged: (value) {
@@ -730,7 +693,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                 onTapOutside: (event) {
                                                   FocusScope.of(context).unfocus();
                                                   setState(() {
-                                                    comienzaEditarNombresContacto = true;
+                                                    
                                                   });
                                                 },
                                               ),
@@ -779,7 +742,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                   FocusScope.of(context).unfocus();
                                                   //FocusScope.of(context).requestFocus(numTelfAfilAkiNode);
                                                   setState(() {
-                                                    comienzaEditarNombres = true;
+                                                    
                                                   });
                                                 },
                                                 onChanged: (value) {
@@ -788,7 +751,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                 onTapOutside: (event) {
                                                   FocusScope.of(context).unfocus();
                                                   setState(() {
-                                                    comienzaEditarNombres = true;
+                                                    
                                                   });
                                                 },
                                               ),
@@ -816,7 +779,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                     ))
                                                 .toList(),
                                             onChanged: (value) {
-                                              comienzaEditarPais = true;
+                                              
                                               setState(() {
                                                 paisEditSelect = value ?? '';
                                               });
@@ -847,7 +810,6 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                           )
                                           .toList(),
                                           onChanged: (String? newValue) {
-                                            comienzaEditarCampania = true;
                                             setState(() {
                                               campEditSelect = newValue ?? '';
                                             });
@@ -878,7 +840,6 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                   ))
                                               .toList(),
                                           onChanged: (newValue) {
-                                            comienzaEditarOrigen = true;
                                             setState(() {
                                               originEditSelect = newValue ?? '';
                                             });
@@ -909,7 +870,6 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                               ))
                                                           .toList(),
                                                       onChanged: (newValue) {
-                                                        comienzaEditarMedio = true;
                                                         setState(() {
                                               mediaEditSelect = newValue ?? '';
                                             });
@@ -959,7 +919,6 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                             FocusScope.of(context).unfocus();
                                             //FocusScope.of(context).requestFocus(numTelfAfilAkiNode);
                                             setState(() {
-                                              comienzaEditarRecomendacion = true;
                                             });
                                           },
                                           onChanged: (value) {
@@ -968,7 +927,6 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                           onTapOutside: (event) {
                                             FocusScope.of(context).unfocus();
                                             setState(() {
-                                              comienzaEditarRecomendacion = true;
                                             });
                                           },
                                         ),
@@ -1012,7 +970,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                   labelText: 'Probabilidad',
                                                   suffix: IconButton(
                                                     onPressed: () {
-                                                      comienzaEditarProbabilidad = true;
+                                                      
                                                       probabilityEditTxt.text = '';
                                                     },
                                                     icon: Icon(
@@ -1033,7 +991,6 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                 onEditingComplete: () {
                                                   FocusScope.of(context).unfocus();
                                                   setState(() {
-                                                    comienzaEditarProbabilidad = true;
                                                   });
                                                 },
                                                 onChanged: (value) {
@@ -1043,14 +1000,13 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                   FocusScope.of(context).unfocus();
 
                                                   setState(() {
-                                                    comienzaEditarProbabilidad = true;
                                                   });
                                                 },
                                               ),
                                             ),
                                                                           
                                             SizedBox(
-                                              height: size.height * 0.02,
+                                              height: size.height * 0.007,
                                             ),
                                             
                                             Container(
@@ -1073,7 +1029,6 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                 //suffixText: '\$',
                                                 suffix: IconButton(
                                                   onPressed: () {
-                                                    comienzaEditarIngEsp = true;
                                                     ingresoEsperadoEditTxt.text = '';
                                                   },
                                                   icon: Icon(
@@ -1094,7 +1049,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                               onEditingComplete: () {
                                                 FocusScope.of(context).unfocus();
                                                 setState(() {
-                                                  comienzaEditarIngEsp = true;
+                                                  
                                                 });
                                               },
                                               onChanged: (value) {
@@ -1104,14 +1059,14 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                 FocusScope.of(context).unfocus();
 
                                                 setState(() {
-                                                  comienzaEditarIngEsp = true;
+                                                  
                                                 });
                                               },
                                             ),
                                           ),
                                             
                                             SizedBox(
-                                              height: size.height * 0.02,
+                                              height: size.height * 0.0008,
                                             ),
                                             
                                             Container(
@@ -1154,7 +1109,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                 FocusScope.of(context).unfocus();
                           //FocusScope.of(context).requestFocus(numTelfAfilAkiNode);
                                                 setState(() {
-                                                  comienzaEditarCorreo = true;
+                                                  
                                                 });
                                               },
                                               onChanged: (value) {
@@ -1163,7 +1118,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                               onTapOutside: (event) {
                                                 FocusScope.of(context).unfocus();
                                                 setState(() {
-                                                  comienzaEditarCorreo = true;
+                                                  
                                                 });
                                               },
                                               validator: (value) {
@@ -1178,12 +1133,13 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                             ),
                                             
                                             SizedBox(
-                                              height: size.height * 0.04,
+                                              height: size.height * 0.06,
                                             ),
                                             
                                             Container(
                                               color: Colors.transparent,
                                               width: size.width * 0.92,
+                                              height: size.height * 0.07,
                                               child: TextFormField(
                                                 onTapOutside: (event) {
                                                   setState(() {
@@ -1219,9 +1175,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                             if (fechaEdit != null) {
                               fecEditCierre = DateFormat('yyyy-MM-dd', 'es').format(fechaEdit);
                               fechaCierreEditxt.text = '';
-                              fechaCierreEditxt.text = fecEditCierre;
-                              
-                              comienzaEditarFechaCierre = true;
+                              fechaCierreEditxt.text = fecEditCierre;                              
                             }
 
                             setState(() {
@@ -1234,7 +1188,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                             ),
                                             
                                             SizedBox(
-                                              height: size.height * 0.02,
+                                              height: size.height * 0.006,
                                             ),
                           
                                             Container(
@@ -1274,7 +1228,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                               onEditingComplete: () {
                                                 FocusScope.of(context).unfocus();
                                                 setState(() {
-                                                  comienzaEditarDireccion = true;
+                                                  
                                                 });
                           //FocusScope.of(context).requestFocus(numTelfAfilAkiNode);
                                               },
@@ -1284,7 +1238,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                               onTapOutside: (event) {
                                                 FocusScope.of(context).unfocus();
                                                 setState(() {
-                                                  comienzaEditarDireccion = true;
+                                                  
                                                 });
                                               },
                                               ),
@@ -1452,19 +1406,19 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                     }
                     
                                     for (var elemento in mappedObjCamp3) {
-                                      if (elemento['name'] == campSelect) {
+                                      if (elemento['name'] == campEditSelect) {
                                         idCamp = elemento['id'];
                                       }
                                     }
                     
                                     for (var elemento in mappedObjOrig3) {
-                                      if (elemento['name'] == originSelect) {
+                                      if (elemento['name'] == originEditSelect) {
                                         idOrigen = elemento['id'];
                                       }
                                     }
                     
                                     for (var elemento in mappedObjMed3) {
-                                      if (elemento['name'] == mediaSelect) {
+                                      if (elemento['name'] == mediaEditSelect) {
                                         idMedia = elemento['id'];
                                       }
                                     }
