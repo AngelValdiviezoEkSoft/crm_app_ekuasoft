@@ -1025,7 +1025,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                   letterSpacing: 0
                                                 ),
                                                 labelText: 'Ingreso esperado en dólares',
-                                                hintText: "0.00",
+                                                hintText: "\$0.00",
                                                 //suffixText: '\$',
                                                 suffix: IconButton(
                                                   onPressed: () {
