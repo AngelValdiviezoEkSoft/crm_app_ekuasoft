@@ -408,51 +408,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
           ),
           title: const Text('Prospectos', style: TextStyle(fontSize: 19),),
           actions: [
-            Container(
-              color: Colors.transparent,
-              width: size.width * 0.3,
-              height: size.height * 0.06,
-              child: DropdownButtonFormField<CrmStage>(
-                value: selectCrmStage,
-                hint: const Text('Seleccione'),
-                onChanged: (CrmStage? newValue) {
-                  selectCrmStage = newValue;
-                  refreshDataByEstado(objRspGen, selectCrmStage?.name ?? '');
-                  setState(() {});
-                },
-                items: lstEstadoProspectos.map((CrmStage item) {
-                  return DropdownMenuItem<CrmStage>(
-                    value: item, 
-                    child: Text(
-                      item.name ?? '',
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  );
-                }).toList(),
-              ),
-              /*
-              DropdownButton<String>(
-                  value: estadoPrspSelect,
-                  onChanged: (String? newValue) {
-                    estadoPrspSelect = newValue ?? '';
-
-                    refreshDataByEstado(objRspGen, estadoPrspSelect);
-
-                    setState(() {
-                      //compSelect = newValue ?? '';
-                    });
-                  },
-                  items: lstEstadosPrsp
-                  .map((statePrsp) =>
-                    DropdownMenuItem(
-                      value: statePrsp,
-                      child: AutoSizeText(statePrsp, maxLines: 1, style: const TextStyle(fontSize: 11), presetFontSizes: const [14,12,10,8,6,4],),
-                    ))
-                  .toList(),
-                ),
-                */
-            ),
-
+            
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: () {
@@ -641,19 +597,56 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                         height: size.height * 0.009,
                       ),
 
+/*
+                      Container(
+                        width: size.width * 0.96,
+                        height: size.height * 0.03,
+                        color: Colors.transparent,
+                        child: const Text('Filtros: '),
+                      ),
+                      */
+
                       Container(
                         color: Colors.transparent,
                         width: size.width * 0.96,
                         height: size.height * 0.07,
                         child: Row(
                           children: [
-                             //VALIDAR QUE SEA SOLO PARA CVE
                             Container(
                               color: Colors.white,
-                              width: size.width * 0.45,
+                              width: size.width * 0.34,
+                              //height: size.height * 0.06,
+                              child: DropdownButtonFormField<CrmStage>(
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                ),
+                                value: selectCrmStage,
+                                hint: const Text('Seleccione'),
+                                onChanged: (CrmStage? newValue) {
+                                  selectCrmStage = newValue;
+                                  refreshDataByEstado(objRspGen, selectCrmStage?.name ?? '');
+                                  setState(() {});
+                                },
+                                items: lstEstadoProspectos.map((CrmStage item) {
+                                  return DropdownMenuItem<CrmStage>(
+                                    value: item, 
+                                    child: Text(
+                                      item.name ?? '',
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                            
+                            SizedBox(width: size.width * 0.05,),
+
+                            Container(
+                              color: Colors.white,
+                              width: size.width * 0.25,
                               child: DropdownButtonFormField<int>(
                                 alignment: Alignment.center,
-                                hint: const Text('Selecciona mes', style: TextStyle(color: Colors.black),),//, style: TextStyle(color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 2 ? Colors.white : Colors.black,),),
+                                hint: const Text('Mes', style: TextStyle(color: Colors.black),),//, style: TextStyle(color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 2 ? Colors.white : Colors.black,),),
                                 value: _mesSeleccionado,
                                 isExpanded: true,
                                 decoration: const InputDecoration(
@@ -683,7 +676,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
                             Container(
                               color: Colors.white,
-                              width: size.width * 0.45,
+                              width: size.width * 0.27,
                               child: DropdownButtonFormField<int>(
                                 //style: TextStyle(color: !_isDropdownOpen && (themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 2) ? Colors.white : Colors.black,),
                                 value: selectedYear,
