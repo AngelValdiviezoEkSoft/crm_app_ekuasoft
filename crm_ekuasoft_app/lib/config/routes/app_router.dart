@@ -193,6 +193,10 @@ final GoRouter appRouter = GoRouter(
       path: objRutas.rutaOnBoarding,
       builder: (context, state) => const OnBoardingScreen(null),
     ),
+    GoRoute(
+      path: objRutas.rutaNotificaciones,
+      builder: (context, state) => const NotificationsScreen(),
+    ),
   ],
   initialLocation: objRutas.rutaBienvenida,
 );

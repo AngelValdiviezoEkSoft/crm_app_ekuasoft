@@ -31,6 +31,7 @@ class Rutas{
   String rutaFrmChangePassword = '/rutaFrmChangePassword';
   String rutaSettingsUser = '/rutaSettingsUser';
   String rutaEditProfile = '/rutaEditProfile';
+  String rutaNotificaciones = '/rutaNotificaciones';
 
   //imágenes 
   String rutaImagenes = 'assets/images/';

@@ -1,3 +1,4 @@
+import 'dart:ui' as ui;
 
 import 'dart:convert';
 import 'dart:io';
@@ -838,6 +839,63 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                         color: Colors.transparent,
                                                         width: size.width * 0.54,
                                                         height: size.height * 0.04,
+                                                        child: LayoutBuilder(
+                                                          builder: (context, constraints) {
+                                                            final text = prospectosFiltrados[index].name;
+                                                            const textStyle = TextStyle(fontWeight: FontWeight.bold);
+
+                                                            final textPainter = TextPainter(
+                                                              text: TextSpan(text: text, style: textStyle),
+                                                              maxLines: 1,
+                                                              textDirection: ui.TextDirection.ltr,//TextDirection.LTR,
+                                                            )..layout(maxWidth: constraints.maxWidth);
+
+                                                            String displayText = text;
+                                                            if (textPainter.didExceedMaxLines) {
+                                                              displayText = text.substring(0, textPainter.getPositionForOffset(Offset(constraints.maxWidth - 20, 0)).offset) + '...';
+                                                            }
+
+                                                            return SelectableText(
+                                                              displayText,
+                                                              style: textStyle,
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+
+                                                      Container(
+                                                        color: Colors.transparent,
+                                                        width: size.width * 0.54,
+                                                        height: size.height * 0.04,
+                                                        child: LayoutBuilder(
+                                                          builder: (context, constraints) {
+                                                            final text = prospectosFiltrados[index].contactName ?? '';
+                                                            const textStyle = TextStyle(fontWeight: FontWeight.bold);
+
+                                                            final textPainter = TextPainter(
+                                                              text: TextSpan(text: text, style: textStyle),
+                                                              maxLines: 1,
+                                                              textDirection: ui.TextDirection.ltr,//TextDirection.LTR,
+                                                            )..layout(maxWidth: constraints.maxWidth);
+
+                                                            String displayText = text;
+                                                            if (textPainter.didExceedMaxLines) {
+                                                              displayText = text.substring(0, textPainter.getPositionForOffset(Offset(constraints.maxWidth - 20, 0)).offset) + '...';
+                                                            }
+
+                                                            return SelectableText(
+                                                              displayText,
+                                                              style: textStyle,
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+
+/*
+                                                      Container(
+                                                        color: Colors.transparent,
+                                                        width: size.width * 0.54,
+                                                        height: size.height * 0.04,
                                                         child: SelectableText.rich(
                                                           TextSpan(
                                                           children: [                                                            
@@ -863,19 +921,14 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                               TextSpan(
                                                                 text: prospectosFiltrados[index].contactName ?? '',
                                                                 style: const TextStyle(
-                                                                  fontWeight: FontWeight.bold,                                                                
-                                                                  //color: Colors.black
+                                                                  fontWeight: FontWeight.bold,
                                                                 ),
-                                                                /*
-                                                                maxLines: 1,
-                                                                overflow: TextOverflow.ellipsis,
-                                                                textAlign: TextAlign.left,
-                                                                */
                                                               ),
                                                             ],
                                                           ),
                                                         ),
                                                       ),
+                                                      */
                                                       
                                                     Container(
                                                     color: Colors.transparent,
@@ -932,28 +985,30 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                   ),
                                                 
                                                   Container(
-                                                      color: Colors.transparent,
-                                                      width: size.width * 0.54,
+                                                    color: Colors.transparent,
+                                                    width: size.width * 0.54,
                                                     height: size.height * 0.035,
                                                       child: AutoSizeText(
-                                                          prospectosFiltrados[index].stageId.name,
-                                                            style: TextStyle(
-                                                              fontWeight: FontWeight.bold,
-                                                              fontSize: 10,
-                                                              color: prospectosFiltrados[index].stageId.name.toLowerCase() == 'perdido' ? Colors.red : Colors.green
-                                                            ),
-                                                            maxLines: 2,
-                                                            textAlign: TextAlign.left,),
-                                                  ),
-                                                
-                                                      ],
+                                                        prospectosFiltrados[index].stageId.name,
+                                                        style: TextStyle(
+                                                          fontWeight: prospectosFiltrados[index].stageId.name.toLowerCase() == 'ganado' ? FontWeight.bold : FontWeight.normal,
+                                                          fontSize: 10,
+                                                          color: prospectosFiltrados[index].stageId.name.toLowerCase() == 'perdido' ? Colors.red :
+                                                          prospectosFiltrados[index].stageId.name.toLowerCase() == 'ganado' ? Colors.blue : Colors.green,                                                          
+                                                        ),
+                                                        maxLines: 2,
+                                                        textAlign: TextAlign.left,                                                        
+                                                      ),
                                                     ),
-                                                  ),
+                                                
+                                                  ],
+                                                ),
+                                              ),
                                                   
                                                   
-                                                ],
-                                              )
-                                            ),
+                                            ],
+                                          )
+                                        ),
                                             Container(
                                               width: size.width * 0.13,
                                               height: size.height * 0.17,

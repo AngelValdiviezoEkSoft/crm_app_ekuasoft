@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -35,7 +36,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 //ignore: must_be_immutable
-class HomeScreenState extends State<HomeScreen> {
+class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
 
   int varPosicionMostrar = 0;
 
@@ -60,12 +61,26 @@ class HomeScreenState extends State<HomeScreen> {
     
   }
 
+  late AnimationController varController = AnimationController(vsync: this, duration: const Duration(milliseconds: 700))
+    ..repeat(reverse: true);
+
+/*
+  late Animation<Offset> _animationVertical =
+      Tween(begin: Offset.zero, end: const Offset(0.1, 0.9))
+          .animate(_controller);
+          */
+
+  late Animation<Offset> animationHorizontal = Tween(begin: const Offset(-0.07, 0), end: const Offset(0.07, 0)).animate(varController);
+
+
   @override
   Widget build(BuildContext context) {
 
     final size = MediaQuery.of(context).size;
 
     List<String> lstComp = [];
+
+    double angle = pi / 420.0;
 
     return SafeArea(
       child: WillPopScope(        
@@ -268,7 +283,7 @@ class HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         title: const Text(
-                          'Dashboard',
+                          '',
                           style: TextStyle(color: Colors.black),
                         ),
                         actions: [
@@ -278,7 +293,7 @@ class HomeScreenState extends State<HomeScreen> {
                             width: size.width * 0.6,
                             height: size.height * 0.055,
                             child: DropdownButton<String>(
-                                hint: const Icon(Icons.flip_camera_android_rounded), // Ícono del ComboBox
+                                //hint: const Icon(Icons.flip_camera_android_rounded), // Ícono del ComboBox
                                 value: compSelect,
                                 onChanged: (String? newValue) {
                                   //compSelect = newValue ?? '';
@@ -297,9 +312,72 @@ class HomeScreenState extends State<HomeScreen> {
                           ),
 
                           if(mostrarBoton)
-                          IconButton(
-                            icon: const Icon(Icons.notifications_active),
-                            onPressed: () {},
+                          TweenAnimationBuilder(
+                            duration: const Duration(milliseconds: 400), //Duration(minutes: 60),
+                            curve: Curves.ease,
+                            tween: Tween<double>(begin: -pi / 12.0, end: angle),
+                            onEnd: () {
+                              if (angle == pi / 12.0) {
+                                setState(() {
+                                  angle = -pi / 12.0;
+                                });
+                              } else {
+                                setState(() {
+                                  angle = 0;
+                                });
+                              }
+                            },
+                            builder: (_, double value, __) {
+                              return Transform.rotate(
+                                angle: value,
+                                child: Stack(
+                                  children: [
+                                    SlideTransition(
+                                      position: animationHorizontal,
+                                      child: IconButton(
+                                        icon: const Icon(Icons.notifications_active),
+                                        color: Colors.blueAccent,
+                                        tooltip: 'Notificaciones',
+                                        onPressed: () async {
+                                          await context.push(objRutasGen.rutaNotificaciones);
+                                        },
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 2.0,
+                                      right: 5.0,
+                                      child: Container(
+                                        width: 16,
+                                        height: 16,
+                                        alignment: Alignment.center,
+                                        decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                                        child: 
+                                        /*
+                                        state.cantidadTotalNotificaciones < 100
+                                          ? Text(
+                                              '${state.cantidadTotalNotificaciones}',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontSize: numNotificaciones < 100 ? 9 : 6
+                                              ),
+                                            )
+                                          : 
+                                          */
+                                          const Text(
+                                              '2',//'99+',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontSize: 6
+                                              ),
+                                            ),
+                                      )
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                           ),
 
                           if(!mostrarBoton)

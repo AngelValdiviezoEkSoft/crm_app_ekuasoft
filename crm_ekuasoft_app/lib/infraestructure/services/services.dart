@@ -1,3 +1,5 @@
+export 'package:crm_ekuasoft_app/infraestructure/services/notifications/notifications.dart';
+
 export 'package:crm_ekuasoft_app/infraestructure/services/notas_internas_service.dart';
 
 export 'package:crm_ekuasoft_app/infraestructure/services/informative_service.dart';

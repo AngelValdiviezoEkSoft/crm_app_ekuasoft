@@ -1,4 +1,6 @@
 
+export 'package:crm_ekuasoft_app/domain/models/notification_model.dart';
+
 export 'package:crm_ekuasoft_app/domain/models/response_generic_model.dart';
 
 export 'package:crm_ekuasoft_app/domain/models/activities_closed_response_model.dart';

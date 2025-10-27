@@ -1,3 +1,5 @@
+export 'package:crm_ekuasoft_app/ui/screens/notifications/notifications.dart';
+
 export 'package:crm_ekuasoft_app/ui/screens/informative/informative.dart';
 
 export 'package:crm_ekuasoft_app/ui/screens/carga/carga.dart';
