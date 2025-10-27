@@ -9,6 +9,10 @@ abstract class AuthState extends Equatable {
   
   Future<String> readToken() async {
     try {
+      String internet = await ValidacionesUtils().validaInternet();
+
+      if(internet.isNotEmpty) return 'NI';
+      
       String rspFinal = 'home';
 
       var rspReg = await storage.read(key: 'RespuestaRegistro') ?? '';

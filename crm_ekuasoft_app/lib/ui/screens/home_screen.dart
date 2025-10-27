@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:math';
-
+import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crm_ekuasoft_app/app/app.dart';
 import 'package:crm_ekuasoft_app/domain/domain.dart';
 import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
@@ -40,14 +40,21 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
 
   int varPosicionMostrar = 0;
 
+  late StreamSubscription<ConnectivityResult> connectivitySubscription;
+
+  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+
+  final Connectivity _connectivity = Connectivity();
+
   @override
   void initState(){
     super.initState();
     objActividadEscogida = null;
     objCalendarioActividadescogidaByFiltroCal = null;
+    connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
 
     contextPrincipalGen = context;
-
+/*
     Connectivity().onConnectivityChanged.listen((_) async {
       final isConnected = await InternetConnectionChecker().hasConnection;
       //_controller.sink.add(isConnected);
@@ -58,7 +65,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
       });
 
     });
-    
+    */
   }
 
   late AnimationController varController = AnimationController(vsync: this, duration: const Duration(milliseconds: 700))
@@ -71,6 +78,17 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
           */
 
   late Animation<Offset> animationHorizontal = Tween(begin: const Offset(-0.07, 0), end: const Offset(0.07, 0)).animate(varController);
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    setState(() {
+      _connectionStatus = result;
+    });
+
+    if (_connectionStatus.name == ConnectivityResult.none.name) {
+      //context.pop();
+      context.push(objRutasGen.rutaConexionInternet);
+    }
+  }
 
 
   @override

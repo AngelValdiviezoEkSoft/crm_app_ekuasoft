@@ -108,12 +108,11 @@ final GoRouter appRouter = GoRouter(
                 return const CargaScreen(null);
               } else {
                 if(snapshot.data != '') {
-                  /*
+                  
                   if(snapshot.data == 'NI') {
                     return const ConexionInternetScreen(null);
                   }
-                  else{
-                    */
+                  else {
                     if(snapshot.data == 'log') {
                       return AuthScreen(null);
                     }
@@ -123,7 +122,7 @@ final GoRouter appRouter = GoRouter(
                     if(snapshot.data == 'termCond') {
                       return const TermsAndConditionsScreen(null);
                     }
-                  //}
+                  }
                 }
               }
               

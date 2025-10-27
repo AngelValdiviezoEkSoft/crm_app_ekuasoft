@@ -83,14 +83,10 @@ class ValidacionesUtils extends ChangeNotifier {
 
   Future<String> validaInternet() async {
     String respuesta = '';
-    //var connectivityResult = await (Connectivity().checkConnectivity());
 
     bool result = await InternetConnectionChecker().hasConnection;
     
-    //if (!connectivityResult.contains(ConnectivityResult.mobile) && !connectivityResult.contains(ConnectivityResult.wifi)) {
     if(!result){
-
-    //if(!connectivityResult.contains(ConnectivityResult.mobile) && !connectivityResult.contains(ConnectivityResult.wifi)){
       respuesta = 'N';
     }
 

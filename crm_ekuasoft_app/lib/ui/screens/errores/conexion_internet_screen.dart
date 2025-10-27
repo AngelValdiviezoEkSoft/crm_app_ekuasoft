@@ -31,8 +31,8 @@ class ConexionInternetScreenState extends State<ConexionInternetScreen>{
         
       debugShowCheckedModeBanner: false,
       
-      home: WillPopScope(
-        onWillPop: () async => false,
+      home: PopScope(
+        onPopInvoked: (didPop) => false,        
         child: Scaffold(
           backgroundColor: const Color.fromARGB(254, 254, 254, 254),
           body: Center(
@@ -98,43 +98,9 @@ class ConexionInternetScreenState extends State<ConexionInternetScreen>{
                                       
                                   ),
                                   onPressed: () async {
-                                    /*
-                                    Future.microtask(() => 
-                                      Navigator.of(context, rootNavigator: true).pushReplacement(
-                                        CupertinoPageRoute<bool>(
-                                          fullscreenDialog: true,
-                                          builder: (BuildContext context) => const CheckAuthScreen(),
-                                        ),
-                                      )
-                                    );
-                                    */
-                                    //context.read<AuthBloc>().add(AppStarted());objRutas.
-                                    context.push(objRutasGen.rutaCheckAuth);
+                                    context.pop();
+                                    context.push(objRutasGen.rutaBienvenida);
 
-                                    /*
-                                    BlocBuilder<AuthBloc, AuthState>(
-                                      builder: (context, state) {
-                                        
-                                        return FutureBuilder(
-                                          future: state.readToken(),
-                                          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                                            if(!snapshot.hasData) {
-                                              return const CargaScreen(null);
-                                            } else {
-                                              if(snapshot.data != '') {
-                                                if(snapshot.data == 'NI') {
-
-                                                  return const ConexionInternetScreen(null);
-
-                                                }
-                                              }
-                                            }
-                                            return WelcomeScreen();
-                                          }
-                                        );
-                                      },
-                                    );
-                                  */
                                   },
                         
                                 ),
