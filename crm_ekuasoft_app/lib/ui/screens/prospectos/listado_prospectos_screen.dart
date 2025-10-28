@@ -78,16 +78,16 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
     lstEstadosPrsp = [];
     lstEstadoProspectos = [];
     lstMenuGrid = [
-      /*
+      
       MenuGridWidgetModel(
         icon: Icons.download, 
         title: 'Reporte',
         onTap: () {
           contextPrincipalGen!.pop();
-          generarReporte(contextPrincipalGen!);          
+          generarReporte(contextPrincipalGen!);
         },
       ),
-      */
+      
       MenuGridWidgetModel(
         icon: Icons.calendar_month, 
         title: 'Calendario de actividades',
@@ -298,6 +298,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
           prospectosFiltrados.add(
             DatumCrmLead(
+              dateCreate: DateTime.now(),
               activityIds: lstComboActivityId,
               campaignId: objCampaign,
               countryId: objCountryId,
@@ -802,7 +803,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                             borderRadius: const BorderRadius.all(Radius.circular(10))
                                           ),
                                           width: size.width * 0.98,
-                                          height: size.height * 0.195,
+                                          height: size.height * 0.23,
                                           child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -931,31 +932,31 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                       */
                                                       
                                                     Container(
-                                                    color: Colors.transparent,
-                                                    width: size.width * 0.54,
-                                                    height: size.height * 0.035,
-                                                      child: 
-                                                      SelectableText.rich(
-                                                         TextSpan(
-                                                            children: [
-                                                              TextSpan(
-                                                                text: 'Email: ',
-                                                                style: TextStyle(
-                                                                  fontSize: 14,
-                                                                  color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
-                                                                )
-                                                              ),
-                                                              TextSpan(
-                                                                text: prospectosFiltrados[index].emailFrom,
-                                                                style: const TextStyle(
-                                                                  fontSize: 14,
-                                                                  color: Colors.blue)
-                                                              ),
-                                                            ]
-                                                          ),
-                                                        
-                                                      )
-                                                  ),
+                                                      color: Colors.transparent,
+                                                      width: size.width * 0.54,
+                                                      height: size.height * 0.035,
+                                                        child: 
+                                                        SelectableText.rich(
+                                                          TextSpan(
+                                                              children: [
+                                                                TextSpan(
+                                                                  text: 'Email: ',
+                                                                  style: TextStyle(
+                                                                    fontSize: 14,
+                                                                    color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                                  )
+                                                                ),
+                                                                TextSpan(
+                                                                  text: prospectosFiltrados[index].emailFrom,
+                                                                  style: const TextStyle(
+                                                                    fontSize: 14,
+                                                                    color: Colors.blue)
+                                                                ),
+                                                              ]
+                                                            ),
+                                                          
+                                                        )
+                                                    ),
                                                 
 
                                                   Container(
@@ -984,6 +985,34 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                       )
                                                   ),
                                                 
+                                                  
+                                                  Container(
+                                                    color: Colors.transparent,
+                                                    width: size.width * 0.6,
+                                                    height: size.height * 0.035,
+                                                      child: 
+                                                      SelectableText.rich(
+                                                         TextSpan(
+                                                            children: [
+                                                              TextSpan(
+                                                                text: 'Registro: ',
+                                                                style: TextStyle(
+                                                                  fontSize: 14,
+                                                                  color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white)
+                                                              ),
+                                                              TextSpan(
+                                                                text: prospectosFiltrados[index].dateCreate != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(prospectosFiltrados[index].dateCreate!) : '-------',
+                                                                style: const TextStyle(
+                                                                  fontSize: 12,
+                                                                  color: Colors.blue)
+                                                              ),
+                                                            ]
+                                                          ),
+                                                        
+                                                      )
+                                                  ),
+                                                
+
                                                   Container(
                                                     color: Colors.transparent,
                                                     width: size.width * 0.54,

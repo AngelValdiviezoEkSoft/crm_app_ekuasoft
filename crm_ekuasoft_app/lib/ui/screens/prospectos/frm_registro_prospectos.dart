@@ -386,7 +386,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                     Container(
                                       color: Colors.transparent,
                                       width: size.width * 0.92,
-                                      height: size.height * 0.07,
+                                      height: size.height * 0.0895,
                                       child: InternationalPhoneNumberInput(
                                         isEnabled: !validandoCell,
                                         onInputChanged: (PhoneNumber phoneNumber) async {
@@ -589,7 +589,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                             Container(
                                               color: Colors.transparent,
                                               width: size.width * 0.92,
-                                              height: size.height * 0.07,
+                                              height: size.height * 0.08,
                                               child: TextFormField(
                                                 
                                                 textCapitalization: TextCapitalization.sentences,
@@ -646,7 +646,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                             Container(
                                               color: Colors.transparent,
                                               width: size.width * 0.92,
-                                              height: size.height * 0.07,
+                                              height: size.height * 0.105,
                                               child: TextFormField(
                                                 textCapitalization: TextCapitalization.sentences,
                                                 cursorColor: AppLightColors().primary,                                        
@@ -1792,6 +1792,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                       name: nombresOportTxt.text,
                                       emailCc: emailTxt.text,
                                       priority: '',
+                                      dateCreate: DateTime.now(),
                                       type: '',
                                       city: '',
                                       contactName: nombresTxt.text,

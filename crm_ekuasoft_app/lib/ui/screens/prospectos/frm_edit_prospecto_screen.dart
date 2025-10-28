@@ -1432,6 +1432,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                   DatumCrmLead objProsp = DatumCrmLead(                                    
                                     //dateClose: DateTime.now(),
                                     //userId: 0,
+                                    dateCreate: DateTime.now(),
                                     id: objDatumCrmLeadEdit?.id ?? 0,
                                     dayClose: double.parse(dateEdPrsp.day.toString()),                                    
                                     name: nombresOportEditTxt.text,

@@ -159,6 +159,7 @@ class PlanificacionActividadesService extends ChangeNotifier{
           CrmLeadDatumAppModel objCrmLeadDatumAppModel = CrmLeadDatumAppModel(
             dateDeadline:  DateTime.now(),
             dateClose: DateTime.now(),
+            dateCreate: DateTime.now(),
             probability: objProspecto.probability ?? 0,
             street: objProspecto.street,
             referred: objProspecto.referred,

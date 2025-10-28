@@ -79,9 +79,12 @@ class GenericState extends Equatable {
   Future<String> readPrincipalPage() async {
 
     try{
-      
+      IrModel objIrModel = IrModel(data: [], length: 0, fields: FieldsIr(id: '', model: ''));
       var objRspIrModel = await storageDataInicial.read(key: 'RespuestaIrModel') ?? '';
-      IrModel objIrModel = IrModel.fromRawJson(objRspIrModel);
+      
+      if(objRspIrModel.isNotEmpty){
+        objIrModel = IrModel.fromRawJson(objRspIrModel);
+      }      
 
       final registraProspecto = await storage.read(key: 'registraProspecto') ?? '';
       final registraActividad = await storage.read(key: 'RegistraActividad') ?? '';

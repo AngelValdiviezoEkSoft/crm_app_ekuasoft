@@ -101,8 +101,8 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
     double angle = pi / 420.0;
 
     return SafeArea(
-      child: WillPopScope(        
-        onWillPop: () async => false,
+      child: PopScope(        
+        onPopInvoked: (didPop) => false,
         child: BlocBuilder<GenericBloc, GenericState>(
             builder: (context,state) {
 
@@ -329,9 +329,11 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
                               ),
                           ),
 
+                          //NO QUITAR, NOTIFICACIONES
+/*
                           if(mostrarBoton)
                           TweenAnimationBuilder(
-                            duration: const Duration(milliseconds: 400), //Duration(minutes: 60),
+                            duration: const Duration(milliseconds: 400),
                             curve: Curves.ease,
                             tween: Tween<double>(begin: -pi / 12.0, end: angle),
                             onEnd: () {
@@ -397,6 +399,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
                               );
                             },
                           ),
+*/
 
                           if(!mostrarBoton)
                           IconButton(
@@ -578,7 +581,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
                   }
 
                   return Container(
-                    color: Colors.blue,
+                    color: Colors.red,
                   );
                 }
               );

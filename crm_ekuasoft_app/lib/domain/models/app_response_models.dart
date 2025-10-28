@@ -287,6 +287,7 @@ class CrmLeadDatumAppModel {
   DateTime? dateDeadline;
   String? description;
   bool? active;
+  DateTime? dateCreate;
 
   CrmLeadDatumAppModel({
       required this.id,
@@ -317,7 +318,8 @@ class CrmLeadDatumAppModel {
       required this.dateClose,
       required this.dateDeadline,
       this.description,
-      this.active
+      this.active,
+      required this.dateCreate
   });
 
   factory CrmLeadDatumAppModel.fromRawJson(String str) => CrmLeadDatumAppModel.fromJson(json.decode(str));
@@ -367,10 +369,12 @@ class CrmLeadDatumAppModel {
     probability: json["probability"] ?? 0,
     description: json["description"],
     active: json["active"] ?? true,
+    dateCreate: json["create_date"] != null ? DateTime.parse(json["create_date"]) : null,
 );
 
   Map<String, dynamic> toJson() => {
     "id": id,
+    "create_date": '$dateCreate',//dateCreate?.toIso8601String(),
     "activity_ids": List<dynamic>.from(activityIds.map((x) => x.toJson())),
     "campaign_id": campaignId.toJson(),
     "contact_name": contactName,

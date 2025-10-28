@@ -48,7 +48,7 @@ class DataInicialService extends ChangeNotifier{
       
     }
     catch(ex){
-      //print('Test DataInit $ex');
+      print('Test DataInit $ex');
     }
   }
   

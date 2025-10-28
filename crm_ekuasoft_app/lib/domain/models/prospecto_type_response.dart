@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:crm_ekuasoft_app/common/common.dart';
+
 class ProspectoResponseModel {
     String jsonrpc;
     dynamic id;
@@ -135,6 +137,7 @@ class DatumCrmLead {
     StructCombos? userId;
     double expectedRevenue;
     String? referred;
+    DateTime? dateCreate;
 
     DatumCrmLead({
         required this.id,
@@ -170,7 +173,8 @@ class DatumCrmLead {
         this.dateClose,
         this.userId,
         this.referred,
-        this.active
+        this.active,
+        required this.dateCreate
     });
 
     factory DatumCrmLead.fromJson(String str) => DatumCrmLead.fromMap(json.decode(str));
@@ -179,6 +183,7 @@ class DatumCrmLead {
 
     factory DatumCrmLead.fromMap(Map<String, dynamic> json) => DatumCrmLead(
         id: json["id"],
+        dateCreate: json["create_date"] != null ? DateTime.parse(json["create_date"]) : null,
         activityIds: List<StructCombos>.from(json["activity_ids"].map((x) => StructCombos.fromMap(x))),
         campaignId: CampaignId.fromMap(json["campaign_id"]),
         contactName: json["contact_name"],
@@ -218,6 +223,7 @@ class DatumCrmLead {
 
       return DatumCrmLead(
         id: json['id'],
+        dateCreate: json["create_date"] != null ? DateTime.parse(json["create_date"]) : null,
         activityIds: (json['activity_ids'] as List<dynamic>)
             .map((item) => StructCombos.fromJson2(jsonDecode(item)))
             .toList(),
@@ -258,6 +264,7 @@ class DatumCrmLead {
     Map<String, dynamic> toJson2() {
     return {
       'id': id,
+      "create_date": dateCreate,      
       'activity_ids': activityIds.map((activity) => jsonEncode(activity.toJson())).toList(),
       'campaign_id': campaignId?.toJson(),
       'contact_name': contactName,

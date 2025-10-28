@@ -187,6 +187,7 @@ class AgendaScreenState extends State<AgendaScreen>  {
           length: 0
         ),
         lead: DatumCrmLead(
+          dateCreate: DateTime.now(),
           activityIds: [], campaignId: CampaignId(id: 0, name: ''), countryId: StructCombos(id: 0, name: ''),
           dayClose: 0, emailFrom: '', expectedRevenue: 0, id: 0, lostReasonId: CampaignId(id: 0, name: ''),
           mediumId: StructCombos(id: 0, name: ''), mobile: '', name: '', partnerId: PartnerId(id: 0, name: '', tradeName: '', cantonId: StructCombos(id: 0, name: ''), regionId: StructCombos(id: 0, name: ''), sectorId: StructCombos(id: 0, name: ''), channelId: StructCombos(id: 0, name: ''), cityId: StructCombos(id: 0, name: ''),clasificationId: StructCombos(id: 0, name: ''), email: ''),
