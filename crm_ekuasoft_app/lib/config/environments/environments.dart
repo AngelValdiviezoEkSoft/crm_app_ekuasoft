@@ -1,4 +1,6 @@
 
+export 'package:crm_ekuasoft_app/config/environments/environments_cells_word.dart';
+
 export 'package:crm_ekuasoft_app/config/environments/mensaje_validacion.dart';
 
 export 'package:crm_ekuasoft_app/config/environments/tipo_alertas.dart';

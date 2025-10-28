@@ -66,6 +66,8 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
   PhoneNumber number = PhoneNumber(isoCode: 'EC');
   final formKeyRegPrp = GlobalKey<FormState>();
   
+String _textoAnterior = "";
+  
   @override
   void initState() {
     super.initState();
@@ -101,6 +103,63 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
     telefonoPrsp = '';
     codIsoPhone = '';
     dialCodePhone = '';
+
+    telefonoTxt.addListener(() {
+      final nuevoTexto = telefonoTxt.text;
+
+      // Si el cambio es "grande", probablemente se pegó un texto
+      if ((nuevoTexto.length - _textoAnterior.length).abs() > 1) {
+        
+        String numero = telefonoTxt.text.replaceAll(' ', '');
+        int indiceQuitar = 0;
+
+        if (numero.startsWith(EnvironmentsCellsWord().masEcuador)
+            || numero.startsWith(EnvironmentsCellsWord().masComoros)
+            || numero.startsWith(EnvironmentsCellsWord().masBahamas)
+            || numero.startsWith(EnvironmentsCellsWord().masCookIslands)
+            || numero.startsWith(EnvironmentsCellsWord().masCostaRica)
+            || numero.startsWith(EnvironmentsCellsWord().masPanama)
+          ) {
+          indiceQuitar = 4;
+        }
+
+        if (numero.startsWith(EnvironmentsCellsWord().ecuador) 
+        || numero.startsWith(EnvironmentsCellsWord().masEspania)
+        || numero.startsWith(EnvironmentsCellsWord().masChile)
+        || numero.startsWith(EnvironmentsCellsWord().masChina)
+        || numero.startsWith(EnvironmentsCellsWord().masColombia)
+        || numero.startsWith(EnvironmentsCellsWord().comoros)
+        || numero.startsWith(EnvironmentsCellsWord().cookIslands)
+        || numero.startsWith(EnvironmentsCellsWord().bahamas)
+        || numero.startsWith(EnvironmentsCellsWord().costaRica)
+        || numero.startsWith(EnvironmentsCellsWord().panama)
+        ) {
+          indiceQuitar = 3;          
+        }
+
+        if (numero.startsWith(EnvironmentsCellsWord().espania) 
+        || numero.startsWith(EnvironmentsCellsWord().masEeuu)
+        || numero.startsWith(EnvironmentsCellsWord().chile)
+        || numero.startsWith(EnvironmentsCellsWord().china)
+        || numero.startsWith(EnvironmentsCellsWord().colombia)
+        ) {
+          indiceQuitar = 2;
+        }
+
+        if (numero.startsWith(EnvironmentsCellsWord().eeuu)) {
+          indiceQuitar = 1;
+        }
+
+        telefonoTxt.text = numero.substring(indiceQuitar);
+
+        // Aquí puedes hacer algo adicional:
+        // - Validar automáticamente
+        // - Mostrar un mensaje
+        // - Llamar a tu función de validación
+      }
+
+      _textoAnterior = nuevoTexto;
+    });
   }
 
   @override
@@ -394,32 +453,6 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                           codIsoPhone = phoneNumber.isoCode ?? '';
                                           dialCodePhone = phoneNumber.dialCode ?? '';
 
-/*
-                                          if(telefonoPrsp.contains('+593')){
-                                            String numeroSinPrefijo1 = phoneNumber.phoneNumber!.replaceFirst('+593', '').trim();
-  
-                                            //String numeroSinPrefijo2 = phoneNumber.phoneNumber!.replaceFirst('+593', '');
-                                            
-                                            String numeroLimpio = numeroSinPrefijo1.replaceAll(' ', '');
-
-                                            telefonoPrsp = '';
-                                            telefonoPrsp = numeroLimpio;
-                                          }
-
-                                          if(telefonoPrsp.startsWith('593')){
-                                            String numeroSinPrefijo1 = phoneNumber.phoneNumber!.replaceFirst('593', '').trim();
-  
-                                            //String numeroSinPrefijo2 = phoneNumber.phoneNumber!.replaceFirst('+593', '');
-                                            
-                                            String numeroLimpio = numeroSinPrefijo1.replaceAll(' ', '');
-
-                                            telefonoPrsp = '';
-                                            telefonoPrsp = numeroLimpio;
-                                          }
-                                          */
-
-                                          //telefonoTxt.text = telefonoPrsp;
-
                                           setState(() {});
                                         },
                                         onInputValidated: (bool isValid) async {
@@ -558,6 +591,9 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                           suffix: IconButton(
                                             onPressed: () {
                                               telefonoTxt.text = '';
+                                              habilitaGuardar = false;
+
+                                              setState(() {});
                                             },
                                             icon: Icon(
                                                 size: 18,
