@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:crm_ekuasoft_app/common/common.dart';
-
 class ProspectoResponseModel {
     String jsonrpc;
     dynamic id;

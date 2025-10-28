@@ -30,8 +30,9 @@ class AuthScreen extends StatelessWidget {
     contextAuth = context;
     final size = MediaQuery.of(context).size;
 
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) => false,
       child: SafeArea(
         child: Scaffold(
           backgroundColor: AppLightColors().gray100Background,

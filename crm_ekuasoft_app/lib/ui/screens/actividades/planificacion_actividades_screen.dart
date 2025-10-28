@@ -137,8 +137,9 @@ class PlanActState extends State<PlanificacionActividades> {
     return BlocBuilder<GenericBloc, GenericState>(
         builder: (context,state) {
           
-        return WillPopScope(
-              onWillPop: () async => false,
+        return PopScope(
+          canPop: false,
+          onPopInvoked: (didPop) => false,
               child: Scaffold(
                 //resizeToAvoidBottomInset: false,
                 appBar: AppBar(

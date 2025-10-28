@@ -31,8 +31,9 @@ class GpsFakeScreenState extends State<GpsFakeScreen>{
         
       debugShowCheckedModeBanner: false,
       
-      home: WillPopScope(
-        onWillPop: () async => false,
+      home: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) => false,
         child: Scaffold(
           backgroundColor: const Color.fromARGB(254, 254, 254, 254),
           body: Center(

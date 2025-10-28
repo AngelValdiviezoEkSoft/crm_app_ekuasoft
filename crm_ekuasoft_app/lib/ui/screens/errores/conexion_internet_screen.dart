@@ -32,6 +32,7 @@ class ConexionInternetScreenState extends State<ConexionInternetScreen>{
       debugShowCheckedModeBanner: false,
       
       home: PopScope(
+        canPop: false,
         onPopInvoked: (didPop) => false,        
         child: Scaffold(
           backgroundColor: const Color.fromARGB(254, 254, 254, 254),

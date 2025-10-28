@@ -25,8 +25,9 @@ class ScanQrScreenState extends State<ScanQrScreen> {
   Widget build(BuildContext context) {
     final sizeScreen = MediaQuery.of(context).size;
 
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) => false,
       child: Scaffold(
         appBar: AppBarWidget(
           null,

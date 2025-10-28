@@ -161,8 +161,9 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
             probCalculada = objDatumCrmLead!.probability! * 100;
           }
         
-          return WillPopScope(
-            onWillPop: () async => false,
+          return PopScope(
+            canPop: false,
+            onPopInvoked: (didPop) => false,
             child: Scaffold(
               appBar: AppBar(
                 title: Text(

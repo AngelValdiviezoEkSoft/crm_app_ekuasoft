@@ -23,7 +23,7 @@ class AppResponseModel {
         id: json["id"] ?? 0,
         result: json["result"] != null ? AppModel.fromJson(json["result"]) : 
           AppModel(estado: 0, data: DataAppModel(
-            lostReason: CrmLostReasonResponse(data: [], length: 0, fields: Map<String, String>()),
+            lostReason: CrmLostReasonResponse(data: [], length: 0, fields: {}),
             crmLead: CrmLeadAppModel(data: [], length: 0, fields: CrmLeadFieldsAppModel(activityIds: '', campaignId: '', city: '', contactName: '', countryId: '', dateClosed: '', dateDeadline: '', dateOpen: '', dayClose: '', description: '', emailCc: '', emailFrom: '', expectedRevenue: '', function: '', lostReasonId: '', mediumId: '', mobile: '', name: '', partnerId: '', partnerName: '', phone: '', priority: '', referred: '', sourceId: '', stageId: '', stateId: '', street: '', tagIds: '', title: '', type: '', userId: '')), 
             irResponse: IrModel(data: [], fields: FieldsIr(id: '', model: ''), length: 0), 
             mailActivity: MailActivityAppModel(data: [], length: 0, fields: MailActivityFieldsAppModel(code: '', name: '', stateIds: '')), 
@@ -33,12 +33,12 @@ class AppResponseModel {
             utmCampaign: UtmCampaignAppModel(data: [], length: 0, fields: UtmCampaignFieldsAppModel(active: '', name: '', title: '')), 
             utmMedium: UtmAppModel(data: [], length: 0, fields: UtmMediumFields(name: '')), 
             utmSource: UtmAppModel(data: [], length: 0, fields: UtmMediumFields(name: '')),
-            ekClasification: EkClassification(data: [],fields: Map<String, String>(), length: 0),
-            ekResCountryCanton: CantonModel(data: [],fields: Map<String, String>(), length: 0),
-            ekResCountryCity: CountryCity(data: [],fields: Map<String, String>(), length: 0),
-            ekResRegion: RegionModel(data: [],fields: Map<String, String>(), length: 0),
-            ekResSector: SectorModel(data: [],fields: Map<String, String>(), length: 0),
-            crmStageResponse: CrmStageResponse(data: [], length: 0, fields: Map<String, String>(),),
+            ekClasification: EkClassification(data: [],fields: {}, length: 0),
+            ekResCountryCanton: CantonModel(data: [],fields: {}, length: 0),
+            ekResCountryCity: CountryCity(data: [],fields: {}, length: 0),
+            ekResRegion: RegionModel(data: [],fields: {}, length: 0),
+            ekResSector: SectorModel(data: [],fields: {}, length: 0),
+            crmStageResponse: CrmStageResponse(data: [], length: 0, fields: {},),
           )
         ),
     );
@@ -66,7 +66,7 @@ class AppModel {
     factory AppModel.fromJson(Map<String, dynamic> json) => AppModel(
         estado: json["estado"] ?? 0,
         data: json["data"] != null ? DataAppModel.fromJson(json["data"]) : DataAppModel(
-          lostReason: CrmLostReasonResponse(data: [], length: 0, fields: Map<String, String>()),
+          lostReason: CrmLostReasonResponse(data: [], length: 0, fields: {}),
           crmLead: CrmLeadAppModel(data: [], length: 0, fields: CrmLeadFieldsAppModel(activityIds: '', campaignId: '', city: '', contactName: '', countryId: '', dateClosed: '', dateDeadline: '', dateOpen: '', dayClose: '', description: '', emailCc: '', emailFrom: '', expectedRevenue: '', function: '', lostReasonId: '', mediumId: '', mobile: '', name: '', partnerId: '', partnerName: '', phone: '', priority: '', referred: '', sourceId: '', stageId: '', stateId: '', street: '', tagIds: '', title: '', type: '', userId: '')), 
           irResponse: IrModel(data: [], fields: FieldsIr(id: '', model: ''), length: 0), 
           mailActivity: MailActivityAppModel(data: [], length: 0, fields: MailActivityFieldsAppModel(code: '', name: '', stateIds: '')), 
@@ -76,12 +76,12 @@ class AppModel {
           utmCampaign: UtmCampaignAppModel(data: [], length: 0, fields: UtmCampaignFieldsAppModel(active: '', name: '', title: '')), 
           utmMedium: UtmAppModel(data: [], length: 0, fields: UtmMediumFields(name: '')), 
           utmSource: UtmAppModel(data: [], length: 0, fields: UtmMediumFields(name: '')),
-          ekClasification: EkClassification(data: [],fields: Map<String, String>(), length: 0),
-          ekResCountryCanton: CantonModel(data: [],fields: Map<String, String>(), length: 0),
-          ekResCountryCity: CountryCity(data: [],fields: Map<String, String>(), length: 0),
-          ekResRegion: RegionModel(data: [],fields: Map<String, String>(), length: 0),
-          ekResSector: SectorModel(data: [],fields: Map<String, String>(), length: 0),
-          crmStageResponse: CrmStageResponse(data: [], length: 0, fields: Map<String, String>(),),
+          ekClasification: EkClassification(data: [],fields: {}, length: 0),
+          ekResCountryCanton: CantonModel(data: [],fields: {}, length: 0),
+          ekResCountryCity: CountryCity(data: [],fields: {}, length: 0),
+          ekResRegion: RegionModel(data: [],fields: {}, length: 0),
+          ekResSector: SectorModel(data: [],fields: {}, length: 0),
+          crmStageResponse: CrmStageResponse(data: [], length: 0, fields: {},),
         ),            
     );
 
@@ -180,29 +180,29 @@ class DataAppModel {
         ekClasification: 
             json[EnvironmentsProd().modEkClasif] != null ? 
                 EkClassification.fromJson(json[EnvironmentsProd().modEkClasif])
-            : EkClassification(data: [],fields: Map<String, String>(), length: 0),
+            : EkClassification(data: [],fields: {}, length: 0),
         ekResCountryCanton: 
             json[EnvironmentsProd().modEkResCountryCanton] != null ? 
                 CantonModel.fromJson(json[EnvironmentsProd().modEkResCountryCanton])
-            : CantonModel(data: [],length: 0, fields: Map<String, String>()),
+            : CantonModel(data: [],length: 0, fields: {}),
         ekResRegion: 
             json[EnvironmentsProd().modEkResRegion] != null ? 
                 RegionModel.fromJson(json[EnvironmentsProd().modEkResRegion])
-            : RegionModel(data: [], length: 0, fields: Map<String, String>()),
+            : RegionModel(data: [], length: 0, fields: {}),
         ekResSector: 
             json[EnvironmentsProd().modEkResSector] != null ? 
                 SectorModel.fromJson(json[EnvironmentsProd().modEkResSector])
-            : SectorModel(data: [], length: 0, fields: Map<String, String>()),
+            : SectorModel(data: [], length: 0, fields: {}),
         ekResCountryCity: 
             json[EnvironmentsProd().modEkResCountryCity] != null ? 
                 CountryCity.fromJson(json[EnvironmentsProd().modEkResCountryCity])
-            : CountryCity(data: [], length: 0, fields: Map<String, String>()),
+            : CountryCity(data: [], length: 0, fields: {}),
         lostReason: json[EnvironmentsProd().modCrmLostReason] != null ? 
           CrmLostReasonResponse.fromJson(json[EnvironmentsProd().modCrmLostReason])
-          : CrmLostReasonResponse(data: [], length: 0, fields: Map<String, String>()),
+          : CrmLostReasonResponse(data: [], length: 0, fields: {}),
         crmStageResponse: json[EnvironmentsProd().modCrmLostReason] != null ? 
           CrmStageResponse.fromJson(json[EnvironmentsProd().modCrmStage])
-          : CrmStageResponse(data: [], fields: Map<String, String>(), length: 0)
+          : CrmStageResponse(data: [], fields: {}, length: 0)
 
     );
 
@@ -1329,7 +1329,7 @@ class EkClassification {
   factory EkClassification.fromJson(Map<String, dynamic> json) {
     return EkClassification(
       length: json['length'] ?? 0,
-      fields: json['fields'] != null ? Map<String, String>.from(json['fields']) : Map<String, String>(),
+      fields: json['fields'] != null ? Map<String, String>.from(json['fields']) : {},
       data: json['data'] != null ? (json['data'] as List)
           .map((e) => CombosAppModel.fromJson(e))
           .toList() : [],
@@ -1361,7 +1361,7 @@ class CantonModel {
   factory CantonModel.fromJson(Map<String, dynamic> json) {
     return CantonModel(
       length: json['length'] ?? 0,
-      fields: json['fields'] != null ? Map<String, String>.from(json['fields']) : Map<String, String>(),
+      fields: json['fields'] != null ? Map<String, String>.from(json['fields']) : {},
       data: json['data'] != null ? (json['data'] as List)
           .map((e) => CombosAppModel.fromJson(e))
           .toList() : [],
@@ -1393,7 +1393,7 @@ class RegionModel {
   factory RegionModel.fromJson(Map<String, dynamic> json) {
     return RegionModel(
       length: json['length'] ?? 0,
-      fields: json['fields'] != null ? Map<String, String>.from(json['fields']) : Map<String, String>(),
+      fields: json['fields'] != null ? Map<String, String>.from(json['fields']) : {},
       data: json['data'] != null ? (json['data'] as List)
           .map((e) => CombosAppModel.fromJson(e))
           .toList() : [],
@@ -1425,7 +1425,7 @@ class SectorModel {
   factory SectorModel.fromJson(Map<String, dynamic> json) {
     return SectorModel(
       length: json['length'] ?? 0,
-      fields: json['fields'] != null ? Map<String, String>.from(json['fields']) : Map<String, String>(),
+      fields: json['fields'] != null ? Map<String, String>.from(json['fields']) : {},
       data: json['data'] != null ? (json['data'] as List)
           .map((e) => CombosAppModel.fromJson(e))
           .toList() : [],
@@ -1457,7 +1457,7 @@ class CountryCity {
   factory CountryCity.fromJson(Map<String, dynamic> json) {
     return CountryCity(
       length: json['length'] ?? 0,
-      fields: json['fields'] != null ? Map<String, String>.from(json['fields']) : Map<String, String>(),
+      fields: json['fields'] != null ? Map<String, String>.from(json['fields']) : {},
       data: json['data'] != null ? (json['data'] as List)
           .map((e) => CombosAppModel.fromJson(e))
           .toList() : [],

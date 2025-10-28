@@ -29,8 +29,9 @@ class FrmCargaScreen extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return SafeArea(
-      child: WillPopScope(
-        onWillPop: () async => false,
+      child: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) => false,
         child: BlocBuilder<AuthBloc, AuthState>(
             builder: (context,state) { 
               return Scaffold(

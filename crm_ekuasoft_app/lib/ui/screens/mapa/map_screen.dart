@@ -304,8 +304,9 @@ class MapScreenState extends State<MapScreen> {
 
     final size = MediaQuery.of(context).size;
     
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) => false,
       child: 
       BlocBuilder<GpsBloc, GpsState>(
         builder: (context, state) {

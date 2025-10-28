@@ -23,8 +23,9 @@ class EnConstruccionScreenState extends State<EnConstruccionScreen>{
   Widget build(BuildContext context) {
     final sizeScreen = MediaQuery.of(context).size;
     
-    return WillPopScope(
-        onWillPop: () async => false,
+    return PopScope(
+      onPopInvoked: (didPop) => false,
+      canPop: false,
         child: Scaffold(
           body: Container(
             width: sizeScreen.width,

@@ -34,8 +34,9 @@ class VersionamientoScreenState extends State<VersionamientoScreen>{
   Widget build(BuildContext context) {
     final sizeScreen = MediaQuery.of(context).size;
     
-    return WillPopScope(
-        onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) => false,
         child: Scaffold(
           body: Container(
             width: sizeScreen.width,
@@ -72,9 +73,9 @@ class VersionamientoScreenState extends State<VersionamientoScreen>{
                   height: sizeScreen.height * 0.09,//90,
                   child: const Center(
                     child: AutoSizeText (
-                      'Tenemos una nueva versión de nuestro Ecosistema EnrolApp',
+                      'Tenemos una nueva versión del CRM',
                       style: TextStyle(color: Colors.black, decorationStyle: TextDecorationStyle.solid, fontWeight: FontWeight.bold),
-                      presetFontSizes: const [22,20,18,16,14,12,10],
+                      presetFontSizes: [22,20,18,16,14,12,10],
                       textAlign: TextAlign.center,
                       maxLines: 3,
                     ),

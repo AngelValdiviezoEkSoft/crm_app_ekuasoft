@@ -31,11 +31,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   void _deleteNotification(int id) async {
     final success = await NotificationService.deleteNotification(id);
     if (success) {
+      //ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Notificación eliminada")),
       );
       _refresh();
     } else {
+      //ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Error al eliminar notificación")),
       );

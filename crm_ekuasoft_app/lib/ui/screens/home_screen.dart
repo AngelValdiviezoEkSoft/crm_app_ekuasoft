@@ -101,7 +101,8 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
     double angle = pi / 420.0;
 
     return SafeArea(
-      child: PopScope(        
+      child: PopScope(
+        canPop: false,
         onPopInvoked: (didPop) => false,
         child: BlocBuilder<GenericBloc, GenericState>(
             builder: (context,state) {

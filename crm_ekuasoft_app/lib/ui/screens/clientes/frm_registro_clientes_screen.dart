@@ -52,8 +52,9 @@ class FrmRegistroClientesScreenState extends State<FrmRegistroClientesScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) => false,
       child: SafeArea(
         child: BlocBuilder<AuthBloc, AuthState>(
             builder: (context, stateEstado) {

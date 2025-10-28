@@ -275,6 +275,7 @@ class Welcome2Screen extends StatelessWidget {
             plataforma = 'Desconocido';
           }
     
+          //ignore: use_build_context_synchronously
           Position position = await getLocation(context);
     
           //imeiCod = '8234560400000023'; //BORRAR LUEGO - PARA EMULADOR
