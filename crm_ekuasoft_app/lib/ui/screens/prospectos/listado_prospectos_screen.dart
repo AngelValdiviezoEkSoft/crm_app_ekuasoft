@@ -79,6 +79,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
     lstEstadoProspectos = [];
     lstMenuGrid = [
       
+      /*
       MenuGridWidgetModel(
         icon: Icons.download, 
         title: 'Reporte',
@@ -87,6 +88,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
           generarReporte(contextPrincipalGen!);
         },
       ),
+      */
       
       MenuGridWidgetModel(
         icon: Icons.calendar_month, 
@@ -147,21 +149,23 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
     String resInt = await ValidacionesUtils().validaInternet();
 
     if(!accionNav)
-    showDialog(
-      //ignore:use_build_context_synchronously
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => SimpleDialog(
-        alignment: Alignment.center,
-        children: [
-          SimpleDialogCargando(
-            null,
-            mensajeMostrar: 'Estamos consultando',
-            mensajeMostrarDialogCargando: 'el listado de prospectos.',
-          ),
-        ]
-      ),
-    );
+    {
+      showDialog(
+        //ignore:use_build_context_synchronously
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => SimpleDialog(
+          alignment: Alignment.center,
+          children: [
+            SimpleDialogCargando(
+              null,
+              mensajeMostrar: 'Estamos consultando',
+              mensajeMostrarDialogCargando: 'el listado de prospectos.',
+            ),
+          ]
+        ),
+      );
+    }
 
     if(resInt.isEmpty){
       var rspPrsp = await ProspectoTypeService().getProspectos();
