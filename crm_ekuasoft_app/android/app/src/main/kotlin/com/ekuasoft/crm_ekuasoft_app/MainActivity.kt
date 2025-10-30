@@ -1,4 +1,4 @@
-package com.example.crm_ekuasoft_app
+package com.ekuasoft.crm_ekuasoft_app
 
 
 import android.content.Intent

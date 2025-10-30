@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:crm_ekuasoft_app/config/routes/routes.dart';
+import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,7 +29,8 @@ class CrmEkuasoftAppState extends State<CrmEkuasoftApp> {
   final _controller = StreamController<bool>.broadcast();
 
   Stream<bool> get connectionStream => _controller.stream;
-
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  final GlobalKey<ScaffoldMessengerState> messengerKey = GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -36,32 +38,14 @@ class CrmEkuasoftAppState extends State<CrmEkuasoftApp> {
     mostrarBoton = false;
 
     connectivityStream = Connectivity().onConnectivityChanged;
-/*
-    Connectivity().onConnectivityChanged.listen((_) async {
-      final isConnected = await InternetConnectionChecker().hasConnection;
-      _controller.sink.add(isConnected);
-      
-
-      setState(() {
-        mostrarBoton = isConnected;
-      });
-
-    });
-    */
-
-    //!connectivityResult.contains(ConnectivityResult.mobile) && !connectivityResult.contains(ConnectivityResult.wifi)
-    // Escuchar cambios de red
     connectivityStream.listen((_) => checkConnection());
-    checkConnection(); // Verificar al inicio
+    checkConnection();
 
-    // Configura una tarea que se ejecuta cada minuto.
-    // cron.schedule(Schedule.parse('*/6 * * * * *'), () {
-    //   setState(() {
-    //     //tokenManager.startTokenCheck(imei!);
-    //     tokenManager.startTokenCheck();
-    //   });
-    // });
-    
+    NotificationFirebaseService.messagesStream.listen((message) { 
+
+      final snack = CustomSnackbar(null, message: message);
+      ScaffoldMessenger.of(context).showSnackBar(snack);
+    });
   }
 
   @override

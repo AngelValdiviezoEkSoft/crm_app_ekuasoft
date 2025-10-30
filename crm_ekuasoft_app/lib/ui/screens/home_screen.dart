@@ -49,6 +49,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
   @override
   void initState(){
     super.initState();
+    NotificationFirebaseService.init();
     objActividadEscogida = null;
     objCalendarioActividadescogidaByFiltroCal = null;
     connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);

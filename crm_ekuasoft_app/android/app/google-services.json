@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "811143346495",
+    "project_id": "notificaciones-cve-test",
+    "storage_bucket": "notificaciones-cve-test.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:811143346495:android:166f0ac710777cedb87b8a",
+        "android_client_info": {
+          "package_name": "com.ekuasoft.crm_ekuasoft_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVeoar3sOYf-j2fAmrH5R1UrhGN_zIkPY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

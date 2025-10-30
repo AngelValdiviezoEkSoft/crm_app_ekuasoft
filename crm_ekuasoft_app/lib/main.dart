@@ -8,11 +8,20 @@ import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:secure_application/secure_application.dart';
 import 'package:provider/src/change_notifier_provider.dart' as np;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'firebase_options.dart';
 
 String rutaActualGen = '';
 final GlobalKey<ListaProspectosScreenState> listaProspectosKey = GlobalKey<ListaProspectosScreenState>();
 
 void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   setupServiceLocator();
 
