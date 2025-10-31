@@ -9,21 +9,13 @@ class NotificationFirebaseService {
   static Stream<String> get messagesStream => messageString.stream;
     
   static final _firebaseMessaging = FirebaseMessaging.instance;
-  //static final _localNotifications = FlutterLocalNotificationsPlugin();
 
-  static Future<void> init() async {
-    // Solicitar permisos
-    //await _firebaseMessaging.requestPermission();
+  static Future<void> init() async {    
     requestPermission();
-
-    // Inicializar notificaciones locales
-    //const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
-    //const initSettings = InitializationSettings(android: androidInit);
-    //await _localNotifications.initialize(initSettings);
 
     // Obtener token del dispositivo
     final token = await _firebaseMessaging.getToken();
-    print('🔑 Token FCM: $token');
+    //print('🔑 Token FCM: $token');
 
     FirebaseMessaging.onBackgroundMessage(_backgroundHandler); 
     FirebaseMessaging.onMessage.listen(_onMessageHandler); 
@@ -36,7 +28,7 @@ class NotificationFirebaseService {
   }
 
   static Future _onMessageHandler (RemoteMessage message) async { 
-    print('HOLAAA: $message');
+    //print('HOLAAA: $message');
     messageString.sink.add(message.data['producto'] ?? 'No hay data' );
   }
 
@@ -59,7 +51,7 @@ class NotificationFirebaseService {
       sound: true
     );
 
-    print('User push notification status ${ settings.authorizationStatus }');
+    //print('User push notification status ${ settings.authorizationStatus }');
 
   }
 }
