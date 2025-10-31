@@ -1,4 +1,6 @@
+import 'package:crm_ekuasoft_app/ui/ui.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'dart:async';
 
 class NotificationFirebaseService {
@@ -24,16 +26,45 @@ class NotificationFirebaseService {
   }
 
   static Future _backgroundHandler (RemoteMessage message) async { 
-    messageString.sink.add(message.data['producto'] ?? 'No hay titulo' );
+    messageString.sink.add(message.data['llamada'] ?? 'No hay titulo' );
+    cantNotificaciones += 1;
   }
 
   static Future _onMessageHandler (RemoteMessage message) async { 
-    //print('HOLAAA: $message');
-    messageString.sink.add(message.data['producto'] ?? 'No hay data' );
+    
+    Future.delayed(const Duration(seconds: 10), () {
+      if(contextPrincipalGen != null) {
+        Navigator.push(
+          contextPrincipalGen!,
+          MaterialPageRoute(
+            builder: (_) => NotificationDetailView(
+              title: message.notification?.title,
+              body: message.notification?.body,
+              data: message.data,
+            ),
+          ),
+        );
+      }
+    });
+    //cantNotificaciones += 1;
+    messageString.sink.add(message.data['llamada'] ?? 'No hay data' );
   }
 
   static Future _onMessageOpenApp (RemoteMessage message) async { 
-    messageString.sink.add(message.data['producto'] ?? 'No hay data' );
+    if(contextPrincipalGen != null) {
+      Navigator.push(
+        contextPrincipalGen!,
+        MaterialPageRoute(
+          builder: (_) => NotificationDetailView(
+            title: message.notification?.title,
+            body: message.notification?.body,
+            data: message.data,
+          ),
+        ),
+      );
+    }
+    cantNotificaciones += 1;
+    messageString.sink.add(message.data['llamada'] ?? 'No hay data' );
   }
 
   static closeStreams() {
@@ -41,7 +72,8 @@ class NotificationFirebaseService {
   }
 
   static requestPermission() async {
-    NotificationSettings settings = await messaging.requestPermission(
+
+    await messaging.requestPermission(
       alert: true,
       announcement: false,
       badge: true,

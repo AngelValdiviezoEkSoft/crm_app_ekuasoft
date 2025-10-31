@@ -41,11 +41,6 @@ class CrmEkuasoftAppState extends State<CrmEkuasoftApp> {
     connectivityStream.listen((_) => checkConnection());
     checkConnection();
 
-    NotificationFirebaseService.messagesStream.listen((message) { 
-
-      final snack = CustomSnackbar(null, message: message);
-      ScaffoldMessenger.of(context).showSnackBar(snack);
-    });
   }
 
   @override

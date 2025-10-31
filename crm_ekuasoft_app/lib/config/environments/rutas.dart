@@ -32,6 +32,7 @@ class Rutas{
   String rutaSettingsUser = '/rutaSettingsUser';
   String rutaEditProfile = '/rutaEditProfile';
   String rutaNotificaciones = '/rutaNotificaciones';
+  String rutaDetNotificaciones = '/rutaDetNotificaciones';
 
   //imágenes 
   String rutaImagenes = 'assets/images/';

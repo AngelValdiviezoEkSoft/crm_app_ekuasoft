@@ -17,7 +17,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 BuildContext? contextPrincipalGen;
 DonePermissions? objPermisosGen;
-
+int cantNotificaciones = 2;
 String compSelect = '';
 String rutaFotoPerfil = '';
 String numeroIdentificacion = '';
@@ -50,7 +50,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
   void initState(){
     super.initState();
     NotificationFirebaseService.init();
-    objActividadEscogida = null;
+    objActividadEscogida = null;    
     objCalendarioActividadescogidaByFiltroCal = null;
     connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
 
@@ -67,6 +67,21 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
 
     });
     */
+
+    NotificationFirebaseService.messagesStream.listen((message) { 
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          duration: const Duration(seconds: 5),
+        ),
+      );
+
+      setState(() {
+        cantNotificaciones += 1;
+      });
+      
+    });
   }
 
   late AnimationController varController = AnimationController(vsync: this, duration: const Duration(milliseconds: 700))
@@ -332,7 +347,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
                           ),
 
                           //NO QUITAR, NOTIFICACIONES
-/*
+
                           if(mostrarBoton)
                           TweenAnimationBuilder(
                             duration: const Duration(milliseconds: 400),
@@ -386,9 +401,9 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
                                             )
                                           : 
                                           */
-                                          const Text(
-                                              '2',//'99+',
-                                              style: TextStyle(
+                                          Text(
+                                              '$cantNotificaciones',//'99+',
+                                              style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white,
                                                 fontSize: 6
@@ -401,7 +416,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
                               );
                             },
                           ),
-*/
+
 
                           if(!mostrarBoton)
                           IconButton(
