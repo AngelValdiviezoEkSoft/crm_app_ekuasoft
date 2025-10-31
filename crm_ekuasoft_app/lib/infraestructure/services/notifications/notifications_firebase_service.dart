@@ -27,7 +27,7 @@ class NotificationFirebaseService {
 
   static Future _backgroundHandler (RemoteMessage message) async { 
     messageString.sink.add(message.data['llamada'] ?? 'No hay titulo' );
-    cantNotificaciones += 1;
+    //cantNotificaciones += 1;
   }
 
   static Future _onMessageHandler (RemoteMessage message) async { 
@@ -63,7 +63,7 @@ class NotificationFirebaseService {
         ),
       );
     }
-    cantNotificaciones += 1;
+    //cantNotificaciones += 1;
     messageString.sink.add(message.data['llamada'] ?? 'No hay data' );
   }
 
