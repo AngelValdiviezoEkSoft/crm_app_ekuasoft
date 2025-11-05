@@ -347,7 +347,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
                           ),
 
                           //NO QUITAR, NOTIFICACIONES
-
+                          /*
                           if(mostrarBoton)
                           TweenAnimationBuilder(
                             duration: const Duration(milliseconds: 400),
@@ -416,7 +416,7 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
                               );
                             },
                           ),
-
+                          */
 
                           if(!mostrarBoton)
                           IconButton(
