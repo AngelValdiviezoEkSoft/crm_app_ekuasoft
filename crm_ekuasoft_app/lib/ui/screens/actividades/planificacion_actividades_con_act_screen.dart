@@ -846,6 +846,7 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                             children: [
 
                               RatingStarsWidget(
+                                size: 28,
                                 initialRating: prioridadPrsp,//aquí reemplazar con valor dinámico
                                 onRatingChanged: (valor) async {
 
@@ -1090,15 +1091,6 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                             //POR AQUÍ AEVG
                                             //ignore:use_build_context_synchronously
                                             context.pop();
-
-                                            try {
-                                              //ignore:use_build_context_synchronously
-                                            context.pop();
-                                            }
-                                            catch(_){}
-
-                                            //ignore:use_build_context_synchronously
-                                            context.push(objRutasGen.rutaPlanActivConActiv);
                                           }
                                           else{
                                             //ignore:use_build_context_synchronously
@@ -1367,15 +1359,6 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                     
                                                                     int idMotPerd = objCrmLostReasonData.id;
 
-/*
-                                                                    for(int i = 0; i < motivosPerdida.length; i++){
-                                                                      if(motPerdSelect == motivosPerdida[i].name){
-                                                                        idMotPerd = motivosPerdida[i].id;
-                                                                        break;
-                                                                      }
-                                                                    }
-                                                                    */
-
                                                                     ResponseGenericModel? objResp = await ProspectoTypeService().editaEstadoProspecto(false, false, idMotPerd, objDatumCrmLead?.id ?? 0, motivoPerdidaTxtController.text);
 
                                                                     if(objResp != null){
@@ -1620,7 +1603,6 @@ class PlanActivState extends State<PlanificacionActividadesConActividadScreen> {
                                                   actions: [
                                                     TextButton(
                                                       onPressed: () {
-                                                        Navigator.of(context).pop();
                                                         //ignore:use_build_context_synchronously
                                                         context.pop();
                                                       },

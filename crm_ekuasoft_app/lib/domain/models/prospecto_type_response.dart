@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:crm_ekuasoft_app/common/common.dart';
+
 class ProspectoResponseModel {
     String jsonrpc;
     dynamic id;
@@ -181,7 +183,8 @@ class DatumCrmLead {
 
     factory DatumCrmLead.fromMap(Map<String, dynamic> json) => DatumCrmLead(
         id: json["id"],
-        dateCreate: json["create_date"] != null ? DateTime.parse(json["create_date"]) : null,
+        //dateCreate: json["create_date"] != null ? DateTime.parse(json["create_date"]) : null,
+        dateCreate: json["create_date"] != null ? UtilitiesCommon().parseToLocal(json["create_date"]) : null,
         activityIds: List<StructCombos>.from(json["activity_ids"].map((x) => StructCombos.fromMap(x))),
         campaignId: CampaignId.fromMap(json["campaign_id"]),
         contactName: json["contact_name"],
@@ -197,7 +200,7 @@ class DatumCrmLead {
         partnerId: PartnerId.fromMap(json["partner_id"]),
         partnerName: json["partner_name"],
         phone: json["phone"],
-        priority: json["priority"],
+        priority: json["priority"] ?? '0',
         sourceId: json["source_id"] != null ? StructCombos.fromMap(json["source_id"]) : StructCombos(id: 0, name: ''),
         stageId: json["stage_id"] != null ? StageId.fromMap(json["stage_id"]) : StageId(id: 0, name: '', isWon: false),
         stateId: json["state_id"] != null ? StructCombos.fromMap(json["state_id"]) : StructCombos(id: 0, name: ''),

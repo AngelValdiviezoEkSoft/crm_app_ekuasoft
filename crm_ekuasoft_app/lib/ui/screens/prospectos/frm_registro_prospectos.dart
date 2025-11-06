@@ -133,6 +133,7 @@ String _textoAnterior = "";
         || numero.startsWith(EnvironmentsCellsWord().bahamas)
         || numero.startsWith(EnvironmentsCellsWord().costaRica)
         || numero.startsWith(EnvironmentsCellsWord().panama)
+        || numero.startsWith(EnvironmentsCellsWord().masReinoUnido)
         ) {
           indiceQuitar = 3;          
         }
@@ -142,6 +143,7 @@ String _textoAnterior = "";
         || numero.startsWith(EnvironmentsCellsWord().chile)
         || numero.startsWith(EnvironmentsCellsWord().china)
         || numero.startsWith(EnvironmentsCellsWord().colombia)
+        || numero.startsWith(EnvironmentsCellsWord().reinoUnido)
         ) {
           indiceQuitar = 2;
         }
@@ -170,16 +172,16 @@ String _textoAnterior = "";
 
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-            onPressed: () {
-              context.pop();
-            },
-          ),
-          title: const Text('Prospectos', style: TextStyle(fontSize: 18),),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () {
+            context.pop();
+          },
         ),
+        title: const Text('Prospectos', style: TextStyle(fontSize: 18),),
+      ),
       body: BlocBuilder<GenericBloc, GenericState>(
         builder: (context,state) {
           

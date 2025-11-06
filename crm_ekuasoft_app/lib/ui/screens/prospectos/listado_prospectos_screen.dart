@@ -34,6 +34,7 @@ bool listaVaciaPrp = false;
 bool actualizaListaPrp= false;
 bool ingresaUnaVez = true;
 CrmStage? selectCrmStage;
+String stateProspectGen = '';
 
 class ListaProspectosScreen extends StatefulWidget {
   const ListaProspectosScreen({super.key});
@@ -73,8 +74,9 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
   @override
   void initState() {
     super.initState(); 
-    accionNav = false;   
+    accionNav = false;
     estadoPrspSelect = '-- Todos --';
+    stateProspectGen = '';
     lstEstadosPrsp = [];
     lstEstadoProspectos = [];
     lstMenuGrid = [
@@ -302,7 +304,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
           prospectosFiltrados.add(
             DatumCrmLead(
-              dateCreate: DateTime.now(),
+              dateCreate: apiResponse.data[i].dateCreate,
               activityIds: lstComboActivityId,
               campaignId: objCampaign,
               countryId: objCountryId,
@@ -340,7 +342,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
       }
 
       objRspGen = '';
-      objRspGen = jsonEncode(prospectosFiltrados);
+      objRspGen = rspPrsp;//jsonEncode(prospectosFiltrados);
 
       try{
         if(!accionNav){
@@ -630,6 +632,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                 hint: const Text('Seleccione'),
                                 onChanged: (CrmStage? newValue) {
                                   selectCrmStage = newValue;
+                                  stateProspectGen = selectCrmStage?.name ?? '';
                                   refreshDataByEstado(objRspGen, selectCrmStage?.name ?? '');
                                   setState(() {});
                                 },
@@ -787,6 +790,8 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                             //context.push(Rutas().rutaPlanificacionActividades);
                                             rutaActualGen = Rutas().rutaPlanActivConActiv;
                                             await context.push(Rutas().rutaPlanActivConActiv);
+                                            objRspGen = '';
+                                            ingresaUnaVez = true;
                                             await refreshDataProsp();
                                           },
                                           backgroundColor: objColorsApp.celeste,
@@ -825,10 +830,22 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                     color: Colors.transparent,
                                                     width: size.width * 0.14,
                                                     height: size.height * 0.1,
-                                                    child: CircleAvatar(
-                                                      radius: 30.0,
-                                                      backgroundColor: Colors.grey[200],
-                                                      child: const Icon(Icons.person, color: Colors.grey, size: 40.0),
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        CircleAvatar(
+                                                          radius: 30.0,
+                                                          backgroundColor: Colors.grey[200],
+                                                          child: const Icon(Icons.person, color: Colors.grey, size: 40.0),
+                                                        ),
+                                                        RatingStarsWidget(
+                                                          initialRating: int.parse(prospectosFiltrados[index].priority),
+                                                          size: 8,
+                                                          onRatingChanged: (valor) async {
+
+                                                          },
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                   SizedBox(width: size.width * 0.02,),
@@ -994,26 +1011,10 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                     color: Colors.transparent,
                                                     width: size.width * 0.6,
                                                     height: size.height * 0.035,
-                                                      child: 
-                                                      SelectableText.rich(
-                                                         TextSpan(
-                                                            children: [
-                                                              TextSpan(
-                                                                text: 'Registro: ',
-                                                                style: TextStyle(
-                                                                  fontSize: 14,
-                                                                  color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white)
-                                                              ),
-                                                              TextSpan(
-                                                                text: prospectosFiltrados[index].dateCreate != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(prospectosFiltrados[index].dateCreate!) : '-------',
-                                                                style: const TextStyle(
-                                                                  fontSize: 12,
-                                                                  color: Colors.blue)
-                                                              ),
-                                                            ]
-                                                          ),
-                                                        
-                                                      )
+                                                    child: Text(
+                                                      prospectosFiltrados[index].dateCreate != null ? DateFormat('dd/MM/yyyy HH:mm:ss').format(prospectosFiltrados[index].dateCreate!) : '-------',
+                                                      style: const TextStyle(fontSize: 12, color: Colors.blue)
+                                                    )
                                                   ),
                                                 
 
@@ -1096,6 +1097,9 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                             
                                                         await context.push(Rutas().rutaEditProsp);
 
+                                                        ingresaUnaVez = true;
+                                                        objRspGen = '';
+
                                                         await refreshDataProsp();
     
                                                         // Esto es solo para asegurar que la UI se reconstruya
@@ -1169,6 +1173,8 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
           accionNav = true;
           await context.push(objRutasGen.rutaRegistroPrsp);
+          ingresaUnaVez = true;
+          objRspGen = '';
           await refreshDataProsp();
         },
         backgroundColor: const Color.fromRGBO(75, 57, 239, 1.0),
@@ -1633,9 +1639,9 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
   Future<void> refreshDataByMes(int mesSelect, String objMemoria, bool muestraTodos) async {
 
-    refreshDataByEstado(objMemoria, '-- Todos --');
-
     prospectosFiltrados = [];
+
+    //var stateProspect = selectCrmStage?.name ?? '';
 
     CrmLead apiResponse = CrmLead.fromJson(objMemoria);
 
@@ -1649,11 +1655,6 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
         if(prospectosFiltrados.isEmpty && selectedYear != 0){
           prospectosFiltrados = apiResponse.data.where((element) => element.dateOpen!.year == selectedYear).toList();
         }
-        /*
-        else{
-          prospectosFiltrados = apiResponse.data;
-        }
-        */
       }
     }
     else{
@@ -1670,12 +1671,52 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
           }
         }
       }
-      if(prospectosFiltrados.isEmpty){ //&& (terminoBusqueda.contains('+') || terminoBusqueda.contains('0'))){
+      if(prospectosFiltrados.isEmpty){
         for(int i = 0; i < apiResponse.data.length; i++){
           if(apiResponse.data[i].dateOpen!.month == mesSelect && apiResponse.data[i].dateOpen!.year == selectedYear
             && (apiResponse.data[i].phone != null && apiResponse.data[i].phone!.contains(terminoBusqueda))
           ){
             prospectosFiltrados.add(apiResponse.data[i]);
+          }
+        }
+      }
+    }
+
+    if(stateProspectGen.isNotEmpty && prospectosFiltrados.isNotEmpty){
+      List<DatumCrmLead> lstTmpFill = [];
+
+      if(stateProspectGen != EnvironmentsProd().estadoProspectoTodos){
+        lstTmpFill = prospectosFiltrados;
+        prospectosFiltrados = [];
+      }
+
+      if(stateProspectGen != EnvironmentsProd().estadoProspectoTodos){
+        for(int i = 0; i < lstTmpFill.length; i++){
+
+          //GANADO
+          if(
+            stateProspectGen.toLowerCase() == EnvironmentsProd().estadoProspectoGanado &&
+            lstTmpFill[i].active != null && lstTmpFill[i].active == true          
+            && lstTmpFill[i].stageId.id == lstEstadoProspectos.firstWhere(((element) => element.stageUsage!.toLowerCase() == 'won')).id
+          ){
+            prospectosFiltrados.add(lstTmpFill[i]);
+          }
+
+          //PERDIDO 
+          if(
+            stateProspectGen.toLowerCase() == EnvironmentsProd().estadoProspectoPerdido &&
+            lstTmpFill[i].active != null && lstTmpFill[i].active == false
+          ){
+            prospectosFiltrados.add(lstTmpFill[i]);
+          }
+
+          //NUEVO
+          if(
+            stateProspectGen.toLowerCase() == EnvironmentsProd().estadoProspectoNuevo &&
+            lstTmpFill[i].active != null && lstTmpFill[i].active == true
+            && lstTmpFill[i].stageId.id == lstEstadoProspectos.firstWhere(((element) => element.stageUsage!.toLowerCase() == 'new')).id
+          ){
+            prospectosFiltrados.add(lstTmpFill[i]);
           }
         }
       }
@@ -1723,6 +1764,49 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
     else{
       prospectosFiltrados = apiResponse.data;
     }
+
+    if(_mesSeleccionado != null) {
+      List<DatumCrmLead> lstTmpFill = [];
+      lstTmpFill = prospectosFiltrados;
+      prospectosFiltrados = [];
+
+      if(terminoBusqueda.isEmpty){
+        if(_mesSeleccionado != 0 && _mesSeleccionado != 13){
+          prospectosFiltrados = lstTmpFill.where((element) => element.dateOpen!.month == _mesSeleccionado && element.dateOpen!.year == selectedYear).toList();
+          contLst = 0;
+
+          contLst = prospectosFiltrados.length;
+        } else{
+          if(prospectosFiltrados.isEmpty && selectedYear != 0){
+            prospectosFiltrados = lstTmpFill.where((element) => element.dateOpen!.year == selectedYear).toList();
+          }
+        }
+      }
+      else{
+        if(prospectosFiltrados.isEmpty) {
+          for(int i = 0; i < lstTmpFill.length; i++){
+            if(lstTmpFill[i].dateOpen!.month == _mesSeleccionado && apiResponse.data[i].dateOpen!.year == selectedYear
+              && (
+                lstTmpFill[i].emailFrom.toLowerCase().contains(terminoBusqueda.toLowerCase()) 
+            || lstTmpFill[i].name.toLowerCase().contains(terminoBusqueda.toLowerCase()) 
+            || (lstTmpFill[i].contactName != null && lstTmpFill[i].contactName!.toLowerCase().contains(terminoBusqueda.toLowerCase()))
+              )
+            ){
+              prospectosFiltrados.add(lstTmpFill[i]);
+            }
+          }
+        }
+        if(prospectosFiltrados.isEmpty){
+          for(int i = 0; i < lstTmpFill.length; i++){
+            if(lstTmpFill[i].dateOpen!.month == _mesSeleccionado && lstTmpFill[i].dateOpen!.year == selectedYear
+              && (lstTmpFill[i].phone != null && lstTmpFill[i].phone!.contains(terminoBusqueda))
+            ){
+              prospectosFiltrados.add(lstTmpFill[i]);
+            }
+          }
+        }
+      }
+    }    
 
     return;
 

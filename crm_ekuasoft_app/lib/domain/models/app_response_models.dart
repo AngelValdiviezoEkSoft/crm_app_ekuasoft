@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:crm_ekuasoft_app/common/common.dart';
 import 'package:crm_ekuasoft_app/domain/domain.dart';
 import 'package:crm_ekuasoft_app/ui/ui.dart';
 
@@ -369,7 +370,8 @@ class CrmLeadDatumAppModel {
     probability: json["probability"] ?? 0,
     description: json["description"],
     active: json["active"] ?? true,
-    dateCreate: json["create_date"] != null ? DateTime.parse(json["create_date"]) : null,
+    //dateCreate: json["create_date"] != null ? DateTime.parse(json["create_date"]) : null,
+    dateCreate: json["create_date"] != null ? UtilitiesCommon().parseToLocal(json["create_date"]) : null,
 );
 
   Map<String, dynamic> toJson() => {

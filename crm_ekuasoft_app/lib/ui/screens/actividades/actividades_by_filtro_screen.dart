@@ -502,6 +502,26 @@ class ActividadesByFiltroScreenState extends State<ActividadesByFiltroScreen>  {
                           child: ElevatedButton(
                             onPressed: () async {
 
+                              if(campSelectTpAct != '-- Seleccione --' && cellFiltroTxt.text.isEmpty && nombreProbFiltroTxt.text.isEmpty){
+                                for(int i = 0; i < tpActividades.length; i++){
+                                  if(campSelectTpAct == tpActividades[i].name){
+                                    activityTypeId = tpActividades[i].id ?? 0;
+                                  }
+                                }
+                              }
+                              else {
+                                if(cellFiltroTxt.text.isNotEmpty || nombreProbFiltroTxt.text.isNotEmpty){
+                                  activityTypeId = 0;
+                                }
+                                if(campSelectTpAct != '-- Seleccione --' || (cellFiltroTxt.text.isNotEmpty && nombreProbFiltroTxt.text.isNotEmpty)){
+                                  for(int i = 0; i < tpActividades.length; i++){
+                                    if(campSelectTpAct == tpActividades[i].name){
+                                      activityTypeId = tpActividades[i].id ?? 0;
+                                    }
+                                  }
+                                }
+                              }
+
                               if(activityTypeId == 0 
                               && nombreProbFiltroTxt.text.isEmpty
                               && cellFiltroTxt.text.isEmpty){
@@ -531,26 +551,6 @@ class ActividadesByFiltroScreenState extends State<ActividadesByFiltroScreen>  {
                               gnrBloc.setMuestraCarga(true);
 
                               lstActividadesByFiltros = [];
-
-                              if(campSelectTpAct != '-- Seleccione --' && cellFiltroTxt.text.isEmpty && nombreProbFiltroTxt.text.isEmpty){
-                                for(int i = 0; i < tpActividades.length; i++){
-                                  if(campSelectTpAct == tpActividades[i].name){
-                                    activityTypeId = tpActividades[i].id ?? 0;
-                                  }
-                                }
-                              }
-                              else {
-                                if(cellFiltroTxt.text.isNotEmpty || nombreProbFiltroTxt.text.isNotEmpty){
-                                  activityTypeId = 0;
-                                }
-                                if(campSelectTpAct != '-- Seleccione --' || (cellFiltroTxt.text.isNotEmpty && nombreProbFiltroTxt.text.isNotEmpty)){
-                                  for(int i = 0; i < tpActividades.length; i++){
-                                    if(campSelectTpAct == tpActividades[i].name){
-                                      activityTypeId = tpActividades[i].id ?? 0;
-                                    }
-                                  }
-                                }
-                              }
                               
                               ActivitiesPageModel objRsp = await ActivitiesService().getActivitiesByFiltros(nombreProbFiltroTxt.text, cellFiltroTxt.text, activityTypeId, objDatumCrmLead?.id ?? 0);
               

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 class RatingStarsWidget extends StatefulWidget {
   final int initialRating;
+  final double size;
   final ValueChanged<int> onRatingChanged;
 
   const RatingStarsWidget({
     super.key,
     this.initialRating = 0,
+    this.size = 10,
     required this.onRatingChanged,
   });
 
@@ -40,7 +42,7 @@ class _RatingStarsWidgetState extends State<RatingStarsWidget> {
             child: Icon(
               Icons.star,
               color: index < _rating ? Colors.amber : Colors.grey,
-              size: 28,
+              size: widget.size//28,
             ),
           ),
         );

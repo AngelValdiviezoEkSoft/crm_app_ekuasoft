@@ -22,4 +22,6 @@ class EnvironmentsCellsWord {
   final String masCostaRica = '+506';
   final String panama = '507';
   final String masPanama = '+507';
+  final String reinoUnido = '44';
+  final String masReinoUnido = '+44';
 }
