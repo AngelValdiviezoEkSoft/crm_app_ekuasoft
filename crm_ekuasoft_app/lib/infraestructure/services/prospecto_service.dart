@@ -373,6 +373,7 @@ class ProspectoTypeService extends ChangeNotifier{
         */
 
         var objRespuestaFinal = ProspectoRegistroResponseModel.fromRawJson(response.body);
+        
         /*
 
         for(int i = 0; i < objRespuestaFinal.result.data.length; i++)

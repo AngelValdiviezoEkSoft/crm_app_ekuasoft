@@ -22,6 +22,7 @@ import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
+bool filtrosActivados = false;
 bool accionNav = false;
 String objRspGen = '';
 List<int> years = [];
@@ -409,6 +410,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
               FocusScope.of(context).unfocus();
 
               terminoBusqueda = '';
+              filtrosActivados = false;
               filtroPrspTxt = TextEditingController();
               context.pop();
 
@@ -422,9 +424,11 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
               onPressed: () {
                 terminoBusqueda = '';
                 filtroPrspTxt.text = '';
-                //refreshDataByFiltro(objRspGen);
                 _mesSeleccionado = null;//DateTime.now().month;
                 selectedYear = DateTime.now().year;
+                filtrosActivados = false;
+
+                selectCrmStage = lstEstadoProspectos.last;
                                 
                 refreshDataProsp();
               },
@@ -512,8 +516,11 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
 
               if (snapshot.hasData) {
                 String objRsp = snapshot.data as String;
-                
-                objRspGen = objRsp;
+
+                if(!filtrosActivados){
+                  objRspGen = '';
+                  objRspGen = objRsp;
+                }                
 
                 if(objRsp.isNotEmpty){
                   
@@ -568,6 +575,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                 _mesSeleccionado = null;//DateTime.now().month;
                                 selectedYear = DateTime.now().year;
                                 muestraContador = false;
+                                filtrosActivados = true;
                                 
                                 setState(() {
                                   
@@ -632,6 +640,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                 hint: const Text('Seleccione'),
                                 onChanged: (CrmStage? newValue) {
                                   selectCrmStage = newValue;
+                                  filtrosActivados = true;
                                   stateProspectGen = selectCrmStage?.name ?? '';
                                   refreshDataByEstado(objRspGen, selectCrmStage?.name ?? '');
                                   setState(() {});
@@ -648,11 +657,11 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                               ),
                             ),
                             
-                            SizedBox(width: size.width * 0.05,),
+                            SizedBox(width: size.width * 0.04,),
 
                             Container(
                               color: Colors.white,
-                              width: size.width * 0.25,
+                              width: size.width * 0.3,
                               child: DropdownButtonFormField<int>(
                                 alignment: Alignment.center,
                                 hint: const Text('Mes', style: TextStyle(color: Colors.black),),//, style: TextStyle(color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 2 ? Colors.white : Colors.black,),),
@@ -675,17 +684,18 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                   muestraContador = true;
 
                                   _mesSeleccionado = value;
+                                  filtrosActivados = true;
                                   
                                   refreshDataByMes(_mesSeleccionado ?? 0, objRspGen, _mesSeleccionado == 13);
                                 },
                               ),
                             ),
 
-                            SizedBox(width: size.width * 0.05,),
+                            SizedBox(width: size.width * 0.04,),
 
                             Container(
                               color: Colors.white,
-                              width: size.width * 0.27,
+                              width: size.width * 0.24,
                               child: DropdownButtonFormField<int>(
                                 //style: TextStyle(color: !_isDropdownOpen && (themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 2) ? Colors.white : Colors.black,),
                                 value: selectedYear,
@@ -702,6 +712,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                   estadoPrspSelect = '-- Todos --';
                                   selectedYear = value!;
                                   muestraContador = true;
+                                  filtrosActivados = true;
                                   refreshDataByMes(_mesSeleccionado ?? 0, objRspGen, _mesSeleccionado == 13);                            
                                 },
                               ),
@@ -1175,6 +1186,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
           await context.push(objRutasGen.rutaRegistroPrsp);
           ingresaUnaVez = true;
           objRspGen = '';
+          filtrosActivados = false;
           await refreshDataProsp();
         },
         backgroundColor: const Color.fromRGBO(75, 57, 239, 1.0),
@@ -1879,12 +1891,12 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
     // Abrir archivo automáticamente
     await OpenFilex.open(file.path);
 
-    // Mostrar mensaje de éxito
+    //ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('✅ Reporte generado correctamente')),
     );
   } catch (e) {
-    //debugPrint('❌ Error generando el reporte: $e');
+    //ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Error al generar el reporte')),
     );
@@ -1930,6 +1942,7 @@ class _MenuCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        filtrosActivados = false;
         item.onTap!();
       },
       child: Container(

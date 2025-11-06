@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:crm_ekuasoft_app/common/common.dart';
-
 class ProspectoResponseModel {
     String jsonrpc;
     dynamic id;
@@ -183,8 +181,8 @@ class DatumCrmLead {
 
     factory DatumCrmLead.fromMap(Map<String, dynamic> json) => DatumCrmLead(
         id: json["id"],
-        //dateCreate: json["create_date"] != null ? DateTime.parse(json["create_date"]) : null,
-        dateCreate: json["create_date"] != null ? UtilitiesCommon().parseToLocal(json["create_date"]) : null,
+        dateCreate: json["create_date"] != null ? DateTime.parse(json["create_date"]) : null,
+        //dateCreate: json["create_date"] != null ? UtilitiesCommon().parseToLocal(json["create_date"]) : null,
         activityIds: List<StructCombos>.from(json["activity_ids"].map((x) => StructCombos.fromMap(x))),
         campaignId: CampaignId.fromMap(json["campaign_id"]),
         contactName: json["contact_name"],
