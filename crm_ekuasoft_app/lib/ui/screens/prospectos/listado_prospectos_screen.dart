@@ -343,7 +343,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
       }
 
       objRspGen = '';
-      objRspGen = rspPrsp;//jsonEncode(prospectosFiltrados);
+      objRspGen = await ProspectoTypeService().lstProspectosMemoria();//rspPrsp;//jsonEncode(prospectosFiltrados);
 
       try{
         if(!accionNav){
@@ -517,10 +517,10 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
               if (snapshot.hasData) {
                 String objRsp = snapshot.data as String;
 
-                if(!filtrosActivados){
+                //if(!filtrosActivados){
                   objRspGen = '';
                   objRspGen = objRsp;
-                }                
+                //}
 
                 if(objRsp.isNotEmpty){
                   
@@ -568,10 +568,12 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                             border: InputBorder.none,
                             prefixIcon: const Icon(Icons.search, color: Colors.grey),
                             suffixIcon: IconButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 terminoBusqueda = '';
                                 filtroPrspTxt.text = '';
-                                refreshDataByFiltro(objRsp);
+                                String lstPrsp = await ProspectoTypeService().lstProspectosMemoria();
+                                //refreshDataByFiltro(objRsp);
+                                refreshDataByFiltro(lstPrsp);
                                 _mesSeleccionado = null;//DateTime.now().month;
                                 selectedYear = DateTime.now().year;
                                 muestraContador = false;
@@ -638,11 +640,14 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                 ),
                                 value: selectCrmStage,
                                 hint: const Text('Seleccione'),
-                                onChanged: (CrmStage? newValue) {
+                                onChanged: (CrmStage? newValue) async {
                                   selectCrmStage = newValue;
                                   filtrosActivados = true;
                                   stateProspectGen = selectCrmStage?.name ?? '';
-                                  refreshDataByEstado(objRspGen, selectCrmStage?.name ?? '');
+
+                                  String lstPrsp = await ProspectoTypeService().lstProspectosMemoria();
+
+                                  refreshDataByEstado(lstPrsp, selectCrmStage?.name ?? '');
                                   setState(() {});
                                 },
                                 items: lstEstadoProspectos.map((CrmStage item) {
@@ -679,14 +684,16 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                     child: Text(meses[index]),
                                   );
                                 }),
-                                onChanged: (value) {
+                                onChanged: (value) async {
                                   estadoPrspSelect = '-- Todos --';
                                   muestraContador = true;
 
                                   _mesSeleccionado = value;
                                   filtrosActivados = true;
+
+                                  String lstPrsp = await ProspectoTypeService().lstProspectosMemoria();
                                   
-                                  refreshDataByMes(_mesSeleccionado ?? 0, objRspGen, _mesSeleccionado == 13);
+                                  refreshDataByMes(_mesSeleccionado ?? 0, lstPrsp, _mesSeleccionado == 13);
                                 },
                               ),
                             ),
@@ -708,12 +715,13 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                     child: Text(year.toString()),
                                   );
                                 }).toList(),                                                    
-                                onChanged: (value) {
+                                onChanged: (value) async {
                                   estadoPrspSelect = '-- Todos --';
                                   selectedYear = value!;
                                   muestraContador = true;
                                   filtrosActivados = true;
-                                  refreshDataByMes(_mesSeleccionado ?? 0, objRspGen, _mesSeleccionado == 13);                            
+                                  String lstPrsp = await ProspectoTypeService().lstProspectosMemoria();
+                                  refreshDataByMes(_mesSeleccionado ?? 0, lstPrsp, _mesSeleccionado == 13);                            
                                 },
                               ),
                             ),

@@ -1010,7 +1010,7 @@ String _textoAnterior = "";
                                             Container(
                                               color: Colors.transparent,
                                               width: size.width * 0.92,
-                                              height: size.height * 0.07,
+                                              height: size.height * 0.11,
                                               child: TextFormField(            
                                                 enabled: habilitaGuardar,                        
                                                 cursorColor: AppLightColors().primary,
@@ -1078,7 +1078,7 @@ String _textoAnterior = "";
                                             Container(
                                               color: Colors.transparent,
                                               width: size.width * 0.92,
-                                              height: size.height * 0.07,
+                                              height: size.height * 0.09,
                                               child: TextFormField(
                                                 enabled: habilitaGuardar,
                                                 cursorColor: AppLightColors().primary,
@@ -1140,13 +1140,13 @@ String _textoAnterior = "";
                                             ),
                                             
                                             SizedBox(
-                                              height: size.height * 0.02,
+                                              height: size.height * 0.04,
                                             ),
                                             
                                             Container(
                                               color: Colors.transparent,
                                               width: size.width * 0.92,
-                                              height: size.height * 0.07,
+                                              height: size.height * 0.11,
                                               child: TextFormField(
                                               inputFormatters: [
                                                 EmojiInputFormatter()
