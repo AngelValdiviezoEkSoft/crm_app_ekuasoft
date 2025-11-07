@@ -106,11 +106,12 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
     bool actualizandoTexto = false;
     
     telefonoTxt.addListener(() async {
-      
-      if (actualizandoTexto || telefonoTxt.text.isEmpty || telefonoTxt.text.length < 10) return;
 
       final datos = await Clipboard.getData('text/plain');
       final textoPegado = datos?.text ?? '';
+      
+      if (actualizandoTexto || telefonoTxt.text.isEmpty 
+      || telefonoTxt.text.length < 10 || textoPegado.isEmpty) return;
 
       final nuevoTexto = textoPegado;//telefonoTxt.text;
 
