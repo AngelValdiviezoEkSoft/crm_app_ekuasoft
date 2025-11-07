@@ -272,7 +272,7 @@ class _CalendarioActividadesByFiltroViewState extends State<CalendarioActividade
     return Container(
       color: Colors.transparent,
       width: size.width,
-      height: size.height * (toggleValues[0] ? 0.54 : 0.43),
+      height: size.height * (toggleValues[0] ? 0.54 : 0.38),
       child: ListView.builder(
         controller: scrollListaClt,
         itemCount: actividades.length,

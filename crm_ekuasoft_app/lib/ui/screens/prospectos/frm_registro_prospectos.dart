@@ -117,7 +117,12 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
 
       if ((nuevoTexto.length - textoAnterior.length).abs() > 2) {
 
-        String numero = nuevoTexto.replaceAll(RegExp(r'\s+'), ''); 
+        String numero = nuevoTexto.replaceAll(RegExp(r'\s+'), '');
+        String numeroCajaTexto = telefonoTxt.text.replaceAll(RegExp(r'\s+'), '');
+
+        if(!numero.contains(numeroCajaTexto)){
+          return;
+        }
 
         if (numero.startsWith('+')) {
           try {

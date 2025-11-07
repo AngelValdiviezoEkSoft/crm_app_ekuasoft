@@ -890,11 +890,15 @@ class ActivitiesService extends ChangeNotifier{
         fechas = [];
         fechas.add(DateTime.now());
 
+        models = [];
+
+        var fechaActual = DateFormat('yyyy-MM-dd', 'es').format(DateTime.now());
+
         models = [
           {
             "model": modeloConsulta,
             "filters": [            
-              ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(DateTime.now())],            
+              ["date_deadline","=", fechaActual],
               ["res_model_id", "=", resModelId],
               ["user_id", "=", objLogDecode['result']['uid']],
               if(resId != null && resId > 0)
@@ -905,12 +909,17 @@ class ActivitiesService extends ChangeNotifier{
       } else {
         try{
 
+          models = [];
+
+          var fechaEscogida1 = DateFormat('yyyy-MM-dd', 'es').format(fechas[0]);
+          var fechaEscogida2 = DateFormat('yyyy-MM-dd', 'es').format(fechas[1]);
+
           models = [
             {
             "model": modeloConsulta,
             "filters": [            
-              ["date_deadline",">=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],
-              ["date_deadline","<=",DateFormat('yyyy-MM-dd', 'es').format(fechas[1])],
+              ["date_deadline",">=", fechaEscogida1],
+              ["date_deadline","<=", fechaEscogida2],
               ["user_id", "=", objLogDecode['result']['uid']],
               ["res_model_id", "=", resModelId],
               if(resId != null && resId > 0)
@@ -921,12 +930,16 @@ class ActivitiesService extends ChangeNotifier{
         }
         catch(_)
         {
+          models = [];
+
+          var fechaEscogida = DateFormat('yyyy-MM-dd', 'es').format(fechas[0]);
+
           models = [
               {
               "model": modeloConsulta,
               "filters": [           
                 ["user_id", "=", objLogDecode['result']['uid']], 
-                ["date_deadline","=",DateFormat('yyyy-MM-dd', 'es').format(fechas[0])],
+                ["date_deadline","=", fechaEscogida],
                 ["res_model_id", "=", resModelId],
                 if(resId != null && resId > 0)
                 ["res_id", "=", resId]

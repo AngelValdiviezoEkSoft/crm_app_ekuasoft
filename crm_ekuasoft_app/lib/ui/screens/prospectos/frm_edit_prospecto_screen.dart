@@ -14,6 +14,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 int idProsp = 0;
 int tabAccionesEditPrsp = 0;
+String codIsoPhone = '';
+String dialCodePhone = '';
 
 class FrmEditProspectoScreen extends StatefulWidget {
   const FrmEditProspectoScreen({super.key});
@@ -32,7 +34,6 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
   late final WebViewController _wvController;
   final LocalAuthentication auth = LocalAuthentication();  
 
-  String initialCountry = 'EC';
   PhoneNumber number = PhoneNumber(isoCode: 'EC');
 
   String campEditSelect = '';
@@ -78,9 +79,64 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
         : '-- No tiene fecha de cierre --';
     fechaCierreEditxt = TextEditingController(text: initialDateText);
     
-    String cell = separatePhoneNumber(objDatumCrmLeadEdit?.phone ?? '');
-    telefonoEditTxt = TextEditingController(text: cell);
+    //String cell = separatePhoneNumber(objDatumCrmLeadEdit?.phone ?? '');
+    //telefonoEditTxt = TextEditingController(text: cell);
     sectorEditTxt = TextEditingController(text: 'Norte');
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final nuevoTexto = objDatumCrmLeadEdit?.phone ?? '';
+
+      String numero = nuevoTexto.replaceAll(RegExp(r'\s+'), '');
+        
+      if (numero.startsWith('+')) {
+        try {
+          // Detectar país automáticamente
+          PhoneNumber parsed = await PhoneNumber.getRegionInfoFromPhoneNumber(numero);
+
+          codIsoPhone = parsed.isoCode ?? '';
+          dialCodePhone = parsed.dialCode ?? '';
+
+          // Quitar código del país si está presente (sin cortar el último número)
+          String localNumber = numero;
+          if (dialCodePhone.isNotEmpty) {
+            localNumber = numero.replaceFirst(RegExp('^\\+?${RegExp.escape(dialCodePhone)}'), '');
+          }
+
+          // Aseguramos que no se elimine el último dígito
+          if (localNumber.isNotEmpty && localNumber != telefonoEditTxt.text) {              
+            
+            telefonoEditTxt.text = localNumber;
+            telefonoEditTxt.selection = TextSelection.fromPosition(
+              TextPosition(offset: localNumber.length),
+            );
+            
+          }
+
+          // Actualizar bandera / país detectado
+          //setState(() {
+            number = parsed;
+          //});
+
+        } catch (e) {
+
+          telefonoEditTxt.text = numero;
+          telefonoEditTxt.selection = TextSelection.fromPosition(
+            TextPosition(offset: numero.length),
+          );
+            
+        }
+      } else {
+        
+        telefonoEditTxt.text = numero;
+        telefonoEditTxt.selection = TextSelection.fromPosition(
+          TextPosition(offset: numero.length),
+        );            
+      
+      }
+
+      number = PhoneNumber(isoCode: codIsoPhone);
+      //telefonoEditTxt = TextEditingController(text: cell);
+    });
 
     rutaFinal = objDatumCrmLeadEdit?.description ?? '';
 
@@ -1444,7 +1500,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                     description: observacionesEditTxt.text,
                                     emailFrom: emailEditTxt.text,
                                     street: direccionEditTxt.text,
-                                    phone: '+593${telefonoEditTxt.text}',
+                                    phone: '+$dialCodePhone${telefonoEditTxt.text}',
                                     partnerName: nombresEditTxt.text,
                                     mobile: '',
                                     dateOpen: DateTime.now(),
