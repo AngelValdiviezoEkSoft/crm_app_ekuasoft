@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:crm_ekuasoft_app/domain/domain.dart';
 import 'package:crm_ekuasoft_app/infraestructure/infraestructure.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -54,6 +55,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
   bool habilitaGuardar = false;
   bool celularValido = false;
   bool validandoCell = false;
+  String textoAnterior = '';
 
   var currencyFormatter = CurrencyInputFormatter(
     thousandSeparator: ThousandSeparator.None,
@@ -62,11 +64,8 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
   String message = '';
   final LocalAuthentication auth = LocalAuthentication();  
 
-  String initialCountry = 'EC';
   PhoneNumber number = PhoneNumber(isoCode: 'EC');
   final formKeyRegPrp = GlobalKey<FormState>();
-  
-String _textoAnterior = "";
   
   @override
   void initState() {
@@ -86,7 +85,7 @@ String _textoAnterior = "";
     ingresoEsperadoTxt = TextEditingController();
     sectorTxt = TextEditingController(text: 'Norte');
     recomendadoPorTxt = TextEditingController();
-
+    textoAnterior = '';
     fecCierre = DateFormat('yyyy-MM-dd', 'es').format(dateRgPrsp);
     fecCierreFin = DateFormat('yyyy-MM-dd', 'es').format(dateRgPrsp);
     fechaCierreContTxt.text = fecCierre;
@@ -104,64 +103,80 @@ String _textoAnterior = "";
     codIsoPhone = '';
     dialCodePhone = '';
 
-    telefonoTxt.addListener(() {
-      final nuevoTexto = telefonoTxt.text;
+    bool actualizandoTexto = false;
+    
+    telefonoTxt.addListener(() async {
+      
+      if (actualizandoTexto || telefonoTxt.text.isEmpty || telefonoTxt.text.length < 10) return;
 
-      // Si el cambio es "grande", probablemente se pegó un texto
-      if ((nuevoTexto.length - _textoAnterior.length).abs() > 1) {
-        
-        String numero = telefonoTxt.text.replaceAll(' ', '');
-        int indiceQuitar = 0;
+      final datos = await Clipboard.getData('text/plain');
+      final textoPegado = datos?.text ?? '';
 
-        if (numero.startsWith(EnvironmentsCellsWord().masEcuador)
-            || numero.startsWith(EnvironmentsCellsWord().masComoros)
-            || numero.startsWith(EnvironmentsCellsWord().masBahamas)
-            || numero.startsWith(EnvironmentsCellsWord().masCookIslands)
-            || numero.startsWith(EnvironmentsCellsWord().masCostaRica)
-            || numero.startsWith(EnvironmentsCellsWord().masPanama)
-          ) {
-          indiceQuitar = 4;
+      final nuevoTexto = textoPegado;//telefonoTxt.text;
+
+      if ((nuevoTexto.length - textoAnterior.length).abs() > 2) {
+
+        String numero = nuevoTexto.replaceAll(RegExp(r'\s+'), ''); 
+
+        if (numero.startsWith('+')) {
+          try {
+            // Detectar país automáticamente
+            PhoneNumber parsed = await PhoneNumber.getRegionInfoFromPhoneNumber(numero);
+
+            codIsoPhone = parsed.isoCode ?? '';
+            dialCodePhone = parsed.dialCode ?? '';
+
+            // Quitar código del país si está presente (sin cortar el último número)
+            String localNumber = numero;
+            if (dialCodePhone.isNotEmpty) {
+              localNumber = numero.replaceFirst(RegExp('^\\+?${RegExp.escape(dialCodePhone)}'), '');
+            }
+
+            // Aseguramos que no se elimine el último dígito
+            if (localNumber.isNotEmpty && localNumber != telefonoTxt.text) {
+              actualizandoTexto = true;
+              textoAnterior = '';
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                telefonoTxt.text = localNumber;
+                telefonoTxt.selection = TextSelection.fromPosition(
+                  TextPosition(offset: localNumber.length),
+                );
+                actualizandoTexto = false;                
+              });
+            }
+
+            // Actualizar bandera / país detectado
+            setState(() {
+              number = parsed;
+            });
+          } catch (e) {
+            // En caso de error, solo limpiar espacios
+            actualizandoTexto = true;
+            textoAnterior = '';
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              telefonoTxt.text = numero;
+              telefonoTxt.selection = TextSelection.fromPosition(
+                TextPosition(offset: numero.length),
+              );
+              actualizandoTexto = false;
+            });
+          }
+        } else {
+          // Si no tiene código internacional, solo limpia espacios
+          actualizandoTexto = true;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            telefonoTxt.text = numero;
+            telefonoTxt.selection = TextSelection.fromPosition(
+              TextPosition(offset: numero.length),
+            );
+            actualizandoTexto = false;
+          });
         }
-
-        if (numero.startsWith(EnvironmentsCellsWord().ecuador) 
-        || numero.startsWith(EnvironmentsCellsWord().masEspania)
-        || numero.startsWith(EnvironmentsCellsWord().masChile)
-        || numero.startsWith(EnvironmentsCellsWord().masChina)
-        || numero.startsWith(EnvironmentsCellsWord().masColombia)
-        || numero.startsWith(EnvironmentsCellsWord().comoros)
-        || numero.startsWith(EnvironmentsCellsWord().cookIslands)
-        || numero.startsWith(EnvironmentsCellsWord().bahamas)
-        || numero.startsWith(EnvironmentsCellsWord().costaRica)
-        || numero.startsWith(EnvironmentsCellsWord().panama)
-        || numero.startsWith(EnvironmentsCellsWord().masReinoUnido)
-        ) {
-          indiceQuitar = 3;          
-        }
-
-        if (numero.startsWith(EnvironmentsCellsWord().espania) 
-        || numero.startsWith(EnvironmentsCellsWord().masEeuu)
-        || numero.startsWith(EnvironmentsCellsWord().chile)
-        || numero.startsWith(EnvironmentsCellsWord().china)
-        || numero.startsWith(EnvironmentsCellsWord().colombia)
-        || numero.startsWith(EnvironmentsCellsWord().reinoUnido)
-        ) {
-          indiceQuitar = 2;
-        }
-
-        if (numero.startsWith(EnvironmentsCellsWord().eeuu)) {
-          indiceQuitar = 1;
-        }
-
-        telefonoTxt.text = numero.substring(indiceQuitar);
-
-        // Aquí puedes hacer algo adicional:
-        // - Validar automáticamente
-        // - Mostrar un mensaje
-        // - Llamar a tu función de validación
       }
 
-      _textoAnterior = nuevoTexto;
+      textoAnterior = nuevoTexto;
     });
+
   }
 
   @override
@@ -444,6 +459,7 @@ String _textoAnterior = "";
                                       height: size.height * 0.02,
                                     ),
                           
+                          /*
                                     Container(
                                       color: Colors.transparent,
                                       width: size.width * 0.92,
@@ -522,8 +538,6 @@ String _textoAnterior = "";
                                               }
 
                                               var objResp = json.decode(resp);
-
-                                              //print('Núm Cell: ${objResp['result']['create_date']}');
 
                                               if(objResp['result']['create_date'] == null){
                                                 habilitaGuardar = true;
@@ -611,7 +625,148 @@ String _textoAnterior = "";
                                         
                                       ),
                                     ),
-                                    
+                                    */
+
+                                    Container(
+                                      color: Colors.transparent,
+                                      width: size.width * 0.92,
+                                      height: size.height * 0.0895,
+                                      child: InternationalPhoneNumberInput(
+                                        
+                                        //formatInput: false,
+                                        autoValidateMode: AutovalidateMode.disabled,
+                                        
+                                        isEnabled: !validandoCell,
+                                        onInputChanged: (PhoneNumber phoneNumber) async {
+                                          
+                                          telefonoPrsp = phoneNumber.phoneNumber ?? '';
+                                          codIsoPhone = phoneNumber.isoCode ?? '';
+                                          dialCodePhone = phoneNumber.dialCode ?? '';
+                                          setState(() {});
+                                          
+                                        },
+                                        onInputValidated: (bool isValid) async {
+                                          
+                                          validandoCell = true;
+                                          celularValido = isValid;
+
+                                          if (isValid) {
+                                            String resInt = await ValidacionesUtils().validaInternet();
+
+                                            if (resInt.isEmpty) {
+                                              showDialog(
+                                                //ignore: use_build_context_synchronously
+                                                context: context,
+                                                barrierDismissible: false,
+                                                builder: (context) => SimpleDialog(
+                                                  alignment: Alignment.center,
+                                                  children: [
+                                                    SimpleDialogCargando(
+                                                      null,
+                                                      mensajeMostrar: 'Estamos consultando',
+                                                      mensajeMostrarDialogCargando: 'los datos del prospecto',
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+
+                                              var resp = await ProspectoTypeService()
+                                                  .getProspectoRegistrado(telefonoPrsp, codIsoPhone, dialCodePhone);
+
+                                              //ignore: use_build_context_synchronously
+                                              FocusScope.of(context).unfocus();
+
+                                              //ignore: use_build_context_synchronously
+                                              context.pop();
+
+                                              if (resp == null) {
+                                                showDialog(
+                                                  barrierDismissible: false,
+                                                  //ignore: use_build_context_synchronously
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+                                                    return ContentAlertDialog(
+                                                      onPressed: () => Navigator.of(context).pop(),
+                                                      onPressedCont: () => Navigator.of(context).pop(),
+                                                      tipoAlerta: TipoAlerta().alertAccion,
+                                                      numLineasTitulo: 2,
+                                                      numLineasMensaje: 3,
+                                                      titulo: 'Atención',
+                                                      mensajeAlerta: 'Error al consultar datos.',
+                                                    );
+                                                  },
+                                                );
+                                                return;
+                                              }
+
+                                              var objResp = json.decode(resp);
+                                              //ignore: use_build_context_synchronously
+                                              //context.pop();
+
+                                              if (objResp['result']['create_date'] == null) {
+                                                habilitaGuardar = true;
+                                              } else {
+                                                habilitaGuardar = false;
+                                                showDialog(
+                                                  barrierDismissible: false,
+                                                  //ignore: use_build_context_synchronously
+                                                  context: context,
+                                                  builder: (_) => ContentAlertDialog(
+                                                    tipoAlerta: TipoAlerta().alertAccion,
+                                                    titulo: 'Atención',
+                                                    mensajeAlerta: objResp['result']['mensaje'],
+                                                    iconoAlerta: Icons.cancel,
+                                                    colorIconoAlerta: Colors.red,
+                                                    mensajeBoton: 'Volver',
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                    onPressedCont: () {
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                  ),
+                                                );
+                                              }
+                                            }
+                                          }
+
+                                          validandoCell = false;
+                                          setState(() {});
+                                          
+                                        },
+                                        selectorConfig: const SelectorConfig(
+                                          selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                                        ),
+                                        ignoreBlank: false,
+                                        //autoValidateMode: AutovalidateMode.disabled,
+                                        initialValue: number,
+                                        textFieldController: telefonoTxt,
+                                        formatInput: true,
+                                        keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
+                                        inputDecoration: InputDecoration(
+                                          hintText: "Ingrese número",
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          suffix: IconButton(
+                                            onPressed: () {
+                                              telefonoTxt.text = '';
+                                              habilitaGuardar = false;
+                                              textoAnterior = '';
+                                              setState(() {});
+                                            },
+                                            icon: Icon(
+                                              size: 18,
+                                              Icons.close,
+                                              color: AppLightColors().gray900PrimaryText,
+                                            ),
+                                          ),
+                                        ),
+                                        onSaved: (PhoneNumber phoneNumber) {},
+                                        errorMessage: 'Teléfono no válido',                                        
+                                      ),
+                                    ),
+
                                     SizedBox(
                                       height: size.height * 0.02,
                                     ),
