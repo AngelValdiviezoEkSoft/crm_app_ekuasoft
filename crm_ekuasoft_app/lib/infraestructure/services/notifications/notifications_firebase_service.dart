@@ -26,8 +26,22 @@ class NotificationFirebaseService {
   }
 
   static Future _backgroundHandler (RemoteMessage message) async { 
-    messageString.sink.add(message.data['llamada'] ?? 'No hay titulo' );
+    Future.delayed(const Duration(seconds: 10), () {
+      if(contextPrincipalGen != null) {
+        Navigator.push(
+          contextPrincipalGen!,
+          MaterialPageRoute(
+            builder: (_) => NotificationDetailView(
+              title: message.notification?.title,
+              body: message.notification?.body,
+              data: message.data,
+            ),
+          ),
+        );
+      }
+    });
     //cantNotificaciones += 1;
+    messageString.sink.add(message.data['llamada'] ?? 'No hay data' );
   }
 
   static Future _onMessageHandler (RemoteMessage message) async { 
