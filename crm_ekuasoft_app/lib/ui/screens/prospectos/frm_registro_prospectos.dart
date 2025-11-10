@@ -636,7 +636,8 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                     Container(
                                       color: Colors.transparent,
                                       width: size.width * 0.92,
-                                      height: size.height * 0.0895,
+                                      height: size.height * 0.0885,
+                                      alignment: Alignment.center,
                                       child: InternationalPhoneNumberInput(
                                         
                                         //formatInput: false,
@@ -790,7 +791,6 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                               width: size.width * 0.92,
                                               height: size.height * 0.08,
                                               child: TextFormField(
-                                                
                                                 textCapitalization: TextCapitalization.sentences,
                                                 cursorColor: AppLightColors().primary,                                        
                                                 inputFormatters: [
@@ -839,13 +839,14 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                             ),
                                             
                                             SizedBox(
-                                              height: size.height * 0.04,
+                                              height: size.height * 0.025,
                                             ),
                                             
                                             Container(
                                               color: Colors.transparent,
                                               width: size.width * 0.92,
-                                              height: size.height * 0.105,
+                                              //height: size.height * 0.105,
+                                              height: size.height * 0.08,
                                               child: TextFormField(
                                                 textCapitalization: TextCapitalization.sentences,
                                                 cursorColor: AppLightColors().primary,                                        
@@ -895,7 +896,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                             ),
                                             
                                             SizedBox(
-                                              height: size.height * 0.04,
+                                              height: size.height * 0.025,
                                             ),
 
                                             if(habilitaGuardar)
@@ -930,7 +931,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                               
                                             if(habilitaGuardar)
                                             SizedBox(
-                                              height: size.height * 0.03,
+                                              height: size.height * 0.025,
                                             ),
 
                                             if(!habilitaGuardar)
@@ -949,7 +950,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                               
                                             if(!habilitaGuardar)
                                             SizedBox(
-                                              height: size.height * 0.03,
+                                              height: size.height * 0.025,
                                             ),
 
                                       if(habilitaGuardar)    
@@ -979,7 +980,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
 
                                       if(habilitaGuardar)
                                       SizedBox(
-                                        height: size.height * 0.02,
+                                        height: size.height * 0.025,
                                       ),
 
                                       if(!habilitaGuardar)
@@ -998,7 +999,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
 
                                       if(!habilitaGuardar)
                                       SizedBox(
-                                        height: size.height * 0.02,
+                                        height: size.height * 0.025,
                                       ),
                           
                                       if(habilitaGuardar)
@@ -1049,7 +1050,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
 
                                       if(!habilitaGuardar)
                                       SizedBox(
-                                        height: size.height * 0.02,
+                                        height: size.height * 0.025,
                                       ),
 
                                       if(habilitaGuardar)
@@ -1081,7 +1082,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
 
                                       if(habilitaGuardar)
                                       SizedBox(
-                                        height: size.height * 0.02,
+                                        height: size.height * 0.025,
                                       ),
 
                                       if(!habilitaGuardar)
@@ -1100,7 +1101,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
 
                                       if(!habilitaGuardar)
                                       SizedBox(
-                                        height: size.height * 0.02,
+                                        height: size.height * 0.025,
                                       ),
 
                                       Container(
@@ -1117,7 +1118,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                           ),
                                           decoration: InputDecorationCvs.formsDecoration(
                                             labelText: 'Recomendado por',
-                                            hintTetx: 'Ej: Majo Piguave',
+                                            hintTetx: '* Nombre de la persona quien recomendó *',
                                             size: size,
                                             colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
                                             suffix: IconButton(
@@ -1181,7 +1182,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                   color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
                                                 ),
                                                 decoration: InputDecoration(
-                                                  labelText: 'Probabilidad',
+                                                  labelText: '% Probabilidad',
                                                   hintStyle: SafeGoogleFont(
                                                       GoogleFontsApp().fontMulish,
                                                       fontSize: size.width * 0.0025 * 18,
@@ -1233,7 +1234,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                             ),
                                                                           
                                             SizedBox(
-                                              height: size.height * 0.02,
+                                              height: size.height * 0.003,
                                             ),
                                             
                                             Container(
@@ -1301,7 +1302,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                             ),
                                             
                                             SizedBox(
-                                              height: size.height * 0.04,
+                                              height: size.height * 0.025,
                                             ),
                                             
                                             Container(
@@ -1371,7 +1372,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                             ),
                                             
                                             SizedBox(
-                                              height: size.height * 0.03,
+                                              height: size.height * 0.02,
                                             ),
                                             
                                             Container(
@@ -1419,13 +1420,14 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                             ),
                                             
                                             SizedBox(
-                                              height: size.height * 0.01,
+                                              height: size.height * 0.008,
                                             ),
                           
                                             Container(
                                               color: Colors.transparent,
                                               width: size.width * 0.92,
                                               height: size.height * 0.15,
+                                              alignment: Alignment.topCenter,
                                               child: TextFormField(
                                                 enabled: habilitaGuardar,
                                               controller: direccionTxt,

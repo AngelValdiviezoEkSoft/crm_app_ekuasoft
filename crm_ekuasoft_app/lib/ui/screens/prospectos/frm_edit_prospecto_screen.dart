@@ -713,8 +713,8 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                 textCapitalization: TextCapitalization.sentences,
                                                 style: AppTextStyles.bodyRegular(width: size.width),
                                                 decoration: InputDecorationCvs.formsDecoration(
-                                                  labelText: 'Nombre de prospecto',
-                                                  hintTetx: 'Ej: Juan Valdez',
+                                                  labelText: '* Nombre de Prospecto',
+                                                  hintTetx: '* Empresa o Contacto *',
                                                   size: size,
                                                   suffix: IconButton(
                                                     onPressed: () {
@@ -756,7 +756,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                             ),
                                       
                                       SizedBox(
-                                        height: size.height * 0.02,
+                                        height: size.height * 0.025,
                                       ),
 
                                       Container(
@@ -771,7 +771,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                 textCapitalization: TextCapitalization.sentences,
                                                 style: AppTextStyles.bodyRegular(width: size.width),
                                                 decoration: InputDecorationCvs.formsDecoration(
-                                                  labelText: 'Nombre Oportunidad',
+                                                  labelText: '* Nombre Oportunidad',
                                                   hintTetx: 'Ej: Nomb. producto + Nomb. prospecto',
                                                   size: size,
                                                   suffix: IconButton(
@@ -814,7 +814,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                             ),
                                       
                                       SizedBox(
-                                        height: size.height * 0.04,
+                                        height: size.height * 0.025,
                                       ),
                           
                                       Container(
@@ -845,7 +845,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                         ),
                                         
                                       SizedBox(
-                                        height: size.height * 0.03,
+                                        height: size.height * 0.025,
                                       ),
                                                                         
                                       Container(
@@ -874,7 +874,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                       ),
                                                                       
                                       SizedBox(
-                                        height: size.height * 0.03,
+                                        height: size.height * 0.025,
                                       ),
                           
                                       Container(
@@ -904,7 +904,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                         ),
                                                                           
                                       SizedBox(
-                                        height: size.height * 0.03,
+                                        height: size.height * 0.025,
                                       ),
                                             
                                       Container(
@@ -934,7 +934,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                       ),
                                                                           
                                       SizedBox(
-                                        height: size.height * 0.03,
+                                        height: size.height * 0.025,
                                       ),
                                                                           
                                       Container(
@@ -1023,7 +1023,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                                   ),
                                                   hintText: "100%",
                                                   //suffixText: '%',
-                                                  labelText: 'Probabilidad',
+                                                  labelText: '% Probabilidad',
                                                   suffix: IconButton(
                                                     onPressed: () {
                                                       
@@ -1062,7 +1062,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                             ),
                                                                           
                                             SizedBox(
-                                              height: size.height * 0.007,
+                                              height: size.height * 0.003,
                                             ),
                                             
                                             Container(
@@ -1122,7 +1122,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                           ),
                                             
                                             SizedBox(
-                                              height: size.height * 0.0008,
+                                              height: size.height * 0.0003,
                                             ),
                                             
                                             Container(
@@ -1189,7 +1189,7 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                             ),
                                             
                                             SizedBox(
-                                              height: size.height * 0.06,
+                                              height: size.height * 0.04,
                                             ),
                                             
                                             Container(
@@ -1244,13 +1244,14 @@ class _FrmEditProspectoScreenState extends State<FrmEditProspectoScreen> {
                                             ),
                                             
                                             SizedBox(
-                                              height: size.height * 0.006,
+                                              height: size.height * 0.002,
                                             ),
                           
                                             Container(
                                               color: Colors.transparent,
                                               width: size.width * 0.92,
                                               height: size.height * 0.15,
+                                              alignment: Alignment.topCenter,
                                               child: TextFormField(
                                               controller: direccionEditTxt,
                                               cursorColor: AppLightColors().primary,
