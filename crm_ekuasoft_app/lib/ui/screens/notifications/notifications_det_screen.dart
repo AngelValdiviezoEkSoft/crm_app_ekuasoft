@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class NotificationDetailView extends StatelessWidget {
+class NotificationDetailScreen extends StatelessWidget {
   final String? title;
   final String? body;
   final Map<String, dynamic>? data;
 
-  const NotificationDetailView({
+  const NotificationDetailScreen({
     super.key,
     this.title,
     this.body,

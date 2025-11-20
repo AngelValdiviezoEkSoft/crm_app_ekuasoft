@@ -35,7 +35,7 @@ class SimpleDialogCargando extends StatelessWidget {
             ),
 
             const SizedBox(height: 20,),
-            const Text("Por favor espera.", style: TextStyle(color: Color.fromARGB(255, 0, 0, 0),fontFamily: 'Montserrat',fontSize: 14, fontWeight: FontWeight.bold),),
+            const Text("Por favor espera.", style: TextStyle(fontFamily: 'Montserrat',fontSize: 14, fontWeight: FontWeight.bold),),
 
             Container(
               color: Colors.transparent,

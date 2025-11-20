@@ -31,7 +31,7 @@ class NotificationFirebaseService {
         Navigator.push(
           contextPrincipalGen!,
           MaterialPageRoute(
-            builder: (_) => NotificationDetailView(
+            builder: (_) => NotificationDetailScreen(
               title: message.notification?.title,
               body: message.notification?.body,
               data: message.data,
@@ -51,7 +51,7 @@ class NotificationFirebaseService {
         Navigator.push(
           contextPrincipalGen!,
           MaterialPageRoute(
-            builder: (_) => NotificationDetailView(
+            builder: (_) => NotificationDetailScreen(
               title: message.notification?.title,
               body: message.notification?.body,
               data: message.data,
@@ -69,7 +69,7 @@ class NotificationFirebaseService {
       Navigator.push(
         contextPrincipalGen!,
         MaterialPageRoute(
-          builder: (_) => NotificationDetailView(
+          builder: (_) => NotificationDetailScreen(
             title: message.notification?.title,
             body: message.notification?.body,
             data: message.data,

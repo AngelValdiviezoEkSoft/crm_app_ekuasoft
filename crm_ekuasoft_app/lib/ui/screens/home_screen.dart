@@ -55,18 +55,6 @@ class HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMi
     connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
 
     contextPrincipalGen = context;
-/*
-    Connectivity().onConnectivityChanged.listen((_) async {
-      final isConnected = await InternetConnectionChecker().hasConnection;
-      //_controller.sink.add(isConnected);
-      
-
-      setState(() {
-        mostrarBoton = isConnected;
-      });
-
-    });
-    */
 
     NotificationFirebaseService.messagesStream.listen((message) { 
       

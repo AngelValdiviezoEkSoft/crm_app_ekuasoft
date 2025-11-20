@@ -545,6 +545,36 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                 }
 
                 ingresaUnaVez = false;
+
+                final brightness = MediaQuery.of(context).platformBrightness;
+
+                Color colorFondo = Colors.transparent;
+                Color colorFondoOvalo = Colors.transparent;
+                Color colorTextoNombrePrspPerdido = Colors.transparent;
+
+                if(themeProvider.themeMode.index == 0){
+                  if (brightness == Brightness.dark) {
+                    colorFondo = Colors.white;
+                    colorFondoOvalo = Colors.white;
+                    colorTextoNombrePrspPerdido = Colors.white;
+                  } else {
+                    colorFondo = Colors.black;
+                    colorFondoOvalo = Colors.black12;
+                    colorTextoNombrePrspPerdido = Colors.black;
+                  }
+                } else {
+                  colorFondoOvalo = Colors.white;
+                  
+                  if(themeProvider.themeMode.index == 1){
+                    colorFondo = Colors.black;
+                    colorTextoNombrePrspPerdido = Colors.black;
+                  }
+
+                  if(themeProvider.themeMode.index == 2){
+                    colorFondo = Colors.white;                    
+                    colorTextoNombrePrspPerdido = Colors.white60;
+                  }
+                }
               
 
                 return SingleChildScrollView(
@@ -744,11 +774,11 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                         child: SelectableText.rich(
                             TextSpan(
                                 children: [
-                                  TextSpan(
+                                  const TextSpan(
                                     text: 'Prospectos registrados: ',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white)
+                                    )
                                   ),
                                   TextSpan(
                                     text: '${prospectosFiltrados.length}',
@@ -883,7 +913,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                         child: LayoutBuilder(
                                                           builder: (context, constraints) {
                                                             final text = prospectosFiltrados[index].name;
-                                                            const textStyle = TextStyle(fontWeight: FontWeight.bold);
+                                                            var textStyle = TextStyle(fontWeight: FontWeight.bold, color: colorTextoNombrePrspPerdido);
 
                                                             final textPainter = TextPainter(
                                                               text: TextSpan(text: text, style: textStyle),
@@ -911,7 +941,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                         child: LayoutBuilder(
                                                           builder: (context, constraints) {
                                                             final text = prospectosFiltrados[index].contactName ?? '';
-                                                            const textStyle = TextStyle(fontWeight: FontWeight.bold);
+                                                            var textStyle = TextStyle(fontWeight: FontWeight.bold, color: colorTextoNombrePrspPerdido);
 
                                                             final textPainter = TextPainter(
                                                               text: TextSpan(text: text, style: textStyle),
@@ -932,45 +962,6 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                         ),
                                                       ),
 
-/*
-                                                      Container(
-                                                        color: Colors.transparent,
-                                                        width: size.width * 0.54,
-                                                        height: size.height * 0.04,
-                                                        child: SelectableText.rich(
-                                                          TextSpan(
-                                                          children: [                                                            
-                                                            TextSpan(
-                                                              text: prospectosFiltrados[index].name,
-                                                              style: const TextStyle(
-                                                                fontWeight: FontWeight.bold,
-                                                                overflow: TextOverflow.ellipsis,                                                                
-                                                              ),                                                              
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        )
-                                                      ),
-
-                                                      Container(
-                                                        color: Colors.transparent,
-                                                        width: size.width * 0.54,
-                                                        height: size.height * 0.04,
-                                                        child: SelectableText.rich(
-                                                          TextSpan(
-                                                            children: [
-                                                              TextSpan(
-                                                                text: prospectosFiltrados[index].contactName ?? '',
-                                                                style: const TextStyle(
-                                                                  fontWeight: FontWeight.bold,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      */
-                                                      
                                                     Container(
                                                       color: Colors.transparent,
                                                       width: size.width * 0.54,
@@ -983,7 +974,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                                   text: 'Email: ',
                                                                   style: TextStyle(
                                                                     fontSize: 14,
-                                                                    color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                                    color: colorTextoNombrePrspPerdido//themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
                                                                   )
                                                                 ),
                                                                 TextSpan(
@@ -1011,7 +1002,8 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                                                 text: 'Teléfono: ',
                                                                 style: TextStyle(
                                                                   fontSize: 14,
-                                                                  color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white)
+                                                                  color: colorTextoNombrePrspPerdido//themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                                )
                                                               ),
                                                               TextSpan(
                                                                 text: prospectosFiltrados[index].phone,
@@ -1068,7 +1060,7 @@ class ListaProspectosScreenState extends State<ListaProspectosScreen> {
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
                                                 //color: Colors.black12, // Color del óvalo
-                                                color: themeProvider.themeMode.index == 0 ? Colors.black12 : Colors.white,
+                                                color: colorFondoOvalo,//themeProvider.themeMode.index == 0 ? Colors.black12 : Colors.white,
                                                 borderRadius: BorderRadius.circular(50), // Bordes redondeados para el óvalo
                                               ),
                                               child: Column(

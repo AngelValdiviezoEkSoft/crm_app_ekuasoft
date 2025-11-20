@@ -121,9 +121,29 @@ class ProfileScreenGen extends StatelessWidget {
 
     final themeProvider = Provider.of<ThemeProvider>(context);
 
+    final brightness = MediaQuery.of(context).platformBrightness;
+
+    Color colorFondo = Colors.transparent;
+
+    if(themeProvider.themeMode.index == 0){
+      if (brightness == Brightness.dark) {        
+        colorFondo = Colors.black;
+      } else {
+        colorFondo = Colors.white;
+      }
+    } else {
+      if(themeProvider.themeMode.index == 1){
+        colorFondo = Colors.white;
+      }
+
+      if(themeProvider.themeMode.index == 2){        
+        colorFondo = Colors.black;
+      }
+    }
+
     return Container(
       decoration: BoxDecoration(
-        color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.white : Colors.black,
+        color: colorFondo,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [BoxShadow(color: Colors.grey.shade300, blurRadius: 5)],
       ),
@@ -141,9 +161,29 @@ class ProfileScreenGen extends StatelessWidget {
 
     final themeProvider = Provider.of<ThemeProvider>(context);
 
+    final brightness = MediaQuery.of(context).platformBrightness;
+
+    Color colorFondo = Colors.transparent;
+
+    if(themeProvider.themeMode.index == 0){
+      if (brightness == Brightness.dark) {        
+        colorFondo = Colors.black;
+      } else {
+        colorFondo = Colors.white;
+      }
+    } else {
+      if(themeProvider.themeMode.index == 1){        
+        colorFondo = Colors.white;
+      }
+
+      if(themeProvider.themeMode.index == 2){
+        colorFondo = Colors.black;
+      }
+    }
+
     return Container(
       decoration: BoxDecoration(
-        color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.white : Colors.black,
+        color: colorFondo,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [BoxShadow(color: Colors.grey.shade300, blurRadius: 5)],
       ),
@@ -158,9 +198,32 @@ class ProfileScreenGen extends StatelessWidget {
   }
 
   Widget _buildListTile(BuildContext context, IconData icon, String title) {
+
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
+    final brightness = MediaQuery.of(context).platformBrightness;
+
+    Color colorLetra = Colors.transparent;
+
+    if(themeProvider.themeMode.index == 0){
+      if (brightness == Brightness.dark) {        
+        colorLetra = Colors.white;        
+      } else {
+        colorLetra = Colors.black;
+      }
+    } else {
+      if(themeProvider.themeMode.index == 1){
+        colorLetra = Colors.black;
+      }
+
+      if(themeProvider.themeMode.index == 2){
+        colorLetra = Colors.white;
+      }
+    }
+    
     return ListTile(
       leading: Icon(icon),
-      title: Text(title),
+      title: Text(title, style: TextStyle(color: colorLetra),),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
       onTap: () {
         

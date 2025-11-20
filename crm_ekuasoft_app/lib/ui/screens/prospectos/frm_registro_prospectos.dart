@@ -196,12 +196,12 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black,),
           onPressed: () {
             context.pop();
           },
         ),
-        title: const Text('Prospectos', style: TextStyle(fontSize: 18),),
+        title: const Text('Prospectos', style: TextStyle(fontSize: 18, color: Colors.black),),
       ),
       body: BlocBuilder<GenericBloc, GenericState>(
         builder: (context,state) {
@@ -309,6 +309,27 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
 
                   if(actSelect.isEmpty && lstActividades.isNotEmpty){
                     actSelect = lstActividades.first;
+                  }
+
+                  
+                  final brightness = MediaQuery.of(context).platformBrightness;
+
+                  Color colorFondo = Colors.transparent;
+
+                  if(themeProvider.themeMode.index == 0){
+                    if (brightness == Brightness.dark) {
+                      colorFondo = Colors.white;        
+                    } else {
+                      colorFondo = Colors.black;
+                    }
+                  } else {
+                    if(themeProvider.themeMode.index == 1){
+                      colorFondo = Colors.black;
+                    }
+
+                    if(themeProvider.themeMode.index == 2){
+                      colorFondo = Colors.white;
+                    }
                   }
 
                   return Form(
@@ -464,174 +485,6 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                     SizedBox(
                                       height: size.height * 0.02,
                                     ),
-                          
-                          /*
-                                    Container(
-                                      color: Colors.transparent,
-                                      width: size.width * 0.92,
-                                      height: size.height * 0.0895,
-                                      child: InternationalPhoneNumberInput(
-                                        isEnabled: !validandoCell,
-                                        onInputChanged: (PhoneNumber phoneNumber) async {
-                                          telefonoPrsp = phoneNumber.phoneNumber ?? '';
-                                          codIsoPhone = phoneNumber.isoCode ?? '';
-                                          dialCodePhone = phoneNumber.dialCode ?? '';
-
-                                          setState(() {});
-                                        },
-                                        onInputValidated: (bool isValid) async {
-                                          validandoCell = true;
-                                          celularValido = isValid;
-                                          String tituloAlerta = '';
-                                          IconData? iconoAlerta;
-                                          Color? colorIcono;
-                                          String msmBoton = '';
-
-                                          if(isValid){
-                                            
-                                            String resInt = await ValidacionesUtils().validaInternet();
-
-                                            if(resInt.isEmpty){
-
-                                              showDialog(
-                                                //ignore: use_build_context_synchronously
-                                              context: context,
-                                              barrierDismissible: false,
-                                              builder: (context) => SimpleDialog(
-                                                alignment: Alignment.center,
-                                                children: [
-                                                  SimpleDialogCargando(
-                                                    null,
-                                                    mensajeMostrar: 'Estamos consultando',
-                                                    mensajeMostrarDialogCargando: 'los datos del prospecto',
-                                                  ),
-                                                ]
-                                              ),
-                                            );
-                                              
-                                              var resp = await ProspectoTypeService().getProspectoRegistrado(telefonoPrsp, codIsoPhone, dialCodePhone);
-
-                                              //ignore: use_build_context_synchronously
-                                              FocusScope.of(context).unfocus();
-
-                                              //ignore: use_build_context_synchronously
-                                              context.pop();
-
-                                              if(resp == null){
-                                                
-                                                showDialog(
-                                                  barrierDismissible: false,
-                                                  //ignore: use_build_context_synchronously
-                                                  context: context,
-                                                  builder: (BuildContext context) {
-                                                    return ContentAlertDialog(
-                                                      onPressed: () {
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                      onPressedCont: () {
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                      tipoAlerta: TipoAlerta().alertAccion,
-                                                      numLineasTitulo: 2,
-                                                      numLineasMensaje: 3,
-                                                      titulo: 'Atención',
-                                                      mensajeAlerta: 'Error al consultar datos.'
-                                                    );
-                                                  },
-                                                );
-
-                                                return;
-                                              }
-
-                                              var objResp = json.decode(resp);
-
-                                              if(objResp['result']['create_date'] == null){
-                                                habilitaGuardar = true;
-                                                tituloAlerta = 'Información';
-                                                iconoAlerta = Icons.check;
-                                                colorIcono = Colors.green;
-                                                msmBoton = 'Continuar';
-                                              } else {
-                                                habilitaGuardar = false;
-                                                tituloAlerta = 'Atención';
-                                                colorIcono = Colors.red;
-                                                iconoAlerta = Icons.cancel;
-                                                msmBoton = 'Volver';
-                                                validandoCell = false;
-
-                                                showDialog(
-                                                  barrierDismissible: false,
-                                                  //ignore: use_build_context_synchronously
-                                                  context: context,
-                                                  builder: (BuildContext context) {
-                                                    return ContentAlertDialog(
-                                                      onPressed: () {
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                      onPressedCont: () {
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                      tipoAlerta: TipoAlerta().alertAccion,
-                                                      numLineasTitulo: 2,
-                                                      numLineasMensaje: 3,
-                                                      titulo: tituloAlerta,//'Atención',
-                                                      msmConIcono: true,
-                                                      iconoAlerta: iconoAlerta!,
-                                                      colorIconoAlerta: colorIcono,
-                                                      mensajeAlerta: objResp['result']['mensaje'],
-                                                      mensajeBoton: msmBoton
-                                                    );
-                                                  },
-                                                );
-                                              
-                                                return;
-                                              }
-                        
-                                            } 
-                      
-                                          }
-
-                                          validandoCell = false;
-                                          setState(() {
-                                            
-                                          });
-                                        },
-                                        selectorConfig: const SelectorConfig(
-                                          selectorType: PhoneInputSelectorType.BOTTOM_SHEET, // Tipo de selector
-                                        ),
-                                        ignoreBlank: false,
-                                        autoValidateMode: AutovalidateMode.onUserInteraction,
-                                        initialValue: number,
-                                        textFieldController: telefonoTxt,
-                                        formatInput: true,
-                                        keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
-                                        inputDecoration: InputDecoration(
-                                          hintText: "Ingrese número",
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(8),
-                                          ),
-                                          suffix: IconButton(
-                                            onPressed: () {
-                                              telefonoTxt.text = '';
-                                              habilitaGuardar = false;
-
-                                              setState(() {});
-                                            },
-                                            icon: Icon(
-                                                size: 18,
-                                                Icons.close,
-                                                color: AppLightColors().gray900PrimaryText
-                                            ),
-                                          ),
-                                        ),
-                                        onSaved: (PhoneNumber phoneNumber) {
-                                          //print('Número guardado: ${phoneNumber.phoneNumber}');
-                                        },
-                                        errorMessage: 'Teléfono no válido',
-                                        
-                                      ),
-                                    ),
-                                    */
 
                                     Container(
                                       color: Colors.transparent,
@@ -639,10 +492,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                       height: size.height * 0.0885,
                                       alignment: Alignment.center,
                                       child: InternationalPhoneNumberInput(
-                                        
-                                        //formatInput: false,
                                         autoValidateMode: AutovalidateMode.disabled,
-                                        
                                         isEnabled: !validandoCell,
                                         onInputChanged: (PhoneNumber phoneNumber) async {
                                           
@@ -745,7 +595,6 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                           selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
                                         ),
                                         ignoreBlank: false,
-                                        //autoValidateMode: AutovalidateMode.disabled,
                                         initialValue: number,
                                         textFieldController: telefonoTxt,
                                         formatInput: true,
@@ -798,13 +647,13 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 ],
                                                 style: AppTextStyles.bodyRegular(
                                                   width: size.width, 
-                                                  color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                  color: colorFondo,//themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
                                                 ),
                                                 decoration: InputDecorationCvs.formsDecoration(
                                                   labelText: '* Nombre de Prospecto',
                                                   hintTetx: '* Empresa o Contacto *',
                                                   size: size,
-                                                  colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
+                                                  colorTheme: colorFondo,//themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
                                                   suffix: IconButton(
                                                     onPressed: () {
                                                       nombresTxt.text = '';
@@ -812,7 +661,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                     icon: Icon(
                                                         size: 18,
                                                         Icons.close,
-                                                        color: AppLightColors().gray900PrimaryText
+                                                        color: colorFondo,//AppLightColors().gray900PrimaryText
                                                     ),
                                                   ),
                                                 ),
@@ -846,7 +695,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                               color: Colors.transparent,
                                               width: size.width * 0.92,
                                               //height: size.height * 0.105,
-                                              height: size.height * 0.08,
+                                              height: size.height * 0.1,
                                               child: TextFormField(
                                                 textCapitalization: TextCapitalization.sentences,
                                                 cursorColor: AppLightColors().primary,                                        
@@ -855,13 +704,13 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 ],
                                                 style: AppTextStyles.bodyRegular(
                                                   width: size.width,
-                                                  color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                  color: colorFondo,//themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
                                                 ),
                                                 decoration: InputDecorationCvs.formsDecoration(
                                                   labelText: '* Nombre Oportunidad',
                                                   hintTetx: 'Ej: Nomb. producto + Nomb. prospecto',
                                                   size: size,
-                                                  colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
+                                                  colorTheme: colorFondo,//themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
                                                   suffix: IconButton(
                                                     onPressed: () {
                                                       nombresOportTxt.text = '';
@@ -869,7 +718,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                     icon: Icon(
                                                         size: 18,
                                                         Icons.close,
-                                                        color: AppLightColors().gray900PrimaryText
+                                                        color: colorFondo,//AppLightColors().gray900PrimaryText
                                                     ),
                                                   ),
                                                 ),
@@ -1110,17 +959,18 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                         child: TextFormField(
                                           enabled: habilitaGuardar,
                                           textCapitalization: TextCapitalization.sentences,
-                                          cursorColor: AppLightColors().primary,
+                                          cursorColor: colorFondo,//AppLightColors().primary,
                                           autovalidateMode: AutovalidateMode.onUserInteraction,                                        
                                           style: AppTextStyles.bodyRegular(
                                             width: size.width,
-                                            color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                            color: colorFondo//themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white //AQUÍ
                                           ),
                                           decoration: InputDecorationCvs.formsDecoration(
                                             labelText: 'Recomendado por',
                                             hintTetx: '* Nombre de la persona quien recomendó *',
                                             size: size,
-                                            colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
+                                            //asd
+                                            colorTheme: colorFondo,//themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
                                             suffix: IconButton(
                                               onPressed: () {
                                                 recomendadoPorTxt.text = '';
@@ -1128,7 +978,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                               icon: Icon(
                                                   size: 18,
                                                   Icons.close,
-                                                  color: AppLightColors().gray900PrimaryText
+                                                  color: colorFondo//AppLightColors().gray900PrimaryText
                                               ),
                                             ),
                                           ),
@@ -1179,7 +1029,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 autovalidateMode: AutovalidateMode.onUserInteraction,                                              
                                                 style: AppTextStyles.bodyRegular(
                                                   width: size.width,
-                                                  color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                  color: colorFondo//themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
                                                 ),
                                                 decoration: InputDecoration(
                                                   labelText: '% Probabilidad',
@@ -1187,8 +1037,8 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                       GoogleFontsApp().fontMulish,
                                                       fontSize: size.width * 0.0025 * 18,
                                                       fontWeight: FontWeight.w700,
-                                                      color:
-                                                          AppLightColors().gray800SecondaryText,
+                                                      color: colorFondo,
+                                                          //AppLightColors().gray800SecondaryText,
                                                       letterSpacing: 0),
                                                       
                                                   hintText: "100%",
@@ -1200,7 +1050,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                     icon: Icon(
                                                         size: 18,
                                                         Icons.close,
-                                                        color: AppLightColors().gray900PrimaryText
+                                                        color: colorFondo//AppLightColors().gray900PrimaryText
                                                     ),
                                                   ),
                                                 ),
@@ -1247,14 +1097,14 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 autovalidateMode: AutovalidateMode.onUserInteraction,                    
                                                 style: AppTextStyles.bodyRegular(
                                                   width: size.width,
-                                                  color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                  color: colorFondo//themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
                                                 ),
                                                 decoration: InputDecoration(
                                                   hintStyle: SafeGoogleFont(
                                                     GoogleFontsApp().fontMulish,
                                                     fontSize: size.width * 0.0025 * 18,
                                                     fontWeight: FontWeight.w700,
-                                                    color: AppLightColors().gray800SecondaryText,
+                                                    color: colorFondo,//AppLightColors().gray800SecondaryText,
                                                     letterSpacing: 0
                                                   ),
                                                   labelText: 'Ingreso esperado en dólares',
@@ -1268,7 +1118,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                     icon: Icon(
                                                         size: 18,
                                                         Icons.close,
-                                                        color: AppLightColors().gray900PrimaryText
+                                                        color: colorFondo//AppLightColors().gray900PrimaryText
                                                     ),
                                                   ),
                                                 ),
@@ -1319,13 +1169,13 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                               
                                               style: AppTextStyles.bodyRegular(
                                                 width: size.width,
-                                                color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                color: colorFondo//themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
                                               ),
                                               decoration: InputDecorationCvs.formsDecoration(
                                                 labelText: 'Correo',
                                                 hintTetx: 'Ej: correo@ejemplo.com',
                                                 size: size,
-                                                colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
+                                                colorTheme: colorFondo,//themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
                                                 suffix: IconButton(
                                                   onPressed: () {
                                                     emailTxt.text = '';
@@ -1333,7 +1183,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                   icon: Icon(
                                                       size: 18,
                                                       Icons.close,
-                                                      color: AppLightColors().gray900PrimaryText
+                                                      color: colorFondo
                                                   ),
                                                 ),
                                               ),
@@ -1438,13 +1288,13 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                               ],
                                               style: AppTextStyles.bodyRegular(
                                                 width: size.width,
-                                                color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                color: colorFondo//themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
                                               ),
                                               decoration: InputDecorationCvs.formsDecoration(
                                                 labelText: 'Dirección',
                                                 hintTetx: '',
                                                 size: size,
-                                                colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
+                                                colorTheme: colorFondo,//themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
                                                 suffix: IconButton(
                                                   onPressed: () {
                                                     direccionTxt.text = '';
@@ -1452,7 +1302,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                   icon: Icon(
                                                       size: 18,
                                                       Icons.close,
-                                                      color: AppLightColors().gray900PrimaryText
+                                                      color: colorFondo//AppLightColors().gray900PrimaryText
                                                   ),
                                                 ),
                                               ),
@@ -1511,13 +1361,13 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                 autovalidateMode: AutovalidateMode.onUserInteraction,
                                                 style: AppTextStyles.bodyRegular(
                                                   width: size.width,
-                                                  color: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
+                                                  color: colorFondo//themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white
                                                 ),
                                                 decoration: InputDecorationCvs.formsDecoration(
                                                   labelText: 'Observaciones',
                                                   hintTetx: 'Ej: Interesado en casa pero no tiene trabajo estable',
                                                   size: size,
-                                                  colorTheme: themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
+                                                  colorTheme: colorFondo,//themeProvider.themeMode.index == 0 || themeProvider.themeMode.index == 1 ? Colors.black : Colors.white,
                                                   suffix: IconButton(
                                                   onPressed: () {
                                                     observacionesTxt.text = '';
@@ -1525,7 +1375,7 @@ class _FrmRegistroProspectoScreenState extends State<FrmRegistroProspectoScreen>
                                                   icon: Icon(
                                                       size: 18,
                                                       Icons.close,
-                                                      color: AppLightColors().gray900PrimaryText
+                                                      color: colorFondo//AppLightColors().gray900PrimaryText
                                                   ),
                                                 ),
                                                 ),
